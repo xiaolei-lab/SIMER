@@ -1,3 +1,3 @@
 # SIMER
 
-Data Simulation for Life Science, and Breeding
+Data Simulation for Life Science and Breeding
