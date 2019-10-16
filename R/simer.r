@@ -206,9 +206,7 @@ simer <-
 
 # TODO: How to generate inbreeding sirs and uninbreeding dams
 # TODO: optcontri.sel
-# TODO: genetic correlation of multiple traits
 # TODO: add MVP for output
-# TODO: design output
 # TODO: correct pedigree     
 # TODO: add superior limit of homo   
 # TODO: add multiple fix and random effects
@@ -2000,7 +1998,7 @@ simer <-
 #' Write files of simer
 #'
 #' Build date: Jan 7, 2019
-#' Last update: Aug 1, 2019
+#' Last update: Oct 16, 2019
 #'
 #' @author Dong Yin
 #'
@@ -2082,9 +2080,10 @@ write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, seed.map
 		logging.log("Generate phenotype successfully!\n", verbose = verbose)
 
 	} else if (out.format == "plink") {
-	  MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pop$pheno, out = file.path(out, "mvp.plink"), verbose = verbose)
-	}
-
+	  pheno <- cbind(pop$index, pop$pheno)
+	  pheno <- pheno[out.geno.index, ]
+	  MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pheno, out = file.path(out, "mvp.plink"), verbose = verbose)
+	}  
 }
 
 

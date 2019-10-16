@@ -31,7 +31,7 @@ None
 }
 \description{
 Build date: Jan 7, 2019
-Last update: Aug 1, 2019
+Last update: Oct 16, 2019
 }
 \examples{
 \donttest{

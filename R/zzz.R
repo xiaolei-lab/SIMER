@@ -28,5 +28,5 @@ package.env <- NULL
 
 .onAttach <- function(...){
     packageStartupMessage("Full description, Bug report, Suggestion and the latest version:")
-    packageStartupMessage("http://git.soyomics.com:9000/yindong/simer")
+    packageStartupMessage("https://github.com/xiaolei-lab/SIMER")
 }
