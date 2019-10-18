@@ -450,7 +450,7 @@ For ADI model:
 Kao, Chenhung, et al. "Modeling Epistasis of Quantitative Trait Loci Using Cockerham's Model." Genetics 160.3 (2002): 1243-1261.
 
 For build.cov:
-B. D. Ripley (1987) <ISBN:9780470009604>.
+B. D. Ripley "Stochastic Simulation." Wiley-Interscience (1987): Page 98.
 ```
 ---
 
