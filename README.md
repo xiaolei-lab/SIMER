@@ -38,7 +38,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 # Installation
 **[back to top](#contents)**  
 
-**WE STRONGLY RECOMMEND TO INSTALL MVP ON Microsoft R Open(https://mran.microsoft.com/download/)**  
+**WE STRONGLY RECOMMEND TO INSTALL SIMER ON Microsoft R Open(https://mran.microsoft.com/download/)**  
 
 ## Installation
 
@@ -80,7 +80,7 @@ Map file is necessary in **SIMER**. It will generate genotype matrix according t
 ## Genotype
 **[back to top](#contents)**  
 
-Genotype data should be  Numeric (m * n, m rows and n columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
+Genotype data should be  Numeric (m * (2 * n)), m rows and (2 * n) columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
@@ -89,9 +89,9 @@ Genotype data should be  Numeric (m * n, m rows and n columns, m is the number o
 <tr>
 <td align="center">1</td>
 <td align="center">1</td>
-<td align="center">2</td>
+<td align="center">0</td>
 <td align="center">1</td>
-<td align="center">2</td>
+<td align="center">0</td>
 <td align="center">…</td>
 <td align="center">0</td>
 </tr>
@@ -102,23 +102,23 @@ Genotype data should be  Numeric (m * n, m rows and n columns, m is the number o
 <td align="center">1</td>
 <td align="center">0</td>
 <td align="center">…</td>
-<td align="center">2</td>
+<td align="center">0</td>
 </tr>
 <tr>
 <td align="center">1</td>
-<td align="center">2</td>
-<td align="center">2</td>
 <td align="center">1</td>
-<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
 <td align="center">…</td>
 <td align="center">0</td>
 </tr>
 <tr>
 <td align="center">1</td>
 <td align="center">1</td>
-<td align="center">2</td>
+<td align="center">0</td>
 <td align="center">1</td>
-<td align="center">2</td>
+<td align="center">1</td>
 <td align="center">…</td>
 <td align="center">0</td>
 </tr>
@@ -155,8 +155,8 @@ Genotype data should be  Numeric (m * n, m rows and n columns, m is the number o
 **[back to top](#contents)**  
 At least you should prepare two datasets: genotypic map and genotype.  
 
-**genotypic map**, SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, the fifth column is ALT  
-**genotype**, genotype data in **Numeric** format (m * n, m rows and n columns, m is the number of SNPs, n is the number of individuals)
+**genotypic map**, SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, and the fifth column is ALT  
+**genotype**, genotype data in **Numeric** format (m * (2 * n), m rows and n columns, m is the number of SNPs, n is the number of individuals)
 
 ```r
 input.map <- read.table("map.txt" , head = TRUE)
@@ -256,8 +256,8 @@ for (i in 1:rep) {
   simer.list <-
         simer(num.gen = 3,
               replication = i, # set index of replication
-              verbose = verbose, 
-              out = out,
+              verbose = TRUE, 
+              out = NULL,
               input.map = input.map,
               rawgeno1 = rawgeno, # use your own genotype matrix
               # num.ind = 100,
@@ -276,6 +276,8 @@ for (i in 1:rep) {
 ## Population information
 **[back to top](#contents)**  
 
+Population information contains generation,  individual indice, family indice, within-family indice, sire indice, dam indice, sex, and phenotpye. 
+
 ```r
 > pop <- simer.list$pop
 > head(pop)
@@ -291,6 +293,8 @@ for (i in 1:rep) {
 ## Marker effects
 **[back to top](#contents)**  
 
+Marker effects is a list with selected markers and effects of markers. 
+
 ```r
 > effs <- simer.list$effs
 > str(effs)
@@ -302,6 +306,8 @@ List of 2
 
 ## Trait information
 **[back to top](#contents)**  
+
+Trait information is displayed by generation in single-breed reproduction or by breed in multiple-breeds reproduction. In every generation (or breed), it contains trait information (variance components and heritability), effect information (phenotype decomposition), phenotype information (TBV, TGV, pEBVs, gEBVs, ssEBVs, phenotype), and others.  
 
 ```r
 > trait <- simer.list$trait
@@ -392,6 +398,8 @@ List of 5
 ## Genotype
 **[back to top](#contents)**  
 
+In genotype matrix, every rows represent a marker and every column represent a individual. 
+
 ```r
 > geno <- simer.list$geno
 > geno[1:6, 1:6]
@@ -407,6 +415,8 @@ List of 5
 ## Genotypic id
 **[back to top](#contents)**  
 
+Genotypic id is the indice of genotyped individuals. 
+
 ```r
 > genoid <- simer.list$genoid
 > head(genoid)
@@ -415,6 +425,9 @@ List of 5
 
 ## Genotypic map
 **[back to top](#contents)**  
+
+In SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, the fifth column is ALT, the sixth column is block ID, and the seventh is recombination information ("1" represents making recombination and "0" represents not).   
+
 
 ```r
 > map <- simer.list$map
@@ -430,6 +443,8 @@ List of 5
 
 ## Selection intensity
 **[back to top](#contents)**  
+
+Selection intensity is calculated according to ratio of selected individuals. 
 
 ```r
 > si <- simer.list$si
