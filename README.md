@@ -80,7 +80,7 @@ Map file is necessary in **SIMER**. It will generate genotype matrix according t
 ## Genotype
 **[back to top](#contents)**  
 
-Genotype data should be  Numeric (m * (2 * n)), m rows and (2 * n) columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
+Genotype data should be  Numeric (m rows and (2 * n) columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
