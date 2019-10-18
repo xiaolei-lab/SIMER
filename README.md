@@ -2,12 +2,6 @@
 
 ## Data Simulation for Life Science and Breeding
 
-<p align="center">
-<a href="https://raw.githubusercontent.com/XiaoleiLiuBio/MVP/master/results/simer_logo.png">
-<img src="results/simer_logo.png" height="180px" width="370px">
-</a>
-</p>
-
 ### Authors:
 Designed and Maintained by [Dong Yin](https://github.com/Foredawnbio), [Lilin Yin](https://github.com/YinLiLin), [Haohao Zhang](https://github.com/hyacz), [Xuanning Zhang](https://github.com/zxnyaonuli), and [**Xiaolei Liu**](https://github.com/XiaoleiLiuBio).  
 Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan,  Shuhong Zhao
@@ -22,7 +16,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Genotypic map](#genotypic-map)
     - [Genotype](#genotype)
     - [Designed pedigree](#designed-pedigree)
-- [Data Input](#data-input)
+- [Data Input](#data-input)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png" height="250" align="right" />
     - [Basic](#basic)
     - [Selective](#selective)
 - [Start Simulation](#start-simulation)
