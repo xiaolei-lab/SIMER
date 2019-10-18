@@ -4,7 +4,7 @@
 
 ### Authors:
 Designed and Maintained by [Dong Yin](https://github.com/Foredawnbio), [Lilin Yin](https://github.com/YinLiLin), [Haohao Zhang](https://github.com/hyacz), [Xuanning Zhang](https://github.com/zxnyaonuli), and [**Xiaolei Liu**](https://github.com/XiaoleiLiuBio).  
-Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan,  Shuhong Zhao
+Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan, and Shuhong Zhao
 
 Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu@mail.hzau.edu.cn](mailto:xiaoleiliu@mail.hzau.edu.cn)
 
@@ -180,57 +180,57 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 
 **num.gen**, number of generations in simulation  
 **replication**, replication index of simulation  
-**verbose** whether to print detail  
-**mrk.dense** whether markers are dense  
-**out path** of output files  
-**out.format** format of output, "numeric" or "plink"  
-**seed.geno** random seed of genotype matrix  
-**seed.map** random seed of map file  
-**out.geno.gen** indice of generation of output genotype   
-**out.pheno.gen** indice of generation of  output phenotype   
-**rawgeno1** extrinsic genotype matrix1  
-**rawgeno2** extrinsic genotype matrix2    
-**rawgeno3** extrinsic genotype matrix3  
-**rawgeno4** extrinsic genotype matrix4  
-**num.ind** population size of base population  
-**prob** weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1  
-**input.map** map from outside  
-**len.block** length of every blocks  
-**range.hot** range of exchages in hot spot block  
-**range.cold** range of exchages in cold spot block  
-**rate.mut** mutation rate between 1e-8 and 1e-6  
-**cal.model** phenotype model with "A", "AD", "ADI"  
-**h2.tr1** heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd  
-**num.qtn.tr1** integer or integer vector, the number of QTN in the trait1  
-**var.tr1** variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
-**dist.qtn.tr1** distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**eff.unit.tr1** unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**shape.tr1** shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**scale.tr1** scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**multrait** whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
-**num.qtn.trn** QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
-**eff.sd** a matrix with the standard deviation of QTN effects  
-**gnt.cov** genetic covaiance matrix among all traits  
-**env.cov** environment covaiance matrix among all traits  
-**qtn.spot** QTN probability in every blocks  
-**maf** Minor Allele Frequency, markers selection range is from  maf to 0.5  
-**sel.crit** selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
-**sel.on** whether to add selection  
-**mtd.reprod** different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
-**userped** user-specific pedigree  
-**num.prog** litter size of dams  
-**ratio** ratio of males in all individuals  
-**prog.tri** litter size of the first single cross process in trible cross process  
-**prog.doub** litter size of the first two single cross process in double cross process  
-**prog.back** a vector with litter size in every generations  
-**ps** fraction selected in selection  
-**decr** whether to sorting with descreasing  
-**sel.multi** selection method of multi-trait with options: "tdm", "indcul" and "index"  
-**index.wt** economic weights of selection index method  
-**index.tdm** index represents which trait is being selected. NOT CONTROL BY USER  
-**goal.perc** percentage of goal more than mean of scores of individuals  
-**pass.perc** percentage of expected excellent individuals  
-**sel.sing** selection method of single trait with options: "ind", "fam", "infam" and "comb"  
+**verbose**, whether to print detail  
+**mrk.dense**, whether markers are dense  
+**out path**, path of output files  
+**out.format**, format of output, "numeric" or "plink"  
+**seed.geno**, random seed of genotype matrix  
+**seed.map**, random seed of map file  
+**out.geno.gen**, indice of generation of output genotype   
+**out.pheno.gen**, indice of generation of  output phenotype   
+**rawgeno1**, extrinsic genotype matrix1  
+**rawgeno2**, extrinsic genotype matrix2    
+**rawgeno3**, extrinsic genotype matrix3  
+**rawgeno4**, extrinsic genotype matrix4  
+**num.ind**, population size of base population  
+**prob**, weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1  
+**input.map**, map from outside  
+**len.block**, length of every blocks  
+**range.hot**, range of exchages in hot spot block  
+**range.cold**, range of exchages in cold spot block  
+**rate.mut**, mutation rate between 1e-8 and 1e-6  
+**cal.model**, phenotype model with "A", "AD", "ADI"  
+**h2.tr1**, heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd  
+**num.qtn.tr1**, integer or integer vector, the number of QTN in the trait1  
+**var.tr1**, variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
+**dist.qtn.tr1**, distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**eff.unit.tr1**, unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**shape.tr1**, shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**scale.tr1**, scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
+**num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
+**eff.sd**, a matrix with the standard deviation of QTN effects  
+**gnt.cov**, genetic covaiance matrix among all traits  
+**env.cov**, environment covaiance matrix among all traits  
+**qtn.spot**, QTN probability in every blocks  
+**maf**, Minor Allele Frequency, markers selection range is from  maf to 0.5  
+**sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
+**sel.on**, whether to add selection  
+**mtd.reprod**, different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
+**userped**, user-specific pedigree  
+**num.prog**, litter size of dams  
+**ratio**, ratio of males in all individuals  
+**prog.tri**, litter size of the first single cross process in trible cross process  
+**prog.doub**, litter size of the first two single cross process in double cross process  
+**prog.back**, a vector with litter size in every generations  
+**ps**, fraction selected in selection  
+**decr**, whether to sorting with descreasing  
+**sel.multi**, selection method of multi-trait with options: "tdm", "indcul" and "index"  
+**index.wt**, economic weights of selection index method  
+**index.tdm**, index represents which trait is being selected. NOT CONTROL BY USER  
+**goal.perc**, percentage of goal more than mean of scores of individuals  
+**pass.perc**, percentage of expected excellent individuals  
+**sel.sing**, selection method of single trait with options: "ind", "fam", "infam" and "comb"  
 
 ```r
 # simdata: rawgeno input.map userped
@@ -398,7 +398,7 @@ List of 5
 ## Genotype
 **[back to top](#contents)**  
 
-In genotype matrix, every rows represent a marker and every column represent a individual. 
+In genotype matrix, each row represents a marker and each column represents a individual. 
 
 ```r
 > geno <- simer.list$geno
