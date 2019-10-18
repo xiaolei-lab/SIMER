@@ -3,8 +3,8 @@
 ## Data Simulation for Life Science and Breeding
 
 <p align="center">
-<a href="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png">
-<img src="results/mvp_logo.png" height="180px" width="370px">
+<a href="https://raw.githubusercontent.com/XiaoleiLiuBio/MVP/master/results/simer_logo.png">
+<img src="results/simer_logo.png" height="180px" width="370px">
 </a>
 </p>
 
