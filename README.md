@@ -15,8 +15,8 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 - [Data Preparation](#data-preparation)
     - [Genotypic map](#genotypic-map)
     - [Genotype](#genotype)
-    - [Designed pedigree](#designed-pedigree)
-- [Data Input](#data-input)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png" height="250" align="right" />
+    - [Designed pedigree](#designed-pedigree)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png" height="250" align="right" />
+- [Data Input](#data-input)
     - [Basic](#basic)
     - [Selective](#selective)
 - [Start Simulation](#start-simulation)
