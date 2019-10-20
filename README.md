@@ -720,7 +720,7 @@ basepop2 <- set.pheno(pop = basepop2, pop2.pheno, sel.crit = "pheno")
 Note that real genetic covariance matrix may not be consistent with expected genetic covariance matrix **gnt.cov**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
 
 ```r
-####################
+#######################
 ### multiple traits ###
 # calculate for marker information
 effs <-
@@ -1398,7 +1398,7 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "pheno")
 Multiple groups QTN effects can be realized by setting different elements of **num.qtn.tr1**, every elements represent amount of QTNs affacting a effect. For example, **num.qtn.tr1 = c(2, 6, 10)** means that the additive effect of the trait is the sum of three QTN group effects. The first group has 2 QTNs, the second group has 6 QTNs and the third group has 10 QTNs. Because of the three groups, the first three elements of **var.tr1** mean the variances of the three QTN groups.
 
 ```r
-####################
+#####################
 ### single traits ###
 # calculate for marker information
 effs <-
