@@ -898,6 +898,9 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 In addition, "pheno" is not just phenotype. It can also be "TBV", "TGV", "pEBVs'", "gEBVs",  or "ssEBVs". "TBV" is True Breeding Value, represents only that part of genotypic value that can be transmitted from parent to offspring. 
 
 ```r
+####################
+### single trait ###
+# Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
@@ -938,6 +941,8 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "TBV")
 Phenotype of multiple traits can also be represented as "TBV".
 
 ```r
+#######################
+### multiple traits ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -979,6 +984,8 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "TBV")
 "TGV" is True Genotypic Value, represents the sum of additive effect, dominance effect and epistatic effect.
 
 ```r
+####################
+### single trait ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1020,6 +1027,8 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "TGV")
 Phenotype of multiple traits can also be represented as "TGV".
 
 ```r
+#######################
+### multiple traits ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1064,6 +1073,8 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "TGV")
 # call "hiblup" package
 suppressMessages(library("hiblup"))
 
+####################
+### single trait ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1106,6 +1117,8 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pEBVs")
 Phenotype of multiple traits can also be represented as "pEBVs".
 
 ```r
+#######################
+### multiple traits ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1147,6 +1160,8 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "pEBVs")
 "gEBVs" is genomic Estimated Breeding Values. It means that BLUP constructs kinship by genotype matrix. You can get "gEBVs" by "GBLUP" model in HIBLUP.
 
 ```r
+####################
+### single trait ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1190,6 +1205,8 @@ Phenotype of multiple traits can also be represented as "gEBVs".
 
 ```r
 # Additive model
+#######################
+### multiple traits ###
 effs <-
     cal.effs(pop.geno = basepop.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
@@ -1230,6 +1247,8 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "gEBVs")
 "ssEBVs" is single-step genomic Estimated Breeding Values. It means that BLUP constructs kinship by pedigree and genotype matrix. You can get "ssEBVs" by "SSBLUP" model in HIBLUP.
 
 ```r
+####################
+### single trait ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1272,6 +1291,8 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "ssEBVs")
 Phenotype of multiple traits can also be represented as "ssEBVs".
 
 ```r
+#######################
+### multiple traits ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1313,6 +1334,8 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "ssEBVs")
 At last, "pheno" is phenotype including additive effect (and dominance effect) (and epistatic effect) and residual effect.
 
 ```r
+####################
+### single trait ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
@@ -1354,6 +1377,8 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 Phenotype of multiple traits can also be represented as "pheno".
 
 ```r
+#######################
+### multiple traits ###
 # Additive model
 effs <-
     cal.effs(pop.geno = basepop.geno,
