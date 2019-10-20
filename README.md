@@ -13,12 +13,12 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 
 - [Installation](#installation)
 - [Data Preparation](#data-preparation)
-    - [Genotypic map](#genotypic-map)
     - [Genotype](#genotype)
-    - [Designed pedigree](#designed-pedigree)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png" height="250" align="right" />
+    - [Genotypic map](#genotypic-map)
+    - [Pedigree](#pedigree)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png" height="250" align="right" />
 - [Data Input](#data-input)
     - [Basic](#basic)
-    - [Selective](#selective)
+    - [Optional](#Optional)
 - [Start Simulation](#start-simulation)
 - [Output](#output)
     - [Population information](#population-information)
@@ -57,25 +57,9 @@ After installed successfully, **SIMER** can be loaded by typing
 ```
 Typing ```?simer``` could get the details of all parameters.
 
-**For more help on Windows installation, see the [wiki page](https://github.com/XiaoleiLiuBio/rMVP/wiki/R-%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97%EF%BC%88Windows%EF%BC%89) (Chinese)**
-
 ---
 
 # Data Preparation
-## Genotypic map
-**[back to top](#contents)**  
-Map file is necessary in **SIMER**. It will generate genotype matrix according to number of markers in input map file. 
-
-> `map.txt`
-
-| SNP | Chrom | BP | REF | ALT |
-| :---: | :---: |:---: |:---: |:---: |
-| 1_10673082 | 1 | 10673082 | T | C |
-| 1_10723065 | 1 | 10723065 | A | G |
-| 1_11407894 | 1 | 11407894 | A | G |
-| 1_11426075 | 1 | 11426075 | T | C |
-| 1_13996200 | 1 | 13996200 | T | C |
-| 1_14638936 | 1 | 14638936 | T | C |
 
 ## Genotype
 **[back to top](#contents)**  
@@ -132,7 +116,22 @@ Genotype data should be  Numeric (m rows and (2 * n) columns, m is the number of
 <td align="center">0</td>
 </tr></tbody></table>
 
-## Designed pedigree
+## Genotypic map
+**[back to top](#contents)**  
+Map file is necessary in **SIMER**. It will generate genotype matrix according to number of markers in input map file. 
+
+> `map.txt`
+
+| SNP | Chrom | BP | REF | ALT |
+| :---: | :---: |:---: |:---: |:---: |
+| 1_10673082 | 1 | 10673082 | T | C |
+| 1_10723065 | 1 | 10723065 | A | G |
+| 1_11407894 | 1 | 11407894 | A | G |
+| 1_11426075 | 1 | 11426075 | T | C |
+| 1_13996200 | 1 | 13996200 | T | C |
+| 1_14638936 | 1 | 14638936 | T | C |
+
+## Pedigree
 **[back to top](#contents)**  
 **SIMER** supports designed pedigree to control mating process. Designed pedigree is useful only in "userped" reproduction. 
 
@@ -155,15 +154,15 @@ Genotype data should be  Numeric (m rows and (2 * n) columns, m is the number of
 **[back to top](#contents)**  
 At least you should prepare two datasets: genotypic map and genotype.  
 
-**genotypic map**, SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, and the fifth column is ALT  
 **genotype**, genotype data in **Numeric** format (m * (2 * n), m rows and n columns, m is the number of SNPs, n is the number of individuals)
+**genotypic map**, SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, and the fifth column is ALT  
 
 ```r
-input.map <- read.table("map.txt" , head = TRUE)
 rawgeno <- read.table("genotype.txt")
+input.map <- read.table("map.txt" , head = TRUE)
 ```
 
-## Selective
+## Optional
 **[back to top](#contents)**  
 If you want to control mating process by designed pedigree. 
 
