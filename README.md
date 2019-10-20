@@ -23,6 +23,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 - [Genotype simulation](#genotype-simulation)
     - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
+    - [Set block information and recombination information](#set-block-information-and-recombination-information)
     - [Add chromosome crossovers and mutaions to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
 - [Phenotype simulation](#phenotype-simulation) 
     - [Generate base population information](#generate-base-population-information)
@@ -338,6 +339,21 @@ basepop.geno <- genotype(num.marker = nmrk, num.ind = 40, verbose = verbose)
 basepop.geno <- genotype(rawgeno = rawgeno, verbose = verbose)
 ```
 
+## Set block information and recombination information
+**[back to top](#contents)** 
+
+Add block information and recombination information to map file. Calculate block ranges and recombination states of blocks.
+
+```r
+nmrk <- nrow(basepop.geno)
+nind <- ncol(basepop.geno) / 2
+
+# set block information and recombination information
+pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
+blk.rg <- cal.blk(pos.map)
+recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
+```
+
 ## Add chromosome crossovers and mutaions to genotype matrix
 **[back to top](#contents)** 
 
@@ -354,7 +370,7 @@ basepop.geno.em <-  # genotype matrix after cross and Mutation
              verbose = verbose)
 ```
 
-Note that recombination only exists in meiosis. Therefore, some reproduction methods such like "clone" do not have recombination process. You can set \verb|recom.spot = NULL| to add only mutations to genotype matrix.  
+Note that recombination only exists in meiosis. Therefore, some reproduction methods such like "clone" do not have recombination process. You can set **recom.spot = NULL** to add only mutations to genotype matrix.  
 
 ```r
 basepop.geno.em <-  # genotype matrix after crosses and mutations
