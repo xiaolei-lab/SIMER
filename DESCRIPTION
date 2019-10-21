@@ -3,9 +3,9 @@ Title: Data Simulation for Life Science and Breeding
 Version: 0.8.1.3
 Date: 2019-10-14
 Authors@R: c( person("Dong", "Yin", role = "aut"),
+              person("Xuanning", "Zhang", role = "aut"), 
               person("Lilin", "Yin", role = "aut"), 
               person("Haohao", "Zhang", role = "aut"),
-              person("Xuanning", "Zhang", role = "aut"), 
               person("Zhenshuang", "Tang", role = "aut"),
               person("Jingya", "Xu", role = "aut"),
               person("Xinyun", "Li", role = "aut"),
@@ -23,7 +23,7 @@ Description: Data simulator including genotype, phenotype, pedigree,
 License: Apache License 2.0
 URL: https://github.com/xiaolei-lab/SIMER
 BugReports: https://github.com/xiaolei-lab/SIMER/issues
-Imports: utils, stats
+Imports: utils, stats, methods
 Depends: R (>= 3.5.0), MASS, bigmemory, rMVP
 Suggests: knitr
 RoxygenNote: 6.1.1.9000

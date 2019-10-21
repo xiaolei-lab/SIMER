@@ -76,7 +76,8 @@
 #' @export
 #' @import MASS bigmemory rMVP
 #' @importFrom stats aov cor dnorm qnorm rgamma rnorm runif var
-#' @importFrom utils write.table read.delim
+#' @importFrom utils write.table read.delim packageVersion
+#' @importFrom methods getPackageName
 #'
 #' @examples
 #' \donttest{
@@ -139,6 +140,8 @@
 #'            pass.perc = 0.9, 
 #'            sel.sing = "comb") 
 #' pop <- simer.list$pop
+#' effs <- simer.list$effs
+#' trait <- simer.list$trait
 #' geno <- simer.list$geno
 #' map <- simer.list$map
 #' si <- simer.list$si
@@ -215,6 +218,8 @@ simer <-
 # TODO: updata index selection
 # TODO: add true block distribution   
   
+  simer.Version(width = 70, verbose = verbose)    
+      
   inner.env <- environment()    
   # initialize logging
   if (!is.null(out)) {
@@ -225,7 +230,7 @@ simer <-
   }
   
 	################### MAIN_FUNCTION_SETTING ###################
-  logging.log("--------------------- replication", replication, "---------------------\n", verbose = verbose)
+  logging.log("--------------------------- replication ", replication, "---------------------------\n", verbose = verbose)
   op <- Sys.time()
   logging.log("SIMER BEGIN AT", as.character(op), "\n", verbose = verbose)
   set.seed(seed.geno)
@@ -1988,128 +1993,10 @@ simer <-
   # total information list
   simer.list <- list(pop = pop.total, effs = effs, trait = trait, geno = geno.total, genoid = out.geno.index, map = pos.map, si = sel.i)
   rm(effs); rm(trait); rm(pop.total); rm(geno.total); rm(input.map); rm(pos.map); gc()
-
+  
+  print_accomplished(width = 70, verbose = verbose)
   # Return the last directory
   ed <- Sys.time()
-  logging.log(" SIMER DONE WITHIN TOTAL RUN TIME:", times(as.numeric(ed)-as.numeric(op)), "\n", verbose = verbose)
+  logging.log(" SIMER DONE WITHIN TOTAL RUN TIME:", format_time(as.numeric(ed)-as.numeric(op)), "\n", verbose = verbose)
   return(simer.list)
-}
-
-#' Write files of simer
-#'
-#' Build date: Jan 7, 2019
-#' Last update: Oct 16, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye
-#' @param geno genotype matrix of population
-#' @param map map information of markers
-#' @param out.geno.index indice of individuals outputting genotype
-#' @param out.pheno.index indice of individuals outputting phenotype
-#' @param seed.map random seed of map file
-#' @param out path of output files
-#' @param out.format format of output, "numeric" or "plink"
-#' @param verbose whether to print detail
-#'
-#' @return None
-#' @export
-#'
-#' @examples
-#' \donttest{
-#' data(simdata)
-#' nmrk <- nrow(input.map)
-#' pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
-#' basepop <- getpop(nind = 40, from = 1, ratio = 0.1)
-#' basepop.geno <- rawgeno
-#' basepop.geno <- as.big.matrix(basepop.geno)
-#' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
-#'              cal.model = "A",
-#'              num.qtn.tr1 = c(2, 6, 10),
-#'              var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-#'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-#'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = FALSE,
-#'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              eff.sd = diag(c(1, 0.5)),
-#'              qtn.spot = rep(0.1, 10),
-#'              maf = 0, 
-#'              verbose = TRUE)
-#' str(basepop)
-#' pop.pheno <-
-#'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
-#'               pos.map = NULL,
-#'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-#'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
-#'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
-#'               sel.on = TRUE, 
-#'               inner.env = NULL, 
-#'               verbose = TRUE)
-#' basepop <- set.pheno(pop = basepop, pop.pheno = pop.pheno, sel.crit = "pheno")
-#' idx <- basepop$index
-#' seed.map <- 888888
-#' # convert (0, 1) to (0, 1, 2)
-#' basepop.geno <- geno.cvt(basepop.geno)
-#' basepop.geno <- as.big.matrix(basepop.geno)
-#' write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
-#'     out.geno.index = idx, out.pheno.index = idx, seed.map = seed.map, 
-#'     out = tempdir(), out.format = "numeric", verbose = TRUE)
-#' file.remove(file.path(tempdir(), "geno_id.txt"))
-#' file.remove(file.path(tempdir(), "map.txt"))
-#' file.remove(file.path(tempdir(), "pedigree.txt"))
-#' file.remove(file.path(tempdir(), "phenotype.txt"))
-#' }
-write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, seed.map, out, out.format, verbose) {
-  if (is.null(out)) return(invisible())
-  
-  if (out.format == "numeric") {
-		write.table(pop[out.geno.index, 2], file = file.path(out, "geno_id.txt"), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
-		logging.log("Generate genoid successfully!\n", verbose = verbose)
-		write.table(map, file = file.path(out, "map.txt"), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
-		logging.log("Generate map successfully!\n", verbose = verbose)
-		write.table(pop[out.pheno.index, c(2, 5, 6)], file = file.path(out, "pedigree.txt"), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-		logging.log("Generate pedigree successfully!\n", verbose = verbose)
-		write.table(pop[out.pheno.index, c(1, 2, 5, 7, 8:ncol(pop))], file = file.path(out, "phenotype.txt"), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-		logging.log("Generate phenotype successfully!\n", verbose = verbose)
-
-	} else if (out.format == "plink") {
-	  pheno <- cbind(pop$index, pop$pheno)
-	  pheno <- pheno[out.geno.index, ]
-	  MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pheno, out = file.path(out, "mvp.plink"), verbose = verbose)
-	}  
-}
-
-
-#' Convert number to time character
-#'
-#' Build date: Jan 7, 2019
-#' Last update: Aug 1, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param x time of numeric
-#'
-#' @return time of character in the format "h", "m", "s"
-#' @export
-#'
-#' @examples
-#' time.range <- 3700
-#' times(time.range)
-times <- function(x)
-{
-	h <- x %/% 3600
-	m <- (x %% 3600) %/% 60
-	s <- ((x %% 3600) %% 60)
-	index <- which(c(h, m, s) != 0)
-	num <- c(h, m, s)[index]
-	num <- round(num, 0)
-	char <- c("h", "m", "s")[index]
-	return(paste(num, char, sep="", collapse=""))
 }

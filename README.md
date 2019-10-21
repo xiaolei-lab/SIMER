@@ -15,7 +15,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 - [Data Preparation](#data-preparation)
     - [Genotype](#genotype)
     - [Genotypic map](#genotypic-map)
-    - [Pedigree](#pedigree)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/results/simer_logo.png" height="250" align="right" />
+    - [Pedigree](#pedigree)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/inst/extdata/00simer_logo/simer_logo.png" height="250" align="right" />
 - [Data Input](#data-input)
     - [Basic](#basic)
     - [Optional](#optional)

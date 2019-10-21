@@ -200,6 +200,8 @@ simer.list <-
            pass.perc = 0.9, 
            sel.sing = "comb") 
 pop <- simer.list$pop
+effs <- simer.list$effs
+trait <- simer.list$trait
 geno <- simer.list$geno
 map <- simer.list$map
 si <- simer.list$si
