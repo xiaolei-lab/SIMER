@@ -477,41 +477,70 @@ cal.r <- function(pop, pop.curr) {
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
-#'              cal.model = "A",
-#'              num.qtn.tr1 = c(2, 6, 10),
-#'              var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-#'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-#'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = FALSE, # single trait
-#'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              eff.sd = diag(c(1, 0.5)),
-#'              qtn.spot = rep(0.1, 10),
-#'              maf = 0, 
-#'              verbose = TRUE)
-#' pop.pheno <-
-#'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
-#'               pos.map = NULL,
-#'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-#'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
-#'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
-#'               sel.on = TRUE, 
-#'               inner.env = NULL, 
-#'               verbose = TRUE)
-#' str(basepop)
-#' basepop <- set.pheno(basepop, pop.pheno, sel.crit = "pheno")
-#' str(basepop)
+#' \donttest{
+#' # get map file, map is neccessary
+#' data(simdata)
+#'
+#' # run simer
+#' simer.list <-
+#'      simer(num.gen = 10,
+#'            replication = 1,
+#'            verbose = TRUE, 
+#'            mrk.dense = FALSE,
+#'            out = NULL,
+#'            out.format = "numeric",
+#'            seed.geno = runif(1, 0, 100),
+#'            seed.map = 12345,
+#'            out.geno.gen = 3:5,
+#'            out.pheno.gen = 1:5,
+#'            rawgeno1 = rawgeno,
+#'            rawgeno2 = NULL,
+#'            rawgeno3 = NULL,
+#'            rawgeno4 = NULL,
+#'            num.ind = NULL,
+#'            prob = c(0.5, 0.5),
+#'            input.map = input.map,
+#'            len.block = 5e7,
+#'            range.hot = 4:6,
+#'            range.cold = 1:5,
+#'            rate.mut = 1e-8,
+#'            cal.model = "A",
+#'            h2.tr1 = 0.3,
+#'            num.qtn.tr1 = 18,
+#'            var.tr1 = 2,
+#'            dist.qtn.tr1 = "normal",
+#'            eff.unit.tr1 = 0.5,
+#'            shape.tr1 = 1,
+#'            scale.tr1 = 1,
+#'            multrait = FALSE,
+#'            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+#'            eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+#'            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+#'            env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'            qtn.spot = rep(0.1, 10),
+#'            maf = 0,
+#'            sel.crit = "pheno",
+#'            sel.on = TRUE, 
+#'            mtd.reprod = "randmate",
+#'            userped = userped,
+#'            num.prog = 2,
+#'            ratio = 0.5,
+#'            prog.tri = 2,
+#'            prog.doub = 2,
+#'            prog.back = rep(2, 5),
+#'            ps = 0.8,
+#'            decr = TRUE,
+#'            sel.multi = "index",
+#'            index.wt = c(0.5, 0.5),
+#'            index.tdm = 1,
+#'            goal.perc = 0.1,
+#'            pass.perc = 0.9, 
+#'            sel.sing = "comb") 
+#' 
+#' pop <- simer.list$pop                         
 #' selPath <- system.file("extdata", "01select_scheme", package = "simer")
-#' out.index <- read.selgeno(pop = basepop, selPath = selPath, out = NULL)
+#' out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
+#' }
 read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
   if (!dir.exists(selPath)) stop("Please input a right selection path!")
   if (!is.null(out)) {
@@ -532,7 +561,7 @@ read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
 	  }
   }
   
-  out.index <- lapply(filenames, function(filename) {
+  out.pop <- lapply(filenames, function(filename) {
     filename.old <- filename
     filename <- file.path(selPath, filename)
     scheme <- read.delim(filename, header = TRUE, stringsAsFactors = FALSE)
@@ -567,14 +596,16 @@ read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
       } # end if1
     } # end for2
     out.index <- out.index[out.index != 0]
+    out.pop <- pop[pop$index %in% out.index, ]
     
     if (!is.null(out))
-      write.table(out.index, file.path(out, paste0("index_", filename.old)), row.names=FALSE, col.names=FALSE, quote=FALSE)
+      write.table(out.pop, file.path(out, paste0("out_", filename.old)), row.names=FALSE, col.names=TRUE, quote=FALSE)
     
-    return(out.index)
+    return(out.pop)
   })
+  names(out.pop) <- paste("scheme", 1:length(filenames))
   
-  return(out.index)
+  return(out.pop)
 }
 
 #' Convert string number to numeric number
