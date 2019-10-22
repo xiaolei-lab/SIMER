@@ -19,13 +19,13 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 - [Data Input](#data-input)
     - [Basic](#basic)
     - [Optional](#optional)
-- [Quick start](#quick-start)
-- [Genotype simulation](#genotype-simulation)
+- [Quick Start](#quick-start)
+- [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
     - [Set block information and recombination information](#set-block-information-and-recombination-information)
     - [Add chromosome crossovers and mutaions to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
-- [Phenotype simulation](#phenotype-simulation) 
+- [Phenotype Simulation](#phenotype-simulation) 
     - [Generate base population information](#generate-base-population-information)
     - [Generate phenotype of single trait by A model](#generate-phenotype-of-single-trait-by-A-model)
     - [Generate phenotype of single trait by AD model](#generate-phenotype-of-single-trait-by-AD-model)
@@ -188,7 +188,7 @@ userped <- read.table("userped.txt", header = TRUE)
 
 ---
 
-# Quick start
+# Quick Start
 **[back to top](#contents)** 
 
 After obtaining genotypic map data and genotype data, we can start our simulation.
@@ -284,7 +284,7 @@ for (i in 1:rep) {
 
 ---
 
-# Genotype simulation
+# Genotype Simulation
 **[back to top](#contents)** 
 
 Genotype data in SIMER will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination informaion of map. 
@@ -385,7 +385,7 @@ basepop.geno.em <-  # genotype matrix after crosses and mutations
 
 ---
 
-# Phenotype simulation
+# Phenotype Simulation
 **[back to top](#contents)**  
 
 Phenotype data in **SIMER** will be generated according to different phenotype model, QTN effect distribution and selection criteria. SIMER supports both single trait and multiple trait. In single traits, you could set different model by **cal.model** as your need. But in multiple traits, only "A" model can be used. In both single trait and multiple traits, you can set different amount, effect variance, effect distribution for QTNs and heritability for traits. In single trait, multiple groups QTN effects can also be under consideration. In multiple trait, you can set specific genetic correlation and environmental correlation. 
