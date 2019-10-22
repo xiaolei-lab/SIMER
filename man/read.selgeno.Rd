@@ -9,7 +9,7 @@ read.selgeno(pop = NULL, selPath = NULL, out = NULL)
 \arguments{
 \item{pop}{total population information}
 
-\item{selPath}{the path of select_scheme}
+\item{selPath}{the path of breeding_plan}
 
 \item{out}{path of output files}
 }

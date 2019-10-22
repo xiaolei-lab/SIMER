@@ -470,7 +470,7 @@ cal.r <- function(pop, pop.curr) {
 #' @author Dong Yin
 #'
 #' @param pop total population information
-#' @param selPath the path of select_scheme
+#' @param selPath the path of breeding_plan
 #' @param out path of output files
 #'
 #' @return None
