@@ -82,7 +82,7 @@ simer.list <-
            sel.sing = "comb") 
 
 pop <- simer.list$pop                         
-selPath <- system.file("extdata", "01select_scheme", package = "simer")
+selPath <- system.file("extdata", "01breeding_plan", package = "simer")
 out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
 }
 }

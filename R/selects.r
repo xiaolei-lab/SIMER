@@ -538,7 +538,7 @@ cal.r <- function(pop, pop.curr) {
 #'            sel.sing = "comb") 
 #' 
 #' pop <- simer.list$pop                         
-#' selPath <- system.file("extdata", "01select_scheme", package = "simer")
+#' selPath <- system.file("extdata", "01breeding_plan", package = "simer")
 #' out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
 #' }
 read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
@@ -556,7 +556,7 @@ read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
 	    filenames <- filenames[!(filenames == filename)]
 	    next
     }
-	  if (substr(fn[1], 1, 13) != "select_scheme") {
+	  if (substr(fn[1], 1, 13) != "breeding_plan") {
 	    filenames <- filenames[!(filenames == filename)]
 	  }
   }
@@ -603,7 +603,7 @@ read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
     
     return(out.pop)
   })
-  names(out.pop) <- paste("scheme", 1:length(filenames))
+  names(out.pop) <- paste("plan", 1:length(filenames), sep = "")
   
   return(out.pop)
 }
