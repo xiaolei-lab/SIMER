@@ -3,7 +3,7 @@
 ## Data Simulation for Life Science and Breeding
 
 ### Authors:
-Designed and Maintained by [Dong Yin](https://github.com/Foredawnbio), [Lilin Yin](https://github.com/YinLiLin), [Haohao Zhang](https://github.com/hyacz), [Xuanning Zhang](https://github.com/zxnyaonuli), and [**Xiaolei Liu**](https://github.com/XiaoleiLiuBio).  
+Designed and Maintained by [Dong Yin](https://github.com/Foredawnbio), [Xuanning Zhang](https://github.com/zxnyaonuli), [Lilin Yin](https://github.com/YinLiLin), [Haohao Zhang](https://github.com/hyacz), and [**Xiaolei Liu**](https://github.com/XiaoleiLiuBio).  
 Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan, and Shuhong Zhao
 
 Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu@mail.hzau.edu.cn](mailto:xiaoleiliu@mail.hzau.edu.cn)
@@ -147,7 +147,7 @@ Map file is necessary in **SIMER**. It will generate genotype matrix according t
 
 ## Pedigree
 **[back to top](#contents)**  
-**SIMER** supports designed pedigree to control mating process. Designed pedigree is useful only in "userped" reproduction. Pedigree should at least start with generation 2. The first column is sample id, the sescond column is paternal id, and the third column is maternal id. Please make sure that paternal id and maternal id can be found in the last generation. 
+**SIMER** supports user designed pedigree to control mating process. User designed pedigree is useful only in "userped" reproduction. Pedigree should at least start with generation 2. The first column is sample id, the sescond column is paternal id, and the third column is maternal id. Please make sure that paternal id and maternal id can be found in the last generation. 
 
 > `userped.txt`
 
@@ -178,7 +178,7 @@ input.map <- read.table("map.txt" , head = TRUE)
 
 ## Optional
 **[back to top](#contents)**  
-If you want to control mating process by designed pedigree. 
+If you want to control mating process by user designed pedigree. 
 
 **pedigree**, pedigree information, the first column is sample id, the second column is paternal id, and the third column is maternal id. Note that the individuals in the pedigree data file do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0.
 
