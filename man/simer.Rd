@@ -203,10 +203,14 @@ pop <- simer.list$pop
 effs <- simer.list$effs
 trait <- simer.list$trait
 geno <- simer.list$geno
+genoid <- simer.list$genoid
 map <- simer.list$map
 si <- simer.list$si
-str(pop)
-str(geno[])
+head(pop)
+str(effs)
+str(trait)
+geno[1:6, 1:6]
+genoid[1:6]
 str(map)
 si
 }
