@@ -25,25 +25,37 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
     - [Set block information and recombination information](#set-block-information-and-recombination-information)
     - [Add chromosome crossovers and mutaions to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
-- [Phenotype Simulation](#phenotype-simulation) 
-    - [Gallery of phenotype simulation input parameters](#Gallery-of-phenotype-simulation-input-parameters)
-    - [Generate base population information](#generate-base-population-information)
-    - [Generate phenotype of single trait by A model](#generate-phenotype-of-single-trait-by-A-model)
-    - [Generate phenotype of single trait by AD model](#generate-phenotype-of-single-trait-by-AD-model)
-    - [Generate phenotype of single trait by ADI model](#generate-phenotype-of-single-trait-by-ADI-model)
-    - [Generate phenotype of multiple traits](#generate-phenotype-of-multiple-traits)
-    - [Different QTN effect distributions](#different-QTN-effect-distributions)
-    - [Different selection criteria](#different-selection-criteria)
-    - [Multiple groups QTN effects](#multiple-groups-QTN-effects)
-- [Selection](#Selection)   
-    - [Gallery of selection input parameters](#Gallery-of-selection-input-parameters)
-    - [Individual selection on single trait](#Individual-selection-on-single-trait)
-    - [Family selection on single trait](#Family-selection-on-single-trait)
-    - [Within family selection on single trait](#Within-family-selection-on-single-trait)
-    - [Combined selection on single trait](#Combined-selection-on-single-trait)
-    - [Tandem selection on multiple traits](#Tandem-selection-on-multiple-traits)
-    - [Independent culling selection on multiple traits](#Independent-culling-selection-on-multiple-traits)
-    - [Index selection on multiple traits](#Index-selection-on-multiple-traits)
+- [Phenotype Simulation](#phenotype-simulation)  
+    - [Gallery of phenotype simulation input parameters](#gallery-of-phenotype-simulation-input-parameters)  
+    - [Generate base population information](#generate-base-population-information)  
+    - [Generate phenotype of single trait by "A" model](#generate-phenotype-of-single-trait-by-"A"-model)  
+    - [Generate phenotype of single trait by "AD" model](#generate-phenotype-of-single-trait-by-"AD"-model)  
+    - [Generate phenotype of single trait by "ADI" model](#generate-phenotype-of-single-trait-by-"ADI"-model)  
+    - [Generate phenotype of multiple traits](#generate-phenotype-of-multiple-traits)  
+    - [Different QTN effect distributions](#different-QTN-effect-distributions)  
+    - [Different selection criteria](#different-selection-criteria)  
+    - [Multiple groups QTN effects](#multiple-groups-QTN-effects)  
+- [Selection](#selection)
+    - [Gallery of selection input parameters](#gallery-of-selection-input-parameters)
+    - [Individual selection on single trait](#individual-selection-on-single-trait)
+    - [Family selection on single trait](#family-selection-on-single-trait)
+    - [Within family selection on single trait](#within-family-selection-on-single-trait)
+    - [Combined selection on single trait](#combined-selection-on-single-trait)
+    - [Tandem selection on multiple traits](#tandem-selection-on-multiple-traits)
+    - [Independent culling selection on multiple traits](#independent-culling-selection-on-multiple-traits)
+    - [Index selection on multiple traits](#index-selection-on-multiple-traits)
+- [Reproduction](#reproduction) 
+    - [Gallery of reproduction input parameters](#gallery-of-reproduction-input-parameters)
+    - [Clone](#clone)
+    - [Double haploid](#double-haploid)
+    - [Self pollination](#self-pollination)
+    - [Random mating](#random-mating)
+    - [Random mating without self pollination](#random-mating-without-self-pollination)
+    - [User designed pedigree mating](#user-designed-pedigree-mating)
+    - [Two way cross](#two-way-cross)
+    - [Three way cross](#three-way-cross)
+    - [Four way cross](#four-way-cross)
+    - [Back cross](#back-cross)
 - [Output](#output)
     - [Population information](#population-information)
     - [Marker effects](#marker-effects)
@@ -456,10 +468,10 @@ basepop1 <- getpop(nind = nind, from = 1, ratio = 0.1)
 basepop2 <- getpop(nind = nind, from = nind + 1, ratio = 0.1)
 ```
 
-## Generate phenotype of single trait by A model
+## Generate phenotype of single trait by "A" model
 **[back to top](#contents)** 
 
-In "A" model, SIMER considers only Additive effect(a). Therefore, only the first elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1** , and **scale.tr1** are useful for "A" model. Add phenotypes of single trait to base population1 are displayed as follows:
+In "A" model, **SIMER** considers only Additive effect(a). Therefore, only the first elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1** , and **scale.tr1** are useful for "A" model. Add phenotypes of single trait to base population1 are displayed as follows: 
 
 ```r
 ####################
@@ -502,7 +514,7 @@ pop1.pheno <-
 basepop1 <- set.pheno(pop = basepop1, pop1.pheno, sel.crit = "pheno")
 ```
 
-## Generate phenotype of single trait by AD model
+## Generate phenotype of single trait by "AD" model
 **[back to top](#contents)**
 
 In "AD" model, **SIMER** considers both Additive effect(a) and Dominance effect(d). Therefore, only the first two elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1**,  and **scale.tr1** are useful for "AD" model. Add phenotypes of single trait to base population1 are displayed as follows:
@@ -592,7 +604,7 @@ pop.pheno <-
 basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 ```
 
-## Generate phenotype of single trait by ADI model
+## Generate phenotype of single trait by "ADI" model
 **[back to top](#contents)**
 
 In "ADI" model, **SIMER** considers not only Additive effect(a) and Dominance effect(d) but also interactive effects including Additive by Additive effect(aXa), Additive by Dominance effect(aXd), Dominance by Additive effect(dXa) and Dominance by Dominance effect(dXd). Therefore, all six elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1**, and **scale.tr1** are useful for "ADI" model. Meanwhile, QTN amount should be an even in "ADI" model. Add phenotypes of single trait to base population1 are displayed as follows:
