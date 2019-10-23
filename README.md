@@ -26,6 +26,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Set block information and recombination information](#set-block-information-and-recombination-information)
     - [Add chromosome crossovers and mutaions to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation) 
+    - [Gallery of phenotype simulation input parameters](#Gallery-of-phenotype-simulation-input-parameters)
     - [Generate base population information](#generate-base-population-information)
     - [Generate phenotype of single trait by A model](#generate-phenotype-of-single-trait-by-A-model)
     - [Generate phenotype of single trait by AD model](#generate-phenotype-of-single-trait-by-AD-model)
@@ -34,6 +35,15 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Different QTN effect distributions](#different-QTN-effect-distributions)
     - [Different selection criteria](#different-selection-criteria)
     - [Multiple groups QTN effects](#multiple-groups-QTN-effects)
+- [Selection](#Selection)   
+    - [Gallery of selection input parameters](#Gallery-of-selection-input-parameters)
+    - [Individual selection on single trait](#Individual-selection-on-single-trait)
+    - [Family selection on single trait](#Family-selection-on-single-trait)
+    - [Within family selection on single trait](#Within-family-selection-on-single-trait)
+    - [Combined selection on single trait](#Combined-selection-on-single-trait)
+    - [Tandem selection on multiple traits](#Tandem-selection-on-multiple-traits)
+    - [Independent culling selection on multiple traits](#Independent-culling-selection-on-multiple-traits)
+    - [Index selection on multiple traits](#Index-selection-on-multiple-traits)
 - [Output](#output)
     - [Population information](#population-information)
     - [Marker effects](#marker-effects)
@@ -1464,8 +1474,194 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 
 ---
 
+# Selection
+**[back to top](#contents)**  
+
+You can get ordered individuals indice according to phenotype in the populaton information. Fraction selected can be used to keep a certain amount of individuals. SIMER chooses automatically single trait selection or multiple traits selection according to number of columns of phenotype.
+
+# Gallery of selection input parameters
+**[back to top](#contents)**  
+
+`selects()`, main function of selection:  
+**pop**, population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye  
+**decr**, whether to sorting with descreasing  
+**sel.multi**, selection method of multi-trait with options: "tdm", "indcul" and "index"  
+**index.wt**, economic weights of selection index method  
+**index.tdm**, index represents which trait is being selected. NOT CONTROL BY USER  
+**goal.perc**, percentage of goal more than mean of scores of individuals  
+**pass.perc**, percentage of expected excellent individuals  
+**sel.sing**, selection method of single trait with options: "ind", "fam", "infam" and "comb"  
+**pop.total**, total population infarmation  
+**pop.pheno**, list of all phenotype information  
+**verbose**, whether to print detail  
+
+`simer()`, main function:  
+**ps**, fraction selected in selection  
+
+# Individual selection on single trait
+**[back to top](#contents)**  
+
+Individual selection is a method of selecting according to the phenotype of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with high heritability.
+
+```r
+# output index.tdm and ordered individuals indice
+# single trait selection
+# individual selection
+ind.ordered <-
+    selects(pop = basepop1, # population with single trait
+            decr = TRUE, # sort individuals by descreasing
+            sel.sing = "ind",
+            pop.total = basepop1,
+            pop.pheno = pop1.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+# Family selection on single trait
+**[back to top](#contents)** 
+
+Family selection is a method of selecting by family based on the average of the family. This selection method is used for traits with low heritability.
+
+```r
+# output index.tdm and ordered individuals indice
+# single trait selection
+# family selection
+ind.ordered <-
+    selects(pop = basepop1, # population with single trait
+            decr = TRUE, # sort individuals by descreasing
+            sel.sing = "fam",
+            pop.total = basepop1,
+            pop.pheno = pop1.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+# Within family selection on single trait
+**[back to top](#contents)** 
+
+Within-family selection is a method of selecting according to the deviation of individual phenotype and family mean value in each family. This selection method is used for traits with low heritability and small family.
+
+```r
+# output index.tdm and ordered individuals indice
+# single trait selection
+# within-family selection
+ind.ordered <-
+    selects(pop = basepop1, # population with single trait
+            decr = TRUE, # sort individuals by descreasing
+            sel.sing = "infam",
+            pop.total = basepop1,
+            pop.pheno = pop1.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+# Combined selection on single trait
+**[back to top](#contents)**  
+
+Combined selection is a method of selecting according to weighed combination of the deviation of individual phenotype and family mean value  and family mean value.
+
+```r
+# output index.tdm and ordered individuals indice
+# single trait selection
+# combined selection
+ind.ordered <-
+    selects(pop = basepop1, # population with single trait
+            decr = TRUE, # sort individuals by descreasing
+            sel.sing = "comb",
+            pop.total = basepop1,
+            pop.pheno = pop1.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+# Tandem selection on multiple traits
+**[back to top](#contents)**  
+
+Tandem selection is a method for sequentially selecting a plurality of target traits one by one. The index of selected trait is **index.tdm** and this parameter should not controlled by User.
+
+```r
+# output index.tdm and ordered individuals indice
+# multiple traits selection
+# tandem selection
+ind.ordered <-
+    selects(pop = basepop2, # population with multiple traits
+            decr = TRUE,
+            sel.multi = "tdm",
+            index.wt = c(0.5, 0.5),
+            index.tdm = 1,
+            goal.perc = 0.1,
+            pass.perc = 0.9,
+            pop.total = basepop2,
+            pop.pheno = pop2.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+# Independent culling selection on multiple traits
+**[back to top](#contents)**  
+
+After setting a minimum selection criterion for each target trait. Independent culling selection will eliminate this individual when the candidate's performance on any trait is lower than the corresponding criteria.
+
+```r
+# output index.tdm and ordered individuals indice
+# multiple traits selection
+# Independent culling selection
+ind.ordered <-
+    selects(pop = basepop2, # population with multiple traits
+            decr = TRUE,
+            sel.multi = "indcul",
+            index.wt = c(0.5, 0.5),
+            index.tdm = 1,
+            goal.perc = 0.1,
+            pass.perc = 0.9,
+            pop.total = basepop2,
+            pop.pheno = pop2.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+# Index selection on multiple traits
+**[back to top](#contents)**  
+
+Index selection is a comprehensive selection that will consider several traits based on their respective heritabilities, phenotypic variances, economic weights, and corresponding genetic correlations and phenotypes. Then calculate the index value of each body, and eliminate or select it according to its level. You can set the weight of Index selection by **index.wt**.
+
+```r
+# output index.tdm and ordered individuals indice
+# multiple traits selection
+# index selection
+ind.ordered <-
+    selects(pop = basepop2, # population with multiple traits
+            decr = TRUE,
+            sel.multi = "index",
+            index.wt = c(0.5, 0.5), # trait1 and trait2
+            index.tdm = 1,
+            goal.perc = 0.1,
+            pass.perc = 0.9,
+            pop.total = basepop2,
+            pop.pheno = pop2.pheno, 
+            verbose = verbose)
+index.tdm <- ind.ordered[1]
+ind.ordered <- ind.ordered[-1]
+ind.ordered
+```
+
+---
+
 # Output
 **[back to top](#contents)**  
+
 **SIMER** outputs data including population information, marker effects, trait information, genotype, genotypic id, genotypic map, and selection intensity. 
 
 ## Population information
