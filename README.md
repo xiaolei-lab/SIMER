@@ -28,9 +28,9 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 - [Phenotype Simulation](#phenotype-simulation)  
     - [Gallery of phenotype simulation input parameters](#gallery-of-phenotype-simulation-input-parameters)  
     - [Generate base population information](#generate-base-population-information)  
-    - [Generate phenotype of single trait by "A" model](#generate-phenotype-of-single-trait-by-"A"-model)  
-    - [Generate phenotype of single trait by "AD" model](#generate-phenotype-of-single-trait-by-"AD"-model)  
-    - [Generate phenotype of single trait by "ADI" model](#generate-phenotype-of-single-trait-by-"ADI"-model)  
+    - [Generate phenotype of single trait by A model](#generate-phenotype-of-single-trait-by-A-model)  
+    - [Generate phenotype of single trait by AD model](#generate-phenotype-of-single-trait-by-AD-model)  
+    - [Generate phenotype of single trait by ADI model](#generate-phenotype-of-single-trait-by-ADI-model)  
     - [Generate phenotype of multiple traits](#generate-phenotype-of-multiple-traits)  
     - [Different QTN effect distributions](#different-QTN-effect-distributions)  
     - [Different selection criteria](#different-selection-criteria)  
@@ -468,7 +468,7 @@ basepop1 <- getpop(nind = nind, from = 1, ratio = 0.1)
 basepop2 <- getpop(nind = nind, from = nind + 1, ratio = 0.1)
 ```
 
-## Generate phenotype of single trait by "A" model
+## Generate phenotype of single trait by A model
 **[back to top](#contents)** 
 
 In "A" model, **SIMER** considers only Additive effect(a). Therefore, only the first elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1** , and **scale.tr1** are useful for "A" model. Add phenotypes of single trait to base population1 are displayed as follows: 
@@ -514,7 +514,7 @@ pop1.pheno <-
 basepop1 <- set.pheno(pop = basepop1, pop1.pheno, sel.crit = "pheno")
 ```
 
-## Generate phenotype of single trait by "AD" model
+## Generate phenotype of single trait by AD model
 **[back to top](#contents)**
 
 In "AD" model, **SIMER** considers both Additive effect(a) and Dominance effect(d). Therefore, only the first two elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1**,  and **scale.tr1** are useful for "AD" model. Add phenotypes of single trait to base population1 are displayed as follows:
@@ -604,7 +604,7 @@ pop.pheno <-
 basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 ```
 
-## Generate phenotype of single trait by "ADI" model
+## Generate phenotype of single trait by ADI model
 **[back to top](#contents)**
 
 In "ADI" model, **SIMER** considers not only Additive effect(a) and Dominance effect(d) but also interactive effects including Additive by Additive effect(aXa), Additive by Dominance effect(aXd), Dominance by Additive effect(dXa) and Dominance by Dominance effect(dXd). Therefore, all six elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1**, and **scale.tr1** are useful for "ADI" model. Meanwhile, QTN amount should be an even in "ADI" model. Add phenotypes of single trait to base population1 are displayed as follows:
