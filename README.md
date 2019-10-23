@@ -1659,6 +1659,224 @@ ind.ordered
 
 ---
 
+# Reproduction
+**[back to top](#contents)**  
+
+Different kind of reproduction methods need different preparation. Reproduction methods in **mtd.reprod** can be devided into single-breeds and multi-breeds methods. In every reproduction methods, you can set litter size **num.prog** and sex ratio **ratio** in freedom.
+
+# Gallery of reproduction input parameters
+**[back to top](#contents)** 
+
+`simer()`, main function:  
+**mtd.reprod**, different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
+**userped**, user-specific pedigree  
+**num.prog**, litter size of dams  
+**ratio**, ratio of males in all individuals  
+**prog.tri**, litter size of the first single cross process in trible cross process  
+**prog.doub**, litter size of the first two single cross process in double cross process  
+**prog.back**, a vector with litter size in every generations  
+
+# Clone
+**[back to top](#contents)** 
+
+Asexual reproduction does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. Sex of offspring will be "0" in clone. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+
+```r
+# clone
+simer.list <-
+    simer(num.gen = 3,
+          verbose = verbose, 
+          out = out, 
+          input.map = input.map,
+          # rawgeno1 = rawgeno, # use your own genotype matrix
+          num.ind = 50,
+          mtd.reprod = "clone",
+          num.prog = 2,
+          ratio = 0.5)
+```
+
+# Double haploid
+**[back to top](#contents)**  
+
+Breeding workers often use another culture in vitro to obtain haploid plants, and then artificially induced to double the number of chromosomes and restore the number of chromosomes in normal plants. This method is named double-haploid reproduction. Sex of offspring will be "0" in double-haploid. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+
+```r
+# double-haploid
+simer.list <-
+    simer(num.gen = 4,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          # rawgeno1 = rawgeno, # use your own genotype matrix
+          num.ind = 50,
+          mtd.reprod = "dh",
+          num.prog = 2,
+          ratio = 0.5)
+```
+
+# Self pollination
+**[back to top](#contents)** 
+
+Self-pollination refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. Sex of offspring will be "0" in self-pollination. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.  
+
+```r
+# self-pollination
+simer.list <-
+    simer(num.gen = 5,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          # rawgeno1 = rawgeno, # use your own genotype matrix
+          num.ind = 50,
+          mtd.reprod = "selfpol",
+          num.prog = 2,
+          ratio = 0.5)
+```
+
+# Random mating
+**[back to top](#contents)**  
+
+In random mating, any female or male individual have the same probability to mate with any opposite sex in a sexually reproducing organism. Sex of offspring in random mating is up to sex of parents. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+
+```r
+# random-mating
+simer.list <-
+    simer(num.gen = 4,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          # rawgeno1 = rawgeno, # use your own genotype matrix
+          num.ind = 100,
+          mtd.reprod = "randmate",
+          num.prog = 2,
+          ratio = 0.5)
+```
+
+# Random mating without self pollination
+**[back to top](#contents)**  
+
+In random mating without self-pollination, a individual cannot mate to itself. Sex of offspring in random mating without self-pollination is up to sex of parents. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+
+```r
+# random-mating without self-pollination
+simer.list <-
+    simer(num.gen = 3,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          # rawgeno1 = rawgeno, # use your own genotype matrix
+          num.ind = 100,
+          mtd.reprod = "randexself",
+          num.prog = 2,
+          ratio = 0.5)
+```
+
+# User designed pedigree mating
+**[back to top](#contents)**  
+
+User-designed-pedigree mating needs a specific user designed pedigree to control mating process. Pedigree should at least start with generation 2. Please make sure that paternal id and maternal id can be found in the last generation. Note that the individuals in the pedigree data file do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+
+```r
+# user-designed-pedigree mating
+simer.list <-
+    simer(num.gen = 5,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          rawgeno1 = rawgeno, # use your own genotype matrix
+          # num.ind = 100,
+          mtd.reprod = "userped",
+          userped = userped) # input your own pedigree
+```
+
+# Two way cross
+**[back to top](#contents)**  
+
+Two-way cross method needs two genotype matrice of different two breeds. You can input your own genotype matrix by parameters **rawgeno1** and **rawgeno2**. If any of these two is NULL, **SIMER** will generates a random one.
+
+```r
+# two-way cross
+simer.list <-
+    simer(num.gen = 5,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          rawgeno1 = rawgeno, # use your own genotype matrix
+          rawgeno2 = NULL,
+          # num.ind = 100,
+          mtd.reprod = "singcro",
+          num.prog = 2,
+          ratio = 0.5)
+```
+
+# Three way cross
+**[back to top](#contents)** 
+
+Three-way cross method needs three genotype matrice of different three breeds. You can input your own genotype matrix by parameters **rawgeno1**, **rawgeno2**, and **rawgeno3**. If any of these three is NULL, **SIMER** will generates a random one. In triple-cross method, you can set litter size of the single-cross of population2 and population3 by **prog.tri**.
+
+```r
+# three way cross
+simer.list <-
+    simer(num.gen = 5,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          rawgeno1 = rawgeno, # use your own genotype matrix
+          rawgeno2 = NULL,
+          rawgeno3 = NULL,
+          # num.ind = 100,
+          mtd.reprod = "tricro",
+          num.prog = 2,
+          prog.tri = 2,
+          ratio = 0.5)
+```
+
+# Four way cross
+**[back to top](#contents)**  
+
+Four-way cross method needs four genotype matrice of different four breeds. You can input your own genotype matrix by parameters **rawgeno1**, **rawgeno2**, **rawgeno3**, and **rawgeno4**. If any of these four is NULL, **SIMER** will generates a random one. In four-way cross method, you can set litter size of the first two two-way cross by **prog.doub**.
+
+```r
+# four way cross
+simer.list <-
+    simer(num.gen = 5,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          rawgeno1 = rawgeno, # use your own genotype matrix
+          rawgeno2 = NULL,
+          rawgeno3 = NULL,
+          rawgeno4 = NULL,
+          # num.ind = 100,
+          mtd.reprod = "doubcro",
+          num.prog = 2,
+          prog.doub = 2,
+          ratio = 0.5)
+```
+
+# Back cross
+**[back to top](#contents)**  
+
+Back-cross method needs two different breeds. You can input your own genotype matrix by parameters **rawgeno1** and **rawgeno2**. If any of these two is NULL, **SIMER** will generates a random one. Back-cross is similar to two-way cross but with some differences: 1. Back-cross is multi-generation mating; 2. The first base population is fixed in every generations. In back-cross method, you can set litter size of two-way cross in every generation by a vector **prog.back**.
+
+```r
+# Back-cross
+simer.list <-
+    simer(num.gen = 5,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          rawgeno1 = rawgeno, # use your own genotype matrix
+          rawgeno2 = NULL,
+          # num.ind = 100,
+          mtd.reprod = "backcro",
+          num.prog = 2,
+          prog.back = rep(2, 5),
+          ratio = 0.5)
+```
+
+---
+
 # Output
 **[back to top](#contents)**  
 
