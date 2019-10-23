@@ -56,6 +56,16 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Three way cross](#three-way-cross)
     - [Four way cross](#four-way-cross)
     - [Back cross](#back-cross)
+- [Comparison on Breeding Plans](#comparison-on-breeding-plans) 
+    - [Gallery of comparison input parameters](#gallery-of-comparison-input-parameters)
+    - [Plans preparation](#plans-preparation)
+    - [Comparison on breeding plans](#comparison-on-breeding-plans)
+- [Global Options](#global-options)
+    - [Gallery of global options input parameters](#gallery-of-global-options-input-parameters)
+    - [Calculation of total population size](#calculation-of-total-population-size)
+    - [Replicated simulation](#replicated-simulation)
+    - [File output](#file-output)
+    - [Generation selective output](#generation-selective-output)
 - [Output](#output)
     - [Population information](#population-information)
     - [Marker effects](#marker-effects)
@@ -1388,7 +1398,7 @@ pop.pheno <-
               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
               sel.crit = "pheno",
               pop.total = basepop1,
-              sel.on = TRUE,
+              sel.on = TRUE, 
               inner.env = NULL,
               verbose = verbose)
 
@@ -1491,7 +1501,7 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 
 You can get ordered individuals indice according to phenotype in the populaton information. Fraction selected can be used to keep a certain amount of individuals. SIMER chooses automatically single trait selection or multiple traits selection according to number of columns of phenotype.
 
-# Gallery of selection input parameters
+## Gallery of selection input parameters
 **[back to top](#contents)**  
 
 `selects()`, main function of selection:  
@@ -1510,7 +1520,7 @@ You can get ordered individuals indice according to phenotype in the populaton i
 `simer()`, main function:  
 **ps**, fraction selected in selection  
 
-# Individual selection on single trait
+## Individual selection on single trait
 **[back to top](#contents)**  
 
 Individual selection is a method of selecting according to the phenotype of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with high heritability.
@@ -1531,7 +1541,7 @@ ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
 
-# Family selection on single trait
+## Family selection on single trait
 **[back to top](#contents)** 
 
 Family selection is a method of selecting by family based on the average of the family. This selection method is used for traits with low heritability.
@@ -1552,7 +1562,7 @@ ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
 
-# Within family selection on single trait
+## Within family selection on single trait
 **[back to top](#contents)** 
 
 Within-family selection is a method of selecting according to the deviation of individual phenotype and family mean value in each family. This selection method is used for traits with low heritability and small family.
@@ -1573,7 +1583,7 @@ ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
 
-# Combined selection on single trait
+## Combined selection on single trait
 **[back to top](#contents)**  
 
 Combined selection is a method of selecting according to weighed combination of the deviation of individual phenotype and family mean value  and family mean value.
@@ -1594,7 +1604,7 @@ ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
 
-# Tandem selection on multiple traits
+## Tandem selection on multiple traits
 **[back to top](#contents)**  
 
 Tandem selection is a method for sequentially selecting a plurality of target traits one by one. The index of selected trait is **index.tdm** and this parameter should not controlled by User.
@@ -1619,7 +1629,7 @@ ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
 
-# Independent culling selection on multiple traits
+## Independent culling selection on multiple traits
 **[back to top](#contents)**  
 
 After setting a minimum selection criterion for each target trait. Independent culling selection will eliminate this individual when the candidate's performance on any trait is lower than the corresponding criteria.
@@ -1644,7 +1654,7 @@ ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
 
-# Index selection on multiple traits
+## Index selection on multiple traits
 **[back to top](#contents)**  
 
 Index selection is a comprehensive selection that will consider several traits based on their respective heritabilities, phenotypic variances, economic weights, and corresponding genetic correlations and phenotypes. Then calculate the index value of each body, and eliminate or select it according to its level. You can set the weight of Index selection by **index.wt**.
@@ -1676,7 +1686,7 @@ ind.ordered
 
 Different kind of reproduction methods need different preparation. Reproduction methods in **mtd.reprod** can be devided into single-breeds and multi-breeds methods. In every reproduction methods, you can set litter size **num.prog** and sex ratio **ratio** in freedom.
 
-# Gallery of reproduction input parameters
+## Gallery of reproduction input parameters
 **[back to top](#contents)** 
 
 `simer()`, main function:  
@@ -1688,7 +1698,7 @@ Different kind of reproduction methods need different preparation. Reproduction 
 **prog.doub**, litter size of the first two single cross process in double cross process  
 **prog.back**, a vector with litter size in every generations  
 
-# Clone
+## Clone
 **[back to top](#contents)** 
 
 Asexual reproduction does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. Sex of offspring will be "0" in clone. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
@@ -1707,7 +1717,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Double haploid
+## Double haploid
 **[back to top](#contents)**  
 
 Breeding workers often use another culture in vitro to obtain haploid plants, and then artificially induced to double the number of chromosomes and restore the number of chromosomes in normal plants. This method is named double-haploid reproduction. Sex of offspring will be "0" in double-haploid. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
@@ -1726,7 +1736,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Self pollination
+## Self pollination
 **[back to top](#contents)** 
 
 Self-pollination refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. Sex of offspring will be "0" in self-pollination. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.  
@@ -1745,7 +1755,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Random mating
+## Random mating
 **[back to top](#contents)**  
 
 In random mating, any female or male individual have the same probability to mate with any opposite sex in a sexually reproducing organism. Sex of offspring in random mating is up to sex of parents. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
@@ -1764,7 +1774,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Random mating without self pollination
+## Random mating without self pollination
 **[back to top](#contents)**  
 
 In random mating without self-pollination, a individual cannot mate to itself. Sex of offspring in random mating without self-pollination is up to sex of parents. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
@@ -1783,7 +1793,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# User designed pedigree mating
+## User designed pedigree mating
 **[back to top](#contents)**  
 
 User-designed-pedigree mating needs a specific user designed pedigree to control mating process. Pedigree should at least start with generation 2. Please make sure that paternal id and maternal id can be found in the last generation. Note that the individuals in the pedigree data file do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
@@ -1801,7 +1811,7 @@ simer.list <-
           userped = userped) # input your own pedigree
 ```
 
-# Two way cross
+## Two way cross
 **[back to top](#contents)**  
 
 Two-way cross method needs two genotype matrice of different two breeds. You can input your own genotype matrix by parameters **rawgeno1** and **rawgeno2**. If any of these two is NULL, **SIMER** will generates a random one.
@@ -1821,7 +1831,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Three way cross
+## Three way cross
 **[back to top](#contents)** 
 
 Three-way cross method needs three genotype matrice of different three breeds. You can input your own genotype matrix by parameters **rawgeno1**, **rawgeno2**, and **rawgeno3**. If any of these three is NULL, **SIMER** will generates a random one. In triple-cross method, you can set litter size of the single-cross of population2 and population3 by **prog.tri**.
@@ -1843,7 +1853,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Four way cross
+## Four way cross
 **[back to top](#contents)**  
 
 Four-way cross method needs four genotype matrice of different four breeds. You can input your own genotype matrix by parameters **rawgeno1**, **rawgeno2**, **rawgeno3**, and **rawgeno4**. If any of these four is NULL, **SIMER** will generates a random one. In four-way cross method, you can set litter size of the first two two-way cross by **prog.doub**.
@@ -1866,7 +1876,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-# Back cross
+## Back cross
 **[back to top](#contents)**  
 
 Back-cross method needs two different breeds. You can input your own genotype matrix by parameters **rawgeno1** and **rawgeno2**. If any of these two is NULL, **SIMER** will generates a random one. Back-cross is similar to two-way cross but with some differences: 1. Back-cross is multi-generation mating; 2. The first base population is fixed in every generations. In back-cross method, you can set litter size of two-way cross in every generation by a vector **prog.back**.
@@ -1889,10 +1899,260 @@ simer.list <-
 
 ---
 
+# Comparison on Breeding Plans
+**[back to top](#contents)**  
+
+After a total reproduction process, further work can be done. For breeders, they want to predict their breeding plans. To save a lot of money and time, simulation will assist them to make comparison on different breeding plans. 
+
+## Gallery of comparison input parameters
+**[back to top](#contents)**
+
+`read.selgeno()`, function to make comparison on breeding plans:  
+**pop**, total population information  
+**selPath**, the path of breeding plans  
+**out**, path of output files  
+
+## Plans preparation
+**[back to top](#contents)**
+
+Breeding plans should be stored on different files respectively. Filenames must begin with breeding_plan, such like breeding_plan01.txt. For now, **SIMER** supports different breeding plans on generation, family_index, within_family_index, and sex. 
+
+```r
+> # get path of breeding plan
+> selPath <- system.file("extdata", "01breeding_plan", package = "simer")
+
+> # show filename format
+> dir(selPath)
+[1] "breeding_plan01.txt" "breeding_plan02.txt" "breeding_plan03.txt" "ReadMe.txt" 
+
+> # show file contents format
+> fn1 <- file.path(selPath, "breeding_plan01.txt")
+> bp1 <- read.delim(fn1, header = TRUE)
+
+> # ###NOTE###
+> # 1. any generation can be choosed within num.gen.
+> # 2. any sex(1 represents sir 2 represents dam) can be choosed.
+> # 3. any family index can be choosed in all family. 1:5 means 
+> #    that the first 5 family will be chosen.
+> # 4. any infamily index can be choosed in every family.
+> # 5. numbers should be separated by comma(",").
+> # 6. ":" can choose serial number, "1:3,7" represents "1 2 3 7".
+> # 7. "all" will choose all of options in a category.
+> bp1
+  generation family_index within_family_index sex
+1          1        1:3,7                 all   1
+2          2        1:3,7                 all   1
+3          3        1:3,7                 all   1
+```
+
+## Comparison on breeding plans
+**[back to top](#contents)**  
+
+After a total reproduction process, comparison on breeding plan can be done. 
+
+```r
+# random-mating
+simer.list <-
+    simer(num.gen = 10,
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          rawgeno1 = rawgeno, # use your own genotype matrix
+          # num.ind = 100,
+          mtd.reprod = "randmate",
+          num.prog = 2,
+          ratio = 0.5)
+
+pop <- simer.list$pop
+out.pop <- read.selgeno(pop = pop, selPath = selPath, out = out)
+
+# make comparison on breeding plans
+plan1 <- out.pop$plan1
+plan2 <- out.pop$plan2
+plan3 <- out.pop$plan3
+summary(plan1)
+summary(plan2)
+summary(plan3)
+```
+
+---
+
+# Global Options
+**[back to top](#contents)**  
+
+In this part, calculation of population size and different ourput methods will be introduced. 
+
+## Gallery of global options input parameters
+**[back to top](#contents)** 
+
+`simer()`, main function:  
+**num.gen**, number of generations in simulation  
+**replication**, replication index of simulation  
+**verbose**, whether to print detail  
+**out**, path of output files  
+**out.format**, format of output, "numeric" or "plink"  
+**seed.geno**, random seed of genotype matrix  
+**seed.map**, random seed of map file  
+**out.geno.gen**, indice of generation of output genotype  
+**out.pheno.gen**, indice of generation of output phenotype  
+
+## Calculation of total population size
+**[back to top](#contents)**  
+
+The following is the method of obtaining population size of every generation. Every elements in **cound.ind** are population size in this generation respectively. 
+
+```r
+# parameters that controls population size of every generations 
+nind <- 40
+num.gen <- 10
+ratio <- 0.5
+sel.on <- TRUE # whether selection exsits
+ps <- 0.8
+ps <- ifelse(sel.on, ps, 1)
+num.prog <- 2
+mtd.reprod <- "randmate"
+
+# populations of the first generation
+basepop <- getpop(nind = nind, from = 1, ratio = ratio)
+pop2 <- getpop(nind = nind, from = 41, ratio = ratio)
+pop3 <- getpop(nind = nind, from = 81, ratio = ratio)
+pop4 <- getpop(nind = nind, from = 121, ratio = ratio)
+
+# calculate number of individuals in every generation
+count.ind <- rep(nind, num.gen)
+if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol") {
+  if (num.gen > 1) {
+    for(i in 2:num.gen) {
+      count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
+    }
+  }
+  
+} else if (mtd.reprod == "randmate" || mtd.reprod == "randexself") {
+  if (num.gen > 1) {
+    for(i in 2:num.gen) {
+      count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
+    }
+  }
+
+} else if (mtd.reprod == "singcro") {
+  sing.ind <- round(nrow(pop2) * ps) * num.prog
+  count.ind <- c(nrow(basepop), nrow(pop2), sing.ind)
+
+} else if (mtd.reprod == "tricro") {
+  dam21.ind <- round(nrow(pop2) * ps) * prog.tri
+  tri.ind <- round(dam21.ind * (1-ratio) * ps) * num.prog
+  count.ind <- c(nrow(basepop), nrow(pop2), nrow(pop3), dam21.ind, tri.ind)
+
+} else if (mtd.reprod == "doubcro") {
+  sir11.ind <- round(nrow(pop2) * ps) * prog.doub
+  dam22.ind <- round(nrow(pop4) * ps) * prog.doub
+  doub.ind <- round(dam22.ind * (1-ratio) * ps) * num.prog
+  count.ind <- c(nrow(basepop), nrow(pop2), nrow(pop3), nrow(pop4), sir11.ind, dam22.ind, doub.ind)
+
+} else if (mtd.reprod == "backcro") {
+  count.ind[1] <- nrow(basepop) + nrow(pop2)
+  if (num.gen > 1) {
+    count.ind[2] <- round(nrow(pop2) * ps) * num.prog
+    for(i in 3:num.gen) {
+      count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
+    }
+  }
+}
+```
+
+## Replicated simulation
+**[back to top](#contents)**
+
+Replicated simulation can be realized by "for" in **R** and **replication**. Random seed of simulation is random in every replication and random seed of map is fixed. In every replication, you can set your own random seed of simulation and random seed of map by **seed.geno**| and **seed.map** respectively. 
+
+```r
+# random-mating 
+rep <- 2
+for (i in 1:rep) {
+  simer.list <-
+    simer(num.gen = 3,
+          replication = i, # set index of replication
+          verbose = verbose, 
+          out = out,
+          input.map = input.map,
+          # rawgeno1 = rawgeno, # use your own genotype matrix
+          num.ind = 100,
+          mtd.reprod = "randmate",
+          num.prog = 2,
+          ratio = 0.5)
+}
+```
+
+## File output
+**[back to top](#contents)** 
+
+**SIMER** won't output files by default. A series of files output when specify a exsited out path by **out**. File output format can be "numeric" or "plink" by **out.format**. 
+
+```r
+# set a output path
+out = getwd()
+
+# "numeric" format
+simer.list <-
+  simer(num.gen = 3,
+        verbose = verbose, 
+        out = out,
+        out.format = "numeric", 
+        input.map = input.map,
+        # rawgeno1 = rawgeno, # use your own genotype matrix
+        num.ind = 100,
+        mtd.reprod = "randmate",
+        num.prog = 2,
+        ratio = 0.5)
+
+# "plink" format
+simer.list <-
+  simer(num.gen = 3,
+        verbose = verbose, 
+        out = out,
+        out.format = "plink", 
+        input.map = input.map,
+        # rawgeno1 = rawgeno, # use your own genotype matrix
+        num.ind = 100,
+        mtd.reprod = "randmate",
+        num.prog = 2,
+        ratio = 0.5)
+```
+
+## Generation selective output
+**[back to top](#contents)**  
+
+Output of genotype and phenotype can be generation-selective by **out.geno.gen** and **out.pheno.gen**. For example, **out.geno.gen = 3:5** and **out.pheno.gen = 1:5** represent outputting genotype from generation3 to generation5 and outputting phenotype from generation1 to generation5.
+
+```r
+# set output generations of genotype and phenotype
+out.geno.gen <- 3:5
+out.pheno.gen <- 1:5
+simer.list <-
+  simer(num.gen = 5,
+        verbose = verbose, 
+        out = out,
+        out.geno.gen = out.geno.gen, 
+        out.pheno.gen = out.pheno.gen, 
+        input.map = input.map,
+        # rawgeno1 = rawgeno, # use your own genotype matrix
+        num.ind = 100,
+        mtd.reprod = "randmate",
+        num.prog = 2,
+        ratio = 0.5)
+```
+
+---
+
 # Output
 **[back to top](#contents)**  
 
-**SIMER** outputs data including population information, marker effects, trait information, genotype, genotypic id, genotypic map, and selection intensity. 
+**SIMER** outputs data including population information, marker effects, trait information, genotype, genotypic id, genotypic map, and selection intensity. Note that several result files will be generated. Firstly, a result path will be generated. The number at the beginning represents the total individuals number and the ending character is the format of output ("num_Simer_Data_format"). Secondly, you will see a path named "replication1". It is the first replication of simulation and you can get numerous different replications by setting parameter **replication**. In "replication1", results are following:  
+`geno_id.txt` contains indice of genotyped individuals  
+`genotype.geno.bin` and `genotype.geno.desc` contain genotype matrix of all individuals  
+`map.txt` contains input map with block information and recombination information  
+`pedigree.txt` contains pedigree of individuals  
+`phenotype.txt` contains phenotype of individuals  
 
 ## Population information
 **[back to top](#contents)**  
