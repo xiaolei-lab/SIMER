@@ -61,9 +61,9 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Breeding plan preparation](#breeding-plan-preparation)
     - [Breeding plan comparison](#breeding-plan-comparison)
 - [Global Options](#global-options)
-    - [Gallery of global options input parameters](#gallery-of-global-options-input-parameters)
-    - [Calculation of total population size](#calculation-of-total-population-size)
-    - [Replicated simulation](#replicated-simulation)
+    - [Gallery of global input parameters](#gallery-of-global-input-parameters)
+    - [Counts of total population size](#count-of-total-population-size)
+    - [Simulation of multiple populations](#simulation-of-multiple-populations)
     - [File output](#file-output)
     - [Generation selective output](#generation-selective-output)
 - [Output](#output)
@@ -1982,7 +1982,7 @@ summary(plan3)
 
 In this part, calculation of population size and different ourput methods will be introduced. 
 
-## Gallery of global options input parameters
+## Gallery of global input parameters
 **[back to top](#contents)** 
 
 `simer()`, main function:  
@@ -1996,7 +1996,7 @@ In this part, calculation of population size and different ourput methods will b
 **out.geno.gen**, indice of generation of output genotype  
 **out.pheno.gen**, indice of generation of output phenotype  
 
-## Calculation of total population size
+## Counts of total population size
 **[back to top](#contents)**  
 
 The following is the method of obtaining population size of every generation. Every elements in **cound.ind** are population size in this generation respectively. 
@@ -2060,10 +2060,10 @@ if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol") {
 }
 ```
 
-## Replicated simulation
+## Simulation of multiple populations
 **[back to top](#contents)**
 
-Replicated simulation can be realized by "for" in **R** and **replication**. Random seed of simulation is random in every replication and random seed of map is fixed. In every replication, you can set your own random seed of simulation and random seed of map by **seed.geno**| and **seed.map** respectively. 
+Simulation of multiple populations can be realized by "for" in **R** and **replication**. Random seed of simulation is random in every replication and random seed of map is fixed. In every replication, you can set your own random seed of simulation and random seed of map by **seed.geno**| and **seed.map** respectively. 
 
 ```r
 # random-mating 
