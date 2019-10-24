@@ -58,8 +58,8 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Back cross](#back-cross)
 - [Comparison on Breeding Plans](#comparison-on-breeding-plans) 
     - [Gallery of comparison input parameters](#gallery-of-comparison-input-parameters)
-    - [Plans preparation](#plans-preparation)
-    - [Comparison on breeding plans](#comparison-on-breeding-plans)
+    - [Breeding plans preparation](#breeding-plans-preparation)
+    - [Breeding plans comparison](#breeding-plans-comparison)
 - [Global Options](#global-options)
     - [Gallery of global options input parameters](#gallery-of-global-options-input-parameters)
     - [Calculation of total population size](#calculation-of-total-population-size)
@@ -1912,7 +1912,7 @@ After a total reproduction process, further work can be done. For breeders, they
 **selPath**, the path of breeding plans  
 **out**, path of output files  
 
-## Plans preparation
+## Breeding plans preparation
 **[back to top](#contents)**
 
 Breeding plans should be stored on different files respectively. Filenames must begin with breeding_plan, such like breeding_plan01.txt. For now, **SIMER** supports different breeding plans on generation, family_index, within_family_index, and sex. 
@@ -1945,10 +1945,10 @@ Breeding plans should be stored on different files respectively. Filenames must 
 3          3        1:3,7                 all   1
 ```
 
-## Comparison on breeding plans
+## Breeding plans comparison
 **[back to top](#contents)**  
 
-After a total reproduction process, comparison on breeding plan can be done. 
+After a total reproduction process, breeding plans comparison can be done. 
 
 ```r
 # random-mating
