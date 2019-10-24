@@ -62,7 +62,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Breeding plan comparison](#breeding-plan-comparison)
 - [Global Options](#global-options)
     - [Gallery of global input parameters](#gallery-of-global-input-parameters)
-    - [Counts of total population size](#count-of-total-population-size)
+    - [Counts of total population size](#counts-of-total-population-size)
     - [Simulation of multiple populations](#simulation-of-multiple-populations)
     - [File output](#file-output)
     - [Generation selective output](#generation-selective-output)
