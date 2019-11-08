@@ -4,34 +4,35 @@
 \alias{phenotype}
 \title{Generate phenotype and other values according to selection criterion}
 \usage{
-phenotype(effs, pop, pop.geno, pos.map, h2.tr1 = c(0.3, 0.1, 0.05, 0.05,
-  0.05, 0.01), gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-  env.cov = matrix(c(10, 5, 5, 100), 2, 2), sel.crit = "pheno",
-  pop.total = NULL, sel.on = TRUE, inner.env = NULL,
-  verbose = TRUE)
+phenotype(effs, FR, pop, pop.geno, pos.map, h2.tr1 = c(0.3, 0.1, 0.05,
+  0.05, 0.05, 0.01), gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+  h2.trn = c(0.3, 0.5), sel.crit = "pheno", pop.total = NULL,
+  sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 }
 \arguments{
-\item{effs}{a list with number of overlap markers, selected markers, effects of markers}
+\item{effs}{a list of selected markers and their effects}
 
-\item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
+\item{FR}{list of fixed effects, random effects, and their combination}
 
-\item{pop.geno}{genotype matrix of population, a individual has two columns}
+\item{pop}{population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex}
 
-\item{pos.map}{marker information of population}
+\item{pop.geno}{genotype matrix of the population, an individual has two columns}
 
-\item{h2.tr1}{heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd}
+\item{pos.map}{marker information of the population}
 
-\item{gnt.cov}{genetic covaiance matrix among all traits}
+\item{h2.tr1}{heritability vector of the trait1, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{env.cov}{environment covaiance matrix among all traits}
+\item{gnt.cov}{genetic covariance matrix among all traits}
 
-\item{sel.crit}{selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"}
+\item{h2.trn}{heritability among all traits}
+
+\item{sel.crit}{selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"}
 
 \item{pop.total}{total population infarmation}
 
 \item{sel.on}{whether to add selection}
 
-\item{inner.env}{environment of main function of simer}
+\item{inner.env}{R environment of parameter "effs"}
 
 \item{verbose}{whether to print detail}
 }
@@ -40,71 +41,115 @@ phenotype of population
 }
 \description{
 Build date: Jul 14, 2019
-Last update: Oct 13, 2019
+Last update: Nov 5, 2019
 }
 \examples{
-basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
+b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
+pop$a <- a # load your fixed  effects
+pop$b <- b # load your random effects
+pop.env <- environment()
+
+# combination of fixed effects
+cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
+                tr2 = c("mu", "diet", "season")) # trait 2
+            
+fix <- list( 
+         mu = list(level = "mu", eff = 2),  				      
+        gen = FALSE,         
+        sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
+       diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
+     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
+          a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
+
+# combination and ralation of random effects
+tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
+            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
+tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
+cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
+      
+rand <- list(
+        sir = list(mean = 0, sd = 1),		      
+        dam = list(mean = 0, sd = 1),	       
+         PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
+     litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
+          b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
+  
+FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
+
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = pop.geno,
              cal.model = "A",
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = FALSE,
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0, 
              verbose = TRUE)
-str(basepop)
+
 pop.pheno <-
     phenotype(effs = effs,
-              pop = basepop,
-              pop.geno = basepop.geno,
+              FR = FR, 
+              pop = pop,
+              pop.geno = pop.geno,
               pos.map = NULL,
               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),  
               sel.crit = "pheno", 
-              pop.total = basepop, 
+              pop.total = pop, 
               sel.on = TRUE, 
-              inner.env = NULL, 
+              inner.env = pop.env, 
               verbose = TRUE)
+str(pop)              
+pop <- pop.pheno$pop
+str(pop)
+pop.pheno$pop <- NULL           
 str(pop.pheno)
 
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = pop.geno,
              cal.model = "A",
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = TRUE,
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0, 
              verbose = TRUE)
-str(basepop)
+
 pop.pheno <-
     phenotype(effs = effs,
-              pop = basepop,
-              pop.geno = basepop.geno,
+              FR = FR, 
+              pop = pop,
+              pop.geno = pop.geno,
               pos.map = NULL,
               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5), 
               sel.crit = "pheno", 
-              pop.total = basepop, 
-              sel.on = TRUE, 
-              inner.env = NULL, 
+              pop.total = pop, 
+              sel.on = FALSE, 
+              inner.env = pop.env, 
               verbose = TRUE)
+str(pop)              
+pop <- pop.pheno$pop
+str(pop)
+pop.pheno$pop <- NULL  
 str(pop.pheno)
 }
 \author{

@@ -32,40 +32,46 @@ Build date: Nov 14, 2018
 Last update: Oct 13, 2019
 }
 \examples{
-basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = pop.geno,
              cal.model = "A",
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-             multrait = TRUE, # multiple traits
+             multrait = TRUE,
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0, 
              verbose = TRUE)
+             
 pop.pheno <-
     phenotype(effs = effs,
-              pop = basepop,
-              pop.geno = basepop.geno,
+              FR = NULL, 
+              pop = pop,
+              pop.geno = pop.geno,
               pos.map = NULL,
               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5), 
               sel.crit = "pheno", 
-              pop.total = basepop, 
-              sel.on = TRUE, 
+              pop.total = pop, 
+              sel.on = TRUE,
               inner.env = NULL, 
               verbose = TRUE)
-basepop <- set.pheno(basepop, pop.pheno, sel.crit = "pheno")
+pop <- pop.pheno$pop
+pop.pheno$pop <- NULL 
+        
 goal.perc <- 0.9
-goal <- (1 + goal.perc) * apply(basepop$pheno, 2, mean)
-ind.ordered <- cal.multi(pop = basepop, decr = TRUE, sel.multi = "index",
+goal <- (1 + goal.perc) * apply(pop$pheno, 2, mean)
+
+ind.ordered <- cal.multi(pop = pop, decr = TRUE, sel.multi = "index",
     index.wt = c(0.5, 0.5), index.tdm = 1, goal = goal, 
     pass.perc = 0.9, pop.pheno = pop.pheno)
 str(ind.ordered)

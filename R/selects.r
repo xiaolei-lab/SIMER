@@ -18,14 +18,14 @@
 #'
 #' @author Dong Yin
 #'
-#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye
-#' @param decr whether to sorting with descreasing
-#' @param sel.multi selection method of multi-trait with options: "tdm", "indcul" and "index"
+#' @param pop population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, sex, and phenotype
+#' @param decr whether to sorting with decreasing
+#' @param sel.multi selection methods of multiple traits with the options: "tdm", "indcul" and "index"
 #' @param index.wt economic weights of selection index method
 #' @param index.tdm index represents which trait is being selected. NOT CONTROL BY USER
-#' @param goal.perc percentage of goal more than mean of scores of individuals
+#' @param goal.perc percentage of goal more than the mean of scores of individuals
 #' @param pass.perc percentage of expected excellent individuals
-#' @param sel.sing selection method of single trait with options: "ind", "fam", "infam" and "comb"
+#' @param sel.sing selection methods of single trait with the options: "ind", "fam", "infam", and "comb"
 #' @param pop.total total population infarmation
 #' @param pop.pheno list of all phenotype information
 #' @param verbose whether to print detail
@@ -34,39 +34,44 @@
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+#' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' 
 #' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
+#'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
 #'              num.qtn.tr1 = c(2, 6, 10),
-#'              var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+#'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
 #'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = FALSE, # single trait
+#'              multrait = FALSE,
 #'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              eff.sd = diag(c(1, 0.5)),
+#'              sd.trn = diag(c(1, 0.5)),
 #'              qtn.spot = rep(0.1, 10),
 #'              maf = 0, 
 #'              verbose = TRUE)
+#' 
 #' pop.pheno <-
 #'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
+#'               FR = NULL, 
+#'               pop = pop,
+#'               pop.geno = pop.geno,
 #'               pos.map = NULL,
 #'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'               h2.trn = c(0.3, 0.5), 
 #'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
+#'               pop.total = pop, 
 #'               sel.on = TRUE, 
 #'               inner.env = NULL, 
 #'               verbose = TRUE)
-#' basepop <- set.pheno(basepop, pop.pheno, sel.crit = "pheno")
+#' pop <- pop.pheno$pop
+#' pop.pheno$pop <- NULL 
+#' 
 #' ind.ordered1 <-
-#'     selects(pop = basepop,
+#'     selects(pop = pop,
 #'             decr = TRUE,
 #'             sel.multi = "index",
 #'             index.wt = c(0.5, 0.5),
@@ -74,41 +79,45 @@
 #'             goal.perc = 0.1,
 #'             pass.perc = 0.9,
 #'             sel.sing = "comb",
-#'             pop.total = basepop,
+#'             pop.total = pop,
 #'             pop.pheno = pop.pheno, 
 #'             verbose = TRUE)
 #'
 #' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
+#'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
 #'              num.qtn.tr1 = c(2, 6, 10),
-#'              var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+#'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
 #'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = TRUE, # multiple traits
+#'              multrait = TRUE,
 #'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              eff.sd = diag(c(1, 0.5)),
+#'              sd.trn = diag(c(1, 0.5)),
 #'              qtn.spot = rep(0.1, 10),
 #'              maf = 0, 
 #'              verbose = TRUE)
+#'              
 #' pop.pheno <-
 #'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
+#'               FR = NULL, 
+#'               pop = pop,
+#'               pop.geno = pop.geno,
 #'               pos.map = NULL,
 #'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'               h2.trn = c(0.3, 0.5), 
 #'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
+#'               pop.total = pop, 
 #'               sel.on = TRUE, 
 #'               inner.env = NULL, 
 #'               verbose = TRUE)
-#' basepop <- set.pheno(basepop, pop.pheno, sel.crit = "pheno")
+#' pop <- pop.pheno$pop
+#' pop.pheno$pop <- NULL
+#' 
 #' ind.ordered2 <-
-#'     selects(pop = basepop,
+#'     selects(pop = pop,
 #'             decr = TRUE,
 #'             sel.multi = "index",
 #'             index.wt = c(0.5, 0.5),
@@ -116,7 +125,7 @@
 #'             goal.perc = 0.1,
 #'             pass.perc = 0.9,
 #'             sel.sing = "comb",
-#'             pop.total = basepop,
+#'             pop.total = pop,
 #'             pop.pheno = pop.pheno, 
 #'             verbose = TRUE)
 #' str(ind.ordered1)
@@ -182,40 +191,44 @@ selects <-
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+#' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' 
 #' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
+#'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
 #'              num.qtn.tr1 = c(2, 6, 10),
-#'              var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+#'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
 #'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = FALSE, # single trait
+#'              multrait = FALSE,
 #'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              eff.sd = diag(c(1, 0.5)),
+#'              sd.trn = diag(c(1, 0.5)),
 #'              qtn.spot = rep(0.1, 10),
 #'              maf = 0, 
 #'              verbose = TRUE)
+#' 
 #' pop.pheno <-
 #'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
+#'               FR = NULL, 
+#'               pop = pop,
+#'               pop.geno = pop.geno,
 #'               pos.map = NULL,
 #'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'               h2.trn = c(0.3, 0.5), 
 #'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
+#'               pop.total = pop, 
 #'               sel.on = TRUE, 
 #'               inner.env = NULL, 
 #'               verbose = TRUE)
-#' basepop <- set.pheno(basepop, pop.pheno, sel.crit = "pheno")
-#' cor.r <- cal.r(basepop, basepop)
-#' ind.ordered <- cal.sing(pop = basepop, decr = TRUE, sel.sing = "comb",
-#'                         cor.r = cor.r)
+#' pop <- pop.pheno$pop
+#' pop.pheno$pop <- NULL
+#' 
+#' cor.r <- cal.r(pop, pop)
+#' ind.ordered <- cal.sing(pop = pop, decr = TRUE, sel.sing = "comb", cor.r = cor.r)
 #' str(ind.ordered)
 cal.sing <- function(pop, decr, sel.sing, cor.r) {
   num.ind <- length(pop$index)
@@ -239,18 +252,18 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
       num.ind <- length(pop$index)
       num.infam <- tapply(rep(1, num.ind), pop$fam, sum)
       pf <- rep(tapply(pop$pheno, pop$fam, mean), num.infam)
-
-      pop.tab <- summary(aov(pop$pheno~as.factor(pop$fam)))
-      MB <- pop.tab[[1]][1, 3]
-      MW <- pop.tab[[1]][2, 3]
       cor.n <- num.infam[[1]]
-      if (is.na(MW)) {
-        MW <- 0
+
+      if (length(num.infam) == 1) {
         cor.t <- 2
       } else {
+        pop.tab <- summary(aov(pop$pheno~as.factor(pop$fam)))
+        MB <- pop.tab[[1]][1, 3]
+        MW <- pop.tab[[1]][2, 3]
+        if (is.na(MW)) MW <- 0
         cor.t <- (MB - MW) / (MB + (cor.n - 1) * MW)
       }
-
+      
       I <- pop$pheno + ((cor.r-cor.t)*cor.n / (1-cor.r) / (1+(cor.n-1)*cor.t)) * pf
       ind.score <- cbind(pop$index, I)
       ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing=decr), ]
@@ -301,40 +314,46 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+#' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' 
 #' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
+#'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
 #'              num.qtn.tr1 = c(2, 6, 10),
-#'              var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+#'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
 #'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = TRUE, # multiple traits
+#'              multrait = TRUE,
 #'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              eff.sd = diag(c(1, 0.5)),
+#'              sd.trn = diag(c(1, 0.5)),
 #'              qtn.spot = rep(0.1, 10),
 #'              maf = 0, 
 #'              verbose = TRUE)
+#'              
 #' pop.pheno <-
 #'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
+#'               FR = NULL, 
+#'               pop = pop,
+#'               pop.geno = pop.geno,
 #'               pos.map = NULL,
 #'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'               h2.trn = c(0.3, 0.5), 
 #'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
-#'               sel.on = TRUE, 
+#'               pop.total = pop, 
+#'               sel.on = TRUE,
 #'               inner.env = NULL, 
 #'               verbose = TRUE)
-#' basepop <- set.pheno(basepop, pop.pheno, sel.crit = "pheno")
+#' pop <- pop.pheno$pop
+#' pop.pheno$pop <- NULL 
+#'         
 #' goal.perc <- 0.9
-#' goal <- (1 + goal.perc) * apply(basepop$pheno, 2, mean)
-#' ind.ordered <- cal.multi(pop = basepop, decr = TRUE, sel.multi = "index",
+#' goal <- (1 + goal.perc) * apply(pop$pheno, 2, mean)
+#' 
+#' ind.ordered <- cal.multi(pop = pop, decr = TRUE, sel.multi = "index",
 #'     index.wt = c(0.5, 0.5), index.tdm = 1, goal = goal, 
 #'     pass.perc = 0.9, pop.pheno = pop.pheno)
 #' str(ind.ordered)
@@ -471,7 +490,7 @@ cal.r <- function(pop, pop.curr) {
 #'
 #' @param pop total population information
 #' @param selPath the path of breeding_plan
-#' @param out path of output files
+#' @param out the path of output files
 #'
 #' @return None
 #' @export
@@ -504,19 +523,20 @@ cal.r <- function(pop, pop.curr) {
 #'            range.hot = 4:6,
 #'            range.cold = 1:5,
 #'            rate.mut = 1e-8,
-#'            cal.model = "A",
-#'            h2.tr1 = 0.3,
+#'            cal.model = "AD",
+#'            FR = NULL, 
+#'            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'            num.qtn.tr1 = 18,
-#'            var.tr1 = 2,
-#'            dist.qtn.tr1 = "normal",
-#'            eff.unit.tr1 = 0.5,
-#'            shape.tr1 = 1,
-#'            scale.tr1 = 1,
+#'            sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+#'            dist.qtn.tr1 = rep("normal", 6),
+#'            eff.unit.tr1 = rep(0.5, 6),
+#'            shape.tr1 = rep(1, 6),
+#'            scale.tr1 = rep(1, 6),
 #'            multrait = FALSE,
 #'            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'            eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+#'            sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
 #'            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'            env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'            h2.trn = c(0.3, 0.5), 
 #'            qtn.spot = rep(0.1, 10),
 #'            maf = 0,
 #'            sel.crit = "pheno",
@@ -540,6 +560,7 @@ cal.r <- function(pop, pop.curr) {
 #' pop <- simer.list$pop                         
 #' selPath <- system.file("extdata", "01breeding_plan", package = "simer")
 #' out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
+#' str(out.pop)
 #' }
 read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
   if (!dir.exists(selPath)) stop("Please input a right selection path!")

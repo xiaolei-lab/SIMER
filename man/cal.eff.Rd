@@ -4,12 +4,12 @@
 \alias{cal.eff}
 \title{Calculate for genetic effects vector of selected markers}
 \usage{
-cal.eff(num.qtn, eff.var, dist.qtn, eff.unit, shape, scale)
+cal.eff(num.qtn, eff.sd, dist.qtn, eff.unit, shape, scale)
 }
 \arguments{
 \item{num.qtn}{number of QTN}
 
-\item{eff.var}{variances of different effects}
+\item{eff.sd}{standard deviation of different effects}
 
 \item{dist.qtn}{distribution of QTN's effects with options: "normal", "geometry" and "gamma"}
 
@@ -28,14 +28,14 @@ Last update: Jul 30, 2019
 }
 \examples{
 num.qtn <- c(2, 6, 10) # three qtn groups
-eff.var <- c(0.4, 0.2, 0.02) # three variance of qtn group
-eff <- cal.eff(num.qtn = num.qtn, eff.var = eff.var, dist.qtn = "normal",
+eff.sd <- c(0.4, 0.2, 0.02) # three variance of qtn group
+eff <- cal.eff(num.qtn = num.qtn, eff.sd = eff.sd, dist.qtn = "normal",
         eff.unit = 0.5, shape = 1, scale = 1)
 str(eff)
 
 num.qtn <- sum(num.qtn)
-eff.var <- sum(eff.var)
-eff <- cal.eff(num.qtn = num.qtn, eff.var = eff.var, dist.qtn = "normal",
+eff.sd <- sum(eff.sd)
+eff <- cal.eff(num.qtn = num.qtn, eff.sd = eff.sd, dist.qtn = "normal",
         eff.unit = 0.5, shape = 1, scale = 1)
 str(eff)
 }

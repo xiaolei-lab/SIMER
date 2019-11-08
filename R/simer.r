@@ -34,32 +34,33 @@
 #' @param rawgeno4 extrinsic genotype matrix4
 #' @param num.ind population size of base population
 #' @param prob weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1
-#' @param input.map map from outside
+#' @param input.map map that should be input
 #' @param len.block length of every blocks
-#' @param range.hot range of exchages in hot spot block
-#' @param range.cold range of exchages in cold spot block
+#' @param range.hot range of number of chromosome crossovers in a hot spot block
+#' @param range.cold range of number of chromosome crossovers in a cold spot block
 #' @param rate.mut mutation rate between 1e-8 and 1e-6
-#' @param cal.model phenotype model with "A", "AD", "ADI"
-#' @param h2.tr1 heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd
+#' @param cal.model phenotype model with the options: "A", "AD", "ADI"
+#' @param FR list of fixed effects, random effects, and their combination
+#' @param h2.tr1 heritability vector of the trait1, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param num.qtn.tr1 integer or integer vector, the number of QTN in the trait1
-#' @param var.tr1 variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
-#' @param dist.qtn.tr1 distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param eff.unit.tr1 unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param shape.tr1 shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param scale.tr1 scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param multrait whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not
-#' @param num.qtn.trn QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn
-#' @param eff.sd a matrix with the standard deviation of QTN effects
+#' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
+#' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param eff.unit.tr1 unit effect of geometric distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param shape.tr1 shape of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param scale.tr1 scale of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param multrait whether to apply multiple traits, TRUE represents applying, FALSE represents not
+#' @param num.qtn.trn QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits
+#' @param sd.trn a matrix with the standard deviation of the QTN effects
 #' @param gnt.cov genetic covaiance matrix among all traits
-#' @param env.cov environment covaiance matrix among all traits
-#' @param qtn.spot QTN probability in every blocks
-#' @param maf Minor Allele Frequency, markers selection range is from  maf to 0.5
-#' @param sel.crit selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"
+#' @param h2.trn heritability among all traits
+#' @param qtn.spot QTN probability in every block
+#' @param maf Minor Allele Frequency, marker selection range is from  maf to 0.5
+#' @param sel.crit selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"
 #' @param sel.on whether to add selection
-#' @param mtd.reprod different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"
-#' @param userped user-specific pedigree
+#' @param mtd.reprod different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself", and "userped"
+#' @param userped user-designed pedigree
 #' @param num.prog litter size of dams
-#' @param ratio ratio of males in all individuals
+#' @param ratio ratio of the males in all individuals
 #' @param prog.tri litter size of the first single cross process in trible cross process
 #' @param prog.doub litter size of the first two single cross process in double cross process
 #' @param prog.back a vector with litter size in every generations
@@ -86,7 +87,7 @@
 #'
 #' # run simer
 #' simer.list <-
-#'      simer(num.gen = 10,
+#'      simer(num.gen = 5,
 #'            replication = 1,
 #'            verbose = TRUE, 
 #'            mrk.dense = FALSE,
@@ -108,18 +109,19 @@
 #'            range.cold = 1:5,
 #'            rate.mut = 1e-8,
 #'            cal.model = "A",
-#'            h2.tr1 = 0.3,
+#'            FR = NULL, 
+#'            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'            num.qtn.tr1 = 18,
-#'            var.tr1 = 2,
-#'            dist.qtn.tr1 = "normal",
-#'            eff.unit.tr1 = 0.5,
-#'            shape.tr1 = 1,
-#'            scale.tr1 = 1,
+#'            sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+#'            dist.qtn.tr1 = rep("normal", 6),
+#'            eff.unit.tr1 = rep(0.5, 6),
+#'            shape.tr1 = rep(1, 6),
+#'            scale.tr1 = rep(1, 6),
 #'            multrait = FALSE,
 #'            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'            eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+#'            sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
 #'            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'            env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+#'            h2.trn = c(0.3, 0.5), 
 #'            qtn.spot = rep(0.1, 10),
 #'            maf = 0,
 #'            sel.crit = "pheno",
@@ -177,18 +179,19 @@ simer <-
              range.cold = 1:5,
              rate.mut = 1e-8,
              cal.model = "A",
-             h2.tr1 = 0.3,
+             FR = NULL, 
+             h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
              num.qtn.tr1 = 18,
-             var.tr1 = 2,
-             dist.qtn.tr1 = "normal",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1,
-             scale.tr1 = 1,
+             sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+             dist.qtn.tr1 = rep("normal", 6),
+             eff.unit.tr1 = rep(0.5, 6),
+             shape.tr1 = rep(1, 6),
+             scale.tr1 = rep(1, 6),
              multrait = FALSE,
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
              gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
-             env.cov = matrix(c(6, 5, 5, 10), 2, 2),
+             h2.trn = c(0.3, 0.5), 
              qtn.spot = rep(0.1, 10),
              maf = 0,
              sel.crit = "pheno",
@@ -220,7 +223,9 @@ simer <-
 # TODO: add summary() to population information
 # TODO: add inbreeding coeficient
 # TODO: updata index selection
-# TODO: add true block distribution   
+# TODO: add true block distribution  
+# TODO: genomic mating
+# TODO: inbreeding change in every generations
   
   simer.Version(width = 70, verbose = verbose)    
       
@@ -270,14 +275,14 @@ simer <-
     cal.effs(pop.geno = basepop.geno,
              cal.model = cal.model,
              num.qtn.tr1 = num.qtn.tr1,
-             var.tr1 = var.tr1,
+             sd.tr1 = sd.tr1,
              dist.qtn.tr1 = dist.qtn.tr1,
              eff.unit.tr1 = eff.unit.tr1,
              shape.tr1 = shape.tr1,
              scale.tr1 = scale.tr1,
              multrait = multrait,
              num.qtn.trn = num.qtn.trn,
-             eff.sd = eff.sd,
+             sd.trn = sd.trn,
              qtn.spot = qtn.spot,
              maf = maf, 
              verbose = verbose)
@@ -286,18 +291,20 @@ simer <-
   if (sel.on) {
     pop1.pheno <-
       phenotype(effs = effs,
+                FR = FR, 
                 pop = basepop,
                 pop.geno = basepop.geno,
                 pos.map = pos.map,
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
-                env.cov = env.cov,
+                h2.trn = h2.trn, 
                 sel.crit = sel.crit, 
                 pop.total = basepop, 
                 sel.on = sel.on, 
                 inner.env =  inner.env, 
                 verbose = verbose)
-    basepop <- set.pheno(basepop, pop1.pheno, sel.crit)
+    basepop <- pop1.pheno$pop
+    pop1.pheno$pop <- NULL
     trait[[1]] <- pop1.pheno
   }
   
@@ -338,18 +345,20 @@ simer <-
     if (sel.on) {
       pop2.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop2,
                   pop.geno = pop2.geno,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop2, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop2 <- set.pheno(pop2, pop2.pheno, sel.crit)
+      pop2 <- pop2.pheno$pop
+      pop2.pheno$pop <- NULL
       
       # reset trait
       if (mtd.reprod != "backcro") {
@@ -393,18 +402,20 @@ simer <-
     if (sel.on) {
       pop3.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop3,
                   pop.geno = pop3.geno,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop3, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop3 <- set.pheno(pop3, pop3.pheno, sel.crit)
+      pop3 <- pop3.pheno$pop
+      pop3.pheno$pop <- NULL
       trait$pop.sir1 <- pop3.pheno
     }
     
@@ -438,18 +449,20 @@ simer <-
     if (sel.on) {
       pop4.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop4,
                   pop.geno = pop4.geno,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop4, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop4 <- set.pheno(pop4, pop4.pheno, sel.crit)
+      pop4 <- pop4.pheno$pop
+      pop4.pheno$pop <- NULL
       trait$pop.dam2 <- pop4.pheno
     }
     
@@ -629,18 +642,20 @@ simer <-
         if (sel.on) {
           pop.pheno <-
             phenotype(effs = effs,
+                      FR = FR, 
                       pop = pop.curr,
                       pop.geno = pop.geno.curr,
                       pos.map = pos.map,
                       h2.tr1 = h2.tr1,
                       gnt.cov = gnt.cov,
-                      env.cov = env.cov,
+                      h2.trn = h2.trn, 
                       sel.crit = sel.crit, 
                       pop.total = pop.total.temp, 
                       sel.on = sel.on, 
                       inner.env =  inner.env, 
                       verbose = verbose)
-          pop.curr <- set.pheno(pop.curr, pop.pheno, sel.crit)
+          pop.curr <- pop.pheno$pop
+          pop.pheno$pop <- NULL
           trait[[i]]<- pop.pheno
         }
         
@@ -696,18 +711,20 @@ simer <-
     if (!sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.total,
                   pop.geno = geno.total.temp,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.total <- set.pheno(pop.total, pop.pheno, sel.crit)
+      pop.total <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait <- pop.pheno
     }
     
@@ -839,18 +856,20 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.singcro,
                   pop.geno = pop.geno.singcro,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total.temp, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.singcro <- set.pheno(pop.singcro, pop.pheno, sel.crit)
+      pop.singcro <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait$pop.singcro <- pop.pheno
     }
     
@@ -870,18 +889,20 @@ simer <-
       geno.total <- cbind(basepop.geno, pop2.geno, pop.geno.singcro)
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.total <- set.pheno(pop.total, pop.pheno, sel.crit)
+      pop.total <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait <- pop.pheno
       basepop$pheno <- pop.total$pheno[1:nind, ]
       pop2$pheno <- pop.total$pheno[(nind+1):(nind+nind2)]
@@ -1060,18 +1081,20 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.dam21,
                   pop.geno = pop.geno.dam21,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total.temp, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.dam21 <- set.pheno(pop.dam21, pop.pheno, sel.crit)
+      pop.dam21 <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait$pop.dam21 <- pop.pheno
       
       # output index.tdm and ordered individuals indice
@@ -1125,18 +1148,20 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.tricro,
                   pop.geno = pop.geno.tricro,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total.temp, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.tricro <- set.pheno(pop.tricro, pop.pheno, sel.crit)
+      pop.tricro <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait$pop.tricro <- pop.pheno
     }
     
@@ -1160,18 +1185,20 @@ simer <-
       geno.total <- cbind(basepop.geno, pop2.geno, pop3.geno, pop.geno.dam21[], pop.geno.tricro[])
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.total <- set.pheno(pop.total, pop.pheno, sel.crit)
+      pop.total <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait <- pop.pheno
       basepop$pheno <- pop.total$pheno[1:nind, ]
       pop2$pheno <- pop.total$pheno[(nind+1):(nind+nind2)]
@@ -1389,18 +1416,20 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.sir11,
                   pop.geno = pop.geno.sir11,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total.temp, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.sir11 <- set.pheno(pop.sir11, pop.pheno, sel.crit)
+      pop.sir11 <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait$pop.sir11 <- pop.pheno
       
       # output index.tdm and ordered individuals indice
@@ -1489,18 +1518,20 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.dam22,
                   pop.geno = pop.geno.dam22,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total.temp, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.dam22 <- set.pheno(pop.dam22, pop.pheno, sel.crit)
+      pop.dam22 <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait$pop.dam22 <- pop.pheno
     }
 
@@ -1553,18 +1584,20 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.doubcro,
                   pop.geno = pop.geno.doubcro,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total.temp, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.doubcro <- set.pheno(pop.doubcro, pop.pheno, sel.crit)
+      pop.doubcro <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait$pop.doubcro <- pop.pheno
     }
     
@@ -1592,18 +1625,20 @@ simer <-
       geno.total <- cbind(basepop.geno, pop2.geno, pop3.geno, pop4.geno, pop.geno.sir11[], pop.geno.dam22[], pop.geno.doubcro[])
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.total <- set.pheno(pop.total, pop.pheno, sel.crit)
+      pop.total <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait <- pop.pheno
       basepop$pheno <- pop.total$pheno[1:nind, ]
       pop2$pheno <- pop.total$pheno[(nind+1):(nind+nind2)]
@@ -1762,18 +1797,20 @@ simer <-
         if (sel.on) {
           pop.pheno <-
             phenotype(effs = effs,
+                      FR = FR, 
                       pop = pop.curr,
                       pop.geno = pop.geno.curr,
                       pos.map = pos.map,
                       h2.tr1 = h2.tr1,
                       gnt.cov = gnt.cov,
-                      env.cov = env.cov,
+                      h2.trn = h2.trn, 
                       sel.crit = sel.crit, 
                       pop.total = pop.total.temp, 
                       sel.on = sel.on, 
                       inner.env =  inner.env, 
                       verbose = verbose)
-          pop.curr <- set.pheno(pop.curr, pop.pheno, sel.crit)
+          pop.curr <- pop.pheno$pop
+          pop.pheno$pop <- NULL
           trait[[i]] <- pop.pheno
         }
         
@@ -1829,18 +1866,20 @@ simer <-
     if (!sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
+                  FR = FR, 
                   pop = pop.total,
                   pop.geno = geno.total.temp,
                   pos.map = pos.map,
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
-                  env.cov = env.cov,
+                  h2.trn = h2.trn, 
                   sel.crit = sel.crit, 
                   pop.total = pop.total, 
                   sel.on = sel.on, 
                   inner.env =  inner.env, 
                   verbose = verbose)
-      pop.total <- set.pheno(pop.total, pop.pheno, sel.crit)
+      pop.total <- pop.pheno$pop
+      pop.pheno$pop <- NULL
       trait <- pop.pheno
     }
     
@@ -1968,18 +2007,20 @@ simer <-
     isd <- c(2, 5, 6)
     pop.pheno <-
       phenotype(effs = effs,
+                FR = FR, 
                 pop = pop.total,
                 pop.geno = pop1.geno.copy,
                 pos.map = pos.map,
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
-                env.cov = env.cov,
+                h2.trn = h2.trn, 
                 sel.crit = sel.crit, 
                 pop.total = pop.total[, isd], 
                 sel.on = sel.on, 
                 inner.env =  inner.env, 
                 verbose = verbose)
-    pop.total <- set.pheno(pop.total, pop.pheno, sel.crit)
+    pop.total <- pop.pheno$pop
+    pop.pheno$pop <- NULL
     trait <- pop.pheno
     
     if (!is.null(out)) {

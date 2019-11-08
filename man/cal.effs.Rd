@@ -5,39 +5,39 @@
 \title{Calculate for genetic effects list of selected markers}
 \usage{
 cal.effs(pop.geno, cal.model = "A", num.qtn.tr1 = c(2, 6, 10),
-  var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+  sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
   dist.qtn.tr1 = rep("normal", 6), eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5,
   0.5, 0.5), shape.tr1 = c(1, 1, 1, 1, 1, 1), scale.tr1 = c(1, 1, 1, 1,
   1, 1), multrait = FALSE, num.qtn.trn = matrix(c(18, 10, 10, 20), 2,
-  2), eff.sd = matrix(c(1, 0, 0, 0.5), 2, 2), qtn.spot = rep(0.1, 10),
+  2), sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2), qtn.spot = rep(0.1, 10),
   maf = 0, verbose = TRUE)
 }
 \arguments{
 \item{pop.geno}{genotype of population, a individual has two columns}
 
-\item{cal.model}{phenotype model with "A", "AD", "ADI"}
+\item{cal.model}{phenotype models with the options: "A", "AD", "ADI"}
 
 \item{num.qtn.tr1}{integer or integer vector, the number of QTN in the trait1}
 
-\item{var.tr1}{variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
+\item{sd.tr1}{standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
 
-\item{dist.qtn.tr1}{distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{eff.unit.tr1}{unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{eff.unit.tr1}{unit effect of geometric distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{shape.tr1}{shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{shape.tr1}{shape of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{scale.tr1}{scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{scale.tr1}{scale of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{multrait}{whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not}
+\item{multrait}{whether to apply multiple traits, TRUE represents applying, FALSE represents not}
 
-\item{num.qtn.trn}{QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn}
+\item{num.qtn.trn}{QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits}
 
-\item{eff.sd}{a matrix with the standard deviation of QTN effects}
+\item{sd.trn}{a matrix with the standard deviation of the QTN effects}
 
-\item{qtn.spot}{QTN probability in every blocks}
+\item{qtn.spot}{QTN probability in every block}
 
-\item{maf}{Minor Allele Frequency, selection range is from  maf to 0.5}
+\item{maf}{Minor Allele Frequency, marker selection range is from  maf to 0.5}
 
 \item{verbose}{whether to print detail}
 }
@@ -54,14 +54,14 @@ effs <-
     cal.effs(pop.geno = basepop.geno,
              cal.model = "A",
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = FALSE,
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0, 
              verbose = TRUE)

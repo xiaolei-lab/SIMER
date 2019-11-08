@@ -11,19 +11,19 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
   rawgeno1 = NULL, rawgeno2 = NULL, rawgeno3 = NULL,
   rawgeno4 = NULL, num.ind = 100, prob = c(0.5, 0.5),
   input.map = NULL, len.block = 5e+07, range.hot = 4:6,
-  range.cold = 1:5, rate.mut = 1e-08, cal.model = "A",
-  h2.tr1 = 0.3, num.qtn.tr1 = 18, var.tr1 = 2,
-  dist.qtn.tr1 = "normal", eff.unit.tr1 = 0.5, shape.tr1 = 1,
-  scale.tr1 = 1, multrait = FALSE, num.qtn.trn = matrix(c(18, 10, 10,
-  20), 2, 2), eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
-  gnt.cov = matrix(c(14, 10, 10, 15), 2, 2), env.cov = matrix(c(6, 5,
-  5, 10), 2, 2), qtn.spot = rep(0.1, 10), maf = 0,
-  sel.crit = "pheno", sel.on = TRUE, mtd.reprod = "randmate",
-  userped = NULL, num.prog = 2, ratio = 0.5, prog.tri = 2,
-  prog.doub = 2, prog.back = rep(2, num.gen), ps = 0.8,
-  decr = TRUE, sel.multi = "index", index.wt = c(0.5, 0.5),
-  index.tdm = 1, goal.perc = 0.1, pass.perc = 0.9,
-  sel.sing = "comb")
+  range.cold = 1:5, rate.mut = 1e-08, cal.model = "A", FR = NULL,
+  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01), num.qtn.tr1 = 18,
+  sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1), dist.qtn.tr1 = rep("normal",
+  6), eff.unit.tr1 = rep(0.5, 6), shape.tr1 = rep(1, 6),
+  scale.tr1 = rep(1, 6), multrait = FALSE, num.qtn.trn = matrix(c(18,
+  10, 10, 20), 2, 2), sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
+  gnt.cov = matrix(c(14, 10, 10, 15), 2, 2), h2.trn = c(0.3, 0.5),
+  qtn.spot = rep(0.1, 10), maf = 0, sel.crit = "pheno",
+  sel.on = TRUE, mtd.reprod = "randmate", userped = NULL,
+  num.prog = 2, ratio = 0.5, prog.tri = 2, prog.doub = 2,
+  prog.back = rep(2, num.gen), ps = 0.8, decr = TRUE,
+  sel.multi = "index", index.wt = c(0.5, 0.5), index.tdm = 1,
+  goal.perc = 0.1, pass.perc = 0.9, sel.sing = "comb")
 }
 \arguments{
 \item{num.gen}{number of generations in simulation}
@@ -58,57 +58,59 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{prob}{weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1}
 
-\item{input.map}{map from outside}
+\item{input.map}{map that should be input}
 
 \item{len.block}{length of every blocks}
 
-\item{range.hot}{range of exchages in hot spot block}
+\item{range.hot}{range of number of chromosome crossovers in a hot spot block}
 
-\item{range.cold}{range of exchages in cold spot block}
+\item{range.cold}{range of number of chromosome crossovers in a cold spot block}
 
 \item{rate.mut}{mutation rate between 1e-8 and 1e-6}
 
-\item{cal.model}{phenotype model with "A", "AD", "ADI"}
+\item{cal.model}{phenotype model with the options: "A", "AD", "ADI"}
 
-\item{h2.tr1}{heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd}
+\item{FR}{list of fixed effects, random effects, and their combination}
+
+\item{h2.tr1}{heritability vector of the trait1, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
 \item{num.qtn.tr1}{integer or integer vector, the number of QTN in the trait1}
 
-\item{var.tr1}{variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
+\item{sd.tr1}{standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
 
-\item{dist.qtn.tr1}{distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{eff.unit.tr1}{unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{eff.unit.tr1}{unit effect of geometric distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{shape.tr1}{shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{shape.tr1}{shape of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{scale.tr1}{scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{scale.tr1}{scale of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{multrait}{whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not}
+\item{multrait}{whether to apply multiple traits, TRUE represents applying, FALSE represents not}
 
-\item{num.qtn.trn}{QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn}
+\item{num.qtn.trn}{QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits}
 
-\item{eff.sd}{a matrix with the standard deviation of QTN effects}
+\item{sd.trn}{a matrix with the standard deviation of the QTN effects}
 
 \item{gnt.cov}{genetic covaiance matrix among all traits}
 
-\item{env.cov}{environment covaiance matrix among all traits}
+\item{h2.trn}{heritability among all traits}
 
-\item{qtn.spot}{QTN probability in every blocks}
+\item{qtn.spot}{QTN probability in every block}
 
-\item{maf}{Minor Allele Frequency, markers selection range is from  maf to 0.5}
+\item{maf}{Minor Allele Frequency, marker selection range is from  maf to 0.5}
 
-\item{sel.crit}{selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"}
+\item{sel.crit}{selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"}
 
 \item{sel.on}{whether to add selection}
 
-\item{mtd.reprod}{different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"}
+\item{mtd.reprod}{different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself", and "userped"}
 
-\item{userped}{user-specific pedigree}
+\item{userped}{user-designed pedigree}
 
 \item{num.prog}{litter size of dams}
 
-\item{ratio}{ratio of males in all individuals}
+\item{ratio}{ratio of the males in all individuals}
 
 \item{prog.tri}{litter size of the first single cross process in trible cross process}
 
@@ -146,7 +148,7 @@ data(simdata)
 
 # run simer
 simer.list <-
-     simer(num.gen = 10,
+     simer(num.gen = 5,
            replication = 1,
            verbose = TRUE, 
            mrk.dense = FALSE,
@@ -168,18 +170,19 @@ simer.list <-
            range.cold = 1:5,
            rate.mut = 1e-8,
            cal.model = "A",
-           h2.tr1 = 0.3,
+           FR = NULL, 
+           h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
            num.qtn.tr1 = 18,
-           var.tr1 = 2,
-           dist.qtn.tr1 = "normal",
-           eff.unit.tr1 = 0.5,
-           shape.tr1 = 1,
-           scale.tr1 = 1,
+           sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+           dist.qtn.tr1 = rep("normal", 6),
+           eff.unit.tr1 = rep(0.5, 6),
+           shape.tr1 = rep(1, 6),
+           scale.tr1 = rep(1, 6),
            multrait = FALSE,
            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-           eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+           sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-           env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+           h2.trn = c(0.3, 0.5), 
            qtn.spot = rep(0.1, 10),
            maf = 0,
            sel.crit = "pheno",

@@ -23,9 +23,9 @@
 #' @param pop1.geno genotype matrix of population1
 #' @param pop2.geno genotype matrix of population2
 #' @param ind.stay selected individuals regarded as parents
-#' @param mtd.reprod different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "randmate" and "randexself"
+#' @param mtd.reprod different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "randmate", and "randexself"
 #' @param num.prog litter size of dams
-#' @param ratio ratio of males in all individuals
+#' @param ratio ratio of the males in all individuals
 #'
 #' @return population information and genotype matrix of current population
 #' @export
@@ -598,9 +598,9 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
 #'
 #' @author Dong Yin
 #'
-#' @param nind number of individuals in the population
+#' @param nind number of the individuals in a population
 #' @param from initial index of the population
-#' @param ratio ratio of males in all individuals
+#' @param ratio ratio of males in a population
 #'
 #' @return population information
 #' @export

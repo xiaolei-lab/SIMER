@@ -19,11 +19,11 @@ reproduces(pop1 = NULL, pop2 = NULL, pop1.geno = NULL,
 
 \item{ind.stay}{selected individuals regarded as parents}
 
-\item{mtd.reprod}{different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "randmate" and "randexself"}
+\item{mtd.reprod}{different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "randmate", and "randexself"}
 
 \item{num.prog}{litter size of dams}
 
-\item{ratio}{ratio of males in all individuals}
+\item{ratio}{ratio of the males in all individuals}
 }
 \value{
 population information and genotype matrix of current population

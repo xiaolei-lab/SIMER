@@ -7,7 +7,7 @@
 check.map(input.map = NULL, num.marker = NULL, len.block = 5e+07)
 }
 \arguments{
-\item{input.map}{map from outside}
+\item{input.map}{map that should be input}
 
 \item{num.marker}{number of markers of genotype matrix}
 

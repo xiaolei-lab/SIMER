@@ -7,11 +7,11 @@
 getpop(nind, from, ratio)
 }
 \arguments{
-\item{nind}{number of individuals in the population}
+\item{nind}{number of the individuals in a population}
 
 \item{from}{initial index of the population}
 
-\item{ratio}{ratio of males in all individuals}
+\item{ratio}{ratio of males in a population}
 }
 \value{
 population information

@@ -18,15 +18,15 @@
 #'
 #' @author Dong Yin
 #'
-#' @param rawgeno genotype matrix from outside
+#' @param rawgeno extrinsic genotype matrix
 #' @param geno genotype matrix need dealing with
 #' @param num.marker number of markers
 #' @param num.ind number of individuals
 #' @param prob weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1
-#' @param blk.rg represents the started and ended position blocks
+#' @param blk.rg it represents the starting position and the ending position of a block
 #' @param recom.spot whether to consider recombination in every blocks
-#' @param range.hot range of exchages in hot spot block
-#' @param range.cold range of exchages in cold spot block
+#' @param range.hot range of number of chromosome crossovers in a hot spot block
+#' @param range.cold range of number of chromosome crossovers in a cold spot block
 #' @param rate.mut mutation rate between 1e-8 and 1e-6
 #' @param verbose whether to print detail
 #'
@@ -177,7 +177,7 @@ genotype <-
 #'
 #' @author Dong Yin
 #'
-#' @param input.map map from outside
+#' @param input.map map that should be input
 #' @param num.marker number of markers of genotype matrix
 #' @param len.block length of every blocks
 #'

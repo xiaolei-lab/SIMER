@@ -11,7 +11,7 @@ read.selgeno(pop = NULL, selPath = NULL, out = NULL)
 
 \item{selPath}{the path of breeding_plan}
 
-\item{out}{path of output files}
+\item{out}{the path of output files}
 }
 \value{
 None
@@ -48,19 +48,20 @@ simer.list <-
            range.hot = 4:6,
            range.cold = 1:5,
            rate.mut = 1e-8,
-           cal.model = "A",
-           h2.tr1 = 0.3,
+           cal.model = "AD",
+           FR = NULL, 
+           h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
            num.qtn.tr1 = 18,
-           var.tr1 = 2,
-           dist.qtn.tr1 = "normal",
-           eff.unit.tr1 = 0.5,
-           shape.tr1 = 1,
-           scale.tr1 = 1,
+           sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+           dist.qtn.tr1 = rep("normal", 6),
+           eff.unit.tr1 = rep(0.5, 6),
+           shape.tr1 = rep(1, 6),
+           scale.tr1 = rep(1, 6),
            multrait = FALSE,
            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-           eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+           sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-           env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+           h2.trn = c(0.3, 0.5), 
            qtn.spot = rep(0.1, 10),
            maf = 0,
            sel.crit = "pheno",
@@ -84,6 +85,7 @@ simer.list <-
 pop <- simer.list$pop                         
 selPath <- system.file("extdata", "01breeding_plan", package = "simer")
 out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
+str(out.pop)
 }
 }
 \author{

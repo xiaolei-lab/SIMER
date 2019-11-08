@@ -10,7 +10,7 @@ genotype(rawgeno = NULL, geno = NULL, num.marker = NULL,
   rate.mut = 1e-08, verbose = TRUE)
 }
 \arguments{
-\item{rawgeno}{genotype matrix from outside}
+\item{rawgeno}{extrinsic genotype matrix}
 
 \item{geno}{genotype matrix need dealing with}
 
@@ -20,13 +20,13 @@ genotype(rawgeno = NULL, geno = NULL, num.marker = NULL,
 
 \item{prob}{weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1}
 
-\item{blk.rg}{represents the started and ended position blocks}
+\item{blk.rg}{it represents the starting position and the ending position of a block}
 
 \item{recom.spot}{whether to consider recombination in every blocks}
 
-\item{range.hot}{range of exchages in hot spot block}
+\item{range.hot}{range of number of chromosome crossovers in a hot spot block}
 
-\item{range.cold}{range of exchages in cold spot block}
+\item{range.cold}{range of number of chromosome crossovers in a cold spot block}
 
 \item{rate.mut}{mutation rate between 1e-8 and 1e-6}
 
