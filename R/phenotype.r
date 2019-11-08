@@ -694,6 +694,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
   # combine random effects
   rand <- lapply(1:len.tr, function(i) { 
     rn <- cmb.rand[[i]]$rn
+    if (is.null(rn)) return(res[NULL])
     ratio <- cmb.rand[[i]]$ratio
     if (length(rn) != length(ratio))
       stop("phenotype variance ratio of random effects should be corresponding to random effects names!")
