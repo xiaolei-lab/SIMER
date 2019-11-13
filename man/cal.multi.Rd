@@ -67,9 +67,11 @@ pop.pheno <-
               verbose = TRUE)
 pop <- pop.pheno$pop
 pop.pheno$pop <- NULL 
-        
+
+f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = TRUE)
+pheno <- subset(pop, select = f1)                  
 goal.perc <- 0.9
-goal <- (1 + goal.perc) * apply(pop$pheno, 2, mean)
+goal <- (1 + goal.perc) * apply(pheno, 2, mean)
 
 ind.ordered <- cal.multi(pop = pop, decr = TRUE, sel.multi = "index",
     index.wt = c(0.5, 0.5), index.tdm = 1, goal = goal, 

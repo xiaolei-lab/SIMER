@@ -75,10 +75,12 @@
 #'
 #' @return a list with population information, genotype matrix, map information, selection intensity
 #' @export
-#' @import MASS bigmemory rMVP
+#' @import bigmemory
 #' @importFrom stats aov cor dnorm qnorm rgamma rnorm runif var
 #' @importFrom utils write.table read.delim packageVersion
 #' @importFrom methods getPackageName
+#' @importFrom MASS ginv mvrnorm
+#' @importFrom rMVP MVP.Data.MVP2Bfile
 #'
 #' @examples
 #' \donttest{

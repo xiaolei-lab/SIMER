@@ -23,8 +23,8 @@ Description: Data simulator including genotype, phenotype, pedigree,
 License: Apache License 2.0
 URL: https://github.com/xiaolei-lab/SIMER
 BugReports: https://github.com/xiaolei-lab/SIMER/issues
-Imports: utils, stats, methods
-Depends: R (>= 3.5.0), MASS, bigmemory, rMVP
+Imports: utils, stats, methods, MASS, rMVP
+Depends: R (>= 3.5.0), bigmemory
 Suggests: knitr
 RoxygenNote: 6.1.1.9000
 Encoding: UTF-8

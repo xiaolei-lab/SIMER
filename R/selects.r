@@ -83,6 +83,7 @@
 #'             pop.pheno = pop.pheno, 
 #'             verbose = TRUE)
 #'
+#' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' effs <-
 #'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
@@ -144,8 +145,10 @@ selects <-
              verbose = TRUE) {
 
 # Start selection
-      
-	if (ncol(pop$pheno) == 1) {
+  
+  f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = TRUE)
+  pheno <- subset(pop, select = f1)         
+	if (ncol(pheno) == 1) {
 	  # calculate r by A matrix
 	  if (sel.sing == "comb") {
 	    cor.r <- cal.r(pop.total, pop)
@@ -157,17 +160,19 @@ selects <-
 	} else {
 	  # select desired individuals
 	  if (sel.multi == "indcul" || sel.multi == "tdm"){
-	    goal <- (1 + goal.perc) * apply(pop$pheno, 2, mean)
+	    goal <- (1 + goal.perc) * apply(pheno, 2, mean)
+	  } else {
+	    goal <- NULL
 	  }
 	  ind.ordered <- cal.multi(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc, pop.pheno)
 	}
 
 	if (sel.multi == "tdm") {
-    if (index.tdm == ncol(pop$pheno)) {
+    if (index.tdm == ncol(pheno)) {
       logging.log("all phenotype have selected by tandem method~\n", verbose = verbose)
       index.tdm <- 1
     }
-    if (pop$pheno[nrow(pop$pheno) * pass.perc, index.tdm] >= goal[index.tdm]) {
+    if (pheno[nrow(pheno) * pass.perc, index.tdm] >= goal[index.tdm]) {
       index.tdm <- index.tdm + 1
     }
   }
@@ -349,9 +354,11 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
 #'               verbose = TRUE)
 #' pop <- pop.pheno$pop
 #' pop.pheno$pop <- NULL 
-#'         
+#' 
+#' f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = TRUE)
+#' pheno <- subset(pop, select = f1)                  
 #' goal.perc <- 0.9
-#' goal <- (1 + goal.perc) * apply(pop$pheno, 2, mean)
+#' goal <- (1 + goal.perc) * apply(pheno, 2, mean)
 #' 
 #' ind.ordered <- cal.multi(pop = pop, decr = TRUE, sel.multi = "index",
 #'     index.wt = c(0.5, 0.5), index.tdm = 1, goal = goal, 
@@ -359,14 +366,16 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
 #' str(ind.ordered)
 cal.multi <- function(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc, pop.pheno) {
   num.ind <- length(pop$index)
+  f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = TRUE)
+  pheno <- subset(pop, select = f1)    
 
   if (sel.multi == "index") {
-    if(ncol(pop$pheno) != length(index.wt)) {
+    if(ncol(pheno) != length(index.wt)) {
       stop("Column of phenotype should equal length of weight of index")
     }
     
     # phenotype covariance matrix
-    P <- var(pop$pheno)
+    P <- var(pheno)
     iP <- try(solve(P), silent = TRUE)
     if (inherits(iP, "try-error")) {
       iP <- ginv(P)
@@ -378,19 +387,20 @@ cal.multi <- function(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc
     b <- iP %*% A %*% index.wt
     b <- as.vector(b)
     
-    ind.score <- cbind(pop$index, apply(pop$pheno * b, 1, sum))
+    ind.score <- cbind(pop$index, apply(pheno * b, 1, sum))
+    attr(ind.score, "names") <- NULL
     ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
     ind.ordered <- ind.score.ordered[, 1]
 
   } else if (sel.multi == "indcul") {
-  	# goal <- (1 + goal.perc) * apply(pop$pheno, 2, mean)
-  	flag.prior <- apply(pop$pheno, 1, function(v) {
+  	# goal <- (1 + goal.perc) * apply(pheno, 2, mean)
+  	flag.prior <- apply(pheno, 1, function(v) {
   	  return(all(v > goal))
   	})
   	ind.ordered <- c(pop$index[flag.prior], pop$index[!flag.prior])
 
   } else if (sel.multi == "tdm") {
-    ind.score <- cbind(pop$index, pop$pheno[, index.tdm])
+    ind.score <- cbind(pop$index, pheno[, index.tdm])
     ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
     ind.ordered <- ind.score.ordered[, 1]
 

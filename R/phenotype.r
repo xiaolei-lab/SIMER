@@ -37,9 +37,9 @@
 #'
 #' @examples
 #' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
-#' b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
+#' pop.geno <- genotype(num.marker = 49336, num.ind = 100, verbose = TRUE)
+#' a <- sample(c("a1", "a2", "a3"), nind, replace = TRUE)
+#' b <- sample(c("b1", "b2", "b3"), nind, replace = TRUE)
 #' pop$a <- a # load your fixed  effects
 #' pop$b <- b # load your random effects
 #' pop.env <- environment()
@@ -1203,6 +1203,6 @@ set.pheno <- function(pop, pop.pheno, sel.crit) {
   } else {
     stop("please select correct selection criterion!")
   }
-  pop$pheno <- do.call(cbind, pop.pheno$info.pheno[names(pop.pheno$info.pheno) %in% pn])
+  pop <- cbind(pop, subset(pop.pheno$info.pheno, select = pn))
   return(pop)
 }

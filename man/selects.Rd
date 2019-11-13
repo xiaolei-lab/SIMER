@@ -89,6 +89,7 @@ ind.ordered1 <-
             pop.pheno = pop.pheno, 
             verbose = TRUE)
 
+pop <- getpop(nind = 100, from = 1, ratio = 0.1)
 effs <-
     cal.effs(pop.geno = pop.geno,
              cal.model = "A",
