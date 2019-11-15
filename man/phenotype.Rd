@@ -45,7 +45,7 @@ Last update: Nov 5, 2019
 }
 \examples{
 pop <- getpop(nind = 100, from = 1, ratio = 0.1)
-pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+pop.geno <- genotype(num.marker = 49336, num.ind = 100, verbose = TRUE)
 a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
 b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
 pop$a <- a # load your fixed  effects
