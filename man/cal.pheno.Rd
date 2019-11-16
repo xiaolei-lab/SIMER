@@ -88,7 +88,7 @@ rand <- list(
           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
   
 FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-fr <- cal.FR(pop = pop, FR = FR, var.pheno = c(10, 10), pop.env = pop.env, verbose = TRUE)
+fr <- cal.FR(pop = pop, FR = FR, var.pheno = var.pheno, pop.env = pop.env, verbose = TRUE)
 
 pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2,
     num.ind = num.ind, var.pheno = var.pheno, verbose = TRUE)

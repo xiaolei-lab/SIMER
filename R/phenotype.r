@@ -728,31 +728,21 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     if (length(rn) != length(ratio))
       stop("phenotype variance ratio of random effects should be corresponding to random effects names!")
     rt <- res[rn]
-    # if (!any(var(rt) == 0)) {
-      if (is.null(cmb.rand[[i]]$cr)) {
-        cr <- diag(rep(1, length(rn)))
-      } else {
-        cr <- cmb.rand[[i]]$cr
-        if (nrow(cr) != length(rn) | ncol(cr) != length(rn))
-          stop("random correlation matrix should be corresponding to random effects names!")
-      }
-      if (length(ratio) == 1) ratio <- as.matrix(ratio)
-      sd <- diag(sqrt(ratio * var.pheno[i]))
-      Sigma <- sd %*% cr %*% sd
-      mu <- colMeans(rt)
-      # adjust random effects
-      rt <- build.cov(rt, mu = mu, Sigma = Sigma, tol = 1e-06)
-      # rt <- as.data.frame(rt)
-      # names(rt) <- rn
-    # } else {
-    #   rt.mean <- colMeans(rt)
-    #   var.r <- apply(rt, 2, var)
-    #   adj.ratio <- sqrt(ratio * var.pheno[i] / var.r)
-    #   adj.ratio[is.infinite(adj.ratio) | is.nan(adj.ratio)] <- 1
-    #   rt <- sweep(rt, 2, adj.ratio, "*")
-    #   rt <- sweep(rt, 2, colMeans(rt), "-")
-    #   rt <- sweep(rt, 2, rt.mean, "+")
-    # }
+
+    if (is.null(cmb.rand[[i]]$cr)) {
+      cr <- diag(rep(1, length(rn)))
+    } else {
+      cr <- cmb.rand[[i]]$cr
+      if (nrow(cr) != length(rn) | ncol(cr) != length(rn))
+        stop("random correlation matrix should be corresponding to random effects names!")
+    }
+    if (length(ratio) == 1) ratio <- as.matrix(ratio)
+    sd <- diag(sqrt(ratio * var.pheno[i]))
+    Sigma <- sd %*% cr %*% sd
+    mu <- colMeans(rt)
+    # adjust random effects
+    rt <- build.cov(rt, mu = mu, Sigma = Sigma, tol = 1e-06)
+     
     var.r <- apply(rt, 2, var)
     logging.log("The variance of", names(rt), "of", paste0(names(cmb.rand)[i], ":"), var.r, "\n", verbose = verbose)
     return(rt)
@@ -842,7 +832,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
 #'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
 #'   
 #' FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-#' fr <- cal.FR(pop = pop, FR = FR, var.pheno = c(10, 10), pop.env = pop.env, verbose = TRUE)
+#' fr <- cal.FR(pop = pop, FR = FR, var.pheno = var.pheno, pop.env = pop.env, verbose = TRUE)
 #' 
 #' pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2,
 #'     num.ind = num.ind, var.pheno = var.pheno, verbose = TRUE)
@@ -876,6 +866,8 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
   ind.env <- ind.env * sqrt(var.env / var(ind.env))
   info.eff$ind.env <- ind.env
   if (!is.data.frame(info.eff)) info.eff <- as.data.frame(info.eff) 
+ 
+  # get phenotype
   ind.pheno <- apply(info.eff, 1, sum)
   
   Vg <- var.gnt
