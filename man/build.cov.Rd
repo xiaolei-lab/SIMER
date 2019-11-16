@@ -4,10 +4,10 @@
 \alias{build.cov}
 \title{To bulid correlation of variables}
 \usage{
-build.cov(mat, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06)
+build.cov(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06)
 }
 \arguments{
-\item{mat}{matrix without correlation}
+\item{df}{data.frame without correlation}
 
 \item{mu}{means of the variables}
 
@@ -17,7 +17,7 @@ build.cov(mat, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06)
 lack of positive-definiteness in Sigma.}
 }
 \value{
-matrix with correlaion
+data.frame with correlaion
 }
 \description{
 Build date: Oct 10, 2019
@@ -26,9 +26,11 @@ Last update: Oct 10, 2019
 \examples{
 Sigma <- matrix(c(14, 10, 10, 15), 2, 2)
 Sigma
-mat <- cbind(rnorm(100), rnorm(100))
-mat.cov <- build.cov(mat, Sigma = Sigma)
-var(mat.cov)
+df <- cbind(rnorm(100), 0)
+df <- as.data.frame(df)
+names(df) <- paste0("tr", 1:ncol(df))
+df.cov <- build.cov(df, Sigma = Sigma)
+var(df.cov)
 }
 \references{
 B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98

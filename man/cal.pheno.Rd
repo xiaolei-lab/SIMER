@@ -4,7 +4,8 @@
 \alias{cal.pheno}
 \title{Calculate for phenotype}
 \usage{
-cal.pheno(fr = NULL, info.eff = NULL, h2 = NULL, verbose = TRUE)
+cal.pheno(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL,
+  var.pheno = NULL, verbose = TRUE)
 }
 \arguments{
 \item{fr}{list of fixed effects and random effects}
@@ -12,6 +13,10 @@ cal.pheno(fr = NULL, info.eff = NULL, h2 = NULL, verbose = TRUE)
 \item{info.eff}{list of phenotype decomposition}
 
 \item{h2}{heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+
+\item{num.ind}{population size}
+
+\item{var.pheno}{phenotype variace}
 
 \item{verbose}{whether to print detail}
 }
@@ -48,6 +53,7 @@ info.eff <- cal.gnt(geno = geno, h2 = h2, effs = effs,
 # calculate for phenotype variance
 ind.a <- info.eff$ind.a
 var.pheno <- var(ind.a) / h2[1]
+num.ind <- nrow(pop)
         
 a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
 b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
@@ -84,7 +90,8 @@ rand <- list(
 FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
 fr <- cal.FR(pop = pop, FR = FR, var.pheno = c(10, 10), pop.env = pop.env, verbose = TRUE)
 
-pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2, verbose = TRUE)
+pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2,
+    num.ind = num.ind, var.pheno = var.pheno, verbose = TRUE)
 str(pheno.list)
 }
 \author{
