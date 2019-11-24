@@ -362,7 +362,7 @@ There are two different ways to generate genotype matrix of base population.
 ```r
 # use num.marker and num.ind to generate a new genotype matrix
 nmrk <- nrow(input.map)
-basepop.geno <- genotype(num.marker = nmrk, num.ind = 40, verbose = verbose)
+basepop.geno <- genotype(num.marker = nmrk, num.ind = 40, prob = c(0.5, 0.5), verbose = verbose)
 
 # use genotype matrix from outside
 basepop.geno <- genotype(rawgeno = rawgeno, verbose = verbose)
