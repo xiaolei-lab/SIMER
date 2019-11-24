@@ -343,7 +343,11 @@ eval(parse(text = "tryCatch({
       pheno1 <- cbind(pop$index, pheno1)
 	    pedigree1 <- subset(pop.total, select = c(\"index\", \"sir\", \"dam\"))
 	    pos.map <- pos.map[, 1:3]
-	    if (cal.model == \"ADI\") cal.model <- \"AD\"
+	    if (\"ind.d\" %in% names(pheno$info.eff)) {
+	      cal.model <- \"AD\"
+	    } else {
+	      cal.model <- \"A\"
+	    }
 	    if (sel.crit == \"pEBVs\") {
 	      ebv <- hiblup(pheno = pheno1, geno = NULL, map = pos.map, geno.id = geno.id, file.output = FALSE, 
                       pedigree = pedigree1, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
