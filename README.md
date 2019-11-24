@@ -89,10 +89,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 ## Installation
 
 ``` r
-# please wait
-install.packages("simer")
-
-# Or the the development version from GitHub:
+# the the development version from GitHub:
 # install.packages("devtools")
 devtools::install_github("xiaolei-lab/SIMER")
 ```
