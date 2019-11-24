@@ -361,6 +361,7 @@ There are two different ways to generate genotype matrix of base population.
 
 ```r
 # use num.marker and num.ind to generate a new genotype matrix
+# use prob to control the proportion of "0" in genotype matrix
 nmrk <- nrow(input.map)
 basepop.geno <- genotype(num.marker = nmrk, num.ind = 40, prob = c(0.5, 0.5), verbose = verbose)
 
@@ -393,8 +394,8 @@ basepop.geno.em <-  # genotype matrix after cross and Mutation
     genotype(geno = basepop.geno,
              blk.rg = blk.rg,
              recom.spot = recom.spot,
-             range.hot = 4:6,
-             range.cold = 1:5,
+             range.hot = 4:6,  # 4~6 recombinations in hot spots
+             range.cold = 1:5, # 1~5 recombinations in cold spots
              rate.mut = 1e-8, 
              verbose = verbose)
 ```
@@ -408,7 +409,7 @@ basepop.geno.em <-  # genotype matrix after crosses and mutations
              recom.spot = NULL, # only mutations on genotype matrix
              range.hot = 4:6,
              range.cold = 1:5,
-             rate.mut = 1e-8, 
+             rate.mut = 1e-8,   # mutation rate
              verbose = verbose)
 ```             
 
