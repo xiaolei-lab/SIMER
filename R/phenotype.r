@@ -144,11 +144,11 @@
 #' pop.pheno$pop <- NULL  
 #' str(pop.pheno)
 phenotype <-
-    function(effs,
-             FR, 
-             pop,
-             pop.geno,
-             pos.map,
+    function(effs = NULL,
+             FR = NULL, 
+             pop = NULL,
+             pop.geno = NULL,
+             pos.map = NULL,
              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
              h2.trn = c(0.3, 0.5), 
@@ -924,7 +924,7 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
 #'              verbose = TRUE)
 #' str(effs)
 cal.effs <-
-    function(pop.geno,
+    function(pop.geno = NULL,
              cal.model = "A",
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
