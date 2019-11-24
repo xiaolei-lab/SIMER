@@ -276,15 +276,13 @@ phenotype <-
 	    pheno <- pheno
 	    
 	  } else {
-	    if (length(effs) > 4) 
-	      stop("hiblup does not support trait more than 3 for now!")
 eval(parse(text = "tryCatch({
       suppressMessages(library(hiblup))
-      geno.id <- pop$index
-	    pheno1 <- cbind(pop$index, pheno$info.pheno$pheno.1, pheno$info.pheno$pheno.2)
-	    pheno1 <- as.data.frame(pheno1)
-	    geno.id <- as.data.frame(geno.id)
-	    pedigree1 <- cbind(pop.total$index, pop.total$sir, pop.total$dam)
+      geno.id <- as.data.frame(pop$index)
+      pn <- grep(pattern = \"pheno\", x = names(pheno$info.pheno), value = TRUE)
+      pheno1 <- subset(pheno$info.pheno, select = pn)
+      pheno1 <- cbind(pop$index, pheno1)
+      pedigree1 <- subset(pop.total, select = c(\"index\", \"sir\", \"dam\"))
 	    pos.map <- pos.map[, 1:3]
 	    cal.model <- \"A\"
 	    if (sel.crit == \"pEBVs\") {
@@ -339,12 +337,13 @@ eval(parse(text = "tryCatch({
 	  } else {
 eval(parse(text = "tryCatch({
       suppressMessages(library(hiblup))
-      geno.id <- pop$index
-	    pheno1 <- cbind(pop$index, pheno$info.pheno$pheno)
-	    pheno1 <- as.data.frame(pheno1)
-	    geno.id <- as.data.frame(geno.id)
-	    pedigree1 <- cbind(pop.total$index, pop.total$sir, pop.total$dam)
+      geno.id <- as.data.frame(pop$index)
+      pn <- grep(pattern = \"pheno\", x = names(pheno$info.pheno), value = TRUE)
+      pheno1 <- subset(pheno$info.pheno, select = pn)
+      pheno1 <- cbind(pop$index, pheno1)
+	    pedigree1 <- subset(pop.total, select = c(\"index\", \"sir\", \"dam\"))
 	    pos.map <- pos.map[, 1:3]
+	    if (cal.model == \"ADI\") cal.model <- \"AD\"
 	    if (sel.crit == \"pEBVs\") {
 	      ebv <- hiblup(pheno = pheno1, geno = NULL, map = pos.map, geno.id = geno.id, file.output = FALSE, 
                       pedigree = pedigree1, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
