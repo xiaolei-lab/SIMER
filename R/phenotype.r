@@ -665,11 +665,13 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     res <- as.data.frame(res)
     names(res) <- rn
     for (i in 1:length(rand)) { # for
-      lev.rand <- as.character(rand[[i]]$level)
-      len.rand <- length(lev.rand)
-      eff.rand <- rand[[i]]$eff
-      if (!is.list(rand[[i]])) next
+      if (is.list(rand[[i]])) {
+        lev.rand <- as.character(rand[[i]]$level)
+        len.rand <- length(lev.rand)
+        eff.rand <- rand[[i]]$eff
+      }
       if (rn[i] == "sir" | rn[i] == "dam") {
+        if (rand[[i]] == FALSE) next
         pt <- pop[, names(pop) == rn[i]]
         re <- rep(0, nind)
         ele.pt <- as.character(unique(pt))
