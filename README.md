@@ -890,7 +890,7 @@ basepop1 <- pop.pheno$pop
 pop.pheno$pop <- NULL
 ```
 
-If inputting \verb|pop.geno| a genotype matrix, you will get phenotype with fixed effects, random effects, and genetic effects. 
+If inputting **pop.geno** a genotype matrix, you will get phenotype with fixed effects, random effects, and genetic effects. 
 
 ```r
 ####################
@@ -982,7 +982,7 @@ pop2.pheno$pop <- NULL
 ## Different QTN effect distributions
 **[back to top](#contents)**  
 
-In different model, you can further set different QTN effect distributions of trait1 by \verb|dist.qtn.tr1|. The most common distribution is "normal" distribution. You can set different variances in "normal" distribution by **dist.qtn.tr1**.
+In different model, you can further set different QTN effect distributions of trait1 by **dist.qtn.tr1*|**. The most common distribution is "normal" distribution. You can set different variances in "normal" distribution by **dist.qtn.tr1**.
 
 ```r
 ####################
