@@ -32,6 +32,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Generate phenotype of single trait by AD model](#generate-phenotype-of-single-trait-by-AD-model)  
     - [Generate phenotype of single trait by ADI model](#generate-phenotype-of-single-trait-by-ADI-model)  
     - [Generate phenotype of multiple traits](#generate-phenotype-of-multiple-traits)  
+    - [Add fixed effects and random effects to phenotype](#add-fixed-effects-and-random-effects-to-phenotype)
     - [Different QTN effect distributions](#different-QTN-effect-distributions)  
     - [Different selection criteria](#different-selection-criteria)  
     - [Multiple groups QTN effects](#multiple-groups-QTN-effects)  
@@ -425,12 +426,13 @@ Phenotype data in **SIMER** will be generated according to different phenotype m
 
 `phenotype()`, main function of phenotype simulation:  
 **effs**, a list with number of overlap markers, selected markers, effects of markers  
+**FR**, a list of fixed effects, random effects, and their combination  
 **pop**, population information of generation, family index, within-family index, index, sire, dam, sex  
 **pop.geno**, genotype matrix of population, two columns represent a individual  
 **pos.map**, marker information of population  
 **h2.tr1**, heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd  
 **gnt.cov**, genetic covaiance matrix among all traits  
-**env.cov**, environment covaiance matrix among all traits  
+**h2.trn**, heritability among all traits  
 **sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
 **pop.total**, total population infarmation  
 **sel.on**, whether to add selection
@@ -441,14 +443,14 @@ Phenotype data in **SIMER** will be generated according to different phenotype m
 **pop.geno**, genotype matrix of population, two columns represent a individual  
 **cal.model**, phenotype model with "A", "AD", "ADI"  
 **num.qtn.tr1**, integer or integer vector, the number of QTN in the trait1  
-**var.tr1**, variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
+**sd.tr1**, standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
 **dist.qtn.tr1**, distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **eff.unit.tr1**, unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **shape.tr1**, shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **scale.tr1**, scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
 **num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
-**eff.sd**, a matrix with the standard deviation of QTN effects  
+**sd.trn**, a matrix with the standard deviation of the QTN effects  
 **qtn.spot**, QTN probability in every blocks  
 **maf**, Minor Allele Frequency, markers selection range is from  maf to 0.5  
 **verbose**, whether to print details  
@@ -534,17 +536,17 @@ In "AD" model, **SIMER** considers both Additive effect(a) and Dominance effect(
 # calculate for marker information
 # Additive by Dominance model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "AD", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = c(0.4, 0.2), # (a, d)
+             sd.tr1 = c(0.4, 0.2), # (a, d)
              dist.qtn.tr1 = c("normal", "normal"),
              eff.unit.tr1 = c(0.5, 0.5),
              shape.tr1 = c(1, 1),
              scale.tr1 = c(1, 1),
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -554,40 +556,42 @@ effs <-
 pop.pheno <-
      phenotype(effs = effs,
                pop = basepop1,
-               pop.geno = basepop.geno,
+               pop.geno = basepop1.geno,
                pos.map = NULL,
-               h2.tr1 = c(0.5, 0.3),
+               h2.tr1 = c(0.3, 0.1),
                gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop1,
                sel.on = TRUE,
                inner.env = NULL,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Note that real variance components ratio may not be consistent with expected herirability **h2.tr1**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
 
 ```r
 ####################
+####################
 ### single trait ###
 # calculate for marker information
 # Additive by Dominance model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "AD", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = c(0.4, 0.2), # (a, d)
+             sd.tr1 = c(0.4, 0.2), # (a, d)
              dist.qtn.tr1 = c("normal", "normal"),
              eff.unit.tr1 = c(0.5, 0.5),
              shape.tr1 = c(1, 1),
              scale.tr1 = c(1, 1),
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -598,19 +602,20 @@ inner.env <- environment()
 pop.pheno <-
      phenotype(effs = effs,
                pop = basepop1,
-               pop.geno = basepop.geno,
+               pop.geno = basepop1.geno,
                pos.map = NULL,
-               h2.tr1 = c(0.5, 0.3),
+               h2.tr1 = c(0.3, 0.1),
                gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop1,
                sel.on = FALSE,
                inner.env = inner.env,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 ## Generate phenotype of single trait by ADI model
@@ -624,17 +629,17 @@ In "ADI" model, **SIMER** considers not only Additive effect(a) and Dominance ef
 # calculate for marker information
 # Additive by Dominance by Iteratiion model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "ADI", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = c(18),
-             var.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+             sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
              dist.qtn.tr1 = rep("normal", times = 6),
              eff.unit.tr1 = rep(0.5, 6), # (a, d, aXa, aXd, dXa, dXd)
              shape.tr1 = rep(1, times = 6),
              scale.tr1 =rep(1, times = 6),
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -644,19 +649,20 @@ effs <-
 pop.pheno <-
      phenotype(effs = effs,
                pop = basepop1,
-               pop.geno = basepop.geno,
+               pop.geno = basepop1.geno,
                pos.map = NULL,
-               h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
+               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
                gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop1,
                sel.on = TRUE,
                inner.env = NULL,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Note that real variance components ratio may not be consistent with expected herirability **h2.tr1**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
@@ -665,19 +671,19 @@ Note that real variance components ratio may not be consistent with expected her
 ####################
 ### single trait ###
 # calculate for marker information
-# Additive by Dominance model
+# Additive by Dominance by Iteratiion model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "ADI", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = c(18),
-             var.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+             sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
              dist.qtn.tr1 = rep("normal", times = 6),
              eff.unit.tr1 = rep(0.5, 6), # (a, d, aXa, aXd, dXa, dXd)
              shape.tr1 = rep(1, times = 6),
              scale.tr1 =rep(1, times = 6),
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -688,42 +694,43 @@ inner.env <- environment()
 pop.pheno <-
      phenotype(effs = effs,
                pop = basepop1,
-               pop.geno = basepop.geno,
+               pop.geno = basepop1.geno,
                pos.map = NULL,
-               h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
+               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
                gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop1,
                sel.on = FALSE,
                inner.env = inner.env,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 ## Generate phenotype of multiple traits
 **[back to top](#contents)**  
 
-In multiple traits, only "A" model is applied and **multrait** should be TRUE. If you want to generate multiple traits with specific genetic correlation and environmental correlation please assign genetic covariance matrix **gnt.cov** and environmental covariance matrix **env.cov**. But when **sel.on** is TRUE, these traits will have random genetic correlation. By designed gnt.cov and env.cov, heritability will be generated indirectly. For example, heritability of the first trait equals to gnt.cov[1, 1] / (gnt.cov[1, 1] + env.cov[1, 1]). Add phenotype of multiple  traits to base population2 are displayed as follows:
+In multiple traits, only "A" model is applied and **multrait** should be TRUE. If you want to generate multiple traits with specific genetic correlation please assign genetic covariance matrix **gnt.cov**. But when **sel.on** is TRUE, these traits will have random genetic correlation. Add phenotype of multiple  traits to base population2 are displayed as follows:
 
 ```r
 #######################
 ### multiple traits ###
 # calculate for marker information
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
              eff.unit.tr1 = rep(0.5, 6),
              shape.tr1 = rep(1, 6),
              scale.tr1 = rep(1, 6),
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -733,19 +740,20 @@ effs <-
 pop2.pheno <-
      phenotype(effs = effs,
                pop = basepop2,
-               pop.geno = basepop.geno,
+               pop.geno = basepop2.geno,
                pos.map = NULL,
                h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
                gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
-               env.cov = matrix(c(6, 5, 5, 10), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop2,
                sel.on = TRUE, 
                inner.env = NULL,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop2.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop2 <- pop2.pheno$pop
+pop2.pheno$pop <- NULL
 ```
 
 Note that real genetic covariance matrix may not be consistent with expected genetic covariance matrix **gnt.cov**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
@@ -755,17 +763,17 @@ Note that real genetic covariance matrix may not be consistent with expected gen
 ### multiple traits ###
 # calculate for marker information
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
              eff.unit.tr1 = rep(0.5, 6),
              shape.tr1 = rep(1, 6),
              scale.tr1 = rep(1, 6),
              multrait = TRUE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = matrix(c(1, 0, 0, 2), 2, 2),
+             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -776,19 +784,199 @@ inner.env <- environment()
 pop.pheno <-
      phenotype(effs = effs,
                pop = basepop2,
-               pop.geno = basepop.geno,
+               pop.geno = basepop2.geno,
                pos.map = NULL,
                h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
                gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
-               env.cov = matrix(c(6, 5, 5, 10), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop2,
                sel.on = FALSE, 
                inner.env = inner.env,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
+```
+
+## Add fixed effects and random effects to phenotype
+**[back to top](#contents)** 
+
+**SIMER** supports add fixed effects and random effects to phenotype. Users should prepare a list with fixed effects, random effects, and their combination first. In the list, the attribution name are fixed. "cmb.fix" contains different combinations of fixed factors in different traits. "fix" contains different fixed factors which have their levels and effects. "cmb.rand" contains different combinations of random factors. Unlike the fixed effect, the user needs to specify the proportion of the variance of the random effect variance by "ratio". Besides, users can also set related random effects for different traits by "cr". Users can use attribute names in population information, meaning that users can assign specific levels to different individuals. At the same time, if the attribute name is not in the population information, **SIMER** will add its level to the population information. 
+
+```r
+# specific levels to different individuals
+a <- sample(c("a1", "a2", "a3"), nind, replace = TRUE)
+b <- sample(c("b1", "b2", "b3"), nind, replace = TRUE)
+basepop1$a <- a # load your fixed  effects
+basepop1$b <- b # load your random effects
+
+# combination of fixed effects
+cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
+                tr2 = c("mu", "diet", "season"))  # trait 2		
+
+# available fixed effects
+fix <- list(
+         mu = list(level = "mu", eff = 2),
+        gen = list(level = "1", eff = 1), # inherent fixed effect in simer
+        sex = list(level = c("1", "2"), eff = c(5, 3)), # inherent fixed effect in simer
+       diet = list(level = c("d1", "d2", "d3"), eff = c(1, 2, 3)),
+     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(1, 2, 3, 2)), 
+          a = list(level = c("a1", "a2", "a3"), eff = c(1, 2, 3)))
+
+# combination and ralation of random effects
+# rn, random effect name
+# ratio, phenotype variance proportion of the random effects
+# cr, corelation of the random effects
+tr1 <- list(rn = c("sir", "dam", "b"), ratio = c(0.03, 0.05, 0.03))
+tr2 <- list(rn = c("PE", "litter"), ratio = c(0.01, 0.03),
+            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
+cmb.rand <- list(tr1 = tr1, tr2 = tr2)
+
+# available random effects
+rand <- list(
+        sir = list(mean = 0, sd = 1), # sir and dam are inherent random effect in simer
+        dam = list(mean = 0, sd = 1), # control mean and sd only
+         PE = list(level = c("p1", "p2", "p3"), eff = c(1, 2, 3)),
+     litter = list(level = c("l1", "l2"), eff = c(1, 2)), 
+          b = list(level = c("b1", "b2", "b3"), eff = c(1, 2, 3)))
+
+FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
+```
+
+After preparation above, you can get phenotype with fixed effects and random effects but without additive effects by setting **pop.geno = NULL**. 
+
+```r
+####################
+### single trait ###
+# calculate for marker information
+# Additive model
+effs <-
+    cal.effs(pop.geno = NULL, # set pop.geno = NULL
+             cal.model = "A", # it can be"A", "AD" or "ADI"
+             num.qtn.tr1 = 18,
+             sd.tr1 = 0.6, # standard deviation of normal distribution
+             dist.qtn.tr1 = "normal",
+             eff.unit.tr1 = 0.5,
+             shape.tr1 = 1,
+             scale.tr1 = 1,
+             multrait = FALSE, # single trait
+             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+             sd.trn = diag(c(1, 0.5)),
+             qtn.spot = rep(0.1, 10),
+             maf = 0,
+             verbose = verbose)
+
+# generate phenotype
+# generate single trait or multiple traits according to effs
+pop.pheno <-
+    phenotype(effs = effs,
+              FR = FR, # input fixed effects and random effects
+              pop = basepop1,
+              pop.geno = NULL, # set pop.geno = NULL
+              pos.map = NULL,
+              h2.tr1 = 0.8,
+              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+              h2.trn = c(0.3, 0.5),
+              sel.crit = "pheno",
+              pop.total = basepop1,
+              sel.on = TRUE,
+              inner.env = NULL,
+              verbose = verbose)
+
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
+```
+
+If inputting \verb|pop.geno| a genotype matrix, you will get phenotype with fixed effects, random effects, and genetic effects. 
+
+```r
+####################
+### single trait ###
+# calculate for marker information
+# Additive model
+effs <-
+    cal.effs(pop.geno = basepop1.geno, # input genotype matrix
+             cal.model = "A", # it can be"A", "AD" or "ADI"
+             num.qtn.tr1 = 18,
+             sd.tr1 = 0.6, # standard deviation of normal distribution
+             dist.qtn.tr1 = "normal",
+             eff.unit.tr1 = 0.5,
+             shape.tr1 = 1,
+             scale.tr1 = 1,
+             multrait = FALSE, # single trait
+             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+             sd.trn = diag(c(1, 0.5)),
+             qtn.spot = rep(0.1, 10),
+             maf = 0,
+             verbose = verbose)
+
+# generate phenotype
+# generate single trait or multiple traits according to effs
+pop.pheno <-
+    phenotype(effs = effs,
+              FR = FR, # input fixed effects and random effects
+              pop = basepop1,
+              pop.geno = basepop1.geno, # input genotype matrix
+              pos.map = NULL,
+              h2.tr1 = 0.8,
+              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+              h2.trn = c(0.3, 0.5),
+              sel.crit = "pheno",
+              pop.total = basepop1,
+              sel.on = TRUE,
+              inner.env = NULL,
+              verbose = verbose)
+
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
+```
+
+Users can also add fixed effects and random effects to different traits respectively by multiple traits mode. 
+
+```r
+#######################
+### multiple traits ###
+# calculate for marker information
+effs <-
+    cal.effs(pop.geno = basepop2.geno,
+             cal.model = "A", # it can be"A", "AD" or "ADI"
+             num.qtn.tr1 = c(2, 6, 10),
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+             dist.qtn.tr1 = rep("normal", 6),
+             eff.unit.tr1 = rep(0.5, 6),
+             shape.tr1 = rep(1, 6),
+             scale.tr1 = rep(1, 6),
+             multrait = TRUE, # multiple traits
+             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
+             qtn.spot = rep(0.1, 10),
+             maf = 0,
+             verbose = verbose)
+
+# generate phenotype
+# generate single trait or multiple traits according to effs
+pop2.pheno <-
+     phenotype(effs = effs,
+               FR = FR, 
+               pop = basepop2,
+               pop.geno = basepop2.geno,
+               pos.map = NULL,
+               h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
+               gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
+               h2.trn = c(0.3, 0.5),
+               sel.crit = "pheno",
+               pop.total = basepop2,
+               sel.on = TRUE, 
+               inner.env = NULL,
+               verbose = verbose)
+
+# get population with phenotype
+basepop2 <- pop2.pheno$pop
+pop2.pheno$pop <- NULL
 ```
 
 ## Different QTN effect distributions
@@ -802,17 +990,17 @@ In different model, you can further set different QTN effect distributions of tr
 # calculate for marker information
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -822,19 +1010,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pheno",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 QTN effect distribution can be "geometry" distribution. You can set effect unit of "geometry" by **eff.unit.tr1**.
@@ -845,17 +1034,17 @@ QTN effect distribution can be "geometry" distribution. You can set effect unit 
 # calculate for marker information
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # a
+             sd.tr1 = 0.6, # a
              dist.qtn.tr1 = "geometry",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1, # effect unit of geomtry distribution
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -865,19 +1054,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pheno",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 "Gamma" distribution is also a kind of QTN effect distribution. You can set shape and scale of "gamma" distribution by **shape.tr1** and **scale.tr1**. Note that default options of "gamma" distribution **shape.tr1 = 1** and **scale.tr1 = 1** exactly lead to exponential distribution.
@@ -888,17 +1078,17 @@ basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
 # calculate for marker information
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # a
+             sd.tr1 = 0.6, # a
              dist.qtn.tr1 = "gamma",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1, # shape of gamma distribution
              scale.tr1 = 1, # scale of gamma distribution
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -908,19 +1098,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pheno",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 ## Different selection criteria
@@ -933,17 +1124,17 @@ In addition, "pheno" is not just phenotype. It can also be "TBV", "TGV", "pEBVs'
 ### single trait ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -954,19 +1145,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "TBV",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "TBV")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Phenotype of multiple traits can also be represented as "TBV".
@@ -976,17 +1168,17 @@ Phenotype of multiple traits can also be represented as "TBV".
 ### multiple traits ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -997,19 +1189,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop2,
-              pop.geno = basepop.geno,
+              pop.geno = basepop2.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "TBV",
               pop.total = basepop2,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "TBV")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 "TGV" is True Genotypic Value, represents the sum of additive effect, dominance effect and epistatic effect.
@@ -1019,17 +1212,17 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "TBV")
 ### single trait ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1040,19 +1233,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "TGV",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "TGV")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Phenotype of multiple traits can also be represented as "TGV".
@@ -1062,17 +1256,17 @@ Phenotype of multiple traits can also be represented as "TGV".
 ### multiple traits ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1082,20 +1276,21 @@ effs <-
 # selection criterion is "TGV"
 pop.pheno <-
     phenotype(effs = effs,
-              pop = basepop,
-              pop.geno = basepop.geno,
+              pop = basepop2,
+              pop.geno = basepop2.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "TGV",
               pop.total = basepop2,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "TGV")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 "pEBVs" is pedigree Estimated Breeding Values. It means that BLUP constructs kinship by pedigree. You can get "pEBVs" by "ABLUP" model in HIBLUP. 
@@ -1108,17 +1303,17 @@ suppressMessages(library("hiblup"))
 ### single trait ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1130,19 +1325,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pEBVs",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pEBVs")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Phenotype of multiple traits can also be represented as "pEBVs".
@@ -1152,17 +1348,17 @@ Phenotype of multiple traits can also be represented as "pEBVs".
 ### multiple traits ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1173,19 +1369,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop2,
-              pop.geno = basepop.geno,
+              pop.geno = basepop2.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pEBVs",
               pop.total = basepop2,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "pEBVs")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 "gEBVs" is genomic Estimated Breeding Values. It means that BLUP constructs kinship by genotype matrix. You can get "gEBVs" by "GBLUP" model in HIBLUP.
@@ -1195,17 +1392,17 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "pEBVs")
 ### single trait ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1217,39 +1414,40 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "gEBVs",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "gEBVs")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Phenotype of multiple traits can also be represented as "gEBVs".
 
 ```r
-# Additive model
 #######################
 ### multiple traits ###
+# Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1260,19 +1458,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop2,
-              pop.geno = basepop.geno,
+              pop.geno = basepop2.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "gEBVs",
               pop.total = basepop2,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "gEBVs")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 "ssEBVs" is single-step genomic Estimated Breeding Values. It means that BLUP constructs kinship by pedigree and genotype matrix. You can get "ssEBVs" by "SSBLUP" model in HIBLUP.
@@ -1282,17 +1481,17 @@ basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "gEBVs")
 ### single trait ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1304,19 +1503,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "ssEBVs",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "ssEBVs")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Phenotype of multiple traits can also be represented as "ssEBVs".
@@ -1326,17 +1526,17 @@ Phenotype of multiple traits can also be represented as "ssEBVs".
 ### multiple traits ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1347,19 +1547,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop2,
-              pop.geno = basepop.geno,
+              pop.geno = basepop2.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "ssEBVs",
               pop.total = basepop2,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "ssEBVs")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 At last, "pheno" is phenotype including additive effect (and dominance effect) (and epistatic effect) and residual effect.
@@ -1369,17 +1570,17 @@ At last, "pheno" is phenotype including additive effect (and dominance effect) (
 ### single trait ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1390,19 +1591,20 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pheno",
               pop.total = basepop1,
-              sel.on = TRUE, 
+              sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 Phenotype of multiple traits can also be represented as "pheno".
@@ -1412,17 +1614,17 @@ Phenotype of multiple traits can also be represented as "pheno".
 ### multiple traits ###
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop2.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = 18,
-             var.tr1 = 0.6, # variance of normal distribution
+             sd.tr1 = 0.6, # standard deviation of normal distribution
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = TRUE, # multiple traits
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1432,43 +1634,44 @@ effs <-
 # selection criterion is "pheno"
 pop.pheno <-
     phenotype(effs = effs,
-              pop = basepop,
-              pop.geno = basepop.geno,
+              pop = basepop2,
+              pop.geno = basepop2.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pheno",
               pop.total = basepop2,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop2 <- set.pheno(pop = basepop2, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop2 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 ## Multiple groups QTN effects
 **[back to top](#contents)**  
 
-Multiple groups QTN effects can be realized by setting different elements of **num.qtn.tr1**, every elements represent amount of QTNs affacting a effect. For example, **num.qtn.tr1 = c(2, 6, 10)** means that the additive effect of the trait is the sum of three QTN group effects. The first group has 2 QTNs, the second group has 6 QTNs and the third group has 10 QTNs. Because of the three groups, the first three elements of **var.tr1** mean the variances of the three QTN groups.
+Multiple groups QTN effects can be realized by setting different elements of **num.qtn.tr1**, every elements represent amount of QTNs affacting a effect. For example, **num.qtn.tr1 = c(2, 6, 10)** means that the additive effect of the trait is the sum of three QTN group effects. The first group has 2 QTNs, the second group has 6 QTNs and the third group has 10 QTNs. Because of the three groups, the first three elements of **sd.tr1** mean the variances of the three QTN groups.
 
 ```r
 #####################
 ### single traits ###
 # calculate for marker information
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A", # it can be"A", "AD" or "ADI"
              num.qtn.tr1 = c(2, 6, 10),
-             var.tr1 = c(0.4, 0.2, 0.02),
+             sd.tr1 = c(0.4, 0.2, 0.02),
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 1,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -1478,19 +1681,20 @@ effs <-
 pop.pheno <-
      phenotype(effs = effs,
                pop = basepop1,
-               pop.geno = basepop.geno,
+               pop.geno = basepop1.geno,
                pos.map = NULL,
                h2.tr1 = 0.3,
                gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+               h2.trn = c(0.3, 0.5),
                sel.crit = "pheno",
                pop.total = basepop1,
                sel.on = TRUE,
                inner.env = NULL,
                verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop.pheno$pop
+pop.pheno$pop <- NULL
 ```
 
 ---
