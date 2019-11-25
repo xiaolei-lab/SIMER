@@ -360,13 +360,13 @@ Genotype data in SIMER will be generated randomly or from outside genotype matri
 There are two different ways to generate genotype matrix of base population.
 
 ```r
+# use genotype matrix from outside
+basepop1.geno <- genotype(rawgeno = rawgeno, verbose = verbose)
+
 # use num.marker and num.ind to generate a new genotype matrix
 # use prob to control the proportion of "0" in genotype matrix
 nmrk <- nrow(input.map)
-basepop.geno <- genotype(num.marker = nmrk, num.ind = 40, prob = c(0.5, 0.5), verbose = verbose)
-
-# use genotype matrix from outside
-basepop.geno <- genotype(rawgeno = rawgeno, verbose = verbose)
+basepop2.geno <- genotype(num.marker = nmrk, num.ind = 100, prob = c(0.5, 0.5), verbose = verbose)
 ```
 
 ## Set block information and recombination information
@@ -375,8 +375,8 @@ basepop.geno <- genotype(rawgeno = rawgeno, verbose = verbose)
 Add block information and recombination information to map file. Calculate block ranges and recombination states of blocks.
 
 ```r
-nmrk <- nrow(basepop.geno)
-nind <- ncol(basepop.geno) / 2
+nmrk <- nrow(basepop1.geno)
+nind <- ncol(basepop1.geno) / 2
 
 # set block information and recombination information
 pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
@@ -391,7 +391,7 @@ After getting block information and recombination information, you can add chrom
 
 ```r
 basepop.geno.em <-  # genotype matrix after cross and Mutation
-    genotype(geno = basepop.geno,
+    genotype(geno = basepop1.geno,
              blk.rg = blk.rg,
              recom.spot = recom.spot,
              range.hot = 4:6,  # 4~6 recombinations in hot spots
@@ -404,7 +404,7 @@ Note that recombination only exists in meiosis. Therefore, some reproduction met
 
 ```r
 basepop.geno.em <-  # genotype matrix after crosses and mutations
-    genotype(geno = basepop.geno,
+    genotype(geno = basepop1.geno,
              blk.rg = blk.rg,
              recom.spot = NULL, # only mutations on genotype matrix
              range.hot = 4:6,
@@ -418,7 +418,7 @@ basepop.geno.em <-  # genotype matrix after crosses and mutations
 # Phenotype Simulation
 **[back to top](#contents)**  
 
-Phenotype data in **SIMER** will be generated according to different phenotype model, QTN effect distribution and selection criteria. SIMER supports both single trait and multiple trait. In single traits, you could set different model by **cal.model** as your need. But in multiple traits, only "A" model can be used. In both single trait and multiple traits, you can set different amount, effect variance, effect distribution for QTNs and heritability for traits. In single trait, multiple groups QTN effects can also be under consideration. In multiple trait, you can set specific genetic correlation and environmental correlation. 
+Phenotype data in **SIMER** will be generated according to different phenotype models, QTN effect distributions and selection criteria. SIMER supports generating single traits or multiple traits. In the case of the single trait, you could set different models by **cal.model** as your need. But in the case of multiple traits, only the  "A" model can be used. In the single trait or multiple traits, you can set different QTN amounts, effect variances, effect distributions for QTNs and heritability for traits. You can also set gene jungles and gene deserts by **qtn.spot**. For a low-quality genotype matrix, you can make quality control by **maf**. Additionally, in the case of the single trait, multiple groups of  QTN effects are also under consideration. In multiple traits, you can set specific genetic correlations. 
 
 ## Gallery of phenotype simulation input parameters
 **[back to top](#contents)**  
@@ -473,7 +473,7 @@ Generate base population information according to population size and sex ratio.
 basepop1 <- getpop(nind = nind, from = 1, ratio = 0.1)
 
 # base population for double traits
-basepop2 <- getpop(nind = nind, from = nind + 1, ratio = 0.1)
+basepop2 <- getpop(nind = 100, from = nind + 1, ratio = 0.1)
 ```
 
 ## Generate phenotype of single trait by A model
@@ -487,17 +487,17 @@ In "A" model, **SIMER** considers only Additive effect(a). Therefore, only the f
 # calculate for marker information
 # Additive model
 effs <-
-    cal.effs(pop.geno = basepop.geno,
+    cal.effs(pop.geno = basepop1.geno,
              cal.model = "A",
              num.qtn.tr1 = 18,
-             var.tr1 = 2,
+             sd.tr1 = 2,
              dist.qtn.tr1 = "normal",
              eff.unit.tr1 = 0.5,
              shape.tr1 = 1,
              scale.tr1 = 1,
              multrait = FALSE, # single trait
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             eff.sd = diag(c(1, 0.5)),
+             sd.trn = diag(c(1, 0.5)),
              qtn.spot = rep(0.1, 10),
              maf = 0,
              verbose = verbose)
@@ -507,19 +507,20 @@ effs <-
 pop1.pheno <-
     phenotype(effs = effs,
               pop = basepop1,
-              pop.geno = basepop.geno,
+              pop.geno = basepop1.geno,
               pos.map = NULL,
               h2.tr1 = 0.8,
               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              env.cov = matrix(c(10, 5, 5, 100), 2, 2),
+              h2.trn = c(0.3, 0.5),
               sel.crit = "pheno",
               pop.total = basepop1,
               sel.on = TRUE,
               inner.env = NULL,
               verbose = verbose)
 
-# add phenotype to basepop
-basepop1 <- set.pheno(pop = basepop1, pop1.pheno, sel.crit = "pheno")
+# get population with phenotype
+basepop1 <- pop1.pheno$pop
+pop1.pheno$pop <- NULL
 ```
 
 ## Generate phenotype of single trait by AD model
