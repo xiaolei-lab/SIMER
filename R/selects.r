@@ -388,9 +388,9 @@ cal.multi <- function(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc
     b <- as.vector(b)
     
     ind.score <- cbind(pop$index, apply(pheno * b, 1, sum))
-    attr(ind.score, "names") <- NULL
     ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
     ind.ordered <- ind.score.ordered[, 1]
+    attr(ind.ordered, "names") <- NULL
 
   } else if (sel.multi == "indcul") {
   	# goal <- (1 + goal.perc) * apply(pheno, 2, mean)

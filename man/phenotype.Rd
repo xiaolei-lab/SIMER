@@ -4,10 +4,11 @@
 \alias{phenotype}
 \title{Generate phenotype and other values according to selection criterion}
 \usage{
-phenotype(effs, FR, pop, pop.geno, pos.map, h2.tr1 = c(0.3, 0.1, 0.05,
-  0.05, 0.05, 0.01), gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-  h2.trn = c(0.3, 0.5), sel.crit = "pheno", pop.total = NULL,
-  sel.on = TRUE, inner.env = NULL, verbose = TRUE)
+phenotype(effs = NULL, FR = NULL, pop = NULL, pop.geno = NULL,
+  pos.map = NULL, h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+  gnt.cov = matrix(c(1, 2, 2, 15), 2, 2), h2.trn = c(0.3, 0.5),
+  sel.crit = "pheno", pop.total = NULL, sel.on = TRUE,
+  inner.env = NULL, verbose = TRUE)
 }
 \arguments{
 \item{effs}{a list of selected markers and their effects}

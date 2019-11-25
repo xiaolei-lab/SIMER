@@ -4,7 +4,7 @@
 \alias{cal.effs}
 \title{Calculate for genetic effects list of selected markers}
 \usage{
-cal.effs(pop.geno, cal.model = "A", num.qtn.tr1 = c(2, 6, 10),
+cal.effs(pop.geno = NULL, cal.model = "A", num.qtn.tr1 = c(2, 6, 10),
   sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
   dist.qtn.tr1 = rep("normal", 6), eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5,
   0.5, 0.5), shape.tr1 = c(1, 1, 1, 1, 1, 1), scale.tr1 = c(1, 1, 1, 1,

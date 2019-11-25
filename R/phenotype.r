@@ -301,7 +301,7 @@ eval(parse(text = "tryCatch({
       for (i in 1:length(pop$index)){
         idx[i] <- which(ebv$ebv[, 1] == pop$index[i])
       }
-      pheno$info.pheno$ebv <- ebv$ebv[idx, 2:3]
+      pheno$info.pheno$ebv <- ebv$ebv[idx, 2:ncol(ebv$ebv)]
       pheno$info.hiblup <- ebv
       }, error=function(e) { 
            stop(\"Something wrong when running HIBLUP!\") })"
@@ -665,13 +665,8 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     res <- as.data.frame(res)
     names(res) <- rn
     for (i in 1:length(rand)) { # for
-      if (is.list(rand[[i]])) {
-        lev.rand <- as.character(rand[[i]]$level)
-        len.rand <- length(lev.rand)
-        eff.rand <- rand[[i]]$eff
-      }
+      if (!is.list(rand[[i]])) next
       if (rn[i] == "sir" | rn[i] == "dam") {
-        if (rand[[i]] == FALSE) next
         pt <- pop[, names(pop) == rn[i]]
         re <- rep(0, nind)
         ele.pt <- as.character(unique(pt))
@@ -694,33 +689,38 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
           }
         }
         
-      } else if (rn[i] %in% names(pop)) {
-        pt <- pop[, names(pop) == rn[i]]
-        re <- rep(0, nind)
-        ele.pt <- as.character(unique(pt))
-        if (len.rand != length(ele.pt)) { 
-          stop("level length should be equal to effects length!")
-        } else if (!setequal(lev.rand, ele.pt)) {
-          stop(rn[i], " in rand should be corresponding to ", rn[i], " in pop!")
-        } 
-        for (j in 1:len.rand) {
-          re[pt == lev.rand[j]] <- eff.rand[j]
-        }
-        
       } else {
-        sam <- sample(1:len.rand, nind, replace = TRUE, prob = rep(0.2, len.rand))
-        while (length(unique(sam)) != len.rand) {
+        lev.rand <- as.character(rand[[i]]$level)
+        len.rand <- length(lev.rand)
+        eff.rand <- rand[[i]]$eff
+        
+        if (rn[i] %in% names(pop)) {
+          pt <- pop[, names(pop) == rn[i]]
+          re <- rep(0, nind)
+          ele.pt <- as.character(unique(pt))
+          if (len.rand != length(ele.pt)) { 
+            stop("level length should be equal to effects length!")
+          } else if (!setequal(lev.rand, ele.pt)) {
+            stop(rn[i], " in rand should be corresponding to ", rn[i], " in pop!")
+          } 
+          for (j in 1:len.rand) {
+            re[pt == lev.rand[j]] <- eff.rand[j]
+          }
+        
+        } else {
           sam <- sample(1:len.rand, nind, replace = TRUE, prob = rep(0.2, len.rand))
+          while (length(unique(sam)) != len.rand) {
+            sam <- sample(1:len.rand, nind, replace = TRUE, prob = rep(0.2, len.rand))
+          }
+          rl <- lev.rand[sam]
+          pop.adj <- get("pop", envir = pop.env)
+          logging.log("add", rn[i], "to population...\n", verbose = verbose)
+          pop.adj <- cbind(pop.adj, rl)
+          names(pop.adj)[names(pop.adj) == "rl"] <- rn[i]
+          assign("pop", pop.adj, envir = pop.env)
+          re <- eff.rand[sam]
         }
-        rl <- lev.rand[sam]
-        pop.adj <- get("pop", envir = pop.env)
-        logging.log("add", rn[i], "to population...\n", verbose = verbose)
-        pop.adj <- cbind(pop.adj, rl)
-        names(pop.adj)[names(pop.adj) == "rl"] <- rn[i]
-        assign("pop", pop.adj, envir = pop.env)
-        re <- eff.rand[sam]
       }
-
       res[[i]] <- re
     } # end for
   }
@@ -1252,6 +1252,8 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #' pop <- set.pheno(pop, pheno.list, sel.crit = "pheno")
 #' str(pop)
 set.pheno <- function(pop, pop.pheno, sel.crit) {
+  f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = FALSE)
+  if (length(f1) != 0) pop <- pop[, -f1]
   if (sel.crit == "TBV") {
     pn <- grep(pattern = "TBV", x = names(pop.pheno$info.pheno), value = TRUE)
   } else if (sel.crit == "TGV") {
