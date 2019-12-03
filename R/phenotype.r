@@ -268,9 +268,19 @@ phenotype <-
     for (i in 1:nqt) {
       fr[[i]]$ind.a <- df.ind.a[, i]
       fr[[i]]$ind.env <- mat.env[, i]
-    } 
+      if (!is.data.frame(fr[[i]])) fr[[i]] <- as.data.frame(fr[[i]])
+    }
     info.pheno <- data.frame(TBV = df.ind.a, TGV = df.ind.a, pheno = ind.pheno)
     pheno <- list(info.tr = info.tr, info.eff = fr, info.pheno = info.pheno)
+    
+    # check data quality
+    for (i in 1:nqt) {
+      idx.len <- unlist(lapply(1:ncol(pheno$info.eff[[i]]), function(j) {  return(length(unique(pheno$info.eff[[i]][, j]))) }))
+      info.eff.t <- pheno$info.eff[[i]][, idx.len != 1]
+      info.eff.cor <- cor(info.eff.t)
+      if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
+        warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects simulation!")
+    }
     
     if (sel.crit == "TBV" | sel.crit == "TGV" | sel.crit == "pheno") {
 	    pheno <- pheno
@@ -330,6 +340,13 @@ eval(parse(text = "tryCatch({
 
     # calculate for phenotype
     pheno <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2.tr1, num.ind = nind, var.pheno = var.pheno, verbose = verbose)
+    
+    # check data quality
+    idx.len <- unlist(lapply(1:ncol(pheno$info.eff), function(i) {  return(length(unique(pheno$info.eff[, i]))) }))
+    info.eff.t <- pheno$info.eff[, idx.len != 1]
+    info.eff.cor <- cor(info.eff.t)
+    if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
+      warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects simulation!")
     
     if (sel.crit == "TBV" | sel.crit == "TGV" | sel.crit == "pheno") {
 	    pheno <- pheno
