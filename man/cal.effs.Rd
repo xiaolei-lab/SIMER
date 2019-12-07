@@ -17,17 +17,17 @@ cal.effs(pop.geno = NULL, cal.model = "A", num.qtn.tr1 = c(2, 6, 10),
 
 \item{cal.model}{phenotype models with the options: "A", "AD", "ADI"}
 
-\item{num.qtn.tr1}{integer or integer vector, the number of QTN in the trait1}
+\item{num.qtn.tr1}{integer or integer vector, the number of QTN in a single trait}
 
 \item{sd.tr1}{standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
 
 \item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{eff.unit.tr1}{unit effect of geometric distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{eff.unit.tr1}{unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{shape.tr1}{shape of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{shape.tr1}{shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{scale.tr1}{scale of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{scale.tr1}{scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
 \item{multrait}{whether to apply multiple traits, TRUE represents applying, FALSE represents not}
 

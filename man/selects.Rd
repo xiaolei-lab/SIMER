@@ -14,11 +14,11 @@ selects(pop, decr = TRUE, sel.multi = "index", index.wt = c(0.5,
 
 \item{decr}{whether to sorting with decreasing}
 
-\item{sel.multi}{selection methods of multiple traits with the options: "tdm", "indcul" and "index"}
+\item{sel.multi}{selection method of multiple traits with options: "tdm", "indcul" and "index"}
 
-\item{index.wt}{economic weights of selection index method}
+\item{index.wt}{economic weights of selection index method, its length should equals to the number of traits}
 
-\item{index.tdm}{index represents which trait is being selected. NOT CONTROL BY USER}
+\item{index.tdm}{index represents which trait is being selected}
 
 \item{goal.perc}{percentage of goal more than the mean of scores of individuals}
 

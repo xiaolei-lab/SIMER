@@ -20,9 +20,9 @@
 #'
 #' @param pop population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, sex, and phenotype
 #' @param decr whether to sorting with decreasing
-#' @param sel.multi selection methods of multiple traits with the options: "tdm", "indcul" and "index"
-#' @param index.wt economic weights of selection index method
-#' @param index.tdm index represents which trait is being selected. NOT CONTROL BY USER
+#' @param sel.multi selection method of multiple traits with options: "tdm", "indcul" and "index"
+#' @param index.wt economic weights of selection index method, its length should equals to the number of traits
+#' @param index.tdm index represents which trait is being selected
 #' @param goal.perc percentage of goal more than the mean of scores of individuals
 #' @param pass.perc percentage of expected excellent individuals
 #' @param sel.sing selection methods of single trait with the options: "ind", "fam", "infam", and "comb"
@@ -308,9 +308,9 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
 #'
 #' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye
 #' @param decr whether to sorting with descreasing
-#' @param sel.multi selection method of multi-trait with "tdm", "indcul", "index"
-#' @param index.wt economic weights of selection index method
-#' @param index.tdm ndex represents which trait is being selected. NOT CONTROL BY USER
+#' @param sel.multi selection method of multiple traits with options: "tdm", "indcul" and "index"
+#' @param index.wt economic weights of selection index method, its length should equals to the number of traits
+#' @param index.tdm index represents which trait is being selected
 #' @param goal goal of the trait
 #' @param pass.perc percentage of expected excellent individuals
 #' @param pop.pheno list of all phenotype information

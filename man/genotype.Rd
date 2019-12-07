@@ -16,9 +16,9 @@ genotype(rawgeno = NULL, geno = NULL, num.marker = NULL,
 
 \item{num.marker}{number of markers}
 
-\item{num.ind}{number of individuals}
+\item{num.ind}{population size of base population}
 
-\item{prob}{weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1}
+\item{prob}{weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1}
 
 \item{blk.rg}{it represents the starting position and the ending position of a block}
 

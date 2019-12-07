@@ -21,9 +21,9 @@ phenotype(effs = NULL, FR = NULL, pop = NULL, pop.geno = NULL,
 
 \item{pos.map}{marker information of the population}
 
-\item{h2.tr1}{heritability vector of the trait1, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{h2.tr1}{heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{gnt.cov}{genetic covariance matrix among all traits}
+\item{gnt.cov}{genetic covaiance matrix among all traits}
 
 \item{h2.trn}{heritability among all traits}
 

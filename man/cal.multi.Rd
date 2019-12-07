@@ -12,11 +12,11 @@ cal.multi(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc,
 
 \item{decr}{whether to sorting with descreasing}
 
-\item{sel.multi}{selection method of multi-trait with "tdm", "indcul", "index"}
+\item{sel.multi}{selection method of multiple traits with options: "tdm", "indcul" and "index"}
 
-\item{index.wt}{economic weights of selection index method}
+\item{index.wt}{economic weights of selection index method, its length should equals to the number of traits}
 
-\item{index.tdm}{ndex represents which trait is being selected. NOT CONTROL BY USER}
+\item{index.tdm}{index represents which trait is being selected}
 
 \item{goal}{goal of the trait}
 

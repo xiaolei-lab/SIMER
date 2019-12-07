@@ -23,8 +23,8 @@
 #' @param pop population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex
 #' @param pop.geno genotype matrix of the population, an individual has two columns
 #' @param pos.map marker information of the population
-#' @param h2.tr1 heritability vector of the trait1, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param gnt.cov genetic covariance matrix among all traits
+#' @param h2.tr1 heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param gnt.cov genetic covaiance matrix among all traits
 #' @param h2.trn heritability among all traits
 #' @param sel.crit selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"
 #' @param pop.total total population infarmation
@@ -912,12 +912,12 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
 #'
 #' @param pop.geno genotype of population, a individual has two columns
 #' @param cal.model phenotype models with the options: "A", "AD", "ADI"
-#' @param num.qtn.tr1 integer or integer vector, the number of QTN in the trait1
+#' @param num.qtn.tr1 integer or integer vector, the number of QTN in a single trait
 #' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
 #' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param eff.unit.tr1 unit effect of geometric distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param shape.tr1 shape of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param scale.tr1 scale of gamma distribution of the trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param eff.unit.tr1 unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param shape.tr1 shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param scale.tr1 scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param multrait whether to apply multiple traits, TRUE represents applying, FALSE represents not
 #' @param num.qtn.trn QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits
 #' @param sd.trn a matrix with the standard deviation of the QTN effects

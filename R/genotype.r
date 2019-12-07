@@ -21,8 +21,8 @@
 #' @param rawgeno extrinsic genotype matrix
 #' @param geno genotype matrix need dealing with
 #' @param num.marker number of markers
-#' @param num.ind number of individuals
-#' @param prob weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1
+#' @param num.ind population size of base population
+#' @param prob weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1
 #' @param blk.rg it represents the starting position and the ending position of a block
 #' @param recom.spot whether to consider recombination in every blocks
 #' @param range.hot range of number of chromosome crossovers in a hot spot block
@@ -177,7 +177,7 @@ genotype <-
 #'
 #' @author Dong Yin
 #'
-#' @param input.map map that should be input
+#' @param input.map map that should be input, the marker number should be consistent in both map file and genotype data
 #' @param num.marker number of markers of genotype matrix
 #' @param len.block length of every blocks
 #'
