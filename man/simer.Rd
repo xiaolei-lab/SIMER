@@ -42,9 +42,9 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{seed.map}{random seed of map file}
 
-\item{out.geno.gen}{indice of generation of output genotype}
+\item{out.geno.gen}{indice of generations of output genotype}
 
-\item{out.pheno.gen}{indice of generation of  output phenotype}
+\item{out.pheno.gen}{indice of generations of output phenotype}
 
 \item{rawgeno1}{extrinsic genotype matrix1}
 

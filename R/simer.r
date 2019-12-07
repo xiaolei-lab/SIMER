@@ -26,8 +26,8 @@
 #' @param out.format format of output, "numeric" or "plink"
 #' @param seed.sim random seed of a simulation process
 #' @param seed.map random seed of map file
-#' @param out.geno.gen indice of generation of output genotype
-#' @param out.pheno.gen indice of generation of  output phenotype
+#' @param out.geno.gen indice of generations of output genotype
+#' @param out.pheno.gen indice of generations of output phenotype
 #' @param rawgeno1 extrinsic genotype matrix1
 #' @param rawgeno2 extrinsic genotype matrix2
 #' @param rawgeno3 extrinsic genotype matrix3
