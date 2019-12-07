@@ -34,7 +34,7 @@
 #' @param rawgeno4 extrinsic genotype matrix4
 #' @param num.ind population size of base population
 #' @param prob weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1
-#' @param input.map map that should be input
+#' @param input.map map that should be input, the marker number should be consistent in both map file and genotype data
 #' @param len.block length of every blocks
 #' @param range.hot range of number of chromosome crossovers in a hot spot block
 #' @param range.cold range of number of chromosome crossovers in a cold spot block

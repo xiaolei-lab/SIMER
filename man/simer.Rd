@@ -58,7 +58,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{prob}{weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1}
 
-\item{input.map}{map that should be input}
+\item{input.map}{map that should be input, the marker number should be consistent in both map file and genotype data}
 
 \item{len.block}{length of every blocks}
 
