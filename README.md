@@ -229,7 +229,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **mrk.dense**, whether markers are dense, it is TRUE when sequencing data  
 **out**, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
-**seed.geno**, random seed of genotype matrix  
+**seed.geno**, random seed of a simulation process  
 **seed.map**, random seed of map file  
 **out.geno.gen**, indice of generation of output genotype   
 **out.pheno.gen**, indice of generation of  output phenotype   
