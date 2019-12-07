@@ -227,7 +227,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **replication**, replication index of simulation  
 **verbose**, whether to print detail  
 **mrk.dense**, whether markers are dense  
-**out***, path of output files  
+**out**, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
 **seed.geno**, random seed of genotype matrix  
 **seed.map**, random seed of map file  
