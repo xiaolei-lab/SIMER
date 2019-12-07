@@ -238,7 +238,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **rawgeno3**, extrinsic genotype matrix3  
 **rawgeno4**, extrinsic genotype matrix4  
 **num.ind**, population size of base population  
-**prob**, weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1  
+**prob**, weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1  
 **input.map**, map from outside  
 **len.block**, length of every blocks  
 **range.hot**, range of exchages in hot spot block  
@@ -328,7 +328,7 @@ Genotype data in SIMER will be generated randomly or from outside genotype matri
 **geno**, genotype matrix need dealing with  
 **num.marker**, number of markers  
 **num.ind**, population size of base population  
-**prob**, weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1  
+**prob**, weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1  
 **blk.rg**, it represents the started and ended position blocks  
 **recom.spot**, whether to consider recombination in every blocks  
 **range.hot**, range of exchages in hot spot block  
