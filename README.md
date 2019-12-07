@@ -272,7 +272,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **ps**, fraction selected in selection  
 **decr**, whether to sort by descreasing  
 **sel.multi**, selection method of multiple traits with options: "tdm", "indcul" and "index"  
-**index.wt**, economic weights of selection index method  
+**index.wt**, economic weights of selection index method, its length should equals to the number of traits  
 **index.tdm**, index represents which trait is being selected. NOT CONTROL BY USER  
 **goal.perc**, percentage of goal more than mean of scores of individuals  
 **pass.perc**, percentage of expected excellent individuals  
@@ -1712,7 +1712,7 @@ You can get ordered individuals indice according to phenotype in the populaton i
 **pop**, population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye  
 **decr**, whether to sort by descreasing  
 **sel.multi**, selection method of multiple traits with options: "tdm", "indcul" and "index"  
-**index.wt**, economic weights of selection index method  
+**index.wt**, economic weights of selection index method, its length should equals to the number of traits  
 **index.tdm**, index represents which trait is being selected. NOT CONTROL BY USER  
 **goal.perc**, percentage of goal more than mean of scores of individuals  
 **pass.perc**, percentage of expected excellent individuals  
