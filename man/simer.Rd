@@ -116,7 +116,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{prog.doub}{litter size of the first two single cross process in double cross process}
 
-\item{prog.back}{a vector with litter size in every generations}
+\item{prog.back}{a vector with litter size in every generation of back-cross}
 
 \item{ps}{fraction selected in selection}
 

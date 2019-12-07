@@ -63,7 +63,7 @@
 #' @param ratio ratio of the males in all individuals
 #' @param prog.tri litter size of the first single cross process in trible cross process
 #' @param prog.doub litter size of the first two single cross process in double cross process
-#' @param prog.back a vector with litter size in every generations
+#' @param prog.back a vector with litter size in every generation of back-cross
 #' @param ps fraction selected in selection
 #' @param decr whether to sorting with descreasing
 #' @param sel.multi selection method of multi-trait with options: "tdm", "indcul" and "index"
