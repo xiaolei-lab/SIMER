@@ -227,7 +227,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **replication**, replication index of simulation  
 **verbose**, whether to print detail  
 **mrk.dense**, whether markers are dense  
-**out path**, path of output files  
+**out***, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
 **seed.geno**, random seed of genotype matrix  
 **seed.map**, random seed of map file  
@@ -245,6 +245,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **range.cold**, range of exchages in cold spot block  
 **rate.mut**, mutation rate between 1e-8 and 1e-6  
 **cal.model**, phenotype model with "A", "AD", "ADI"  
+***FR***, list of fixed effects, random effects, and their combination   
 **h2.tr1**, heritability vector of trait1, corresponding to a, d, aXa, aXd, dXa, dXd  
 **num.qtn.tr1**, integer or integer vector, the number of QTN in the trait1  
 **var.tr1**, variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
