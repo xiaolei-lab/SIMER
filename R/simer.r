@@ -41,7 +41,7 @@
 #' @param rate.mut mutation rate between 1e-8 and 1e-6
 #' @param cal.model phenotype model with the options: "A", "AD", "ADI"
 #' @param FR list of fixed effects, random effects, and their combination
-#' @param h2.tr1 heritability vector of the trait1, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param h2.tr1 heritability vector of single, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param num.qtn.tr1 integer or integer vector, the number of QTN in the trait1
 #' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
 #' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
