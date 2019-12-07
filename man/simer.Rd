@@ -122,7 +122,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{decr}{whether to sort by descreasing}
 
-\item{sel.multi}{selection method of multi-trait with options: "tdm", "indcul" and "index"}
+\item{sel.multi}{selection method of multiple traits with options: "tdm", "indcul" and "index"}
 
 \item{index.wt}{economic weights of selection index method}
 
