@@ -263,12 +263,12 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
 **sel.on**, whether to add selection  
 **mtd.reprod**, different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
-**userped**, user-specific pedigree  
+**userped**, user-designed pedigree to control mating process  
 **num.prog**, litter size of dams  
 **ratio**, ratio of males in all individuals  
 **prog.tri**, litter size of the first single cross process in trible cross process  
 **prog.doub**, litter size of the first two single cross process in double cross process  
-**prog.back**, a vector with litter size in every generations  
+**prog.back**, a vector with litter size in every generation of back-cross  
 **ps**, fraction selected in selection  
 **decr**, whether to sorting with descreasing  
 **sel.multi**, selection method of multi-trait with options: "tdm", "indcul" and "index"  
@@ -1895,12 +1895,12 @@ Different kind of reproduction methods need different preparation. Reproduction 
 
 `simer()`, main function:  
 **mtd.reprod**, different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
-**userped**, user-specific pedigree  
+**userped**, user-designed pedigree to control mating process  
 **num.prog**, litter size of dams  
 **ratio**, ratio of males in all individuals  
 **prog.tri**, litter size of the first single cross process in trible cross process  
 **prog.doub**, litter size of the first two single cross process in double cross process  
-**prog.back**, a vector with litter size in every generations  
+**prog.back**, a vector with litter size in every generation of back-cross  
 
 ## Clone
 **[back to top](#contents)** 
