@@ -72,7 +72,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{FR}{list of fixed effects, random effects, and their combination}
 
-\item{h2.tr1}{heritability vector of single, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{h2.tr1}{heritability vector of single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
 \item{num.qtn.tr1}{integer or integer vector, the number of QTN in the trait1}
 
