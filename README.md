@@ -239,7 +239,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **rawgeno4**, extrinsic genotype matrix4  
 **num.ind**, population size of base population  
 **prob**, weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1  
-**input.map**, map from outside  
+**input.map**, map that should be input, the marker number should be consistent in both map file and genotype data  
 **len.block**, length of every blocks  
 **range.hot**, range of exchages in hot spot block  
 **range.cold**, range of exchages in cold spot block  
@@ -337,7 +337,7 @@ Genotype data in SIMER will be generated randomly or from outside genotype matri
 **verbose**, whether to print details  
 
  `check.map()`, add block id and combination information to genotypic map:   
-**input.map**, map from outside  
+**input.map**, map that should be input, the marker number should be consistent in both map file and genotype data  
 **num.marker**, number of markers   
 **len.block**, length of every blocks  
 
