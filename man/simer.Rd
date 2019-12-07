@@ -56,7 +56,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{num.ind}{population size of base population}
 
-\item{prob}{weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1}
+\item{prob}{weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1}
 
 \item{input.map}{map that should be input}
 

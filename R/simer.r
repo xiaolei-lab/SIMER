@@ -33,7 +33,7 @@
 #' @param rawgeno3 extrinsic genotype matrix3
 #' @param rawgeno4 extrinsic genotype matrix4
 #' @param num.ind population size of base population
-#' @param prob weight of "0" and "1" in genotype matrix, the sum of element in vector equals 1
+#' @param prob weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1
 #' @param input.map map that should be input
 #' @param len.block length of every blocks
 #' @param range.hot range of number of chromosome crossovers in a hot spot block
