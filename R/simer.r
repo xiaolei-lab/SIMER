@@ -58,7 +58,7 @@
 #' @param sel.crit selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"
 #' @param sel.on whether to add selection
 #' @param mtd.reprod different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself", and "userped"
-#' @param userped user-designed pedigree
+#' @param userped user-designed pedigree to control mating process
 #' @param num.prog litter size of dams
 #' @param ratio ratio of the males in all individuals
 #' @param prog.tri litter size of the first single cross process in trible cross process

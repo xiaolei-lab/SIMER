@@ -106,7 +106,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{mtd.reprod}{different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself", and "userped"}
 
-\item{userped}{user-designed pedigree}
+\item{userped}{user-designed pedigree to control mating process}
 
 \item{num.prog}{litter size of dams}
 
