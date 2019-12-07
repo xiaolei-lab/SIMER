@@ -126,7 +126,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{index.wt}{economic weights of selection index method, its length should equals to the number of traits}
 
-\item{index.tdm}{index represents which trait is being selected. NOT CONTROL BY USER}
+\item{index.tdm}{index represents which trait is being selected}
 
 \item{goal.perc}{percentage of goal more than mean of scores of individuals}
 
