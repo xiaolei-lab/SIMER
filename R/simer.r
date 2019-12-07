@@ -54,7 +54,7 @@
 #' @param gnt.cov genetic covaiance matrix among all traits
 #' @param h2.trn heritability among all traits
 #' @param qtn.spot QTN probability in every block
-#' @param maf Minor Allele Frequency, marker selection range is from  maf to 0.5
+#' @param maf Minor Allele Frequency, marker selection range is from maf to 0.5
 #' @param sel.crit selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"
 #' @param sel.on whether to add selection
 #' @param mtd.reprod different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself", and "userped"

@@ -98,7 +98,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{qtn.spot}{QTN probability in every block}
 
-\item{maf}{Minor Allele Frequency, marker selection range is from  maf to 0.5}
+\item{maf}{Minor Allele Frequency, marker selection range is from maf to 0.5}
 
 \item{sel.crit}{selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"}
 
