@@ -120,7 +120,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{ps}{fraction selected in selection}
 
-\item{decr}{whether to sorting with descreasing}
+\item{decr}{whether to sort by descreasing}
 
 \item{sel.multi}{selection method of multi-trait with options: "tdm", "indcul" and "index"}
 
