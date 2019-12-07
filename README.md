@@ -270,7 +270,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **prog.doub**, litter size of the first two single cross process in double cross process  
 **prog.back**, a vector with litter size in every generation of back-cross  
 **ps**, fraction selected in selection  
-**decr**, whether to sorting with descreasing  
+**decr**, whether to sort by descreasing  
 **sel.multi**, selection method of multi-trait with options: "tdm", "indcul" and "index"  
 **index.wt**, economic weights of selection index method  
 **index.tdm**, index represents which trait is being selected. NOT CONTROL BY USER  
@@ -1710,7 +1710,7 @@ You can get ordered individuals indice according to phenotype in the populaton i
 
 `selects()`, main function of selection:  
 **pop**, population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye  
-**decr**, whether to sorting with descreasing  
+**decr**, whether to sort by descreasing  
 **sel.multi**, selection method of multi-trait with options: "tdm", "indcul" and "index"  
 **index.wt**, economic weights of selection index method  
 **index.tdm**, index represents which trait is being selected. NOT CONTROL BY USER  
