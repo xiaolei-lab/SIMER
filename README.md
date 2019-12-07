@@ -226,7 +226,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **num.gen**, number of generations in simulation  
 **replication**, replication index of simulation  
 **verbose**, whether to print detail  
-**mrk.dense**, whether markers are dense  
+**mrk.dense**, whether markers are dense, it is TRUE when sequencing data  
 **out**, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
 **seed.geno**, random seed of genotype matrix  
@@ -348,7 +348,7 @@ Genotype data in SIMER will be generated randomly or from outside genotype matri
 **bigmtr**, total genotype matrix  
 **mtr**, genotype matrix should be inputting  
 **ed**, index of the last column in each process  
-**mrk.dense**, whether markers are dense 
+**mrk.dense**, whether markers are dense, it is TRUE when sequencing data 
 
 `simer()`, main function:  
 **rawgeno1**, extrinsic genotype matrix1  
