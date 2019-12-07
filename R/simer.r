@@ -24,7 +24,7 @@
 #' @param mrk.dense whether markers are dense, it is TRUE when sequencing data
 #' @param out path of output files
 #' @param out.format format of output, "numeric" or "plink"
-#' @param seed.geno random seed of genotype matrix
+#' @param seed.sim random seed of a simulation process
 #' @param seed.map random seed of map file
 #' @param out.geno.gen indice of generation of output genotype
 #' @param out.pheno.gen indice of generation of  output phenotype
@@ -95,7 +95,7 @@
 #'            mrk.dense = FALSE,
 #'            out = NULL,
 #'            out.format = "numeric",
-#'            seed.geno = runif(1, 0, 100),
+#'            seed.sim = runif(1, 0, 100),
 #'            seed.map = 12345,
 #'            out.geno.gen = 3:5,
 #'            out.pheno.gen = 1:5,
@@ -165,7 +165,7 @@ simer <-
              mrk.dense = FALSE,
              out = NULL,
              out.format = "numeric",
-             seed.geno = runif(1, 0, 100),
+             seed.sim = runif(1, 0, 100),
              seed.map = 12345,
              out.geno.gen = (num.gen-2):num.gen,
              out.pheno.gen = 1:num.gen,
@@ -244,7 +244,7 @@ simer <-
   logging.log("--------------------------- replication ", replication, "---------------------------\n", verbose = verbose)
   op <- Sys.time()
   logging.log("SIMER BEGIN AT", as.character(op), "\n", verbose = verbose)
-  set.seed(seed.geno)
+  set.seed(seed.sim)
   trait <- lapply(1:num.gen, function(i) { return(NULL) })
   names(trait) <- paste("gen", 1:num.gen, sep = "")
 

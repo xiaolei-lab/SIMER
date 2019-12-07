@@ -6,7 +6,7 @@
 \usage{
 simer(num.gen = 5, replication = 1, verbose = TRUE,
   mrk.dense = FALSE, out = NULL, out.format = "numeric",
-  seed.geno = runif(1, 0, 100), seed.map = 12345,
+  seed.sim = runif(1, 0, 100), seed.map = 12345,
   out.geno.gen = (num.gen - 2):num.gen, out.pheno.gen = 1:num.gen,
   rawgeno1 = NULL, rawgeno2 = NULL, rawgeno3 = NULL,
   rawgeno4 = NULL, num.ind = 100, prob = c(0.5, 0.5),
@@ -32,13 +32,13 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{verbose}{whether to print detail}
 
-\item{mrk.dense}{whether markers are dense}
+\item{mrk.dense}{whether markers are dense, it is TRUE when sequencing data}
 
 \item{out}{path of output files}
 
 \item{out.format}{format of output, "numeric" or "plink"}
 
-\item{seed.geno}{random seed of genotype matrix}
+\item{seed.sim}{random seed of a simulation process}
 
 \item{seed.map}{random seed of map file}
 
@@ -154,7 +154,7 @@ simer.list <-
            mrk.dense = FALSE,
            out = NULL,
            out.format = "numeric",
-           seed.geno = runif(1, 0, 100),
+           seed.sim = runif(1, 0, 100),
            seed.map = 12345,
            out.geno.gen = 3:5,
            out.pheno.gen = 1:5,

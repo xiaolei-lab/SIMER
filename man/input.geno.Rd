@@ -13,7 +13,7 @@ input.geno(bigmtr, mtr, ed, mrk.dense)
 
 \item{ed}{index of the last column in each process}
 
-\item{mrk.dense}{whether markers are dense}
+\item{mrk.dense}{whether markers are dense, it is TRUE when sequencing data}
 }
 \value{
 none
