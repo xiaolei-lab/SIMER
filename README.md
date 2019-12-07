@@ -246,13 +246,13 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **rate.mut**, mutation rate between 1e-8 and 1e-6  
 **cal.model**, phenotype model with "A", "AD", "ADI"  
 **FR**, list of fixed effects, random effects, and their combination   
-**h2.tr1**, heritability vector of single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**num.qtn.tr1**, integer or integer vector, the number of QTN in the trait1  
-**var.tr1**, variances of different effects, the last 5 vector elements are corrresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
+**h2.tr1**, heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**num.qtn.tr1**, integer or integer vector, the number of QTN in a single trait  
+**sd.tr1**, standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
 **dist.qtn.tr1**, distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**eff.unit.tr1**, unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**shape.tr1**, shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**scale.tr1**, scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**eff.unit.tr1**, unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**shape.tr1**, shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**scale.tr1**, scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
 **num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
 **eff.sd**, a matrix with the standard deviation of QTN effects  
@@ -431,7 +431,7 @@ Phenotype data in **SIMER** will be generated according to different phenotype m
 **pop**, population information of generation, family index, within-family index, index, sire, dam, sex  
 **pop.geno**, genotype matrix of population, two columns represent a individual  
 **pos.map**, marker information of population  
-**h2.tr1**, heritability vector of single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**h2.tr1**, heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **gnt.cov**, genetic covaiance matrix among all traits  
 **h2.trn**, heritability among all traits  
 **sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
@@ -443,12 +443,12 @@ Phenotype data in **SIMER** will be generated according to different phenotype m
 `cal.effs()`, calculate for marker effects: 
 **pop.geno**, genotype matrix of population, two columns represent a individual  
 **cal.model**, phenotype model with "A", "AD", "ADI"  
-**num.qtn.tr1**, integer or integer vector, the number of QTN in the trait1  
-**sd.tr1**, standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
+**num.qtn.tr1**, integer or integer vector, the number of QTN in a single trait  
+**sd.tr1**, standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a 
 **dist.qtn.tr1**, distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**eff.unit.tr1**, unit effect of geometric distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**shape.tr1**, shape of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**scale.tr1**, scale of gamma distribution of trait1, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**eff.unit.tr1**, unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**shape.tr1**, shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
+**scale.tr1**, scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
 **multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
 **num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
 **sd.trn**, a matrix with the standard deviation of the QTN effects  
