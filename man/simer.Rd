@@ -124,7 +124,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{sel.multi}{selection method of multiple traits with options: "tdm", "indcul" and "index"}
 
-\item{index.wt}{economic weights of selection index method}
+\item{index.wt}{economic weights of selection index method, its length should equals to the number of traits}
 
 \item{index.tdm}{index represents which trait is being selected. NOT CONTROL BY USER}
 

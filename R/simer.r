@@ -67,7 +67,7 @@
 #' @param ps fraction selected in selection
 #' @param decr whether to sort by descreasing
 #' @param sel.multi selection method of multiple traits with options: "tdm", "indcul" and "index"
-#' @param index.wt economic weights of selection index method
+#' @param index.wt economic weights of selection index method, its length should equals to the number of traits
 #' @param index.tdm index represents which trait is being selected. NOT CONTROL BY USER
 #' @param goal.perc percentage of goal more than mean of scores of individuals
 #' @param pass.perc percentage of expected excellent individuals
