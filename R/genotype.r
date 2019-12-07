@@ -280,7 +280,7 @@ cal.blk <- function(pos.map) {
 #' @param bigmtr total genotype matrix
 #' @param mtr genotype matrix should be inputting
 #' @param ed index of the last column in each process
-#' @param mrk.dense whether markers are dense
+#' @param mrk.dense whether markers are dense, it is TRUE when sequencing data
 #'
 #' @return none
 #' @export

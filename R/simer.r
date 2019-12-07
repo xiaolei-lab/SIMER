@@ -21,7 +21,7 @@
 #' @param num.gen number of generations in simulation
 #' @param replication replication index of simulation
 #' @param verbose whether to print detail
-#' @param mrk.dense whether markers are dense
+#' @param mrk.dense whether markers are dense, it is TRUE when sequencing data
 #' @param out path of output files
 #' @param out.format format of output, "numeric" or "plink"
 #' @param seed.geno random seed of genotype matrix
