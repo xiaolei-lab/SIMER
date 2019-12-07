@@ -231,8 +231,8 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **out.format**, format of output, "numeric" or "plink"  
 **seed.geno**, random seed of a simulation process  
 **seed.map**, random seed of map file  
-**out.geno.gen**, indice of generation of output genotype   
-**out.pheno.gen**, indice of generation of  output phenotype   
+**out.geno.gen**, indice of generations of output genotype   
+**out.pheno.gen**, indice of generations of  output phenotype   
 **rawgeno1**, extrinsic genotype matrix1  
 **rawgeno2**, extrinsic genotype matrix2    
 **rawgeno3**, extrinsic genotype matrix3  
@@ -2195,10 +2195,10 @@ In this part, calculation of population size and different ourput methods will b
 **verbose**, whether to print detail  
 **out**, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
-**seed.geno**, random seed of genotype matrix  
+**seed.sim**, random seed of a simulation process  
 **seed.map**, random seed of map file  
-**out.geno.gen**, indice of generation of output genotype  
-**out.pheno.gen**, indice of generation of output phenotype  
+**out.geno.gen**, indice of generations of output genotype  
+**out.pheno.gen**, indice of generations of output phenotype  
 
 ## Counts of total population size
 **[back to top](#contents)**  
