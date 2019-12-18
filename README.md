@@ -227,7 +227,8 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **replication**, replication index of simulation  
 **verbose**, whether to print detail  
 **mrk.dense**, whether markers are dense, it is TRUE when sequencing data  
-**out**, path of output files  
+**out**, prefix of output file name  
+**outpath**, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
 **seed.geno**, random seed of a simulation process  
 **seed.map**, random seed of map file  
@@ -285,7 +286,7 @@ data(simdata)
 simer.list <-
     simer(num.gen = 5,
           verbose = TRUE, 
-          out = NULL,
+          outpath = NULL,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           # num.ind = 100,
@@ -303,7 +304,7 @@ for (i in 1:rep) {
         simer(num.gen = 3,
               replication = i, # set index of replication
               verbose = TRUE, 
-              out = NULL,
+              outpath = NULL,
               input.map = input.map,
               rawgeno1 = rawgeno, # use your own genotype matrix
               # num.ind = 100,
@@ -1912,7 +1913,7 @@ Asexual reproduction does not involve germ cells, and does not require a process
 simer.list <-
     simer(num.gen = 3,
           verbose = verbose, 
-          out = out, 
+          outpath = outpath, 
           input.map = input.map,
           # rawgeno1 = rawgeno, # use your own genotype matrix
           num.ind = 50,
@@ -1931,7 +1932,7 @@ Breeding workers often use another culture in vitro to obtain haploid plants, an
 simer.list <-
     simer(num.gen = 4,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           # rawgeno1 = rawgeno, # use your own genotype matrix
           num.ind = 50,
@@ -1950,7 +1951,7 @@ Self-pollination refers to the combination of male and female gametes from the s
 simer.list <-
     simer(num.gen = 5,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           # rawgeno1 = rawgeno, # use your own genotype matrix
           num.ind = 50,
@@ -1969,7 +1970,7 @@ In random mating, any female or male individual have the same probability to mat
 simer.list <-
     simer(num.gen = 4,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           # rawgeno1 = rawgeno, # use your own genotype matrix
           num.ind = 100,
@@ -1988,7 +1989,7 @@ In random mating without self-pollination, a individual cannot mate to itself. S
 simer.list <-
     simer(num.gen = 3,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           # rawgeno1 = rawgeno, # use your own genotype matrix
           num.ind = 100,
@@ -2007,7 +2008,7 @@ User-designed-pedigree mating needs a specific user designed pedigree to control
 simer.list <-
     simer(num.gen = 5,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           # num.ind = 100,
@@ -2025,7 +2026,7 @@ Two-way cross method needs two genotype matrice of different two breeds. You can
 simer.list <-
     simer(num.gen = 5,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           rawgeno2 = NULL,
@@ -2045,7 +2046,7 @@ Three-way cross method needs three genotype matrice of different three breeds. Y
 simer.list <-
     simer(num.gen = 5,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           rawgeno2 = NULL,
@@ -2067,7 +2068,7 @@ Four-way cross method needs four genotype matrice of different four breeds. You 
 simer.list <-
     simer(num.gen = 5,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           rawgeno2 = NULL,
@@ -2090,7 +2091,7 @@ Back-cross method needs two different breeds. You can input your own genotype ma
 simer.list <-
     simer(num.gen = 5,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           rawgeno2 = NULL,
@@ -2114,7 +2115,7 @@ After a total reproduction process, further work can be done. For breeders, they
 `read.selgeno()`, function to make comparison on breeding plans:  
 **pop**, total population information  
 **selPath**, the path of breeding plans  
-**out**, path of output files  
+**outpath**, path of output files  
 
 ## Breeding plan preparation
 **[back to top](#contents)**
@@ -2159,7 +2160,7 @@ After a total reproduction process, breeding plans comparison can be done.
 simer.list <-
     simer(num.gen = 10,
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           rawgeno1 = rawgeno, # use your own genotype matrix
           # num.ind = 100,
@@ -2193,7 +2194,8 @@ In this part, calculation of population size and different ourput methods will b
 **num.gen**, number of generations in simulation  
 **replication**, replication index of simulation  
 **verbose**, whether to print detail  
-**out**, path of output files  
+**out**, prefix of output file name  
+**outpath**, path of output files  
 **out.format**, format of output, "numeric" or "plink"  
 **seed.sim**, random seed of a simulation process  
 **seed.map**, random seed of map file  
@@ -2277,7 +2279,7 @@ for (i in 1:rep) {
     simer(num.gen = 3,
           replication = i, # set index of replication
           verbose = verbose, 
-          out = out,
+          outpath = outpath,
           input.map = input.map,
           # rawgeno1 = rawgeno, # use your own genotype matrix
           num.ind = 100,
@@ -2290,17 +2292,17 @@ for (i in 1:rep) {
 ## File output
 **[back to top](#contents)** 
 
-**SIMER** won't output files by default. A series of files output when specify a exsited out path by **out**. File output format can be "numeric" or "plink" by **out.format**. 
+**SIMER** won't output files by default. A series of files with prefix `out = simer` output when specify a exsited out path by **outpath**. File output format can be "numeric" or "plink" by **out.format**. 
 
 ```r
 # set a output path
-out = getwd()
+outpath = getwd()
 
 # "numeric" format
 simer.list <-
   simer(num.gen = 3,
         verbose = verbose, 
-        out = out,
+        outpath = outpath,
         out.format = "numeric", 
         input.map = input.map,
         # rawgeno1 = rawgeno, # use your own genotype matrix
@@ -2313,7 +2315,7 @@ simer.list <-
 simer.list <-
   simer(num.gen = 3,
         verbose = verbose, 
-        out = out,
+        outpath = outpath,
         out.format = "plink", 
         input.map = input.map,
         # rawgeno1 = rawgeno, # use your own genotype matrix
@@ -2335,7 +2337,7 @@ out.pheno.gen <- 1:5
 simer.list <-
   simer(num.gen = 5,
         verbose = verbose, 
-        out = out,
+        outpath = outpath,
         out.geno.gen = out.geno.gen, 
         out.pheno.gen = out.pheno.gen, 
         input.map = input.map,
@@ -2351,12 +2353,12 @@ simer.list <-
 # Output
 **[back to top](#contents)**  
 
-**SIMER** outputs data including population information, marker effects, trait information, genotype, genotypic id, genotypic map, and selection intensity. Note that several result files will be generated. Firstly, a result path will be generated. The number at the beginning represents the total individuals number and the ending character is the format of output ("num_Simer_Data_format"). Secondly, you will see a path named "replication1". It is the first replication of simulation and you can get numerous different replications by setting parameter **replication**. In "replication1", results are following:  
-`geno_id.txt` contains indice of genotyped individuals  
-`genotype.geno.bin` and `genotype.geno.desc` contain genotype matrix of all individuals  
-`map.txt` contains input map with block information and recombination information  
-`pedigree.txt` contains pedigree of individuals  
-`phenotype.txt` contains phenotype of individuals  
+**SIMER** outputs data including population information, marker effects, trait information, genotype, genotypic id, genotypic map, and selection intensity. Note that several result files with prefix `out = "simer"` will be generated. Firstly, a result path will be generated. The number at the beginning represents the total individuals number and the ending character is the format of output ("num_Simer_Data_format"). Secondly, you will see a path named "replication1". It is the first replication of simulation and you can get numerous different replications by setting parameter **replication**. In "replication1", results are following:  
+`simer.geno.id` contains indice of genotyped individuals  
+`simer.geno.bin` and `simer.geno.desc` contain genotype matrix of all individuals  
+`simer.map` contains input map with block information and recombination information  
+`simer.ped` contains pedigree of individuals  
+`simer.phe` contains phenotype of individuals  
 
 ## Population information
 **[back to top](#contents)**  
