@@ -2169,7 +2169,7 @@ simer.list <-
           ratio = 0.5)
 
 pop <- simer.list$pop
-out.pop <- read.selgeno(pop = pop, selPath = selPath, out = out)
+out.pop <- read.selgeno(pop = pop, selPath = selPath, outpath = outpath)
 
 # make comparison on breeding plans
 plan1 <- out.pop$plan1
