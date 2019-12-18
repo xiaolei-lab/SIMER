@@ -4,14 +4,14 @@
 \alias{read.selgeno}
 \title{Read sel_ind_geno to get selection condition}
 \usage{
-read.selgeno(pop = NULL, selPath = NULL, out = NULL)
+read.selgeno(pop = NULL, selPath = NULL, outpath = NULL)
 }
 \arguments{
 \item{pop}{total population information}
 
 \item{selPath}{the path of breeding_plan}
 
-\item{out}{the path of output files}
+\item{outpath}{the path of output files}
 }
 \value{
 None
@@ -31,7 +31,8 @@ simer.list <-
            replication = 1,
            verbose = TRUE, 
            mrk.dense = FALSE,
-           out = NULL,
+           out = "simer", 
+           outpath = NULL,
            out.format = "numeric",
            seed.geno = runif(1, 0, 100),
            seed.map = 12345,
@@ -84,7 +85,7 @@ simer.list <-
 
 pop <- simer.list$pop                         
 selPath <- system.file("extdata", "01breeding_plan", package = "simer")
-out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
+out.pop <- read.selgeno(pop = pop, selPath = selPath, outpath = NULL)
 str(out.pop)
 }
 }

@@ -5,12 +5,12 @@
 \title{Main function of simer}
 \usage{
 simer(num.gen = 5, replication = 1, verbose = TRUE,
-  mrk.dense = FALSE, out = NULL, out.format = "numeric",
-  seed.sim = runif(1, 0, 100), seed.map = 12345,
-  out.geno.gen = (num.gen - 2):num.gen, out.pheno.gen = 1:num.gen,
-  rawgeno1 = NULL, rawgeno2 = NULL, rawgeno3 = NULL,
-  rawgeno4 = NULL, num.ind = 100, prob = c(0.5, 0.5),
-  input.map = NULL, len.block = 5e+07, range.hot = 4:6,
+  mrk.dense = FALSE, out = "simer", outpath = NULL,
+  out.format = "numeric", seed.sim = runif(1, 0, 100),
+  seed.map = 12345, out.geno.gen = (num.gen - 2):num.gen,
+  out.pheno.gen = 1:num.gen, rawgeno1 = NULL, rawgeno2 = NULL,
+  rawgeno3 = NULL, rawgeno4 = NULL, num.ind = 100, prob = c(0.5,
+  0.5), input.map = NULL, len.block = 5e+07, range.hot = 4:6,
   range.cold = 1:5, rate.mut = 1e-08, cal.model = "A", FR = NULL,
   h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01), num.qtn.tr1 = 18,
   sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1), dist.qtn.tr1 = rep("normal",
@@ -34,7 +34,9 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{mrk.dense}{whether markers are dense, it is TRUE when sequencing data}
 
-\item{out}{path of output files}
+\item{out}{prefix of output file name}
+
+\item{outpath}{path of output files}
 
 \item{out.format}{format of output, "numeric" or "plink"}
 
@@ -152,7 +154,8 @@ simer.list <-
            replication = 1,
            verbose = TRUE, 
            mrk.dense = FALSE,
-           out = NULL,
+           out = "simer", 
+           outpath = NULL,
            out.format = "numeric",
            seed.sim = runif(1, 0, 100),
            seed.map = 12345,

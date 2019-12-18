@@ -11,12 +11,12 @@
 # limitations under the License.
 
 
-logging.initialize <- function(module, out) {
+logging.initialize <- function(module, outpath) {
     file <- NULL
     if (options("simer.OutputLog2File") == TRUE) {
         now <- Sys.time()
         file <- paste(module, format(now, "%Y%m%d_%H%M%S"), "log", sep = ".")
-        file <- file.path(out, file)
+        file <- file.path(outpath, file)
     }
     
     assign("logging.file", file, envir = package.env)

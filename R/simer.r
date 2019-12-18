@@ -22,7 +22,8 @@
 #' @param replication replication index of simulation
 #' @param verbose whether to print detail
 #' @param mrk.dense whether markers are dense, it is TRUE when sequencing data
-#' @param out path of output files
+#' @param out prefix of output file name
+#' @param outpath path of output files
 #' @param out.format format of output, "numeric" or "plink"
 #' @param seed.sim random seed of a simulation process
 #' @param seed.map random seed of map file
@@ -93,7 +94,8 @@
 #'            replication = 1,
 #'            verbose = TRUE, 
 #'            mrk.dense = FALSE,
-#'            out = NULL,
+#'            out = "simer", 
+#'            outpath = NULL,
 #'            out.format = "numeric",
 #'            seed.sim = runif(1, 0, 100),
 #'            seed.map = 12345,
@@ -163,7 +165,8 @@ simer <-
              replication = 1,
              verbose = TRUE, 
              mrk.dense = FALSE,
-             out = NULL,
+             out = "simer", 
+             outpath = NULL,
              out.format = "numeric",
              seed.sim = runif(1, 0, 100),
              seed.map = 12345,
@@ -233,10 +236,10 @@ simer <-
       
   inner.env <- environment()    
   # initialize logging
-  if (!is.null(out)) {
-    if (!dir.exists(out)) stop(paste0("Please check your output path: ", out))
+  if (!is.null(outpath)) {
+    if (!dir.exists(outpath)) stop(paste0("Please check your output path: ", outpath))
     if (verbose) {
-      logging.initialize("Simer", out = out)
+      logging.initialize("Simer", outpath = outpath)
     }
   }
   
@@ -528,18 +531,18 @@ simer <-
 
   if (mtd.reprod != "userped") {
     # Create a folder to save files
-    if (!is.null(out)) {
-      if (!dir.exists(out)) stop("Please check your outpath!")
+    if (!is.null(outpath)) {
+      if (!dir.exists(outpath)) stop("Please check your outpath!")
       if (out.format == "numeric") {
-        out = paste0(out, .Platform$file.sep, sum(count.ind), "_Simer_Data_numeric")
+        outpath = paste0(outpath, .Platform$file.sep, sum(count.ind), "_Simer_Data_numeric")
       } else if (out.format == "plink"){
-        out = paste0(out, .Platform$file.sep, sum(count.ind), "_Simer_Data_plink")
+        outpath = paste0(outpath, .Platform$file.sep, sum(count.ind), "_Simer_Data_plink")
       } else {
         stop("out.format should be 'numeric' or 'plink'!")
       }
-      if (!dir.exists(out)) dir.create(out)
+      if (!dir.exists(outpath)) dir.create(outpath)
       
-      directory.rep <- paste0(out, .Platform$file.sep, "replication", replication)
+      directory.rep <- paste0(outpath, .Platform$file.sep, "replication", replication)
       if (dir.exists(directory.rep)) {
         remove_bigmatrix(file.path(directory.rep, "genotype"))
         unlink(directory.rep, recursive = TRUE)
@@ -573,7 +576,7 @@ simer <-
       geno.total.temp <- NULL
     }
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = sum(count.ind[out.geno.gen]),
@@ -730,10 +733,10 @@ simer <-
       trait <- pop.pheno
     }
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       # write files
       logging.log("---write files of total population---\n", verbose = verbose)
-      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, directory.rep, out.format, verbose)
+      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, out, directory.rep, out.format, verbose)
       flush(geno.total)
     }
     
@@ -748,7 +751,7 @@ simer <-
     out.geno.index <- 1:sum(count.ind)
     logging.log("After generation", 1, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       dir.sir <- paste0(directory.rep, .Platform$file.sep, count.ind[1], "_sir")
       dir.dam <- paste0(directory.rep, .Platform$file.sep, count.ind[2], "_dam")
       dir.sgc <- paste0(directory.rep, .Platform$file.sep, count.ind[3], "_single_cross")
@@ -911,17 +914,17 @@ simer <-
       pop.singcro$pheno <- pop.total$pheno[(nind+nind2+1):(nind+nind2+nrow(pop.singcro))]
     }
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       flush(geno.sir)
       flush(geno.dam)
       flush(geno.singcro)
       # write files
       logging.log("---write files of sirs---\n", verbose = verbose)
-      write.file(basepop, geno.sir, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, dir.sir, out.format, verbose)
+      write.file(basepop, geno.sir, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir, out.format, verbose)
       logging.log("---write files of dams---\n", verbose = verbose)
-      write.file(pop2, geno.dam, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, dir.dam, out.format, verbose)
+      write.file(pop2, geno.dam, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.dam, out.format, verbose)
       logging.log("---write files of progenies---\n", verbose = verbose)
-      write.file(pop.singcro, geno.singcro, pos.map, 1:nrow(pop.singcro), 1:nrow(pop.singcro), seed.map, dir.sgc, out.format, verbose)
+      write.file(pop.singcro, geno.singcro, pos.map, 1:nrow(pop.singcro), 1:nrow(pop.singcro), seed.map, out, dir.sgc, out.format, verbose)
     }
     
     # set total information of population and genotype
@@ -936,7 +939,7 @@ simer <-
     out.geno.index <- 1:sum(count.ind)
     logging.log("After generation", 1, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       dir.sir1  <- paste0(directory.rep, .Platform$file.sep, count.ind[1], "_sir1")
       dir.dam1  <- paste0(directory.rep, .Platform$file.sep, count.ind[2], "_dam1")
       dir.sir2  <- paste0(directory.rep, .Platform$file.sep, count.ind[3], "_sir2")
@@ -1209,7 +1212,7 @@ simer <-
       pop.tricro$pheno <- pop.total$pheno[(nind+nind2+nind3+nrow(pop.dam21)+1):(nind+nind2+nind3+nrow(pop.dam21)+nrow(pop.tricro))]
     }
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       flush(geno.sir1)
       flush(geno.dam1)
       flush(geno.sir2)
@@ -1217,15 +1220,15 @@ simer <-
       flush(geno.tricro)
       # write files
       logging.log("---write files of sir1s---\n", verbose = verbose)
-      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, dir.sir1, out.format, verbose)
+      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir1, out.format, verbose)
       logging.log("---write files of sir2s---\n", verbose = verbose)
-      write.file(pop2, geno.sir2, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, dir.sir2, out.format, verbose)
+      write.file(pop2, geno.sir2, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.sir2, out.format, verbose)
       logging.log("---write files of dam1s---\n", verbose = verbose)
-      write.file(pop3, geno.dam1, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, dir.dam1, out.format, verbose)
+      write.file(pop3, geno.dam1, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, out, dir.dam1, out.format, verbose)
       logging.log("---write files of dam21s---\n", verbose = verbose)
-      write.file(pop.dam21, geno.dam21, pos.map, 1:nrow(pop.dam21), 1:nrow(pop.dam21), seed.map, dir.dam21, out.format, verbose)
+      write.file(pop.dam21, geno.dam21, pos.map, 1:nrow(pop.dam21), 1:nrow(pop.dam21), seed.map, out, dir.dam21, out.format, verbose)
       logging.log("---write files of progenies---\n", verbose = verbose)
-      write.file(pop.tricro, geno.tricro, pos.map, 1:nrow(pop.tricro), 1:nrow(pop.tricro), seed.map, dir.trc, out.format, verbose)
+      write.file(pop.tricro, geno.tricro, pos.map, 1:nrow(pop.tricro), 1:nrow(pop.tricro), seed.map, out, dir.trc, out.format, verbose)
     }
     
     # set total information of population and genotype
@@ -1242,7 +1245,7 @@ simer <-
     out.geno.index <- 1:sum(count.ind)
     logging.log("After generation", 1, ",", sum(count.ind[1:4]), "individuals are generated...\n", verbose = verbose)
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       dir.sir1  <- paste0(directory.rep, .Platform$file.sep, count.ind[1], "_sir1")
       dir.dam1  <- paste0(directory.rep, .Platform$file.sep, count.ind[2], "_dam1")
       dir.sir2  <- paste0(directory.rep, .Platform$file.sep, count.ind[3], "_sir2")
@@ -1651,7 +1654,7 @@ simer <-
       pop.doubcro$pheno <- pop.total$pheno[(nind+nind2+nind3+nrow(pop.sir11)+nrow(pop.dam22)+1):(nind+nind2+nind3+nind4+nrow(pop.sir11)+nrow(pop.dam22)+nrow(pop.doubcro))]
     }
   
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       flush(geno.sir1)
       flush(geno.dam1)
       flush(geno.sir2)
@@ -1662,19 +1665,19 @@ simer <-
     
       # write files
       logging.log("---write files of sir1s---\n", verbose = verbose)
-      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, dir.sir1, out.format, verbose)
+      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir1, out.format, verbose)
       logging.log("---write files of dam1s---\n", verbose = verbose)
-      write.file(pop2, geno.dam1, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, dir.dam1, out.format, verbose)
+      write.file(pop2, geno.dam1, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.dam1, out.format, verbose)
       logging.log("---write files of sir2s---\n", verbose = verbose)
-      write.file(pop3, geno.sir2, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, dir.sir2, out.format, verbose)
+      write.file(pop3, geno.sir2, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, out, dir.sir2, out.format, verbose)
       logging.log("---write files of dam2s---\n", verbose = verbose)
-      write.file(pop4, geno.dam2, pos.map, 1:nrow(pop4), 1:nrow(pop4),seed.map, dir.dam2, out.format, verbose)
+      write.file(pop4, geno.dam2, pos.map, 1:nrow(pop4), 1:nrow(pop4),seed.map, out, dir.dam2, out.format, verbose)
       logging.log("---write files of sir11s---\n", verbose = verbose)
-      write.file(pop.sir11, geno.sir11, pos.map, 1:nrow(pop.sir11), 1:nrow(pop.sir11), seed.map, dir.sir11, out.format, verbose)
+      write.file(pop.sir11, geno.sir11, pos.map, 1:nrow(pop.sir11), 1:nrow(pop.sir11), seed.map, out, dir.sir11, out.format, verbose)
       logging.log("---write files of dam22s---\n", verbose = verbose)
-      write.file(pop.dam22, geno.dam22, pos.map, 1:nrow(pop.dam22), 1:nrow(pop.dam22), seed.map, dir.dam22, out.format, verbose)
+      write.file(pop.dam22, geno.dam22, pos.map, 1:nrow(pop.dam22), 1:nrow(pop.dam22), seed.map, out, dir.dam22, out.format, verbose)
       logging.log("---write files of progenies---\n", verbose = verbose)
-      write.file(pop.doubcro, geno.doubcro, pos.map, 1:nrow(pop.doubcro), 1:nrow(pop.doubcro), seed.map, dir.dbc, out.format, verbose)
+      write.file(pop.doubcro, geno.doubcro, pos.map, 1:nrow(pop.doubcro), 1:nrow(pop.doubcro), seed.map, out, dir.dbc, out.format, verbose)
     }
   
     # set total information of population and genotype
@@ -1709,7 +1712,7 @@ simer <-
       geno.total.temp <- NULL
     }
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = sum(count.ind[out.geno.gen]),
@@ -1885,11 +1888,11 @@ simer <-
       trait <- pop.pheno
     }
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       flush(geno.total)
       # write files
       logging.log("---write files of total population...\n", verbose = verbose)
-      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, directory.rep, out.format, verbose)
+      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, out, directory.rep, out.format, verbose)
     }
     
     if (num.gen > 1) {
@@ -1954,18 +1957,18 @@ simer <-
     rm(pedx1);rm(pedx2);gc()
 
     # Create a folder to save files
-    if (!is.null(out)) {
-      if (!dir.exists(out)) stop("Please check your outpath!")
+    if (!is.null(outpath)) {
+      if (!dir.exists(outpath)) stop("Please check your outpath!")
       if (out.format == "numeric") {
-        out = paste0(out, .Platform$file.sep, sum(count.ind), "_Simer_Data_numeric")
+        outpath = paste0(outpath, .Platform$file.sep, sum(count.ind), "_Simer_Data_numeric")
       } else if (out.format == "plink"){
-        out = paste0(out, .Platform$file.sep, sum(count.ind), "_Simer_Data_plink")
+        outpath = paste0(outpath, .Platform$file.sep, sum(count.ind), "_Simer_Data_plink")
       } else {
         stop("out.format should be 'numeric' or 'plink'!")
       }
-      if (!dir.exists(out)) { dir.create(out) }
+      if (!dir.exists(outpath)) { dir.create(outpath) }
       
-      directory.rep <- paste0(out, .Platform$file.sep, "replication", replication)
+      directory.rep <- paste0(outpath, .Platform$file.sep, "replication", replication)
       if (dir.exists(directory.rep)) {
         remove_bigmatrix(file.path(directory.rep, "genotype"))
         unlink(directory.rep, recursive = TRUE)
@@ -1986,7 +1989,7 @@ simer <-
     pop.total <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
     
     gc <- geno.cvt(pop1.geno.copy)
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = ncol(gc),
@@ -2025,10 +2028,10 @@ simer <-
     pop.pheno$pop <- NULL
     trait <- pop.pheno
     
-    if (!is.null(out)) {
+    if (!is.null(outpath)) {
       flush(geno.total)
       logging.log("---write files of total population...\n", verbose = verbose)
-      write.file(pop.total, geno.total, pos.map, index, index, seed.map, directory.rep, out.format, verbose)
+      write.file(pop.total, geno.total, pos.map, index, index, seed.map, out, directory.rep, out.format, verbose)
     }
     
     rm(basepop); rm(basepop.geno); rm(basepop.geno.em); rm(userped); rm(rawped); rm(ped); gc()

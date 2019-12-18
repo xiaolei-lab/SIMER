@@ -500,7 +500,7 @@ cal.r <- function(pop, pop.curr) {
 #'
 #' @param pop total population information
 #' @param selPath the path of breeding_plan
-#' @param out the path of output files
+#' @param outpath the path of output files
 #'
 #' @return None
 #' @export
@@ -516,7 +516,8 @@ cal.r <- function(pop, pop.curr) {
 #'            replication = 1,
 #'            verbose = TRUE, 
 #'            mrk.dense = FALSE,
-#'            out = NULL,
+#'            out = "simer", 
+#'            outpath = NULL,
 #'            out.format = "numeric",
 #'            seed.geno = runif(1, 0, 100),
 #'            seed.map = 12345,
@@ -569,13 +570,13 @@ cal.r <- function(pop, pop.curr) {
 #' 
 #' pop <- simer.list$pop                         
 #' selPath <- system.file("extdata", "01breeding_plan", package = "simer")
-#' out.pop <- read.selgeno(pop = pop, selPath = selPath, out = NULL)
+#' out.pop <- read.selgeno(pop = pop, selPath = selPath, outpath = NULL)
 #' str(out.pop)
 #' }
-read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
+read.selgeno <- function(pop=NULL, selPath=NULL, outpath=NULL) {
   if (!dir.exists(selPath)) stop("Please input a right selection path!")
-  if (!is.null(out)) {
-    if (!dir.exists(out)) {
+  if (!is.null(outpath)) {
+    if (!dir.exists(outpath)) {
       stop("Please input a right output path!")
     }
   }
@@ -629,8 +630,8 @@ read.selgeno <- function(pop=NULL, selPath=NULL, out=NULL) {
     out.index <- out.index[out.index != 0]
     out.pop <- pop[pop$index %in% out.index, ]
     
-    if (!is.null(out))
-      write.table(out.pop, file.path(out, paste0("out_", filename.old)), row.names=FALSE, col.names=TRUE, quote=FALSE)
+    if (!is.null(outpath))
+      write.table(out.pop, file.path(outpath, paste0("out_", filename.old)), row.names=FALSE, col.names=TRUE, quote=FALSE)
     
     return(out.pop)
   })

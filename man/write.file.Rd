@@ -4,8 +4,8 @@
 \alias{write.file}
 \title{Write files of simer}
 \usage{
-write.file(pop, geno, map, out.geno.index, out.pheno.index, seed.map, out,
-  out.format, verbose)
+write.file(pop, geno, map, out.geno.index, out.pheno.index, seed.map,
+  out = "simer", outpath, out.format, verbose)
 }
 \arguments{
 \item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
@@ -20,7 +20,9 @@ write.file(pop, geno, map, out.geno.index, out.pheno.index, seed.map, out,
 
 \item{seed.map}{random seed of map file}
 
-\item{out}{path of output files}
+\item{out}{prefix of output file name}
+
+\item{outpath}{path of output files}
 
 \item{out.format}{format of output, "numeric" or "plink"}
 
@@ -78,11 +80,11 @@ basepop.geno <- geno.cvt(basepop.geno)
 basepop.geno <- as.big.matrix(basepop.geno)
 write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
     out.geno.index = idx, out.pheno.index = idx, seed.map = seed.map, 
-    out = tempdir(), out.format = "numeric", verbose = TRUE)
-file.remove(file.path(tempdir(), "geno_id.txt"))
-file.remove(file.path(tempdir(), "map.txt"))
-file.remove(file.path(tempdir(), "pedigree.txt"))
-file.remove(file.path(tempdir(), "phenotype.txt"))
+    outpath = tempdir(), out.format = "numeric", verbose = TRUE)
+file.remove(file.path(tempdir(), "simer.geno.id"))
+file.remove(file.path(tempdir(), "simer.map"))
+file.remove(file.path(tempdir(), "simer.ped"))
+file.remove(file.path(tempdir(), "simer.phe"))
 }
 }
 \author{
