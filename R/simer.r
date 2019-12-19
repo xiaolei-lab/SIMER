@@ -671,7 +671,7 @@ simer <-
           input.geno(geno.total, gc, sum(count.ind[out.gg]), mrk.dense)
         }
         if (!sel.on) {
-          input.geno(geno.total.temp, pop.geno.curr, sum(count.ind[1:i]), mrk.dense)
+          input.geno(geno.total.temp, pop.geno.curr, 2*sum(count.ind[1:i]), mrk.dense)
         }
         logging.log("After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
         
