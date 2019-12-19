@@ -561,6 +561,8 @@ simer <-
   #    to different reproduction method.
   logging.log("---start reproduction---\n", verbose = verbose)
   # multi-generation: clone, dh, selpol, randmate, randexself
+	geno.back <- paste0(out, ".geno.bin")
+	geno.desc <- paste0(out, ".geno.desc")
   if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol" || mtd.reprod == "randmate" || mtd.reprod == "randexself") {
     out.geno.index <- getindex(count.ind, out.geno.gen)
     out.pheno.index <- getindex(count.ind, out.pheno.gen)
@@ -583,8 +585,8 @@ simer <-
         init = 3,
         type = 'char',
         backingpath = directory.rep,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       options(bigmemory.typecast.warning=FALSE)
     } else {
       geno.total <- big.matrix(
@@ -768,24 +770,24 @@ simer <-
         init = 3,
         type = 'char',
         backingpath = dir.sir,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.dam <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[2],
         init = 3,
         type = 'char',
         backingpath = dir.dam,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.singcro <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[3],
         init = 3,
         type = 'char',
         backingpath = dir.sgc,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       options(bigmemory.typecast.warning=FALSE)
     } else {
       geno.sir <- big.matrix(
@@ -962,40 +964,40 @@ simer <-
         init = 3,
         type = 'char',
         backingpath = dir.sir1,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.dam1 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[2],
         init = 3,
         type = 'char',
         backingpath = dir.dam1,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.sir2 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[3],
         init = 3,
         type = 'char',
         backingpath = dir.sir2,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.dam21 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[4],
         init = 3,
         type = 'char',
         backingpath = dir.dam21,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.tricro <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[5],
         init = 3,
         type = 'char',
         backingpath = dir.trc,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       options(bigmemory.typecast.warning=FALSE)
     } else {
       geno.sir1 <- big.matrix(
@@ -1274,56 +1276,56 @@ simer <-
         init = 3,
         type = 'char',
         backingpath = dir.sir1,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.dam1 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[2],
         init = 3,
         type = 'char',
         backingpath = dir.dam1,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.sir2 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[3],
         init = 3,
         type = 'char',
         backingpath = dir.sir2,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.dam2 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[4],
         init = 3,
         type = 'char',
         backingpath = dir.dam2,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.sir11 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[5],
         init = 3,
         type = 'char',
         backingpath = dir.sir11,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.dam22 <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[6],
         init = 3,
         type = 'char',
         backingpath = dir.dam22,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       geno.doubcro <- filebacked.big.matrix(
         nrow = num.marker,
         ncol = count.ind[7],
         init = 3,
         type = 'char',
         backingpath = dir.dbc,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       options(bigmemory.typecast.warning=FALSE)
     } else {
       geno.sir1 <- big.matrix(
@@ -1719,8 +1721,8 @@ simer <-
         init = 3,
         type = 'char',
         backingpath = directory.rep,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       options(bigmemory.typecast.warning=FALSE)
     } else {
       geno.total <- big.matrix(
@@ -1996,8 +1998,8 @@ simer <-
         init = 3,
         type = 'char',
         backingpath = directory.rep,
-        backingfile = 'genotype.geno.bin',
-        descriptorfile = 'genotype.geno.desc')
+        backingfile = geno.back,
+        descriptorfile = geno.desc)
       options(bigmemory.typecast.warning=FALSE)
     } else {
       geno.total <- big.matrix(
