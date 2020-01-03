@@ -278,6 +278,8 @@ phenotype <-
       idx.len <- unlist(lapply(1:ncol(pheno$info.eff[[i]]), function(j) {  return(length(unique(pheno$info.eff[[i]][, j]))) }))
       info.eff.t <- pheno$info.eff[[i]][, idx.len != 1]
       info.eff.cor <- cor(info.eff.t)
+      info.eff.f <- names(info.eff.t)[names(info.eff.t) %in% c("ind.d", "ind.aa", "ind.ad", "ind.da", "ind.dd")]
+      info.eff.cor[info.eff.f, info.eff.f] <- 0
       if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
         warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects simulation!")
     }
@@ -345,6 +347,8 @@ eval(parse(text = "tryCatch({
     idx.len <- unlist(lapply(1:ncol(pheno$info.eff), function(i) {  return(length(unique(pheno$info.eff[, i]))) }))
     info.eff.t <- pheno$info.eff[, idx.len != 1]
     info.eff.cor <- cor(info.eff.t)
+    info.eff.f <- names(info.eff.t)[names(info.eff.t) %in% c("ind.d", "ind.aa", "ind.ad", "ind.da", "ind.dd")]
+    info.eff.cor[info.eff.f, info.eff.f] <- 0
     if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
       warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects simulation!")
     
