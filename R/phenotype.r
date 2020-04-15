@@ -158,19 +158,20 @@ phenotype <-
 # Start phenotype
   
   pop.env <- environment()
+  nind <- nrow(pop)
   if (is.null(pop.geno)) {
     multrait <- effs
+    geno <- NULL
+    
   } else {
     multrait <- length(effs) > 2
-  }
-  
-  nind <- nrow(pop)
-  if (ncol(pop.geno) == 2*nind) {
-    geno <- geno.cvt(pop.geno)
-  } else if (ncol(pop.geno) == nind) {
-    geno <- pop.geno
-  } else {
-    stop("Genotype matrix is not match population information!")
+    if (ncol(pop.geno) == 2*nind) {
+      geno <- geno.cvt(pop.geno)
+    } else if (ncol(pop.geno) == nind) {
+      geno <- pop.geno
+    } else {
+      stop("Genotype matrix is not match population information!")
+    }
   }
   
   if (multrait) {
