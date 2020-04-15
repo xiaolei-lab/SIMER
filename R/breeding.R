@@ -317,20 +317,21 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
       } else {
         bivar.R <- R.t
       }
-    } 
+    }
     gebv <- NULL
     eval(parse(text = "tryCatch({
       if (!(\"hiblup\" %in% .packages())) suppressMessages(library(hiblup))
-      gebv <- hiblup(pheno = pheno, bivar.pos = bivar.pos, geno = geno, map = map, 
-                     geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode, 
+      gebv <- hiblup(pheno = pheno, bivar.pos = bivar.pos, geno = geno, map = map,
+                     geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode,
                      CV = CV, R = R, bivar.CV = bivar.CV, bivar.R = bivar.R, snp.solution = FALSE)
-    }, error=function(e) { 
+    }, error=function(e) {
       stop(\"Something wrong when running HIBLUP!\") })"))
+    rm(geno4hi); rm(geno); gc()
     return(gebv$ebv[gebv$ebv[, 1] %in% pop.last$index, ])
   })
   names(idx.ebv) <- plan.names
   logging.log(" \n", verbose = verbose)
-  
+
   # mating for the next generation
   ps <- 0.8
   num.prog <- 4
@@ -345,7 +346,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     if (ncol(ebv.sum) != 2) ebv.sum <- apply(ebv.sum[, 2:ncol(ebv.sum)], 1, sum)
     ind.score.ordered <- ebv[order(ebv.sum, decreasing=TRUE), 1]
     ind.stay <- ind.score.ordered[1:(nrow(ebv)*ps)]
-    
+
     pop.gp.in <- # pop.gp with genotype and pop information
       reproduces(pop1 = pop.last,
                  pop1.geno = pop.geno.last,
@@ -353,12 +354,12 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
                  mtd.reprod = "randmate",
                  num.prog = 4,
                  ratio = 0.5)
-    
+
     return(pop.gp.in)
   })
   names(pop.gp) <- plan.names
   logging.log("Done!\n", verbose = verbose)
-  
+
   # calculate for phenotype
   effs <- simls$effs
   h2.tr1 <- 0.3
@@ -380,21 +381,21 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     gp <- pop.gp[[i]]
     pop1.pheno <-
       phenotype(effs = effs,
-                FR = FR, 
+                FR = FR,
                 pop = gp$pop,
                 pop.geno = gp$geno,
                 pos.map = NULL,
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
-                h2.trn = h2.trn, 
-                sel.crit = "pheno", 
-                pop.total = rbind(pop[, 1:7], gp$pop), 
-                sel.on = TRUE, 
-                inner.env =  NULL, 
+                h2.trn = h2.trn,
+                sel.crit = "pheno",
+                pop.total = rbind(pop[, 1:7], gp$pop),
+                sel.on = TRUE,
+                inner.env =  NULL,
                 verbose = verbose)
     pop.curr <- pop1.pheno$pop
     pheno <- subset(pop.curr, select = f1)
-    
+
     if (ncol(pheno) > 1) {
       # calculate the weigth of index selection
       b <- cal.idx(pop.pheno = pop1.pheno, index.wt = index.wt)
@@ -403,11 +404,11 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     }
     pheno <- rowSums(sweep(pheno, 2, b, "*"))
     pheno.curr <- list(pheno = pheno, b = b)
-    
+
     return(pheno.curr)
   })
   names(pheno.curr) <- plan.names
-  
+
   score.curr <- unlist(lapply(1:length(pheno.curr), function(i) {
     pheno <- mean(pheno.curr[[i]]$pheno)
     score.curr <- pheno - sum(score.last * pheno.curr[[i]]$b)
@@ -416,7 +417,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   names(score.curr) <- plan.names
   score.max <- max(score.curr)
   score.min <- min(score.curr)
-  
+
   logging.log("\n", verbose = verbose)
   logging.log(" Genetic progress of every breeding plan:\n", verbose = verbose)
   for (i in 1:length(score.curr)) {
@@ -430,7 +431,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     logging.log(" Plan", i, ": ", score.curr[i], str0, "\n", sep = "", verbose = verbose)
   }
   logging.log("\n", verbose = verbose)
-  
+
   if (decr) {
     idx.goal <- which.max(score.curr)
   } else {
@@ -441,7 +442,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   simer.print(plan.goal$idx_geno, verbose = verbose)
   logging.log(" Individuals should be phenotyping are:\n", verbose = verbose)
   simer.print(plan.goal$idx_pheno, verbose = verbose)
-  
+
   if (length(plan.goal$eff_fixed) > 0) {
     logging.log(" Fixed effects should be in the model are:\n", verbose = verbose)
     for (i in 1:length(plan.goal$eff_fixed)) {
@@ -459,10 +460,9 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     logging.log(" The weights of index selection are:\n", verbose = verbose)
     logging.log("", plan.goal$b, "\n", verbose = verbose)
   }
-  
-  rm(simls); rm(FR); rm(pop); rm(pop.last); rm(idx4hi); rm(ls.fr); rm(idx.ebv);
-  rm(pop.gp); rm(pheno.curr); gc()
-  
+
+  rm(simls); rm(FR); rm(pop); rm(pop.last); rm(idx4hi); rm(ls.fr); rm(idx.ebv); 
+  rm(pop.geno.last); rm(pop.gp); rm(pheno.curr); gc()
   return(plan.goal)
 }
 

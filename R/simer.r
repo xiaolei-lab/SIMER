@@ -595,6 +595,8 @@ simer <-
 	geno.back <- paste0(out, ".geno.bin")
 	geno.desc <- paste0(out, ".geno.desc")
   if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol" || mtd.reprod == "randmate" || mtd.reprod == "randexself") {
+    out.geno.gen <- out.geno.gen[out.geno.gen > 0]
+    out.pheno.gen <- out.pheno.gen[out.pheno.gen > 0]
     out.geno.index <- getindex(count.ind, out.geno.gen)
     out.pheno.index <- getindex(count.ind, out.pheno.gen)
 
@@ -1775,6 +1777,8 @@ simer <-
   } else if (mtd.reprod == "backcro") {
     if (num.gen != length(prog.back))
       stop(" Number of generation should equal to the length of prog.back!")
+    out.geno.gen <- out.geno.gen[out.geno.gen > 0]
+    out.pheno.gen <- out.pheno.gen[out.pheno.gen > 0]
     out.geno.index <- getindex(count.ind, out.geno.gen)
     out.pheno.index <- getindex(count.ind, out.pheno.gen)
 
