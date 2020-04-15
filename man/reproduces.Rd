@@ -4,9 +4,17 @@
 \alias{reproduces}
 \title{Do reproducion by different mate design}
 \usage{
-reproduces(pop1 = NULL, pop2 = NULL, pop1.geno = NULL,
-  pop2.geno = NULL, ind.stay = NULL, mtd.reprod = "randmate",
-  num.prog = 2, ratio = 0.5)
+reproduces(
+  pop1 = NULL,
+  pop2 = NULL,
+  pop1.geno = NULL,
+  pop2.geno = NULL,
+  incols = 2,
+  ind.stay = NULL,
+  mtd.reprod = "randmate",
+  num.prog = 2,
+  ratio = 0.5
+)
 }
 \arguments{
 \item{pop1}{population information of population1}
@@ -16,6 +24,8 @@ reproduces(pop1 = NULL, pop2 = NULL, pop1.geno = NULL,
 \item{pop1.geno}{genotype matrix of population1}
 
 \item{pop2.geno}{genotype matrix of population2}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
 \item{ind.stay}{selected individuals regarded as parents}
 

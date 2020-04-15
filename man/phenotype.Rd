@@ -4,11 +4,21 @@
 \alias{phenotype}
 \title{Generate phenotype and other values according to selection criterion}
 \usage{
-phenotype(effs = NULL, FR = NULL, pop = NULL, pop.geno = NULL,
-  pos.map = NULL, h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-  gnt.cov = matrix(c(1, 2, 2, 15), 2, 2), h2.trn = c(0.3, 0.5),
-  sel.crit = "pheno", pop.total = NULL, sel.on = TRUE,
-  inner.env = NULL, verbose = TRUE)
+phenotype(
+  effs = NULL,
+  FR = NULL,
+  pop = NULL,
+  pop.geno = NULL,
+  pos.map = NULL,
+  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+  gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
+  h2.trn = c(0.3, 0.5),
+  sel.crit = "pheno",
+  pop.total = NULL,
+  sel.on = TRUE,
+  inner.env = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{effs}{a list of selected markers and their effects}
@@ -66,15 +76,12 @@ fix <- list(
           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
 
 # combination and ralation of random effects
-tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
-            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+tr1 <- list(rn = c("PE"), ratio = 0.03)
+tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
 cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
       
-rand <- list(
-        sir = list(mean = 0, sd = 1),		      
-        dam = list(mean = 0, sd = 1),	       
+rand <- list(       
          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
@@ -87,7 +94,7 @@ effs <-
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = FALSE,
@@ -123,7 +130,7 @@ effs <-
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = TRUE,

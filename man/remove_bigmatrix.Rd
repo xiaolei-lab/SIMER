@@ -4,8 +4,7 @@
 \alias{remove_bigmatrix}
 \title{Remove big.matrix safely}
 \usage{
-remove_bigmatrix(x, desc_suffix = ".geno.desc",
-  bin_suffix = ".geno.bin")
+remove_bigmatrix(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.bin")
 }
 \arguments{
 \item{x}{filename of big.matrix}
@@ -19,7 +18,7 @@ TRUE or FALSE
 }
 \description{
 Build date: Aug 8, 2019
-Last update: Aug 18, 2019
+Last update: Feb 14, 2019
 }
 \examples{
 library(bigmemory)
@@ -29,11 +28,11 @@ mat <- filebacked.big.matrix(
      init = 0,
      type = 'char',
      backingpath = ".",
-     backingfile = 'genotype.geno.bin',
-     descriptorfile = 'genotype.geno.desc')
+     backingfile = 'simer.geno.bin',
+     descriptorfile = 'simer.geno.desc')
 options(bigmemory.typecast.warning=FALSE)
 
-remove_bigmatrix(x = "genotype")
+remove_bigmatrix(x = "simer")
 }
 \author{
 Haohao Zhang and Dong Yin

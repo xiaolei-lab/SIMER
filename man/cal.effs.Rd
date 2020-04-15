@@ -4,16 +4,31 @@
 \alias{cal.effs}
 \title{Calculate for genetic effects list of selected markers}
 \usage{
-cal.effs(pop.geno = NULL, cal.model = "A", num.qtn.tr1 = c(2, 6, 10),
+cal.effs(
+  pop.geno = NULL,
+  incols = 2,
+  cal.model = "A",
+  num.qtn.tr1 = c(2, 6, 10),
   sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-  dist.qtn.tr1 = rep("normal", 6), eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5,
-  0.5, 0.5), shape.tr1 = c(1, 1, 1, 1, 1, 1), scale.tr1 = c(1, 1, 1, 1,
-  1, 1), multrait = FALSE, num.qtn.trn = matrix(c(18, 10, 10, 20), 2,
-  2), sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2), qtn.spot = rep(0.1, 10),
-  maf = 0, verbose = TRUE)
+  dist.qtn.tr1 = rep("normal", 6),
+  prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+  shape.tr1 = c(1, 1, 1, 1, 1, 1),
+  scale.tr1 = c(1, 1, 1, 1, 1, 1),
+  shape1.tr1 = c(1, 1, 1, 1, 1, 1),
+  shape2.tr1 = c(1, 1, 1, 1, 1, 1),
+  ncp.tr1 = c(0, 0, 0, 0, 0, 0),
+  multrait = FALSE,
+  num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+  sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2),
+  qtn.spot = rep(0.1, 10),
+  maf = 0,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{pop.geno}{genotype of population, a individual has two columns}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
 \item{cal.model}{phenotype models with the options: "A", "AD", "ADI"}
 
@@ -21,17 +36,23 @@ cal.effs(pop.geno = NULL, cal.model = "A", num.qtn.tr1 = c(2, 6, 10),
 
 \item{sd.tr1}{standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
 
-\item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry", "gamma", and "beta", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{eff.unit.tr1}{unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{prob.tr1}{unit effect of geometric distribution, its length should be same as dist.qtn.tr1}
 
-\item{shape.tr1}{shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{shape.tr1}{shape of gamma distribution of a single trait, its length should be same as dist.qtn.tr1}
 
-\item{scale.tr1}{scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{scale.tr1}{scale of gamma distribution of a single trait, its length should be same as dist.qtn.tr1}
+
+\item{shape1.tr1}{non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1}
+
+\item{shape2.tr1}{non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1}
+
+\item{ncp.tr1}{non-centrality parameter, its length should be same as dist.qtn.tr1}
 
 \item{multrait}{whether to apply multiple traits, TRUE represents applying, FALSE represents not}
 
-\item{num.qtn.trn}{QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits}
+\item{num.qtn.trn}{QTN distribution matrix, diagonal elements are QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits}
 
 \item{sd.trn}{a matrix with the standard deviation of the QTN effects}
 
@@ -56,9 +77,12 @@ effs <-
              num.qtn.tr1 = c(200, 200, 100),
              sd.tr1 = c(0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.03),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
+             shape1.tr1 = c(1, 1, 1, 1, 1, 1),
+             shape2.tr1 = c(1, 1, 1, 1, 1, 1),
+             ncp.tr1 = c(0, 0, 0, 0, 0, 0), 
              multrait = FALSE,
              num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
              sd.trn = matrix(c(0.07, 0, 0, 0.07), 2, 2),

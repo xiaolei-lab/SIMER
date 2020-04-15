@@ -4,8 +4,14 @@
 \alias{cal.gnt}
 \title{Generate genetic effects}
 \usage{
-cal.gnt(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE,
-  inner.env = NULL, verbose = TRUE)
+cal.gnt(
+  geno = NULL,
+  h2 = NULL,
+  effs = NULL,
+  sel.on = TRUE,
+  inner.env = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{geno}{genotype matrix of the population, an individual has two columns}
@@ -37,7 +43,7 @@ effs <-
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = FALSE,

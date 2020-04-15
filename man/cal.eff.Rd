@@ -4,20 +4,26 @@
 \alias{cal.eff}
 \title{Calculate for genetic effects vector of selected markers}
 \usage{
-cal.eff(num.qtn, eff.sd, dist.qtn, eff.unit, shape, scale)
+cal.eff(num.qtn, eff.sd, dist.qtn, prob, shape, scale, shape1, shape2, ncp = 0)
 }
 \arguments{
 \item{num.qtn}{number of QTN}
 
 \item{eff.sd}{standard deviation of different effects}
 
-\item{dist.qtn}{distribution of QTN's effects with options: "normal", "geometry" and "gamma"}
+\item{dist.qtn}{distribution of QTN's effects with options: "normal", "geometry", "gamma", and "beta"}
 
-\item{eff.unit}{unit effect of geometric distribution}
+\item{prob}{unit effect of geometric distribution}
 
 \item{shape}{shape of gamma distribution}
 
 \item{scale}{scale of gamma distribution}
+
+\item{shape1}{non-negative parameters of the Beta distribution}
+
+\item{shape2}{non-negative parameters of the Beta distribution}
+
+\item{ncp}{non-centrality parameter}
 }
 \value{
 genetic effects vector of selected markers
@@ -30,13 +36,14 @@ Last update: Jul 30, 2019
 num.qtn <- c(2, 6, 10) # three qtn groups
 eff.sd <- c(0.4, 0.2, 0.02) # three variance of qtn group
 eff <- cal.eff(num.qtn = num.qtn, eff.sd = eff.sd, dist.qtn = "normal",
-        eff.unit = 0.5, shape = 1, scale = 1)
+        prob = 0.5, shape = 1, scale = 1)
 str(eff)
 
 num.qtn <- sum(num.qtn)
 eff.sd <- sum(eff.sd)
 eff <- cal.eff(num.qtn = num.qtn, eff.sd = eff.sd, dist.qtn = "normal",
-        eff.unit = 0.5, shape = 1, scale = 1)
+               prob = 0.5, shape = 1, scale = 1, 
+               shape1 = 1, shape2 = 1, ncp = 0)
 str(eff)
 }
 \author{

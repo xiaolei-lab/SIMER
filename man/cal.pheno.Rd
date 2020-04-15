@@ -4,8 +4,14 @@
 \alias{cal.pheno}
 \title{Calculate for phenotype}
 \usage{
-cal.pheno(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL,
-  var.pheno = NULL, verbose = TRUE)
+cal.pheno(
+  fr = NULL,
+  info.eff = NULL,
+  h2 = NULL,
+  num.ind = NULL,
+  var.pheno = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{fr}{list of fixed effects and random effects}
@@ -37,7 +43,7 @@ effs <-
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = FALSE,
@@ -74,15 +80,12 @@ fix <- list(
           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
 
 # combination and ralation of random effects
-tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
-            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+tr1 <- list(rn = c("PE"), ratio = 0.03)
+tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
 cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
       
-rand <- list(
-        sir = list(mean = 0, sd = 1),		      
-        dam = list(mean = 0, sd = 1),	       
+rand <- list(       
          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))

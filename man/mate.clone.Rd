@@ -4,12 +4,14 @@
 \alias{mate.clone}
 \title{Clone process}
 \usage{
-mate.clone(pop1, pop1.geno, ind.stay, num.prog)
+mate.clone(pop1, pop1.geno, incols = 2, ind.stay, num.prog)
 }
 \arguments{
 \item{pop1}{population information of population1}
 
 \item{pop1.geno}{genotype matrix of population1}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
 \item{ind.stay}{selected individuals regarded as parents}
 

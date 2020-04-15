@@ -1,3 +1,4 @@
+
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,11 +21,12 @@
 #'
 #' @param rawgeno extrinsic genotype matrix
 #' @param geno genotype matrix need dealing with
-#' @param num.marker number of markers
-#' @param num.ind population size of base population
+#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
+#' @param num.marker number of the markers
+#' @param num.ind population size of the base population
 #' @param prob weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1
 #' @param blk.rg it represents the starting position and the ending position of a block
-#' @param recom.spot whether to consider recombination in every blocks
+#' @param recom.spot whether to consider recombination in every block
 #' @param range.hot range of number of chromosome crossovers in a hot spot block
 #' @param range.cold range of number of chromosome crossovers in a cold spot block
 #' @param rate.mut mutation rate between 1e-8 and 1e-6
@@ -38,12 +40,13 @@
 #' data(simdata)
 #' num.marker = nrow(input.map)
 #' num.ind = 100
+#' incols = 2
 #' basepop.geno <- genotype(num.marker = num.marker, num.ind = num.ind, verbose = TRUE)
 #' basepop.geno[1:5, 1:5]
 #'
 #' # get block information and recombination information
 #' nmrk <- nrow(basepop.geno)
-#' nind <- ncol(basepop.geno) / 2
+#' nind <- ncol(basepop.geno) / incols
 #' pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
 #' blk.rg <- cal.blk(pos.map)
 #' recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
@@ -51,6 +54,7 @@
 #' # genotype matrix after Exchange and Mutation
 #' basepop.geno.em <-
 #' genotype(geno = basepop.geno,
+#'          incols = 2, 
 #'          blk.rg = blk.rg,
 #'          recom.spot = recom.spot,
 #'          range.hot = 4:6,
@@ -61,6 +65,7 @@
 genotype <-
     function(rawgeno = NULL,
              geno = NULL,
+             incols = 2, 
              num.marker = NULL,
              num.ind = NULL,
              prob = c(0.5, 0.5),
@@ -78,22 +83,20 @@ genotype <-
   }
 
   if (!is.null(rawgeno)) {
-    logging.log("Input outer genotype matrix...\n", verbose = verbose)
+    logging.log(" Input outer genotype matrix...\n", verbose = verbose)
     if (!is.matrix(rawgeno)) {
       rawgeno <- as.matrix(rawgeno)
     }
     outgeno <- rawgeno
-    num.marker <- nrow(rawgeno)
-    num.ind <- ncol(rawgeno) / 2
 
   } else if (!is.null(num.marker) && !is.null(num.ind)){
-    logging.log("Establish genotype matrix of base-population...\n", verbose = verbose)
-    outgeno <- matrix(sample(c(0, 1), num.marker*num.ind*2, prob = prob, replace = TRUE), num.marker, 2*num.ind)
+    logging.log(" Establish genotype matrix of base-population...\n", verbose = verbose)
+    outgeno <- matrix(sample(c(0, 1), num.marker*num.ind*incols, prob = prob, replace = TRUE), num.marker, incols*num.ind)
 
-  } else if (!is.null(geno) & !is.null(recom.spot)) {
-    logging.log("Chromosome exchange and mutation on genotype matrix...\n", verbose = verbose)
+  } else if (!is.null(geno) & !is.null(recom.spot) & incols == 2) {
+    logging.log(" Chromosome exchange and mutation on genotype matrix...\n", verbose = verbose)
     num.marker <- nrow(geno)
-    num.ind <- ncol(geno) / 2
+    num.ind <- ncol(geno) / incols
     # outgeno <- deepcopy(geno) # deepcopy() in bigmemory
     ind.swap <- sample(c(0, 1), num.ind, replace = TRUE)
 
@@ -129,12 +132,12 @@ genotype <-
       return(geno.t)
     }# end geno.swap.ind
     outgeno <- do.call(cbind, lapply(1:num.ind, geno.swap))
-
+    
     # mutation
-    spot.total <- num.marker * 2 * num.ind
+    spot.total <- num.marker * incols * num.ind
     num.mut <- ceiling(spot.total * rate.mut)
     row.mut <- sample(1:num.marker, num.mut)
-    col.mut <- sample(1:(2*num.ind), num.mut)
+    col.mut <- sample(1:(incols*num.ind), num.mut)
     for (i in 1:length(row.mut)) {
       if (geno[row.mut[i], col.mut[i]] == 1) {
         outgeno[row.mut[i], col.mut[i]] <- 0
@@ -143,18 +146,18 @@ genotype <-
       }
     }
 
-  } else if (!is.null(geno) & is.null(recom.spot)) {
-    logging.log("Mutation on genotype matrix...\n", verbose = verbose)
+  } else if ((!is.null(geno) & incols == 1)|(!is.null(geno) & is.null(recom.spot))) {
+    logging.log(" Mutation on genotype matrix...\n", verbose = verbose)
     num.marker <- nrow(geno)
-    num.ind <- ncol(geno) / 2
+    num.ind <- ncol(geno) / incols
     outgeno <- geno
     # outgeno <- deepcopy(geno)
 
     # mutation
-    spot.total <- num.marker * 2 * num.ind
+    spot.total <- num.marker * incols * num.ind
     num.mut <- ceiling(spot.total * rate.mut)
     row.mut <- sample(1:num.marker, num.mut)
-    col.mut <- sample(1:(2*num.ind), num.mut)
+    col.mut <- sample(1:(incols*num.ind), num.mut)
     for (i in 1:length(row.mut)) {
       if (geno[row.mut[i], col.mut[i]] == 1) {
         outgeno[row.mut[i], col.mut[i]] <- 0
@@ -164,7 +167,7 @@ genotype <-
     }
 
   } else {
-    stop("please input the correct genotype matrix!")
+    stop("Please input the correct genotype matrix!")
   }
 
   return(outgeno)
@@ -191,11 +194,11 @@ genotype <-
 #' str(pos.map)
 check.map <- function(input.map = NULL, num.marker = NULL, len.block = 5e7) {
   if (is.null(input.map))
-    stop("please input a map file!")
+    stop("Please input a map file!")
   if (num.marker != nrow(input.map))
-    stop("the number of markers should be equal between genotype file and map file!")
-  if (!is.matrix(input.map))
-    input.map <- as.matrix(input.map)
+    stop("The number of markers should be equal between genotype file and map file!")
+  if (!is.data.frame(input.map))
+    input.map <- is.data.frame(input.map)
   chrs <- unique(input.map[, 2])
   pos.mrk <- as.numeric(input.map[, 3])
   nc.map <- ncol(input.map)

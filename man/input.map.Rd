@@ -4,7 +4,9 @@
 \name{input.map}
 \alias{input.map}
 \title{Map file from outside in simdata}
-\format{list}
+\format{
+list
+}
 \usage{
 data(simdata)
 }

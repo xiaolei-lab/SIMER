@@ -9,7 +9,8 @@ package.env <- NULL
     # set option
     op <- options()
     op.simer <- list(
-        simer.OutputLog2File = TRUE
+        simer.OutputLog2File = TRUE,
+        simer.show.warning = TRUE
     )
     toset <- !(names(op.simer) %in% names(op))
     if (any(toset)) { 

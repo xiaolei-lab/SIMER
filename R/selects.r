@@ -43,7 +43,7 @@
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = FALSE,
@@ -90,7 +90,7 @@
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = TRUE,
@@ -146,7 +146,7 @@ selects <-
 
 # Start selection
   
-  f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = TRUE)
+  f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = TRUE)
   pheno <- subset(pop, select = f1)         
 	if (ncol(pheno) == 1) {
 	  # calculate r by A matrix
@@ -169,14 +169,13 @@ selects <-
 
 	if (sel.multi == "tdm") {
     if (index.tdm == ncol(pheno)) {
-      logging.log("all phenotype have selected by tandem method~\n", verbose = verbose)
+      logging.log(" All phenotype have selected by tandem method.\n", verbose = verbose)
       index.tdm <- 1
     }
     if (pheno[nrow(pheno) * pass.perc, index.tdm] >= goal[index.tdm]) {
       index.tdm <- index.tdm + 1
     }
   }
-
 	return(c(index.tdm, ind.ordered))
 }
 
@@ -205,7 +204,7 @@ selects <-
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = FALSE,
@@ -328,7 +327,7 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = TRUE,
@@ -370,22 +369,8 @@ cal.multi <- function(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc
   pheno <- subset(pop, select = f1)    
 
   if (sel.multi == "index") {
-    if(ncol(pheno) != length(index.wt)) {
-      stop("Column of phenotype should equal length of weight of index")
-    }
-    
-    # phenotype covariance matrix
-    P <- var(pheno)
-    iP <- try(solve(P), silent = TRUE)
-    if (inherits(iP, "try-error")) {
-      iP <- ginv(P)
-    }
-    pn <- grep(pattern = "TBV", x = names(pop.pheno$info.pheno), value = TRUE)
-    TBV <- do.call(cbind, pop.pheno$info.pheno[names(pop.pheno$info.pheno) %in% pn])
-    # BV covariance matrix
-    A <- var(TBV)
-    b <- iP %*% A %*% index.wt
-    b <- as.vector(b)
+    # calculate the weight of index selection
+    b <- cal.idx(pop.pheno = pop.pheno, index.wt = index.wt)
     
     ind.score <- cbind(pop$index, apply(pheno * b, 1, sum))
     ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
@@ -491,181 +476,75 @@ cal.r <- function(pop, pop.curr) {
   return(cor.r)
 }
 
-#' Read sel_ind_geno to get selection condition
+#' Calculate the weight of index selection
 #'
-#' Build date: Nov 14, 2018
-#' Last update: Jul 31, 2019
+#' Build date: Feb 8, 2020
+#' Last update: Feb 8, 2020
 #'
 #' @author Dong Yin
 #'
-#' @param pop total population information
-#' @param selPath the path of breeding_plan
-#' @param outpath the path of output files
+#' @param pop.pheno list of all phenotype information
+#' @param index.wt economic weights of selection index method, its length should equals to the number of traits
 #'
-#' @return None
+#' @return the weight of index selection
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # get map file, map is neccessary
-#' data(simdata)
-#'
-#' # run simer
-#' simer.list <-
-#'      simer(num.gen = 10,
-#'            replication = 1,
-#'            verbose = TRUE, 
-#'            mrk.dense = FALSE,
-#'            out = "simer", 
-#'            outpath = NULL,
-#'            out.format = "numeric",
-#'            seed.geno = runif(1, 0, 100),
-#'            seed.map = 12345,
-#'            out.geno.gen = 3:5,
-#'            out.pheno.gen = 1:5,
-#'            rawgeno1 = rawgeno,
-#'            rawgeno2 = NULL,
-#'            rawgeno3 = NULL,
-#'            rawgeno4 = NULL,
-#'            num.ind = NULL,
-#'            prob = c(0.5, 0.5),
-#'            input.map = input.map,
-#'            len.block = 5e7,
-#'            range.hot = 4:6,
-#'            range.cold = 1:5,
-#'            rate.mut = 1e-8,
-#'            cal.model = "AD",
-#'            FR = NULL, 
-#'            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-#'            num.qtn.tr1 = 18,
-#'            sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
-#'            dist.qtn.tr1 = rep("normal", 6),
-#'            eff.unit.tr1 = rep(0.5, 6),
-#'            shape.tr1 = rep(1, 6),
-#'            scale.tr1 = rep(1, 6),
-#'            multrait = FALSE,
-#'            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'            sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-#'            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'            h2.trn = c(0.3, 0.5), 
-#'            qtn.spot = rep(0.1, 10),
-#'            maf = 0,
-#'            sel.crit = "pheno",
-#'            sel.on = TRUE, 
-#'            mtd.reprod = "randmate",
-#'            userped = userped,
-#'            num.prog = 2,
-#'            ratio = 0.5,
-#'            prog.tri = 2,
-#'            prog.doub = 2,
-#'            prog.back = rep(2, 5),
-#'            ps = 0.8,
-#'            decr = TRUE,
-#'            sel.multi = "index",
-#'            index.wt = c(0.5, 0.5),
-#'            index.tdm = 1,
-#'            goal.perc = 0.1,
-#'            pass.perc = 0.9, 
-#'            sel.sing = "comb") 
+#' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+#' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 #' 
-#' pop <- simer.list$pop                         
-#' selPath <- system.file("extdata", "01breeding_plan", package = "simer")
-#' out.pop <- read.selgeno(pop = pop, selPath = selPath, outpath = NULL)
-#' str(out.pop)
-#' }
-read.selgeno <- function(pop=NULL, selPath=NULL, outpath=NULL) {
-  if (!dir.exists(selPath)) stop("Please input a right selection path!")
-  if (!is.null(outpath)) {
-    if (!dir.exists(outpath)) {
-      stop("Please input a right output path!")
-    }
+#' effs <-
+#'     cal.effs(pop.geno = pop.geno,
+#'              cal.model = "A",
+#'              num.qtn.tr1 = c(2, 6, 10),
+#'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+#'              dist.qtn.tr1 = rep("normal", 6),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
+#'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
+#'              multrait = TRUE,
+#'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+#'              sd.trn = diag(c(1, 0.5)),
+#'              qtn.spot = rep(0.1, 10),
+#'              maf = 0, 
+#'              verbose = TRUE)
+#'              
+#' pop.pheno <-
+#'     phenotype(effs = effs,
+#'               FR = NULL, 
+#'               pop = pop,
+#'               pop.geno = pop.geno,
+#'               pos.map = NULL,
+#'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+#'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+#'               h2.trn = c(0.3, 0.5), 
+#'               sel.crit = "pheno", 
+#'               pop.total = pop, 
+#'               sel.on = TRUE,
+#'               inner.env = NULL, 
+#'               verbose = TRUE)
+#' pop <- pop.pheno$pop
+#' pop.pheno$pop <- NULL 
+#' b <- cal.idx(pop.pheno = pop.pheno, index.wt = c(0.5, 0.5))
+cal.idx <- function(pop.pheno, index.wt) {
+  pn <- grep(pattern = "pheno", x = names(pop.pheno$info.pheno), value = TRUE)
+  pheno <- do.call(data.frame, pop.pheno$info.pheno[names(pop.pheno$info.pheno) %in% pn])
+  
+  if(ncol(pheno) != length(index.wt)) {
+    stop("Column of phenotype should equal length of weight of index")
   }
   
-  filenames <- dir(path = selPath)
-  for (filename in filenames) {
-    fn <- unlist(strsplit(filename, ".", fixed = TRUE))
-	  if (length(fn) != 2) {
-	    filenames <- filenames[!(filenames == filename)]
-	    next
-    }
-	  if (substr(fn[1], 1, 13) != "breeding_plan") {
-	    filenames <- filenames[!(filenames == filename)]
-	  }
+  # phenotype covariance matrix
+  P <- var(pheno)
+  iP <- try(solve(P), silent = TRUE)
+  if (inherits(iP, "try-error")) {
+    iP <- ginv(P)
   }
   
-  out.pop <- lapply(filenames, function(filename) {
-    filename.old <- filename
-    filename <- file.path(selPath, filename)
-    scheme <- read.delim(filename, header = TRUE, stringsAsFactors = FALSE)
-    num.row <- dim(pop)[1]
-    out.index <- rep(0, num.row)
-    for(i in 1:num.row) { # for2
-      gen <- pop$gen[i]
-      if (gen %in% scheme$generation) { # if1
-        si <- which(scheme$generation == gen)
-        fam.index <- scheme$family_index[si]
-        if (fam.index == "all") {
-          flag1 <- TRUE
-        } else {
-          fam.index <- num2num(fam.index) + pop$fam[pop$gen==gen][1] - 1
-          flag1 <- pop$fam[i] %in% fam.index
-        }
-        infam.index <- scheme$within_family_index[si]
-        if (infam.index == "all") {
-          flag2 <- TRUE
-        } else {
-          infam.index <- num2num(infam.index)
-          flag2 <- pop$infam[i] %in% infam.index
-        }
-        if (scheme$sex[si] == "all") {
-          flag3 <- TRUE
-        } else {
-          flag3 <- pop$sex[i] == as.numeric(scheme$sex[si])
-        }
-        if (flag1 && flag2 && flag3) { # if2
-          out.index[i] <- pop$index[i]
-        } # end if2
-      } # end if1
-    } # end for2
-    out.index <- out.index[out.index != 0]
-    out.pop <- pop[pop$index %in% out.index, ]
-    
-    if (!is.null(outpath))
-      write.table(out.pop, file.path(outpath, paste0("out_", filename.old)), row.names=FALSE, col.names=TRUE, quote=FALSE)
-    
-    return(out.pop)
-  })
-  names(out.pop) <- paste("plan", 1:length(filenames), sep = "")
-  
-  return(out.pop)
-}
-
-#' Convert string number to numeric number
-#'
-#' Build date: Nov 14, 2018
-#' Last update: Jul 31, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param nums string number
-#'
-#' @return numeric number
-#' @export
-#'
-#' @examples
-#' nums <- "1,2,4:7"
-#' num <- num2num(nums)
-#' num
-num2num <- function(nums) {
-  nums <- unlist(strsplit(nums, split=","))
-  t1 <- nums[nchar(nums) == 1]
-  t2 <- nums[nchar(nums) != 1]
-  if (length(t2) > 0) { # if2
-    for (ti in 1:length(t2)) { # for3
-      t3 <- unlist(strsplit(t2[ti], split=":"))
-      t1 <- c(t1, seq(t3[1], t3[2]))
-    } # end for3
-  } # end if2
-  nums <- sort(as.numeric(t1))
-  return(nums)
+  pn <- grep(pattern = "TBV", x = names(pop.pheno$info.pheno), value = TRUE)
+  TBV <- do.call(data.frame, pop.pheno$info.pheno[names(pop.pheno$info.pheno) %in% pn])
+  # BV covariance matrix
+  A <- var(TBV)
+  b <- iP %*% A %*% index.wt
+  b <- as.vector(b)
 }

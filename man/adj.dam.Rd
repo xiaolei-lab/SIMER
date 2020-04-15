@@ -4,11 +4,9 @@
 \alias{adj.dam}
 \title{Adjust ped.dam for correcting litter size}
 \usage{
-adj.dam(pop1, ped.dam, ind.stay, ratio)
+adj.dam(ped.dam, ind.stay, ratio)
 }
 \arguments{
-\item{pop1}{population information of population1}
-
 \item{ped.dam}{indice of dams in the pedigree}
 
 \item{ind.stay}{selected individuals regarded as parents}
@@ -26,8 +24,7 @@ Last update: Aug 1, 2019
 basepop <- getpop(nind = 100, from = 1, ratio = 0.5)
 ped.dam <- basepop$dam
 ind.stay <- basepop$index
-idx.dam <- adj.dam(pop1 = basepop, ped.dam = ped.dam,
-    ind.stay = ind.stay, ratio = 0.5)
+idx.dam <- adj.dam(ped.dam = ped.dam, ind.stay = ind.stay, ratio = 0.5)
 str(idx.dam)
 }
 \author{

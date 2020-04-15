@@ -57,15 +57,12 @@
 #'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
 #' 
 #' # combination and ralation of random effects
-#' tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-#' tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+#' tr1 <- list(rn = c("PE"), ratio = 0.03)
+#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
 #'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
 #'       
-#' rand <- list(
-#'         sir = list(mean = 0, sd = 1),		      
-#'         dam = list(mean = 0, sd = 1),	       
+#' rand <- list(       
 #'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
 #'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
 #'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
@@ -78,7 +75,7 @@
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = FALSE,
@@ -114,7 +111,7 @@
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = TRUE,
@@ -150,7 +147,7 @@ phenotype <-
              pop.geno = NULL,
              pos.map = NULL,
              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-             gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+             gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
              h2.trn = c(0.3, 0.5), 
              sel.crit = "pheno", 
              pop.total = NULL, 
@@ -166,15 +163,25 @@ phenotype <-
   } else {
     multrait <- length(effs) > 2
   }
-  geno <- geno.cvt(pop.geno)
+  
   nind <- nrow(pop)
+  if (ncol(pop.geno) == 2*nind) {
+    geno <- geno.cvt(pop.geno)
+  } else if (ncol(pop.geno) == nind) {
+    geno <- pop.geno
+  } else {
+    stop("Genotype matrix is not match population information!")
+  }
   
   if (multrait) {
+    eff1 <- effs$eff1
+    len.eff <- length(eff1)
+    if (len.eff >= 2) stop("Only A model in multiple trait simulatioin!")
     nqt <- nrow(gnt.cov)
     
     df.ind.a <- lapply(1:nqt, function(i) { return(rep(0, nind)) })
     df.ind.a <- as.data.frame(df.ind.a)
-    nts <- paste("tr", 1:nqt, sep = "")
+    nts <- paste(" tr", 1:nqt, sep = "")
     names(df.ind.a) <- nts
     
     if (!is.null(geno)) {
@@ -186,14 +193,14 @@ phenotype <-
         df.ind.a[, i] <- ind.a
       }
       if (!sel.on) {
-        logging.log("build genetic correlation for traits...\n", verbose = verbose)
+        logging.log(" Build genetic correlation for traits...\n", verbose = verbose)
         # calculate additive effects with correlation
         # df.ind.a <- mvrnorm(n = nind, mu = rep(0, nqt), Sigma = gnt.cov, empirical = TRUE)
         df.ind.a <- build.cov(df.ind.a, Sigma = gnt.cov)
         
         # adjust markers effects
         effs.adj <- get("effs", envir = inner.env)
-        logging.log("adjust effects of markers...\n", verbose = verbose)
+        logging.log(" Adjust effects of markers...\n", verbose = verbose)
         for (i in 1:nqt) {
           qtn.a <- geno[effs[[2*i-1]], ]
           ind.a <- df.ind.a[, i]
@@ -208,119 +215,71 @@ phenotype <-
     var.pheno <- diag(var.add) / h2.trn
     if (is.null(geno)) var.pheno <- sample(100, nqt)
     
+    info.eff <- lapply(1:nqt, function(i) return(NULL))
+    names(info.eff) <- nts
+    
     # calculate for fixed effects and random effects
     if (!is.null(FR)) {
       # calculate for fixed effects and random effects
       fr <- cal.FR(pop = pop, FR = FR, var.pheno = var.pheno, pop.env = pop.env, verbose = verbose)
-      frn <- names(fr)
       var.fr <- unlist(lapply(1:length(fr), function(i) {  return(sum(apply(fr[[i]]$rand, 2, var))) }))
-      fr <- lapply(1:length(fr), function(i) {return(cbind(fr[[i]]$fix, fr[[i]]$rand))})
-      names(fr) <- frn
-      mat.fr <- do.call(cbind, lapply(1:length(fr), function(i) { return(apply(fr[[i]], 1, sum)) }))
-
-      # calculate for environmental effects
-      var.env <- var.pheno - var.fr - diag(var.add)
-      mat.env <- mvrnorm(n = nind, mu = rep(0, length(var.env)), Sigma = diag(var.env), empirical = TRUE)
-      mat.env <- as.data.frame(mat.env)
-      names(mat.env) <- nts
-      var.env <- var(mat.env)
-      h2 <- diag(var.add) / (diag(var.add) + var.fr + diag(var.env))
-      
-      # calculate for phenotype
-      ind.pheno <- df.ind.a + mat.fr + mat.env
-      
+      mat.fr <- do.call(cbind, lapply(1:length(fr), function(i) { return(apply(cbind(fr[[i]]$fix, fr[[i]]$rand), 1, sum)) }))
     } else {
-      fr <- lapply(1:nqt, function(i) return(NULL))
-      names(fr) <- paste("tr", 1:nqt, sep = "")
-      
-      # calculate for environmental effects
-      var.env <- var.pheno - diag(var.add)
-      mat.env <- mvrnorm(n = nind, mu = rep(0, length(var.env)), Sigma = diag(var.env), empirical = TRUE)
-      mat.env <- as.data.frame(mat.env)
-      names(mat.env) <- nts
-      var.env <- var(mat.env)
-      h2 <- diag(var.add) / (diag(var.add) + diag(var.env))
-      
-      # calculate for phenotype
-      ind.pheno <- df.ind.a + mat.env
+      fr <- NULL
+      var.fr <- 0
+      mat.fr <- 0
     }
 
+    # calculate for environmental effects
+    var.env <- var.pheno - var.fr - diag(var.add)
+    mat.env <- mvrnorm(n = nind, mu = rep(0, length(var.env)), Sigma = diag(var.env), empirical = TRUE)
+    mat.env <- as.data.frame(mat.env)
+    names(mat.env) <- nts
+    var.env <- var(mat.env)
+    h2 <- diag(var.add) / (diag(var.add) + var.fr + diag(var.env))
+    
+    # calculate for phenotype
+    ind.pheno <- df.ind.a + mat.fr + mat.env
+    
     var.env <- var(mat.env)
     if(any(var(df.ind.a) == 0)) {
       gnt.cor <- matrix(0, nqt, nqt)
     } else {
       gnt.cor <- cor(df.ind.a)
     }
-    logging.log("Total additive    covariance matrix of all traits: \n", verbose = verbose)
-    for (i in 1:nqt) {
-      logging.log(var.add[i, ], "\n", sep = "\t", verbose = verbose)
-    }
-    logging.log("Total environment covariance matrix of all traits: \n", verbose = verbose)
-    for (i in 1:nqt) {
-      logging.log(var.env[i, ], "\n", sep = "\t", verbose = verbose)
-    }
-    logging.log("Heritability:", h2, "\n", verbose = verbose)
-    logging.log("Genetic correlation of all traits: \n", verbose = verbose)
-    for (i in 1:nqt) {
-      logging.log(gnt.cor[i, ], "\n", sep = "\t", verbose = verbose)
-    }
+    logging.log(" Total additive    covariance matrix of all traits: \n", verbose = verbose)
+    simer.print(var.add, verbose = verbose)
+    logging.log(" Total environment covariance matrix of all traits: \n", verbose = verbose)
+    simer.print(var.env, verbose = verbose)
+    logging.log(" Heritability:", h2, "\n", verbose = verbose)
+    logging.log(" Genetic correlation of all traits: \n", verbose = verbose)
+    simer.print(gnt.cor, verbose = verbose)
     info.tr <- list(Covg = var.add, Cove = var.env, h2 = h2, gnt.cor = gnt.cor)
+    
     for (i in 1:nqt) {
-      fr[[i]]$ind.a <- df.ind.a[, i]
-      fr[[i]]$ind.env <- mat.env[, i]
-      if (!is.data.frame(fr[[i]])) fr[[i]] <- as.data.frame(fr[[i]])
+      if (!is.null(fr)) info.eff[[i]] <- cbind(fr[[i]]$fix, fr[[i]]$rand)
+      info.eff[[i]]$ind.a <- df.ind.a[, i]
+      info.eff[[i]]$ind.env <- mat.env[, i]
+      if (!is.data.frame(info.eff[[i]])) info.eff[[i]] <- as.data.frame(info.eff[[i]])
     }
+    names(df.ind.a) <- names(ind.pheno) <- paste("tr", 1:nqt, sep = "")
     info.pheno <- data.frame(TBV = df.ind.a, TGV = df.ind.a, pheno = ind.pheno)
-    pheno <- list(info.tr = info.tr, info.eff = fr, info.pheno = info.pheno)
+    pheno <- list(info.tr = info.tr, info.eff = info.eff, info.pheno = info.pheno)
     
     # check data quality
-    for (i in 1:nqt) {
-      idx.len <- unlist(lapply(1:ncol(pheno$info.eff[[i]]), function(j) {  return(length(unique(pheno$info.eff[[i]][, j]))) }))
-      info.eff.t <- pheno$info.eff[[i]][, idx.len != 1]
-      info.eff.cor <- cor(info.eff.t)
-      info.eff.f <- names(info.eff.t)[names(info.eff.t) %in% c("ind.d", "ind.aa", "ind.ad", "ind.da", "ind.dd")]
-      info.eff.cor[info.eff.f, ] <- 0
-      info.eff.cor[, info.eff.f] <- 0
-      if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
-        warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects simulation!")
+    if (options("simer.show.warning") == TRUE) {
+      for (i in 1:nqt) {
+        idx.len <- unlist(lapply(1:ncol(pheno$info.eff[[i]]), function(j) {  return(length(unique(pheno$info.eff[[i]][, j]))) }))
+        info.eff.t <- pheno$info.eff[[i]][, idx.len != 1]
+        info.eff.cor <- cor(info.eff.t)
+        info.eff.f <- names(info.eff.t)[names(info.eff.t) %in% c("ind.d", "ind.aa", "ind.ad", "ind.da", "ind.dd")]
+        info.eff.cor[info.eff.f, ] <- 0
+        info.eff.cor[, info.eff.f] <- 0
+        if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
+          warning(" There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects in the simulation!")
+      }
     }
     
-    if (sel.crit == "TBV" | sel.crit == "TGV" | sel.crit == "pheno") {
-	    pheno <- pheno
-	    
-	  } else {
-eval(parse(text = "tryCatch({
-      suppressMessages(library(hiblup))
-      geno.id <- as.data.frame(pop$index)
-      pn <- grep(pattern = \"pheno\", x = names(pheno$info.pheno), value = TRUE)
-      pheno1 <- subset(pheno$info.pheno, select = pn)
-      pheno1 <- cbind(pop$index, pheno1)
-      pedigree1 <- subset(pop.total, select = c(\"index\", \"sir\", \"dam\"))
-	    pos.map <- pos.map[, 1:3]
-	    cal.model <- \"A\"
-	    if (sel.crit == \"pEBVs\") {
-	      ebv <- hiblup(pheno = pheno1, bivar.pos = c(2, 3), geno = NULL, map = pos.map, geno.id = geno.id, file.output = FALSE, 
-                      pedigree = pedigree1, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
-	    } else if (sel.crit == \"gEBVs\") {
-	      ebv <- hiblup(pheno = pheno1, bivar.pos = c(2, 3), geno = geno, map = pos.map, geno.id = geno.id,  file.output = FALSE, 
-                      pedigree = NULL, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
-	    } else if (sel.crit == \"ssEBVs\") {
-	      ebv <- hiblup(pheno = pheno1, bivar.pos = c(2, 3), geno = geno, map = pos.map, geno.id = geno.id,  file.output = FALSE, 
-                      pedigree = pedigree1, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
-	    } else {
-	      stop(\"please select correct selection criterion!\")
-	    }
-	    idx <- pop$index
-      for (i in 1:length(pop$index)){
-        idx[i] <- which(ebv$ebv[, 1] == pop$index[i])
-      }
-      pheno$info.pheno$ebv <- ebv$ebv[idx, 2:ncol(ebv$ebv)]
-      pheno$info.hiblup <- ebv
-      }, error=function(e) { 
-           stop(\"Something wrong when running HIBLUP!\") })"
-))
-	  }
-
   } else {
     # calculate for genetic effects
     info.eff <- cal.gnt(geno = geno, h2 = h2.tr1, effs = effs, sel.on = sel.on, inner.env = inner.env, verbose = verbose)
@@ -352,52 +311,76 @@ eval(parse(text = "tryCatch({
     info.eff.cor[info.eff.f, ] <- 0
     info.eff.cor[, info.eff.f] <- 0
     if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
-      warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects simulation!")
+      warning(" There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects in the simulation!")
+  }
+  
+  if (sel.crit == "pEBVs" | sel.crit == "gEBVs" | sel.crit == "ssEBVs") {
+    geno.id <- as.data.frame(pop$index)
+    pn <- grep(pattern = "pheno", x = names(pheno$info.pheno), value = TRUE)
+    pheno1 <- cbind(pop$index, subset(pheno$info.pheno, select = pn))
+    pedigree <- subset(pop.total, select = c("index", "sir", "dam"))
+    pedigree$index <- as.character(pedigree$index)
+    map <- pos.map[, 1:3]
+    mode <- ifelse("ind.d" %in% names(pheno$info.eff), "AD", "A")
     
-    if (sel.crit == "TBV" | sel.crit == "TGV" | sel.crit == "pheno") {
-	    pheno <- pheno
-
-	  } else {
-eval(parse(text = "tryCatch({
-      suppressMessages(library(hiblup))
-      geno.id <- as.data.frame(pop$index)
-      pn <- grep(pattern = \"pheno\", x = names(pheno$info.pheno), value = TRUE)
-      pheno1 <- subset(pheno$info.pheno, select = pn)
-      pheno1 <- cbind(pop$index, pheno1)
-	    pedigree1 <- subset(pop.total, select = c(\"index\", \"sir\", \"dam\"))
-	    pos.map <- pos.map[, 1:3]
-	    if (\"ind.d\" %in% names(pheno$info.eff)) {
-	      cal.model <- \"AD\"
-	    } else {
-	      cal.model <- \"A\"
-	    }
-	    if (sel.crit == \"pEBVs\") {
-	      ebv <- hiblup(pheno = pheno1, geno = NULL, map = pos.map, geno.id = geno.id, file.output = FALSE, 
-                      pedigree = pedigree1, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
-	    } else if (sel.crit == \"gEBVs\") {
-	      ebv <- hiblup(pheno = pheno1, geno = geno, map = pos.map, geno.id = geno.id, file.output = FALSE, 
-                      pedigree = NULL, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
-	    } else if (sel.crit == \"ssEBVs\") {
-	      ebv <- hiblup(pheno = pheno1, geno = geno, map = pos.map, geno.id = geno.id, file.output = FALSE, 
-                      pedigree = pedigree1, vc.method = c(\"HI\"), mode = cal.model, CV = NULL, R = NULL, snp.solution = FALSE)
-	    } else {
-	      stop(\"please select correct selection criterion!\")
-	    }
-	    idx <- pop$index
-      for (i in 1:length(pop$index)){
-        idx[i] <- which(ebv$ebv[, 1] == pop$index[i])
+    # prepare fixed effects and random effects
+    CV <- NULL
+    R <- NULL
+    bivar.CV <- NULL
+    bivar.R <- NULL
+    bivar.pos <- NULL
+    if (ncol(pheno1) > 2) bivar.pos <- 2:ncol(pheno1)
+    fcf <- NULL
+    fcr <- NULL
+    if (!is.null(fr)) {
+      for (i in 1:length(fr)) {
+        fcf[[i]] <- fr[[i]]$fix
+        fcr[[i]] <- fr[[i]]$rand
       }
-      if (cal.model == \"A\") {
-         pheno$info.pheno$ebv <- ebv$ebv[idx, 2]
-         pheno$info.hiblup <- ebv
-      } else if (cal.model == \"AD\" | cal.model == \"ADI\") {
-         pheno$info.pheno$ebv <- ebv$ebv[idx, 2] + ebv$ebv[idx, 3]
-         pheno$info.hiblup <- ebv
-      }}, error=function(e) { 
-           stop(\"Something wrong when running HIBLUP!\") })"
-))
-	  } # if criterion
-  } # end if (multrait)
+      names(fcr) <- names(fcf) <- nts
+    }
+    if (!is.null(fcf)) {
+      CV.t <- lapply(1:length(fcf), function(jf) {
+        cv.t <- build.CV(names(fcf[[jf]]), fcf[[jf]])
+        if (!is.data.frame(cv.t)) cv.t <- as.data.frame(cv.t)
+        return(cv.t)
+      })
+      if (ncol(pheno1) == 2) {
+        CV <- CV.t[[1]]
+      } else {
+        bivar.CV <- CV.t
+      }
+    }
+    if (!is.null(fcr)) {
+      R.t <- lapply(1:length(fcr), function(jr) {
+        if (!is.data.frame(fcr[[jr]])) fcr[[jr]] <- as.data.frame(fcr[[jr]])
+        r.t <- fcr[[jr]]
+        if (!is.data.frame(r.t)) r.t <- as.data.frame(r.t)
+        return(r.t)
+      })
+      if (ncol(pheno1) == 2) {
+        R <- R.t[[1]]
+      } else {
+        bivar.R <- R.t
+      }
+    } 
+    
+    gebv <- NULL
+    eval(parse(text = "tryCatch({
+      if (!(\"hiblup\" %in% .packages())) suppressMessages(library(hiblup))
+      gebv <- hiblup(pheno = pheno1, bivar.pos = bivar.pos, geno = geno, map = map, 
+                     geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode, 
+                     CV = CV, R = R, bivar.CV = bivar.CV, bivar.R = bivar.R, snp.solution = FALSE)
+    }, error=function(e) { 
+      stop(\"Something wrong when running HIBLUP!\") })"))
+    
+    idx <- gebv$ebv[, 1] %in% pop$index
+    ebv <- gebv$ebv[idx, 2:ncol(gebv$ebv)]
+    if (!is.data.frame(ebv)) ebv <- as.data.frame(ebv)
+    if ((!multrait) & (mode == "AD")) ebv <- apply(ebv, 1, sum)
+    pheno$info.pheno <- cbind(pheno$info.pheno, ebv)
+    pheno$info.hiblup <- gebv
+  } 
   
   pop <- set.pheno(pop, pheno, sel.crit)
   pheno$pop <- pop
@@ -432,7 +415,7 @@ eval(parse(text = "tryCatch({
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = FALSE,
@@ -458,7 +441,7 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
   ind.a <- as.vector(crossprod(qtn.a, eff.a))
   info.eff <- data.frame(ind.a = ind.a)
   var.add <- var(ind.a)
-  if (verbose) logging.log("Total additive            variance:", var.add, "\n", verbose = verbose)
+  if (verbose) logging.log(" Total additive            variance:", var.add, "\n", verbose = verbose)
   
   if (h2[1] > 0 & h2[1] <=1) {
     var.pheno <- var.add / h2[1]
@@ -467,7 +450,7 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
     ind.a <- ind.a * 0
     var.add <- 0
   } else {
-    stop("Heritability of additive should be no more than 1 and no less than 0!")
+    stop(" Heritability of additive should be no more than 1 and no less than 0!")
   }
   
   # dominance effect
@@ -488,13 +471,13 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
         var.dom <- var(ind.d)
       }
       effs.adj <- get("effs", envir = inner.env)
-      logging.log("adjust dominance effects of markers...\n", verbose = verbose)
+      logging.log(" Adjust dominance effects of markers...\n", verbose = verbose)
       effs.adj$eff1$eff.d <- eff.d
       assign("effs", effs.adj, envir = inner.env)
     }
     
     info.eff$ind.d <- ind.d
-    if (verbose) logging.log("Total dominance           variance:", var.dom, "\n", verbose = verbose)
+    if (verbose) logging.log(" Total dominance           variance:", var.dom, "\n", verbose = verbose)
   }
   
   # interaction effect
@@ -543,7 +526,7 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
         var.dd <- var(ind.dd)
       } 
       effs.adj <- get("effs", envir = inner.env)
-      logging.log("adjust interaction effects of markers...\n", verbose = verbose)
+      logging.log(" Adjust interaction effects of markers...\n", verbose = verbose)
       effs.adj$eff1$eff.aa <- eff.aa
       effs.adj$eff1$eff.ad <- eff.ad
       effs.adj$eff1$eff.da <- eff.da
@@ -556,10 +539,10 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
     info.eff$ind.da <- ind.da
     info.eff$ind.dd <- ind.dd
     if (verbose) {
-      logging.log("Total additiveXadditive   variance:", var.aa,  "\n", verbose = verbose)
-      logging.log("Total dominanceXadditive  variance:", var.ad,  "\n", verbose = verbose)
-      logging.log("Total dominanceXadditive  variance:", var.da,  "\n", verbose = verbose)
-      logging.log("Total dominanceXdominance variance:", var.dd,  "\n", verbose = verbose)
+      logging.log(" Total additiveXadditive   variance:", var.aa,  "\n", verbose = verbose)
+      logging.log(" Total dominanceXadditive  variance:", var.ad,  "\n", verbose = verbose)
+      logging.log(" Total dominanceXadditive  variance:", var.da,  "\n", verbose = verbose)
+      logging.log(" Total dominanceXdominance variance:", var.dd,  "\n", verbose = verbose)
     }
   }
   
@@ -603,15 +586,12 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
 #'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
 #' 
 #' # combination and ralation of random effects
-#' tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-#' tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+#' tr1 <- list(rn = c("PE"), ratio = 0.03)
+#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
 #'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
 #'       
-#' rand <- list(
-#'         sir = list(mean = 0, sd = 1),		      
-#'         dam = list(mean = 0, sd = 1),	       
+#' rand <- list(       
 #'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
 #'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
 #'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
@@ -648,7 +628,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
         fe <- rep(0, nind)
         ele.pt <- as.character(unique(pt))
         if (len.fix != length(ele.pt)) { 
-          stop("level length should be equal to effects length!")
+          stop("Level length should be equal to effects length!")
         } else if (!setequal(lev.fix, ele.pt)) {
           stop(fn[i], " in fix should be corresponding to ", fn[i], " in pop!")
         } 
@@ -663,7 +643,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
         }
         fl <- lev.fix[sam]
         pop.adj <- get("pop", envir = pop.env)
-        logging.log("add", fn[i], "to population...\n", verbose = verbose)
+        logging.log(" Add", fn[i], "to population...\n", verbose = verbose)
         pop.adj <- cbind(pop.adj, fl)
         names(pop.adj)[names(pop.adj) == "fl"] <- fn[i]
         assign("pop", pop.adj, envir = pop.env)
@@ -696,14 +676,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
         lev.rand <- as.character(unique(pt))
         len.rand <- length(lev.rand)
         if (len.rand == 1) {
-          if (lev.rand == "0") {
-            re <- rep(0, nind)
-          } else {
-            eff.rand <- rnorm(len.rand, mean = rand[[i]]$mean, sd = rand[[i]]$sd)
-            for (j in 1:len.rand) {
-              re[pt == lev.rand[j]] <- eff.rand[j]
-            }
-          }
+          stop("Group number must be more than 1 in random effects!")
           
         } else {
           eff.rand <- rnorm(len.rand, mean = rand[[i]]$mean, sd = rand[[i]]$sd)
@@ -715,6 +688,8 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
       } else {
         lev.rand <- as.character(rand[[i]]$level)
         len.rand <- length(lev.rand)
+        if (len.rand == 1)
+          stop("Group number must be more than 1 in random effects!")
         eff.rand <- rand[[i]]$eff
         
         if (rn[i] %in% names(pop)) {
@@ -722,7 +697,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
           re <- rep(0, nind)
           ele.pt <- as.character(unique(pt))
           if (len.rand != length(ele.pt)) { 
-            stop("level length should be equal to effects length!")
+            stop("Level length should be equal to effects length!")
           } else if (!setequal(lev.rand, ele.pt)) {
             stop(rn[i], " in rand should be corresponding to ", rn[i], " in pop!")
           } 
@@ -737,7 +712,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
           }
           rl <- lev.rand[sam]
           pop.adj <- get("pop", envir = pop.env)
-          logging.log("add", rn[i], "to population...\n", verbose = verbose)
+          logging.log(" Add", rn[i], "to population...\n", verbose = verbose)
           pop.adj <- cbind(pop.adj, rl)
           names(pop.adj)[names(pop.adj) == "rl"] <- rn[i]
           assign("pop", pop.adj, envir = pop.env)
@@ -754,7 +729,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     if (is.null(rn)) return(res[NULL])
     ratio <- cmb.rand[[i]]$ratio
     if (length(rn) != length(ratio))
-      stop("phenotype variance ratio of random effects should be corresponding to random effects names!")
+      stop("Phenotype variance ratio of random effects should be corresponding to random effects names!")
     rt <- res[rn]
 
     if (is.null(cmb.rand[[i]]$cr)) {
@@ -762,7 +737,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     } else {
       cr <- cmb.rand[[i]]$cr
       if (nrow(cr) != length(rn) | ncol(cr) != length(rn))
-        stop("random correlation matrix should be corresponding to random effects names!")
+        stop("Random correlation matrix should be corresponding to random effects names!")
     }
     if (length(ratio) == 1) ratio <- as.matrix(ratio)
     sd <- diag(sqrt(ratio * var.pheno[i]))
@@ -772,7 +747,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     rt <- build.cov(rt, mu = mu, Sigma = Sigma, tol = 1e-06)
      
     var.r <- apply(rt, 2, var)
-    logging.log("The variance of", names(rt), "of", paste0(names(cmb.rand)[i], ":"), var.r, "\n", verbose = verbose)
+    logging.log(" The variance of", names(rt), "of", paste("trait", paste0(i, ":")), var.r, "\n", verbose = verbose)
     return(rt)
   })
   names(rand) <- names(cmb.rand[1:len.tr])
@@ -809,7 +784,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = FALSE,
@@ -846,15 +821,12 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
 #'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
 #' 
 #' # combination and ralation of random effects
-#' tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-#' tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+#' tr1 <- list(rn = c("PE"), ratio = 0.03)
+#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
 #'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
 #'       
-#' rand <- list(
-#'         sir = list(mean = 0, sd = 1),		      
-#'         dam = list(mean = 0, sd = 1),	       
+#' rand <- list(       
 #'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
 #'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
 #'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
@@ -879,7 +851,11 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
   }
   
   if (!is.null(fr)) {
-    info.eff <- cbind(fr[[1]], info.eff)
+    if (is.null(info.eff)) {
+      info.eff <- cbind(fr[[1]]$fix, fr[[1]]$rand)
+    } else {
+      info.eff <- cbind(fr[[1]]$fix, fr[[1]]$rand, info.eff)
+    }
     var.fr <- apply(fr[[1]]$rand, 2, var)
   } else {
     var.fr <- 0
@@ -888,7 +864,7 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
   var.env <- var.pheno - sum(var.fr, var.gnt)
 
   if (var.env <= 0) 
-    stop("please reduce your fixed variance, random variance or genetic variance to get a positive environmental variance!")
+    stop("Please reduce your fixed variance, random variance or genetic variance to get a positive environmental variance!")
   
   ind.env <- rnorm(num.ind, 0, 1)
   ind.env <- ind.env * sqrt(var.env / var(ind.env))
@@ -901,8 +877,8 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
   Vg <- var.gnt
   Ve <- var(ind.env)
   h2.new <- Vg / sum(Vg, var.fr, Ve)
-  logging.log("Total environment         variance:", Ve, "\n", verbose = verbose)
-  logging.log("Heritability:", h2.new, "\n", verbose = verbose)
+  logging.log(" Total environment         variance:", Ve, "\n", verbose = verbose)
+  logging.log(" Heritability:", h2.new, "\n", verbose = verbose)
   info.tr <- list(Vg = Vg, Ve = Ve, h2 = h2.new)
   info.pheno <- data.frame(TBV = TBV, TGV = TGV, pheno = ind.pheno)
   pheno.list <- list(info.tr = info.tr, info.eff = info.eff, info.pheno = info.pheno)
@@ -917,15 +893,19 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
 #' @author Dong Yin
 #'
 #' @param pop.geno genotype of population, a individual has two columns
+#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param cal.model phenotype models with the options: "A", "AD", "ADI"
 #' @param num.qtn.tr1 integer or integer vector, the number of QTN in a single trait
 #' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
-#' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param eff.unit.tr1 unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param shape.tr1 shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param scale.tr1 scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry", "gamma", and "beta", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param prob.tr1 unit effect of geometric distribution, its length should be same as dist.qtn.tr1
+#' @param shape.tr1 shape of gamma distribution of a single trait, its length should be same as dist.qtn.tr1
+#' @param scale.tr1 scale of gamma distribution of a single trait, its length should be same as dist.qtn.tr1
+#' @param shape1.tr1 non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1
+#' @param shape2.tr1 non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1
+#' @param ncp.tr1 non-centrality parameter, its length should be same as dist.qtn.tr1
 #' @param multrait whether to apply multiple traits, TRUE represents applying, FALSE represents not
-#' @param num.qtn.trn QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits
+#' @param num.qtn.trn QTN distribution matrix, diagonal elements are QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits
 #' @param sd.trn a matrix with the standard deviation of the QTN effects
 #' @param qtn.spot QTN probability in every block
 #' @param maf Minor Allele Frequency, marker selection range is from  maf to 0.5
@@ -942,9 +922,12 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
 #'              num.qtn.tr1 = c(200, 200, 100),
 #'              sd.tr1 = c(0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.03),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
+#'              shape1.tr1 = c(1, 1, 1, 1, 1, 1),
+#'              shape2.tr1 = c(1, 1, 1, 1, 1, 1),
+#'              ncp.tr1 = c(0, 0, 0, 0, 0, 0), 
 #'              multrait = FALSE,
 #'              num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
 #'              sd.trn = matrix(c(0.07, 0, 0, 0.07), 2, 2),
@@ -954,13 +937,17 @@ cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var
 #' str(effs)
 cal.effs <-
     function(pop.geno = NULL,
+             incols = 2, 
              cal.model = "A",
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
+             shape1.tr1 = c(1, 1, 1, 1, 1, 1),
+             shape2.tr1 = c(1, 1, 1, 1, 1, 1),
+             ncp.tr1 = c(0, 0, 0, 0, 0, 0), 
              multrait = FALSE,
              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
              sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2),
@@ -971,11 +958,15 @@ cal.effs <-
 # Start calculation
 
   if (is.null(pop.geno)) return(multrait)
-  # combine odd and even columns genotype matrix
-  geno <- geno.cvt(pop.geno)
+  if (incols == 2) {
+    # combine odd and even columns genotype matrix
+    geno <- geno.cvt(pop.geno)
+  } else {
+    geno <- pop.geno
+  }
   num.marker <- nrow(geno)
-  num.ind <- ncol(geno)
-
+  num.ind <- ncol(geno) / incols
+      
   # calculate weight of every marker
   num.block <- length(qtn.spot)
   len.block <- num.marker %/% num.block
@@ -1013,39 +1004,39 @@ cal.effs <-
         k <- k + num.t
       }
       effs[[2*i]] <- list(eff.a = rnorm(length(effs[[2*i-1]]), 0, sd.trn[i, i]))
-      logging.log("number of selected markers of trait", i, ":", length(effs[[2*i-1]]), "\n", verbose = verbose)
+      logging.log(" Number of selected markers of trait", i, ":", length(effs[[2*i-1]]), "\n", verbose = verbose)
     }
 
   } else {
     num.qtn <- sum(num.qtn.tr1)
     sel.marker <- sort(sample(1:num.marker, num.qtn, replace = FALSE, prob = wt.marker))
     len.qtn <- length(num.qtn.tr1)
-    logging.log("number of selected markers of trait 1:", num.qtn.tr1, "\n", verbose = verbose)
+    logging.log(" Number of selected markers of trait 1:", num.qtn.tr1, "\n", verbose = verbose)
     
     if (cal.model == "A") {
-      logging.log("Apply A model...\n", verbose = verbose)
+      logging.log(" Apply A model...\n", verbose = verbose)
       if (length(sd.tr1) < length(num.qtn.tr1))
         stop("The length of sd.tr1 should be no less than length of num.qtn.tr1!")
-      eff.a <- cal.eff(num.qtn.tr1, sd.tr1[1:len.qtn], dist.qtn.tr1[1], eff.unit.tr1[1], shape.tr1[1], scale.tr1[1])
+      eff.a <- cal.eff(num.qtn.tr1, sd.tr1[1:len.qtn], dist.qtn.tr1[1], prob.tr1[1], shape.tr1[1], scale.tr1[1], shape1.tr1[1], shape2.tr1[1], ncp.tr1[1])
       eff1 <- list(eff.a=eff.a)
       
     } else if (cal.model == "AD") {
-      logging.log("Apply AD model...\n", verbose = verbose)
-      eff.a <- cal.eff(num.qtn.tr1, sd.tr1[1:len.qtn], dist.qtn.tr1[1], eff.unit.tr1[1], shape.tr1[1], scale.tr1[1])
-      eff.d <- cal.eff(sum(num.qtn.tr1), sd.tr1[len.qtn+1], dist.qtn.tr1[2], eff.unit.tr1[2], shape.tr1[2], scale.tr1[2])
+      logging.log(" Apply AD model...\n", verbose = verbose)
+      eff.a <- cal.eff(num.qtn.tr1, sd.tr1[1:len.qtn], dist.qtn.tr1[1], prob.tr1[1], shape.tr1[1], scale.tr1[1], shape1.tr1[1], shape2.tr1[1], ncp.tr1[1])
+      eff.d <- cal.eff(sum(num.qtn.tr1), sd.tr1[len.qtn+1], dist.qtn.tr1[2], prob.tr1[2], shape.tr1[2], scale.tr1[2], shape1.tr1[2], shape2.tr1[2], ncp.tr1[2])
       eff1 <- list(eff.a=eff.a, eff.d=eff.d)
       
     } else if (cal.model == "ADI") {
-      logging.log("Apply ADI model...\n", verbose = verbose)
-      if (num.qtn %% 2 != 0) stop("the number of qtn should be even in the ADI model!")
+      logging.log(" Apply ADI model...\n", verbose = verbose)
+      if (num.qtn %% 2 != 0) stop("The number of qtn should be even in the ADI model!")
       # the first part of qtn
       ophalf <- num.qtn %/% 2
-      eff.a  <- cal.eff(num.qtn.tr1,      sd.tr1[1:len.qtn], dist.qtn.tr1[1], eff.unit.tr1[1], shape.tr1[1], scale.tr1[1])
-      eff.d  <- cal.eff(sum(num.qtn.tr1), sd.tr1[len.qtn+1], dist.qtn.tr1[2], eff.unit.tr1[2], shape.tr1[2], scale.tr1[2])
-      eff.aa <- cal.eff(ophalf,           sd.tr1[len.qtn+2], dist.qtn.tr1[3], eff.unit.tr1[3], shape.tr1[3], scale.tr1[3])
-      eff.ad <- cal.eff(ophalf,           sd.tr1[len.qtn+3], dist.qtn.tr1[4], eff.unit.tr1[4], shape.tr1[4], scale.tr1[4])
-      eff.da <- cal.eff(ophalf,           sd.tr1[len.qtn+4], dist.qtn.tr1[5], eff.unit.tr1[5], shape.tr1[5], scale.tr1[5])
-      eff.dd <- cal.eff(ophalf,           sd.tr1[len.qtn+5], dist.qtn.tr1[6], eff.unit.tr1[6], shape.tr1[6], scale.tr1[6])
+      eff.a  <- cal.eff(num.qtn.tr1,      sd.tr1[1:len.qtn], dist.qtn.tr1[1], prob.tr1[1], shape.tr1[1], scale.tr1[1], shape1.tr1[1], shape2.tr1[1], ncp.tr1[1])
+      eff.d  <- cal.eff(sum(num.qtn.tr1), sd.tr1[len.qtn+1], dist.qtn.tr1[2], prob.tr1[2], shape.tr1[2], scale.tr1[2], shape1.tr1[2], shape2.tr1[2], ncp.tr1[2])
+      eff.aa <- cal.eff(ophalf,           sd.tr1[len.qtn+2], dist.qtn.tr1[3], prob.tr1[3], shape.tr1[3], scale.tr1[3], shape1.tr1[3], shape2.tr1[3], ncp.tr1[3])
+      eff.ad <- cal.eff(ophalf,           sd.tr1[len.qtn+3], dist.qtn.tr1[4], prob.tr1[4], shape.tr1[4], scale.tr1[4], shape1.tr1[4], shape2.tr1[4], ncp.tr1[4])
+      eff.da <- cal.eff(ophalf,           sd.tr1[len.qtn+4], dist.qtn.tr1[5], prob.tr1[5], shape.tr1[5], scale.tr1[5], shape1.tr1[5], shape2.tr1[5], ncp.tr1[5])
+      eff.dd <- cal.eff(ophalf,           sd.tr1[len.qtn+5], dist.qtn.tr1[6], prob.tr1[6], shape.tr1[6], scale.tr1[6], shape1.tr1[6], shape2.tr1[6], ncp.tr1[6])
       eff1 <- list(eff.a=eff.a, eff.d=eff.d, eff.aa=eff.aa, eff.ad=eff.ad, eff.da=eff.da, eff.dd=eff.dd)
     }
 
@@ -1064,10 +1055,13 @@ cal.effs <-
 #'
 #' @param num.qtn number of QTN
 #' @param eff.sd standard deviation of different effects
-#' @param dist.qtn distribution of QTN's effects with options: "normal", "geometry" and "gamma"
-#' @param eff.unit unit effect of geometric distribution
+#' @param dist.qtn distribution of QTN's effects with options: "normal", "geometry", "gamma", and "beta"
+#' @param prob unit effect of geometric distribution
 #' @param shape shape of gamma distribution
 #' @param scale scale of gamma distribution
+#' @param shape1 non-negative parameters of the Beta distribution
+#' @param shape2 non-negative parameters of the Beta distribution
+#' @param ncp non-centrality parameter
 #'
 #' @return genetic effects vector of selected markers
 #' @export
@@ -1076,35 +1070,41 @@ cal.effs <-
 #' num.qtn <- c(2, 6, 10) # three qtn groups
 #' eff.sd <- c(0.4, 0.2, 0.02) # three variance of qtn group
 #' eff <- cal.eff(num.qtn = num.qtn, eff.sd = eff.sd, dist.qtn = "normal",
-#'         eff.unit = 0.5, shape = 1, scale = 1)
+#'         prob = 0.5, shape = 1, scale = 1)
 #' str(eff)
 #'
 #' num.qtn <- sum(num.qtn)
 #' eff.sd <- sum(eff.sd)
 #' eff <- cal.eff(num.qtn = num.qtn, eff.sd = eff.sd, dist.qtn = "normal",
-#'         eff.unit = 0.5, shape = 1, scale = 1)
+#'                prob = 0.5, shape = 1, scale = 1, 
+#'                shape1 = 1, shape2 = 1, ncp = 0)
 #' str(eff)
-cal.eff <- function(num.qtn, eff.sd, dist.qtn, eff.unit, shape, scale) {
+cal.eff <- function(num.qtn, eff.sd, dist.qtn, prob, shape, scale, shape1, shape2, ncp=0) {
   if (sum(num.qtn) == 0) return(0)
   # Judge which kind of distribution of QTN
   eff.qtn <- NULL
-  if(dist.qtn == "normal") {
+  if (dist.qtn == "normal") {
     for (nq in 1:length(num.qtn)) {
     	eff.qtn <- c(eff.qtn, rnorm(num.qtn[nq], 0, eff.sd[nq]))
     }
 
-  } else if(dist.qtn == "geometry") {
+  } else if (dist.qtn == "geometry") {
     for (nq in 1:length(num.qtn)) {
-    	eff.qtn <- c(eff.qtn, eff.unit^(1:num.qtn[nq]))
+    	eff.qtn <- c(eff.qtn, rgeom(num.qtn[nq], prob))
     }
 
-  } else if(dist.qtn == "gamma") {
+  } else if (dist.qtn == "gamma") {
     for (nq in 1:length(num.qtn)) {
     	eff.qtn <- c(eff.qtn, rgamma(num.qtn[nq], shape, scale))
     }
-
+    
+  } else if (dist.qtn == "beta") {
+    for (nq in 1:length(num.qtn)) {
+      eff.qtn <- c(eff.qtn, rbeta(num.qtn[nq], shape1, shape2, ncp))
+    }
+    
   } else {
-    stop("please input a right QTN effect!")
+    stop("Please input a right QTN effect!")
   }
 
   return(eff.qtn)
@@ -1160,12 +1160,12 @@ geno.cvt <- function(pop.geno) {
 #' Sigma
 #' df <- cbind(rnorm(100), 0)
 #' df <- as.data.frame(df)
-#' names(df) <- paste0("tr", 1:ncol(df))
+#' names(df) <- paste0(" tr", 1:ncol(df))
 #' df.cov <- build.cov(df, Sigma = Sigma)
 #' var(df.cov)
 build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
   if (!is.data.frame(df)) {
-    df.nm <- paste0("tr", 1:ncol(df))
+    df.nm <- paste0(" tr", 1:ncol(df))
   } else {
     df.nm <- names(df)
   }
@@ -1215,7 +1215,7 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #'              num.qtn.tr1 = c(2, 6, 10),
 #'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
 #'              dist.qtn.tr1 = rep("normal", 6),
-#'              eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
 #'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
 #'              multrait = FALSE,
@@ -1251,15 +1251,12 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
 #' 
 #' # combination and ralation of random effects
-#' tr1 <- list(rn = c("sir", "PE"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-#' tr2 <- list(rn = c("dam", "litter"), ratio = c(0.01, 0.03), 
+#' tr1 <- list(rn = c("PE"), ratio = 0.03)
+#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
 #'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
 #'       
-#' rand <- list(
-#'         sir = list(mean = 0, sd = 1),		      
-#'         dam = list(mean = 0, sd = 1),	       
+#' rand <- list(       
 #'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
 #'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
 #'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
@@ -1275,7 +1272,7 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #' pop <- set.pheno(pop, pheno.list, sel.crit = "pheno")
 #' str(pop)
 set.pheno <- function(pop, pop.pheno, sel.crit) {
-  f1 <- grep(pattern = "TBV|TGV|pheno|ebv", x = names(pop), value = FALSE)
+  f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = FALSE)
   if (length(f1) != 0) pop <- pop[, -f1]
   if (sel.crit == "TBV") {
     pn <- grep(pattern = "TBV", x = names(pop.pheno$info.pheno), value = TRUE)
@@ -1284,9 +1281,9 @@ set.pheno <- function(pop, pop.pheno, sel.crit) {
   } else if (sel.crit == "pheno") {
     pn <- grep(pattern = "pheno", x = names(pop.pheno$info.pheno), value = TRUE)
   } else if (sel.crit == "pEBVs" | sel.crit == "gEBVs" | sel.crit == "ssEBVs") {
-    pn <- grep(pattern = "ebv", x = names(pop.pheno$info.pheno), value = TRUE)
+    pn <- grep(pattern = c("ebv|u1"), x = names(pop.pheno$info.pheno), value = TRUE)
   } else {
-    stop("please select correct selection criterion!")
+    stop("Please select correct selection criterion!")
   }
   pop <- cbind(pop, subset(pop.pheno$info.pheno, select = pn))
   return(pop)

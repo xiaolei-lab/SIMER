@@ -28,7 +28,7 @@ Sigma <- matrix(c(14, 10, 10, 15), 2, 2)
 Sigma
 df <- cbind(rnorm(100), 0)
 df <- as.data.frame(df)
-names(df) <- paste0("tr", 1:ncol(df))
+names(df) <- paste0(" tr", 1:ncol(df))
 df.cov <- build.cov(df, Sigma = Sigma)
 var(df.cov)
 }

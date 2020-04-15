@@ -4,26 +4,69 @@
 \alias{simer}
 \title{Main function of simer}
 \usage{
-simer(num.gen = 5, replication = 1, verbose = TRUE,
-  mrk.dense = FALSE, out = "simer", outpath = NULL,
-  out.format = "numeric", seed.sim = runif(1, 0, 100),
-  seed.map = 12345, out.geno.gen = (num.gen - 2):num.gen,
-  out.pheno.gen = 1:num.gen, rawgeno1 = NULL, rawgeno2 = NULL,
-  rawgeno3 = NULL, rawgeno4 = NULL, num.ind = 100, prob = c(0.5,
-  0.5), input.map = NULL, len.block = 5e+07, range.hot = 4:6,
-  range.cold = 1:5, rate.mut = 1e-08, cal.model = "A", FR = NULL,
-  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01), num.qtn.tr1 = 18,
-  sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1), dist.qtn.tr1 = rep("normal",
-  6), eff.unit.tr1 = rep(0.5, 6), shape.tr1 = rep(1, 6),
-  scale.tr1 = rep(1, 6), multrait = FALSE, num.qtn.trn = matrix(c(18,
-  10, 10, 20), 2, 2), sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-  gnt.cov = matrix(c(14, 10, 10, 15), 2, 2), h2.trn = c(0.3, 0.5),
-  qtn.spot = rep(0.1, 10), maf = 0, sel.crit = "pheno",
-  sel.on = TRUE, mtd.reprod = "randmate", userped = NULL,
-  num.prog = 2, ratio = 0.5, prog.tri = 2, prog.doub = 2,
-  prog.back = rep(2, num.gen), ps = 0.8, decr = TRUE,
-  sel.multi = "index", index.wt = c(0.5, 0.5), index.tdm = 1,
-  goal.perc = 0.1, pass.perc = 0.9, sel.sing = "comb")
+simer(
+  num.gen = 5,
+  replication = 1,
+  verbose = TRUE,
+  mrk.dense = TRUE,
+  incols = 2,
+  outcols = 1,
+  out = "simer",
+  outpath = NULL,
+  selPath = NULL,
+  out.format = "numeric",
+  seed.sim = runif(1, 0, 100),
+  seed.map = 12345,
+  out.geno.gen = (num.gen - 2):num.gen,
+  out.pheno.gen = 1:num.gen,
+  rawgeno1 = NULL,
+  rawgeno2 = NULL,
+  rawgeno3 = NULL,
+  rawgeno4 = NULL,
+  num.ind = 100,
+  prob = c(0.5, 0.5),
+  input.map = NULL,
+  len.block = 5e+07,
+  range.hot = 4:6,
+  range.cold = 1:5,
+  rate.mut = 1e-08,
+  cal.model = "A",
+  FR = NULL,
+  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+  num.qtn.tr1 = 500,
+  sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
+  dist.qtn.tr1 = rep("normal", 6),
+  prob.tr1 = rep(0.5, 6),
+  shape.tr1 = rep(1, 6),
+  scale.tr1 = rep(1, 6),
+  shape1.tr1 = rep(1, 6),
+  shape2.tr1 = rep(1, 6),
+  ncp.tr1 = rep(0, 6),
+  multrait = FALSE,
+  num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
+  sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2),
+  gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
+  h2.trn = c(0.3, 0.5),
+  qtn.spot = rep(0.1, 10),
+  maf = 0,
+  sel.crit = "pheno",
+  sel.on = TRUE,
+  mtd.reprod = "randmate",
+  userped = NULL,
+  num.prog = 2,
+  ratio = 0.5,
+  prog.tri = 2,
+  prog.doub = 2,
+  prog.back = rep(2, num.gen),
+  ps = 0.8,
+  decr = TRUE,
+  sel.multi = "index",
+  index.wt = c(0.5, 0.5),
+  index.tdm = 1,
+  goal.perc = 0.1,
+  pass.perc = 0.9,
+  sel.sing = "comb"
+)
 }
 \arguments{
 \item{num.gen}{number of generations in simulation}
@@ -34,9 +77,15 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{mrk.dense}{whether markers are dense, it is TRUE when sequencing data}
 
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
+
+\item{outcols}{the column number of an individual in the output genotype matrix, it can be 1 or 2}
+
 \item{out}{prefix of output file name}
 
 \item{outpath}{path of output files}
+
+\item{selPath}{the path of breeding_plan}
 
 \item{out.format}{format of output, "numeric" or "plink"}
 
@@ -56,7 +105,7 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{rawgeno4}{extrinsic genotype matrix4}
 
-\item{num.ind}{population size of base population}
+\item{num.ind}{population size of the base population}
 
 \item{prob}{weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1}
 
@@ -80,13 +129,19 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 
 \item{sd.tr1}{standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a}
 
-\item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{dist.qtn.tr1}{distributions of the QTN effects with the options: "normal", "geometry", "gamma", and "beta", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
-\item{eff.unit.tr1}{unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{prob.tr1}{unit effect of geometric distribution of a single trait, its length should be same as dist.qtn.tr1}
 
-\item{shape.tr1}{shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{shape.tr1}{shape of gamma distribution of a single trait, its length should be same as dist.qtn.tr1}
 
-\item{scale.tr1}{scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
+\item{scale.tr1}{scale of gamma distribution of a single trait, its length should be same as dist.qtn.tr1}
+
+\item{shape1.tr1}{non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1}
+
+\item{shape2.tr1}{non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1}
+
+\item{ncp.tr1}{non-centrality parameter, its length should be same as dist.qtn.tr1}
 
 \item{multrait}{whether to apply multiple traits, TRUE represents applying, FALSE represents not}
 
@@ -153,9 +208,12 @@ simer.list <-
      simer(num.gen = 5,
            replication = 1,
            verbose = TRUE, 
-           mrk.dense = FALSE,
+           mrk.dense = TRUE,
+           incols = 2, 
+           outcols = 1, 
            out = "simer", 
            outpath = NULL,
+           selPath = NULL, 
            out.format = "numeric",
            seed.sim = runif(1, 0, 100),
            seed.map = 12345,
@@ -176,15 +234,18 @@ simer.list <-
            FR = NULL, 
            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
            num.qtn.tr1 = 500,
-           sd.tr1 = c(0.07, 0.06, 0.06, 0.06, 0.06, 0.03),
+           sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
            dist.qtn.tr1 = rep("normal", 6),
-           eff.unit.tr1 = rep(0.5, 6),
+           prob.tr1 = rep(0.5, 6),
            shape.tr1 = rep(1, 6),
            scale.tr1 = rep(1, 6),
+           shape1.tr1 = rep(1, 6),
+           shape2.tr1 = rep(1, 6),
+           ncp.tr1 = rep(0, 6),
            multrait = FALSE,
            num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
            sd.trn = matrix(c(0.07, 0, 0, 0.07), 2, 2),
-           gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+           gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
            h2.trn = c(0.3, 0.5), 
            qtn.spot = rep(0.1, 10),
            maf = 0,

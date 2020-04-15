@@ -4,10 +4,12 @@
 \alias{mate}
 \title{Mating according to indice of sires and dams}
 \usage{
-mate(pop.geno, index.sir, index.dam)
+mate(pop.geno, incols = 2, index.sir, index.dam)
 }
 \arguments{
 \item{pop.geno}{genotype matrix of population}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
 \item{index.sir}{indice of sires}
 

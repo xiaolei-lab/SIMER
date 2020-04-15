@@ -4,8 +4,16 @@
 \alias{cal.multi}
 \title{Multiple trait selection method}
 \usage{
-cal.multi(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc,
-  pop.pheno)
+cal.multi(
+  pop,
+  decr,
+  sel.multi,
+  index.wt,
+  index.tdm,
+  goal,
+  pass.perc,
+  pop.pheno
+)
 }
 \arguments{
 \item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
@@ -41,7 +49,7 @@ effs <-
              num.qtn.tr1 = c(2, 6, 10),
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
              shape.tr1 = c(1, 1, 1, 1, 1, 1),
              scale.tr1 = c(1, 1, 1, 1, 1, 1),
              multrait = TRUE,

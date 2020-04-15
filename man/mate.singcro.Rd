@@ -4,7 +4,16 @@
 \alias{mate.singcro}
 \title{Single cross process}
 \usage{
-mate.singcro(pop1, pop2, pop1.geno, pop2.geno, ind.stay, num.prog, ratio)
+mate.singcro(
+  pop1,
+  pop2,
+  pop1.geno,
+  pop2.geno,
+  incols = 2,
+  ind.stay,
+  num.prog,
+  ratio
+)
 }
 \arguments{
 \item{pop1}{population information of population1}
@@ -14,6 +23,8 @@ mate.singcro(pop1, pop2, pop1.geno, pop2.geno, ind.stay, num.prog, ratio)
 \item{pop1.geno}{genotype matrix of population1}
 
 \item{pop2.geno}{genotype matrix of population2}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
 \item{ind.stay}{selected individuals regarded as parents}
 

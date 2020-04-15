@@ -4,25 +4,37 @@
 \alias{genotype}
 \title{Generate genotype and editing genotype}
 \usage{
-genotype(rawgeno = NULL, geno = NULL, num.marker = NULL,
-  num.ind = NULL, prob = c(0.5, 0.5), blk.rg = NULL,
-  recom.spot = NULL, range.hot = 4:6, range.cold = 1:5,
-  rate.mut = 1e-08, verbose = TRUE)
+genotype(
+  rawgeno = NULL,
+  geno = NULL,
+  incols = 2,
+  num.marker = NULL,
+  num.ind = NULL,
+  prob = c(0.5, 0.5),
+  blk.rg = NULL,
+  recom.spot = NULL,
+  range.hot = 4:6,
+  range.cold = 1:5,
+  rate.mut = 1e-08,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{rawgeno}{extrinsic genotype matrix}
 
 \item{geno}{genotype matrix need dealing with}
 
-\item{num.marker}{number of markers}
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
-\item{num.ind}{population size of base population}
+\item{num.marker}{number of the markers}
+
+\item{num.ind}{population size of the base population}
 
 \item{prob}{weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1}
 
 \item{blk.rg}{it represents the starting position and the ending position of a block}
 
-\item{recom.spot}{whether to consider recombination in every blocks}
+\item{recom.spot}{whether to consider recombination in every block}
 
 \item{range.hot}{range of number of chromosome crossovers in a hot spot block}
 
@@ -44,12 +56,13 @@ Last update: Oct 13, 2019
 data(simdata)
 num.marker = nrow(input.map)
 num.ind = 100
+incols = 2
 basepop.geno <- genotype(num.marker = num.marker, num.ind = num.ind, verbose = TRUE)
 basepop.geno[1:5, 1:5]
 
 # get block information and recombination information
 nmrk <- nrow(basepop.geno)
-nind <- ncol(basepop.geno) / 2
+nind <- ncol(basepop.geno) / incols
 pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
 blk.rg <- cal.blk(pos.map)
 recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
@@ -57,6 +70,7 @@ recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
 # genotype matrix after Exchange and Mutation
 basepop.geno.em <-
 genotype(geno = basepop.geno,
+         incols = 2, 
          blk.rg = blk.rg,
          recom.spot = recom.spot,
          range.hot = 4:6,

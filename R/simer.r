@@ -22,8 +22,11 @@
 #' @param replication replication index of simulation
 #' @param verbose whether to print detail
 #' @param mrk.dense whether markers are dense, it is TRUE when sequencing data
+#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
+#' @param outcols the column number of an individual in the output genotype matrix, it can be 1 or 2 
 #' @param out prefix of output file name
 #' @param outpath path of output files
+#' @param selPath the path of breeding_plan
 #' @param out.format format of output, "numeric" or "plink"
 #' @param seed.sim random seed of a simulation process
 #' @param seed.map random seed of map file
@@ -33,7 +36,7 @@
 #' @param rawgeno2 extrinsic genotype matrix2
 #' @param rawgeno3 extrinsic genotype matrix3
 #' @param rawgeno4 extrinsic genotype matrix4
-#' @param num.ind population size of base population
+#' @param num.ind population size of the base population
 #' @param prob weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1
 #' @param input.map map that should be input, the marker number should be consistent in both map file and genotype data
 #' @param len.block length of every blocks
@@ -45,10 +48,13 @@
 #' @param h2.tr1 heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param num.qtn.tr1 integer or integer vector, the number of QTN in a single trait
 #' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
-#' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param eff.unit.tr1 unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param shape.tr1 shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
-#' @param scale.tr1 scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param dist.qtn.tr1 distributions of the QTN effects with the options: "normal", "geometry", "gamma", and "beta", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param prob.tr1 unit effect of geometric distribution of a single trait, its length should be same as dist.qtn.tr1
+#' @param shape.tr1 shape of gamma distribution of a single trait, its length should be same as dist.qtn.tr1
+#' @param scale.tr1 scale of gamma distribution of a single trait, its length should be same as dist.qtn.tr1
+#' @param shape1.tr1 non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1
+#' @param shape2.tr1 non-negative parameters of the Beta distribution, its length should be same as dist.qtn.tr1
+#' @param ncp.tr1 non-centrality parameter, its length should be same as dist.qtn.tr1
 #' @param multrait whether to apply multiple traits, TRUE represents applying, FALSE represents not
 #' @param num.qtn.trn QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits
 #' @param sd.trn a matrix with the standard deviation of the QTN effects
@@ -77,7 +83,7 @@
 #' @return a list with population information, genotype matrix, map information, selection intensity
 #' @export
 #' @import bigmemory
-#' @importFrom stats aov cor dnorm qnorm rgamma rnorm runif var
+#' @importFrom stats aov cor dnorm qnorm rgamma rnorm rbeta rgeom runif var
 #' @importFrom utils write.table read.delim packageVersion
 #' @importFrom methods getPackageName
 #' @importFrom MASS ginv mvrnorm
@@ -93,9 +99,12 @@
 #'      simer(num.gen = 5,
 #'            replication = 1,
 #'            verbose = TRUE, 
-#'            mrk.dense = FALSE,
+#'            mrk.dense = TRUE,
+#'            incols = 2, 
+#'            outcols = 1, 
 #'            out = "simer", 
 #'            outpath = NULL,
+#'            selPath = NULL, 
 #'            out.format = "numeric",
 #'            seed.sim = runif(1, 0, 100),
 #'            seed.map = 12345,
@@ -116,15 +125,18 @@
 #'            FR = NULL, 
 #'            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'            num.qtn.tr1 = 500,
-#'            sd.tr1 = c(0.07, 0.06, 0.06, 0.06, 0.06, 0.03),
+#'            sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
 #'            dist.qtn.tr1 = rep("normal", 6),
-#'            eff.unit.tr1 = rep(0.5, 6),
+#'            prob.tr1 = rep(0.5, 6),
 #'            shape.tr1 = rep(1, 6),
 #'            scale.tr1 = rep(1, 6),
+#'            shape1.tr1 = rep(1, 6),
+#'            shape2.tr1 = rep(1, 6),
+#'            ncp.tr1 = rep(0, 6),
 #'            multrait = FALSE,
 #'            num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
 #'            sd.trn = matrix(c(0.07, 0, 0, 0.07), 2, 2),
-#'            gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+#'            gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
 #'            h2.trn = c(0.3, 0.5), 
 #'            qtn.spot = rep(0.1, 10),
 #'            maf = 0,
@@ -164,9 +176,12 @@ simer <-
     function(num.gen = 5,
              replication = 1,
              verbose = TRUE, 
-             mrk.dense = FALSE,
+             mrk.dense = TRUE,
+             incols = 2, 
+             outcols = 1, 
              out = "simer", 
              outpath = NULL,
+             selPath = NULL, 
              out.format = "numeric",
              seed.sim = runif(1, 0, 100),
              seed.map = 12345,
@@ -186,16 +201,19 @@ simer <-
              cal.model = "A",
              FR = NULL, 
              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-             num.qtn.tr1 = 18,
-             sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
+             num.qtn.tr1 = 500,
+             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
              dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = rep(0.5, 6),
+             prob.tr1 = rep(0.5, 6),
              shape.tr1 = rep(1, 6),
              scale.tr1 = rep(1, 6),
+             shape1.tr1 = rep(1, 6), 
+             shape2.tr1 = rep(1, 6), 
+             ncp.tr1 = rep(0, 6), 
              multrait = FALSE,
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-             gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
+             num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
+             sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2),
+             gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
              h2.trn = c(0.3, 0.5), 
              qtn.spot = rep(0.1, 10),
              maf = 0,
@@ -246,19 +264,19 @@ simer <-
 	################### MAIN_FUNCTION_SETTING ###################
   logging.log("--------------------------- replication ", replication, "---------------------------\n", verbose = verbose)
   op <- Sys.time()
-  logging.log("SIMER BEGIN AT", as.character(op), "\n", verbose = verbose)
+  logging.log(" SIMER BEGIN AT", as.character(op), "\n", verbose = verbose)
   set.seed(seed.sim)
-  trait <- lapply(1:num.gen, function(i) { return(NULL) })
-  names(trait) <- paste("gen", 1:num.gen, sep = "")
+  if (incols == 1) outcols <- 1
 
 	################### BASE_POPULATION ###################
   # stablish genotype of base population if there isn't by two ways:
   # 1. input rawgeno
   # 2. input num.marker and num.ind
   num.marker <- nrow(input.map)
-  logging.log("---base population1---\n", verbose = verbose)
+  logging.log(" --- base population 1 ---\n", verbose = verbose)
   basepop.geno <-
       genotype(rawgeno = rawgeno1,
+               incols = incols, 
                num.marker = num.marker,
                num.ind = num.ind,
                prob = prob, 
@@ -266,7 +284,7 @@ simer <-
 
   # set block information and recombination information
   nmrk <- nrow(basepop.geno)
-  nind <- ncol(basepop.geno) / 2
+  nind <- ncol(basepop.geno) / incols
   num.ind <- nind
   pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = len.block)
   blk.rg <- cal.blk(pos.map)
@@ -278,13 +296,17 @@ simer <-
   # calculate for marker information
   effs <-
     cal.effs(pop.geno = basepop.geno,
+             incols = incols, 
              cal.model = cal.model,
              num.qtn.tr1 = num.qtn.tr1,
              sd.tr1 = sd.tr1,
              dist.qtn.tr1 = dist.qtn.tr1,
-             eff.unit.tr1 = eff.unit.tr1,
+             prob.tr1 = prob.tr1,
              shape.tr1 = shape.tr1,
              scale.tr1 = scale.tr1,
+             shape1.tr1 = shape1.tr1, 
+             shape2.tr1 = shape2.tr1, 
+             ncp.tr1 = ncp.tr1, 
              multrait = multrait,
              num.qtn.trn = num.qtn.trn,
              sd.trn = sd.trn,
@@ -310,7 +332,6 @@ simer <-
                 verbose = verbose)
     basepop <- pop1.pheno$pop
     pop1.pheno$pop <- NULL
-    trait[[1]] <- pop1.pheno
   }
   
   # only mutation in clone and doubled haploid
@@ -322,6 +343,7 @@ simer <-
   
   basepop.geno.em <-  # genotype matrix after Mutation
     genotype(geno = basepop.geno,
+             incols = incols, 
              blk.rg = blk.rg,
              recom.spot = recom.spot,
              range.hot = range.hot,
@@ -334,16 +356,16 @@ simer <-
     basepop$sex <- 1
 
     if (is.null(rawgeno2)) {
-      logging.log("---base population2---\n", verbose = verbose)
+      logging.log(" --- base population 2 ---\n", verbose = verbose)
       prob1 <- runif(1)
       prob <- c(prob1, 1 - prob1)
-      pop2.geno <- genotype(num.marker = num.marker, num.ind = num.ind, prob = prob, verbose = verbose)
+      pop2.geno <- genotype(incols = incols, num.marker = num.marker, num.ind = num.ind, prob = prob, verbose = verbose)
     } else {
       pop2.geno <- genotype(rawgeno = rawgeno2, verbose = verbose)
     }
 
     # set base population information
-    nind2 <- ncol(pop2.geno) / 2
+    nind2 <- ncol(pop2.geno) / incols
     pop2 <- getpop(nind2, nind+1, 0)
     
     # calculate phenotype according to genotype
@@ -367,17 +389,19 @@ simer <-
       
       # reset trait
       if (mtd.reprod != "backcro") {
-        pop.sir1 <- trait[[1]]
         trait <- list()
-        trait$pop.sir1 <- pop.sir1
-        trait$pop.dam1 <- pop2.pheno
-      } else {
-        trait[[1]] <- list(pop.sir1 = trait[[1]], pop.dam1 = pop2.pheno)
+        trait$pop.sir1 <- pop1.pheno
+        if (mtd.reprod == "tricro") {
+          trait$pop.sir2 <- pop2.pheno
+        } else {
+          trait$pop.dam1 <- pop2.pheno
+        }
       }
     }
     
     pop2.geno.em <- # genotype matrix after Mutation
           genotype(geno = pop2.geno,
+                   incols = incols, 
                    blk.rg = blk.rg,
                    recom.spot = recom.spot,
                    range.hot = range.hot,
@@ -391,16 +415,16 @@ simer <-
 
   if (mtd.reprod == "tricro" || mtd.reprod == "doubcro") {
     if (is.null(rawgeno3)) {
-      logging.log("---base population3---\n", verbose = verbose)
+      logging.log(" --- base population 3 ---\n", verbose = verbose)
       prob1 <- runif(1)
       prob <- c(prob1, 1 - prob1)
-      pop3.geno <- genotype(num.marker = num.marker, num.ind = num.ind, prob = prob, verbose = verbose)
+      pop3.geno <- genotype(incols = incols, num.marker = num.marker, num.ind = num.ind, prob = prob, verbose = verbose)
     } else {
       pop3.geno <- genotype(rawgeno = rawgeno3, verbose = verbose)
     }
 
     # set base population information
-    nind3 <- ncol(pop3.geno) / 2
+    nind3 <- ncol(pop3.geno) / incols
     pop3 <- getpop(nind3, nind+nind2+1, 1)
     
     # calculate phenotype according to genotype
@@ -421,11 +445,17 @@ simer <-
                   verbose = verbose)
       pop3 <- pop3.pheno$pop
       pop3.pheno$pop <- NULL
-      trait$pop.sir1 <- pop3.pheno
+      
+      if (mtd.reprod == "tricro") {
+        trait$pop.dam1 <- pop3.pheno
+      } else {
+        trait$pop.sir2 <- pop3.pheno
+      }
     }
     
     pop3.geno.em <- # genotype matrix after Mutation
           genotype(geno = pop3.geno,
+                   incols = incols, 
                    blk.rg = blk.rg,
                    recom.spot = recom.spot,
                    range.hot = range.hot,
@@ -437,17 +467,17 @@ simer <-
   }
 
   if (mtd.reprod == "doubcro") {
-    logging.log("---base population4---\n", verbose = verbose)
+    logging.log(" --- base population 4 ---\n", verbose = verbose)
     if (is.null(rawgeno4)) {
       prob1 <- runif(1)
       prob <- c(prob1, 1 - prob1)
-      pop4.geno <- genotype(num.marker = num.marker, num.ind = num.ind, prob = prob, verbose = verbose)
+      pop4.geno <- genotype(incols = incols, num.marker = num.marker, num.ind = num.ind, prob = prob, verbose = verbose)
     } else {
       pop4.geno <- genotype(rawgeno = rawgeno4, verbose = verbose)
     }
 
     # set base population information
-    nind4 <- ncol(pop4.geno) / 2
+    nind4 <- ncol(pop4.geno) / incols
     pop4 <- getpop(nind4, nind+nind2+nind3+1, 0)
     
     # calculate phenotype according to genotype
@@ -473,6 +503,7 @@ simer <-
     
     pop4.geno.em <- # genotype matrix after Mutation
           genotype(geno = pop4.geno,
+                   incols = incols, 
                    blk.rg = blk.rg,
                    recom.spot = recom.spot,
                    range.hot = range.hot,
@@ -544,7 +575,7 @@ simer <-
       
       directory.rep <- paste0(outpath, .Platform$file.sep, "replication", replication)
       if (dir.exists(directory.rep)) {
-        remove_bigmatrix(file.path(directory.rep, "genotype"))
+        remove_bigmatrix(file.path(directory.rep, out))
         unlink(directory.rep, recursive = TRUE)
       }
       dir.create(directory.rep)
@@ -553,13 +584,13 @@ simer <-
 
 	# calculate selection intensity
 	sel.i <- dnorm(qnorm(1 -ps)) / ps 
-	logging.log("---selection intensity---\n", verbose = verbose)
-	logging.log("Selection intensity is", sel.i, "\n", verbose = verbose)
+	logging.log(" --- selection intensity ---\n", verbose = verbose)
+	logging.log(" Selection intensity is", sel.i, "\n", verbose = verbose)
 	
   ################### REPRODUCTION_PROCESS ###################
   # 1. Reproduction based on basepop and basepop.geno according
   #    to different reproduction method.
-  logging.log("---start reproduction---\n", verbose = verbose)
+  logging.log(" --- start reproduction ---\n", verbose = verbose)
   # multi-generation: clone, dh, selpol, randmate, randexself
 	geno.back <- paste0(out, ".geno.bin")
 	geno.desc <- paste0(out, ".geno.desc")
@@ -568,20 +599,16 @@ simer <-
     out.pheno.index <- getindex(count.ind, out.pheno.gen)
 
     # store all genotype
-    if (!sel.on) {
-      geno.total.temp <- big.matrix(
-        nrow = num.marker,
-        ncol = 2*sum(count.ind),
-        init = 3,
-        type = 'char')
-    } else {
-      geno.total.temp <- NULL
-    }
-    
+    geno.total.temp <- big.matrix(
+      nrow = num.marker,
+      ncol = outcols*sum(count.ind),
+      init = 3,
+      type = 'char')
+
     if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = sum(count.ind[out.geno.gen]),
+        ncol = outcols * sum(count.ind[out.geno.gen]),
         init = 3,
         type = 'char',
         backingpath = directory.rep,
@@ -591,7 +618,7 @@ simer <-
     } else {
       geno.total <- big.matrix(
         nrow = num.marker,
-        ncol = sum(count.ind[out.geno.gen]),
+        ncol = outcols * sum(count.ind[out.geno.gen]),
         init = 3,
         type = 'char')
       options(bigmemory.typecast.warning=FALSE)
@@ -600,43 +627,44 @@ simer <-
     # set total population
     pop.total <- basepop
     
+    gc <- basepop.geno
+    if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
     if (1 %in% out.geno.gen) {
-      gc <- geno.cvt(basepop.geno)
-      input.geno(geno.total, gc, count.ind[1], mrk.dense)
+      input.geno(geno.total, gc, outcols * count.ind[1], mrk.dense)
     }
-    if (!sel.on) {
-      input.geno(geno.total.temp, basepop.geno, 2*count.ind[1], mrk.dense)
-    }
-    logging.log("After generation 1 ,", count.ind[1], "individuals are generated...\n", verbose = verbose)
+    input.geno(geno.total.temp, gc, outcols*count.ind[1], mrk.dense)
 
-    if (sel.on) {
-      # add selection to generation1
-      ind.ordered <-
-        selects(pop = basepop,
-                decr = decr,
-                sel.multi = sel.multi,
-                index.wt = index.wt,
-                index.tdm = index.tdm,
-                goal.perc = goal.perc,
-                pass.perc = pass.perc,
-                sel.sing = sel.sing,
-                pop.total = basepop,
-                pop.pheno = pop1.pheno, 
-                verbose = verbose)
-      index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay <- ind.ordered[1:(count.ind[2]/num.prog/(1-ratio))]
-    } else {
-      ind.stay <- basepop$index
-    }
-    
-    if (num.gen > 2) {
+    logging.log(" After generation 1 ,", count.ind[1], "individuals are generated...\n", verbose = verbose)
+
+    if (num.gen > 1) {
+      if (sel.on) {
+        # add selection to generation1
+        ind.ordered <-
+          selects(pop = basepop,
+                  decr = decr,
+                  sel.multi = sel.multi,
+                  index.wt = index.wt,
+                  index.tdm = index.tdm,
+                  goal.perc = goal.perc,
+                  pass.perc = pass.perc,
+                  sel.sing = sel.sing,
+                  pop.total = basepop,
+                  pop.pheno = pop1.pheno, 
+                  verbose = verbose)
+        index.tdm <- ind.ordered[1]
+        ind.ordered <- ind.ordered[-1]
+        ind.stay <- ind.ordered[1:(count.ind[2]/num.prog/(1-ratio))]
+      } else {
+        ind.stay <- basepop$index
+      }
+      
       pop.last <- basepop
       pop.geno.last <- basepop.geno.em
       for (i in 2:num.gen) {
         pop.gp <- # pop.gp with genotype and pop information
           reproduces(pop1 = pop.last,
                      pop1.geno = pop.geno.last,
+                     incols = incols, 
                      ind.stay = ind.stay,
                      mtd.reprod = mtd.reprod,
                      num.prog = num.prog,
@@ -645,6 +673,16 @@ simer <-
         pop.geno.curr <- pop.gp$geno
         pop.curr <- pop.gp$pop
         isd <- c(2, 5, 6)
+        
+        # input genotype
+        gc <- pop.geno.curr
+        if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
+        if (i %in% out.geno.gen) {
+          out.gg <- out.geno.gen[1:which(out.geno.gen == i)]
+          input.geno(geno.total, gc, outcols * sum(count.ind[out.gg]), mrk.dense)
+        }
+        input.geno(geno.total.temp, gc, outcols*sum(count.ind[1:i]), mrk.dense)
+        
         pop.total.temp <- rbind(pop.total[1:sum(count.ind[1:(i-1)]), isd], pop.curr[, isd])
         if (sel.on) {
           pop.pheno <-
@@ -663,20 +701,12 @@ simer <-
                       verbose = verbose)
           pop.curr <- pop.pheno$pop
           pop.pheno$pop <- NULL
-          trait[[i]]<- pop.pheno
         }
         
         pop.total <- rbind(pop.total, pop.curr)
-        if (i %in% out.geno.gen) {
-          gc <- geno.cvt(pop.geno.curr)
-          out.gg <- out.geno.gen[1:which(out.geno.gen == i)]
-          input.geno(geno.total, gc, sum(count.ind[out.gg]), mrk.dense)
-        }
-        if (!sel.on) {
-          input.geno(geno.total.temp, pop.geno.curr, 2*sum(count.ind[1:i]), mrk.dense)
-        }
-        logging.log("After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
-        
+       
+        logging.log(" After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
+
         if (i == num.gen) break
         
         if (sel.on) {
@@ -702,6 +732,7 @@ simer <-
         
         pop.geno.last <-  # genotype matrix after Exchange and Mutation
           genotype(geno = pop.geno.curr,
+                   incols = incols, 
                    blk.rg = blk.rg,
                    recom.spot = recom.spot,
                    range.hot = range.hot,
@@ -715,29 +746,27 @@ simer <-
     
     # if traits have genetic correlation
     # generate phenotype at last
-    if (!sel.on) {
-      pop.pheno <-
-        phenotype(effs = effs,
-                  FR = FR, 
-                  pop = pop.total,
-                  pop.geno = geno.total.temp,
-                  pos.map = pos.map,
-                  h2.tr1 = h2.tr1,
-                  gnt.cov = gnt.cov,
-                  h2.trn = h2.trn, 
-                  sel.crit = sel.crit, 
-                  pop.total = pop.total, 
-                  sel.on = sel.on, 
-                  inner.env =  inner.env, 
-                  verbose = verbose)
-      pop.total <- pop.pheno$pop
-      pop.pheno$pop <- NULL
-      trait <- pop.pheno
-    }
+    pop.pheno <-
+      phenotype(effs = effs,
+                FR = FR, 
+                pop = pop.total,
+                pop.geno = geno.total.temp,
+                pos.map = pos.map,
+                h2.tr1 = h2.tr1,
+                gnt.cov = gnt.cov,
+                h2.trn = h2.trn, 
+                sel.crit = sel.crit, 
+                pop.total = pop.total, 
+                sel.on = FALSE, 
+                inner.env =  inner.env, 
+                verbose = verbose)
+    pop.total <- pop.pheno$pop
+    pop.pheno$pop <- NULL
+    trait <- pop.pheno
     
     if (!is.null(outpath)) {
       # write files
-      logging.log("---write files of total population---\n", verbose = verbose)
+      logging.log(" --- write files of total population ---\n", verbose = verbose)
       write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, out, directory.rep, out.format, verbose)
       flush(geno.total)
     }
@@ -751,7 +780,7 @@ simer <-
     # certain-generation: singcro, tricro, doubcro
   } else if (mtd.reprod == "singcro") {
     out.geno.index <- 1:sum(count.ind)
-    logging.log("After generation", 1, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 1, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
     
     if (!is.null(outpath)) {
       dir.sir <- paste0(directory.rep, .Platform$file.sep, count.ind[1], "_sir")
@@ -766,7 +795,7 @@ simer <-
 
       geno.sir <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[1],
+        ncol = outcols * count.ind[1],
         init = 3,
         type = 'char',
         backingpath = dir.sir,
@@ -774,7 +803,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.dam <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[2],
+        ncol = outcols * count.ind[2],
         init = 3,
         type = 'char',
         backingpath = dir.dam,
@@ -782,7 +811,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.singcro <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[3],
+        ncol = outcols * count.ind[3],
         init = 3,
         type = 'char',
         backingpath = dir.sgc,
@@ -792,17 +821,17 @@ simer <-
     } else {
       geno.sir <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[1],
+        ncol = outcols * count.ind[1],
         init = 3,
         type = 'char')
       geno.dam <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[2],
+        ncol = outcols * count.ind[2],
         init = 3,
         type = 'char')
       geno.singcro <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[3],
+        ncol = outcols * count.ind[3],
         init = 3,
         type = 'char')
       options(bigmemory.typecast.warning=FALSE)
@@ -824,7 +853,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog/nrow(pop2)*nrow(basepop))]
       ind.ordered <-
         selects(pop = pop2,
                 decr = decr,
@@ -850,6 +879,7 @@ simer <-
                    pop2 = pop2,
                    pop1.geno = basepop.geno.em,
                    pop2.geno = pop2.geno.em,
+                   incols = incols, 
                    ind.stay = ind.stay,
                    mtd.reprod = mtd.reprod,
                    num.prog = num.prog,
@@ -880,11 +910,16 @@ simer <-
       trait$pop.singcro <- pop.pheno
     }
     
-    logging.log("After generation", 2, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 2, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
 
-    gc.sir <- geno.cvt(basepop.geno)
-    gc.dam <- geno.cvt(pop2.geno)
-    gc.singcro <- geno.cvt(pop.geno.singcro)
+    gc.sir <- basepop.geno
+    gc.dam <- pop2.geno
+    gc.singcro <- pop.geno.singcro
+    if (incols == 2 & outcols == 1) {
+      gc.sir <- geno.cvt(gc.sir)
+      gc.dam <- geno.cvt(gc.dam)
+      gc.singcro <- geno.cvt(gc.singcro)
+    }
     input.geno(geno.sir, gc.sir, ncol(geno.sir), mrk.dense)
     input.geno(geno.dam, gc.dam, ncol(geno.dam), mrk.dense)
     input.geno(geno.singcro, gc.singcro, ncol(geno.singcro), mrk.dense)
@@ -911,9 +946,9 @@ simer <-
       pop.total <- pop.pheno$pop
       pop.pheno$pop <- NULL
       trait <- pop.pheno
-      basepop$pheno <- pop.total$pheno[1:nind, ]
-      pop2$pheno <- pop.total$pheno[(nind+1):(nind+nind2)]
-      pop.singcro$pheno <- pop.total$pheno[(nind+nind2+1):(nind+nind2+nrow(pop.singcro))]
+      basepop <- pop.total[1:nind, ]
+      pop2 <- pop.total[(nind+1):(nind+nind2), ]
+      pop.singcro <- pop.total[(nind+nind2+1):(nind+nind2+nrow(pop.singcro)), ]
     }
     
     if (!is.null(outpath)) {
@@ -921,11 +956,11 @@ simer <-
       flush(geno.dam)
       flush(geno.singcro)
       # write files
-      logging.log("---write files of sirs---\n", verbose = verbose)
+      logging.log(" --- write files of sirs ---\n", verbose = verbose)
       write.file(basepop, geno.sir, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir, out.format, verbose)
-      logging.log("---write files of dams---\n", verbose = verbose)
+      logging.log(" --- write files of dams ---\n", verbose = verbose)
       write.file(pop2, geno.dam, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.dam, out.format, verbose)
-      logging.log("---write files of progenies---\n", verbose = verbose)
+      logging.log(" --- write files of progenies ---\n", verbose = verbose)
       write.file(pop.singcro, geno.singcro, pos.map, 1:nrow(pop.singcro), 1:nrow(pop.singcro), seed.map, out, dir.sgc, out.format, verbose)
     }
     
@@ -939,7 +974,7 @@ simer <-
     
   } else if (mtd.reprod == "tricro") {
     out.geno.index <- 1:sum(count.ind)
-    logging.log("After generation", 1, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 1, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
     
     if (!is.null(outpath)) {
       dir.sir1  <- paste0(directory.rep, .Platform$file.sep, count.ind[1], "_sir1")
@@ -960,7 +995,7 @@ simer <-
     
       geno.sir1 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[1],
+        ncol = outcols * count.ind[1],
         init = 3,
         type = 'char',
         backingpath = dir.sir1,
@@ -968,7 +1003,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.dam1 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[2],
+        ncol = outcols * count.ind[2],
         init = 3,
         type = 'char',
         backingpath = dir.dam1,
@@ -976,7 +1011,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.sir2 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[3],
+        ncol = outcols * count.ind[3],
         init = 3,
         type = 'char',
         backingpath = dir.sir2,
@@ -984,7 +1019,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.dam21 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[4],
+        ncol = outcols * count.ind[4],
         init = 3,
         type = 'char',
         backingpath = dir.dam21,
@@ -992,7 +1027,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.tricro <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[5],
+        ncol = outcols * count.ind[5],
         init = 3,
         type = 'char',
         backingpath = dir.trc,
@@ -1002,27 +1037,27 @@ simer <-
     } else {
       geno.sir1 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[1],
+        ncol = outcols * count.ind[1],
         init = 3,
         type = 'char')
       geno.dam1 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[2],
+        ncol = outcols * count.ind[2],
         init = 3,
         type = 'char')
       geno.sir2 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[3],
+        ncol = outcols * count.ind[3],
         init = 3,
         type = 'char')
       geno.dam21 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[4],
+        ncol = outcols * count.ind[4],
         init = 3,
         type = 'char')
       geno.tricro <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[5],
+        ncol = outcols * count.ind[5],
         init = 3,
         type = 'char')
       options(bigmemory.typecast.warning=FALSE)
@@ -1048,7 +1083,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay1 <- ind.ordered[1:(count.ind[4]/prog.tri/nrow(pop3)*nrow(pop2))]
       ind.ordered <-
         selects(pop = pop3,
                 decr = decr,
@@ -1063,7 +1098,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay2 <- ind.ordered[1:(count.ind[4]/prog.tri)]
       ind.stay <- c(ind.stay1, ind.stay2)
     } else {
       ind.stay <- c(pop2$index, pop3$index)
@@ -1075,9 +1110,10 @@ simer <-
                    pop2 = pop3,
                    pop1.geno = pop2.geno.em,
                    pop2.geno = pop3.geno.em,
+                   incols = incols, 
                    ind.stay = ind.stay,
                    mtd.reprod = "singcro",
-                   num.prog = num.prog,
+                   num.prog = prog.tri,
                    ratio = ratio)
 
     pop.geno.dam21 <- pop.gp$geno
@@ -1106,6 +1142,21 @@ simer <-
       
       # output index.tdm and ordered individuals indice
       ind.ordered <-
+        selects(pop = basepop,
+                decr = decr,
+                sel.multi = sel.multi,
+                index.wt = index.wt,
+                index.tdm = index.tdm,
+                goal.perc = goal.perc,
+                pass.perc = pass.perc,
+                sel.sing = sel.sing,
+                pop.total = basepop,
+                pop.pheno = pop1.pheno, 
+                verbose = verbose)
+      index.tdm <- ind.ordered[1]
+      ind.ordered <- ind.ordered[-1]
+      ind.stay1 <- ind.ordered[1:(count.ind[5]/num.prog/(1-ratio)/nrow(pop.dam21)*nrow(basepop))]
+      ind.ordered <-
         selects(pop = pop.dam21,
                 decr = decr,
                 sel.multi = sel.multi,
@@ -1119,15 +1170,17 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay <- c(basepop$index, ind.ordered[1:(count.ind[5]/(num.prog*(sum(pop.dam21$sex==2)/nrow(pop.dam21))))])
+      ind.stay2 <- ind.ordered[1:(count.ind[5]/num.prog/(1-ratio))]
+      ind.stay <- c(ind.stay1, ind.stay2)
     } else {
       ind.stay <- c(basepop$index, pop.dam21$index)
     }
     
-    logging.log("After generation", 2, ",", sum(count.ind[1:4]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 2, ",", sum(count.ind[1:4]), "individuals are generated...\n", verbose = verbose)
     
     pop.geno.dam21.em <-  # genotype matrix after Exchange and Mutation
         genotype(geno = pop.geno.dam21,
+                 incols = incols, 
                  blk.rg = blk.rg,
                  recom.spot = recom.spot,
                  range.hot = range.hot,
@@ -1142,6 +1195,7 @@ simer <-
                    pop2 = pop.dam21,
                    pop1.geno = basepop.geno.em,
                    pop2.geno = pop.geno.dam21.em,
+                   incols = incols, 
                    ind.stay = ind.stay,
                    mtd.reprod = "singcro",
                    num.prog = num.prog,
@@ -1172,13 +1226,20 @@ simer <-
       trait$pop.tricro <- pop.pheno
     }
     
-    logging.log("After generation", 3, ",", sum(count.ind[1:5]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 3, ",", sum(count.ind[1:5]), "individuals are generated...\n", verbose = verbose)
 
-    gc.sir1 <- geno.cvt(basepop.geno)
-    gc.sir2 <- geno.cvt(pop2.geno)
-    gc.dam1 <- geno.cvt(pop3.geno)
-    gc.dam21 <- geno.cvt(pop.geno.dam21)
-    gc.tricro <- geno.cvt(pop.geno.tricro)
+    gc.sir1 <- basepop.geno
+    gc.sir2 <- pop2.geno
+    gc.dam1 <- pop3.geno
+    gc.dam21 <- pop.geno.dam21
+    gc.tricro <- pop.geno.tricro
+    if (incols == 2 & outcols == 1) {
+      gc.sir1 <- geno.cvt(gc.sir1)
+      gc.sir2 <- geno.cvt(gc.sir2)
+      gc.dam1 <- geno.cvt(gc.dam1)
+      gc.dam21 <- geno.cvt(gc.dam21)
+      gc.tricro <- geno.cvt(gc.tricro)
+    }
     input.geno(geno.sir1, gc.sir1, ncol(geno.sir1), mrk.dense)
     input.geno(geno.sir2, gc.sir2, ncol(geno.dam1), mrk.dense)
     input.geno(geno.dam1, gc.dam1, ncol(geno.sir2), mrk.dense)
@@ -1207,11 +1268,11 @@ simer <-
       pop.total <- pop.pheno$pop
       pop.pheno$pop <- NULL
       trait <- pop.pheno
-      basepop$pheno <- pop.total$pheno[1:nind, ]
-      pop2$pheno <- pop.total$pheno[(nind+1):(nind+nind2)]
-      pop3$pheno <- pop.total$pheno[(nind+nind2+1):(nind+nind2+nind3)]
-      pop.dam21$pheno <- pop.total$pheno[(nind+nind2+nind3+1):(nind+nind2+nind3+nrow(pop.dam21))]
-      pop.tricro$pheno <- pop.total$pheno[(nind+nind2+nind3+nrow(pop.dam21)+1):(nind+nind2+nind3+nrow(pop.dam21)+nrow(pop.tricro))]
+      basepop <- pop.total[1:nind, ]
+      pop2 <- pop.total[(nind+1):(nind+nind2), ]
+      pop3 <- pop.total[(nind+nind2+1):(nind+nind2+nind3), ]
+      pop.dam21 <- pop.total[(nind+nind2+nind3+1):(nind+nind2+nind3+nrow(pop.dam21)), ]
+      pop.tricro <- pop.total[(nind+nind2+nind3+nrow(pop.dam21)+1):(nind+nind2+nind3+nrow(pop.dam21)+nrow(pop.tricro)), ]
     }
     
     if (!is.null(outpath)) {
@@ -1221,15 +1282,15 @@ simer <-
       flush(geno.dam21)
       flush(geno.tricro)
       # write files
-      logging.log("---write files of sir1s---\n", verbose = verbose)
+      logging.log(" --- write files of sir1s ---\n", verbose = verbose)
       write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir1, out.format, verbose)
-      logging.log("---write files of sir2s---\n", verbose = verbose)
+      logging.log(" --- write files of sir2s ---\n", verbose = verbose)
       write.file(pop2, geno.sir2, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.sir2, out.format, verbose)
-      logging.log("---write files of dam1s---\n", verbose = verbose)
+      logging.log(" --- write files of dam1s ---\n", verbose = verbose)
       write.file(pop3, geno.dam1, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, out, dir.dam1, out.format, verbose)
-      logging.log("---write files of dam21s---\n", verbose = verbose)
+      logging.log(" --- write files of dam21s ---\n", verbose = verbose)
       write.file(pop.dam21, geno.dam21, pos.map, 1:nrow(pop.dam21), 1:nrow(pop.dam21), seed.map, out, dir.dam21, out.format, verbose)
-      logging.log("---write files of progenies---\n", verbose = verbose)
+      logging.log(" --- write files of progenies ---\n", verbose = verbose)
       write.file(pop.tricro, geno.tricro, pos.map, 1:nrow(pop.tricro), 1:nrow(pop.tricro), seed.map, out, dir.trc, out.format, verbose)
     }
     
@@ -1245,7 +1306,7 @@ simer <-
 
   } else if (mtd.reprod == "doubcro") {
     out.geno.index <- 1:sum(count.ind)
-    logging.log("After generation", 1, ",", sum(count.ind[1:4]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 1, ",", sum(count.ind[1:4]), "individuals are generated...\n", verbose = verbose)
     
     if (!is.null(outpath)) {
       dir.sir1  <- paste0(directory.rep, .Platform$file.sep, count.ind[1], "_sir1")
@@ -1272,7 +1333,7 @@ simer <-
     
       geno.sir1 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[1],
+        ncol = outcols * count.ind[1],
         init = 3,
         type = 'char',
         backingpath = dir.sir1,
@@ -1280,7 +1341,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.dam1 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[2],
+        ncol = outcols * count.ind[2],
         init = 3,
         type = 'char',
         backingpath = dir.dam1,
@@ -1288,7 +1349,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.sir2 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[3],
+        ncol = outcols * count.ind[3],
         init = 3,
         type = 'char',
         backingpath = dir.sir2,
@@ -1296,7 +1357,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.dam2 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[4],
+        ncol = outcols * count.ind[4],
         init = 3,
         type = 'char',
         backingpath = dir.dam2,
@@ -1304,7 +1365,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.sir11 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[5],
+        ncol = outcols * count.ind[5],
         init = 3,
         type = 'char',
         backingpath = dir.sir11,
@@ -1312,7 +1373,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.dam22 <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[6],
+        ncol = outcols * count.ind[6],
         init = 3,
         type = 'char',
         backingpath = dir.dam22,
@@ -1320,7 +1381,7 @@ simer <-
         descriptorfile = geno.desc)
       geno.doubcro <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = count.ind[7],
+        ncol = outcols * count.ind[7],
         init = 3,
         type = 'char',
         backingpath = dir.dbc,
@@ -1330,37 +1391,37 @@ simer <-
     } else {
       geno.sir1 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[1],
+        ncol = outcols * count.ind[1],
         init = 3,
         type = 'char')
       geno.dam1 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[2],
+        ncol = outcols * count.ind[2],
         init = 3,
         type = 'char')
       geno.sir2 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[3],
+        ncol = outcols * count.ind[3],
         init = 3,
         type = 'char')
       geno.dam2 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[4],
+        ncol = outcols * count.ind[4],
         init = 3,
         type = 'char')
       geno.sir11 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[5],
+        ncol = outcols * count.ind[5],
         init = 3,
         type = 'char')
       geno.dam22 <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[6],
+        ncol = outcols * count.ind[6],
         init = 3,
         type = 'char')
       geno.doubcro <- big.matrix(
         nrow = num.marker,
-        ncol = count.ind[7],
+        ncol = outcols * count.ind[7],
         init = 3,
         type = 'char')
       options(bigmemory.typecast.warning=FALSE)
@@ -1382,7 +1443,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay1 <- ind.ordered[1:(count.ind[5]/prog.doub/nrow(pop2)*nrow(basepop))]
       ind.ordered <-
         selects(pop = pop2,
                 decr = decr,
@@ -1397,7 +1458,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay2 <- ind.ordered[1:(count.ind[5]/prog.doub)]
       ind.stay <- c(ind.stay1, ind.stay2)
     } else {
       ind.stay <- c(basepop$index, pop2$index)
@@ -1409,9 +1470,10 @@ simer <-
                    pop2 = pop2,
                    pop1.geno = basepop.geno.em,
                    pop2.geno = pop2.geno.em,
+                   incols = incols, 
                    ind.stay = ind.stay,
                    mtd.reprod = "singcro",
-                   num.prog = num.prog,
+                   num.prog = prog.doub,
                    ratio = ratio)
 
     pop.geno.sir11 <- pop.gp$geno
@@ -1453,14 +1515,12 @@ simer <-
                 pop.pheno = pop.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay.sir11 <- ind.ordered[1:(count.ind[7]/(num.prog*(sum(pop.sir11$sex==2)/nrow(pop.sir11))))]
-    } else {
-      ind.stay.sir11 <- pop.sir11$index
-    }
+      ind.ordered.sir11 <- ind.ordered[-1]
+    } 
     
     pop.geno.sir11.em <-  # genotype matrix after Exchange and Mutation
         genotype(geno = pop.geno.sir11,
+                 incols = incols, 
                  blk.rg = blk.rg,
                  recom.spot = recom.spot,
                  range.hot = range.hot,
@@ -1485,7 +1545,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay1 <- ind.ordered[1:(count.ind[6]/prog.doub/nrow(pop4)*nrow(pop3))]
       ind.ordered <-
         selects(pop = pop4,
                 decr = decr,
@@ -1500,7 +1560,7 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
+      ind.stay2 <- ind.ordered[1:(count.ind[6]/prog.doub)]
       ind.stay <- c(ind.stay1, ind.stay2)
     } else {
       ind.stay <- c(pop3$index, pop4$index)
@@ -1512,9 +1572,10 @@ simer <-
                    pop2 = pop4,
                    pop1.geno = pop3.geno.em,
                    pop2.geno = pop4.geno.em,
+                   incols = incols, 
                    ind.stay = ind.stay,
                    mtd.reprod = "singcro",
-                   num.prog = num.prog,
+                   num.prog = prog.doub,
                    ratio = ratio)
 
     pop.geno.dam22 <- pop.gp$geno
@@ -1540,10 +1601,9 @@ simer <-
       pop.dam22 <- pop.pheno$pop
       pop.pheno$pop <- NULL
       trait$pop.dam22 <- pop.pheno
-    }
-
-    # output index.tdm and ordered individuals indice
-    ind.ordered <-
+      
+      # output index.tdm and ordered individuals indice
+      ind.ordered <-
         selects(pop = pop.dam22,
                 decr = decr,
                 sel.multi = sel.multi,
@@ -1555,12 +1615,19 @@ simer <-
                 pop.total = pop.total.temp,
                 pop.pheno = pop.pheno, 
                 verbose = verbose)
-    # index.tdm <- ind.ordered[1]
-    ind.ordered <- ind.ordered[-1]
-
-    ind.stay.dam22 <- ind.ordered[1:(count.ind[7]/(num.prog*(sum(pop.dam22$sex==2)/nrow(pop.dam22))))]
+      # index.tdm <- ind.ordered[1]
+      ind.ordered.dam22 <- ind.ordered[-1]
+      ind.stay.dam22 <- ind.ordered.dam22[1:(count.ind[7]/num.prog/ratio)]
+      ind.stay.sir11 <- ind.ordered.sir11[1:(count.ind[7]/num.prog/ratio/nrow(pop.dam22)*nrow(pop.sir11))]
+    } else {
+      ind.stay.dam22 <- pop.dam22$index
+      ind.stay.sir11 <- pop.sir11$index
+    }
+    ind.stay <- c(ind.stay.sir11, ind.stay.dam22)
+    
     pop.geno.dam22.em <-  # genotype matrix after Exchange and Mutation
         genotype(geno = pop.geno.dam22,
+                 incols = incols, 
                  blk.rg = blk.rg,
                  recom.spot = recom.spot,
                  range.hot = range.hot,
@@ -1569,9 +1636,7 @@ simer <-
                  rate.mut = rate.mut, 
                  verbose = verbose)
 
-    ind.stay <- c(ind.stay.sir11, ind.stay.dam22)
-    
-    logging.log("After generation", 2, ",", sum(count.ind[1:6]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 2, ",", sum(count.ind[1:6]), "individuals are generated...\n", verbose = verbose)
     
     # the second generation to the third generation
     pop.gp <-
@@ -1579,6 +1644,7 @@ simer <-
                    pop2 = pop.dam22,
                    pop1.geno = pop.geno.sir11.em,
                    pop2.geno = pop.geno.dam22.em,
+                   incols = incols, 
                    ind.stay = ind.stay,
                    mtd.reprod = "singcro",
                    num.prog = num.prog,
@@ -1608,15 +1674,24 @@ simer <-
       trait$pop.doubcro <- pop.pheno
     }
     
-    logging.log("After generation", 3, ",", sum(count.ind[1:7]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", 3, ",", sum(count.ind[1:7]), "individuals are generated...\n", verbose = verbose)
 
-    gc.sir1 <- geno.cvt(basepop.geno)
-    gc.dam1 <- geno.cvt(pop2.geno)
-    gc.sir2 <- geno.cvt(pop3.geno)
-    gc.dam2 <- geno.cvt(pop4.geno)
-    gc.sir11 <- geno.cvt(pop.geno.sir11)
-    gc.dam22 <- geno.cvt(pop.geno.dam22)
-    gc.doubcro <- geno.cvt(pop.geno.doubcro)
+    gc.sir1 <- basepop.geno
+    gc.dam1 <- pop2.geno
+    gc.sir2 <- pop3.geno
+    gc.dam2 <- pop4.geno
+    gc.sir11 <- pop.geno.sir11
+    gc.dam22 <- pop.geno.dam22
+    gc.doubcro <- pop.geno.doubcro
+    if (incols == 2 & outcols == 1) {
+      gc.sir1 <- geno.cvt(gc.sir1)
+      gc.dam1 <- geno.cvt(gc.dam1)
+      gc.sir2 <- geno.cvt(gc.sir2)
+      gc.dam2 <- geno.cvt(gc.dam2)
+      gc.sir11 <- geno.cvt(gc.sir11)
+      gc.dam22 <- geno.cvt(gc.dam22)
+      gc.doubcro <- geno.cvt(gc.doubcro)
+    }
     input.geno(geno.sir1, gc.sir1, ncol(geno.sir1), mrk.dense)
     input.geno(geno.dam1, gc.dam1, ncol(geno.dam1), mrk.dense)
     input.geno(geno.sir2, gc.sir2, ncol(geno.sir2), mrk.dense)
@@ -1647,13 +1722,13 @@ simer <-
       pop.total <- pop.pheno$pop
       pop.pheno$pop <- NULL
       trait <- pop.pheno
-      basepop$pheno <- pop.total$pheno[1:nind, ]
-      pop2$pheno <- pop.total$pheno[(nind+1):(nind+nind2)]
-      pop3$pheno <- pop.total$pheno[(nind+nind2+1):(nind+nind2+nind3)]
-      pop4$pheno <- pop.total$pheno[(nind+nind2+nind3+1):(nind+nind2+nind3+nind4)]
-      pop.sir11$pheno <- pop.total$pheno[(nind+nind2+nind3+nind4+1):(nind+nind2+nind3+nind4+nrow(pop.sir11))]
-      pop.dam22$pheno <- pop.total$pheno[(nind+nind2+nind3+nind4+nrow(pop.sir11)+1):(nind+nind2+nind3+nind4+nrow(pop.sir11)+nrow(pop.dam22))]
-      pop.doubcro$pheno <- pop.total$pheno[(nind+nind2+nind3+nrow(pop.sir11)+nrow(pop.dam22)+1):(nind+nind2+nind3+nind4+nrow(pop.sir11)+nrow(pop.dam22)+nrow(pop.doubcro))]
+      basepop <- pop.total[1:nind, ]
+      pop2 <- pop.total[(nind+1):(nind+nind2), ]
+      pop3 <- pop.total[(nind+nind2+1):(nind+nind2+nind3), ]
+      pop4 <- pop.total[(nind+nind2+nind3+1):(nind+nind2+nind3+nind4), ]
+      pop.sir11 <- pop.total[(nind+nind2+nind3+nind4+1):(nind+nind2+nind3+nind4+nrow(pop.sir11)), ]
+      pop.dam22 <- pop.total[(nind+nind2+nind3+nind4+nrow(pop.sir11)+1):(nind+nind2+nind3+nind4+nrow(pop.sir11)+nrow(pop.dam22)), ]
+      pop.doubcro <- pop.total[(nind+nind2+nind3+nrow(pop.sir11)+nrow(pop.dam22)+1):(nind+nind2+nind3+nind4+nrow(pop.sir11)+nrow(pop.dam22)+nrow(pop.doubcro)), ]
     }
   
     if (!is.null(outpath)) {
@@ -1666,19 +1741,19 @@ simer <-
       flush(geno.doubcro)
     
       # write files
-      logging.log("---write files of sir1s---\n", verbose = verbose)
+      logging.log(" --- write files of sir1s ---\n", verbose = verbose)
       write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir1, out.format, verbose)
-      logging.log("---write files of dam1s---\n", verbose = verbose)
+      logging.log(" --- write files of dam1s ---\n", verbose = verbose)
       write.file(pop2, geno.dam1, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.dam1, out.format, verbose)
-      logging.log("---write files of sir2s---\n", verbose = verbose)
+      logging.log(" --- write files of sir2s ---\n", verbose = verbose)
       write.file(pop3, geno.sir2, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, out, dir.sir2, out.format, verbose)
-      logging.log("---write files of dam2s---\n", verbose = verbose)
+      logging.log(" --- write files of dam2s ---\n", verbose = verbose)
       write.file(pop4, geno.dam2, pos.map, 1:nrow(pop4), 1:nrow(pop4),seed.map, out, dir.dam2, out.format, verbose)
-      logging.log("---write files of sir11s---\n", verbose = verbose)
+      logging.log(" --- write files of sir11s ---\n", verbose = verbose)
       write.file(pop.sir11, geno.sir11, pos.map, 1:nrow(pop.sir11), 1:nrow(pop.sir11), seed.map, out, dir.sir11, out.format, verbose)
-      logging.log("---write files of dam22s---\n", verbose = verbose)
+      logging.log(" --- write files of dam22s ---\n", verbose = verbose)
       write.file(pop.dam22, geno.dam22, pos.map, 1:nrow(pop.dam22), 1:nrow(pop.dam22), seed.map, out, dir.dam22, out.format, verbose)
-      logging.log("---write files of progenies---\n", verbose = verbose)
+      logging.log(" --- write files of progenies ---\n", verbose = verbose)
       write.file(pop.doubcro, geno.doubcro, pos.map, 1:nrow(pop.doubcro), 1:nrow(pop.doubcro), seed.map, out, dir.dbc, out.format, verbose)
     }
   
@@ -1699,25 +1774,21 @@ simer <-
 
   } else if (mtd.reprod == "backcro") {
     if (num.gen != length(prog.back))
-      stop("number of generation should equal to the length of prog.back!")
+      stop(" Number of generation should equal to the length of prog.back!")
     out.geno.index <- getindex(count.ind, out.geno.gen)
     out.pheno.index <- getindex(count.ind, out.pheno.gen)
 
     # store all genotype
-    if (!sel.on) {
-      geno.total.temp <- big.matrix(
-        nrow = num.marker,
-        ncol = 2 * sum(count.ind),
-        init = 3,
-        type = 'char')
-    } else {
-      geno.total.temp <- NULL
-    }
+    geno.total.temp <- big.matrix(
+      nrow = num.marker,
+      ncol = outcols * sum(count.ind),
+      init = 3,
+      type = 'char')
     
     if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,
-        ncol = sum(count.ind[out.geno.gen]),
+        ncol = outcols * sum(count.ind[out.geno.gen]),
         init = 3,
         type = 'char',
         backingpath = directory.rep,
@@ -1727,7 +1798,7 @@ simer <-
     } else {
       geno.total <- big.matrix(
         nrow = num.marker,
-        ncol = sum(count.ind[out.geno.gen]),
+        ncol = outcols * sum(count.ind[out.geno.gen]),
         init = 3,
         type = 'char')
       options(bigmemory.typecast.warning=FALSE)
@@ -1735,62 +1806,67 @@ simer <-
  
     # set total population
     pop.total <- rbind(basepop, pop2)
+    gc.base <- basepop.geno
+    gc.pop2 <- pop2.geno
+    if (incols == 2 & outcols == 1) {
+      gc.base <- geno.cvt(gc.base)
+      gc.pop2 <- geno.cvt(gc.pop2)
+    }
     if (1 %in% out.geno.gen) {
-      gc.base <- geno.cvt(basepop.geno)
-      gc.pop2 <- geno.cvt(pop2.geno)
-      input.geno(geno.total, gc.base, nrow(basepop), mrk.dense)
-      input.geno(geno.total, gc.pop2, count.ind[1], mrk.dense)
+      input.geno(geno.total, gc.base, outcols * nrow(basepop), mrk.dense)
+      input.geno(geno.total, gc.pop2, outcols * count.ind[1], mrk.dense)
     }
     if (!sel.on) {
-      input.geno(geno.total.temp, basepop.geno, 2*nrow(basepop), mrk.dense)
-      input.geno(geno.total.temp, pop2.geno, 2*count.ind[1], mrk.dense)
+      input.geno(geno.total.temp, gc.base, outcols*nrow(basepop), mrk.dense)
+      input.geno(geno.total.temp, gc.pop2, outcols*count.ind[1], mrk.dense)
     }
-    logging.log("After generation 1 ,", count.ind[1], "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation 1 ,", count.ind[1], "individuals are generated...\n", verbose = verbose)
 
-    if (sel.on) {
-      # add selection to generation1
-      ind.ordered <-
-        selects(pop = basepop,
-                decr = decr,
-                sel.multi = sel.multi,
-                index.wt = index.wt,
-                index.tdm = index.tdm,
-                goal.perc = goal.perc,
-                pass.perc = pass.perc,
-                sel.sing = sel.sing,
-                pop.total = basepop,
-                pop.pheno = pop1.pheno, 
-                verbose = verbose)
-      index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
-      ind.ordered <-
-        selects(pop = pop2,
-                decr = decr,
-                sel.multi = sel.multi,
-                index.wt = index.wt,
-                index.tdm = index.tdm,
-                goal.perc = goal.perc,
-                pass.perc = pass.perc,
-                sel.sing = sel.sing,
-                pop.total = pop2,
-                pop.pheno = pop2.pheno, 
-                verbose = verbose)
-      index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
-      ind.stay <- c(ind.stay1, ind.stay2)
-    } else {
-      ind.stay <- c(basepop$index, pop2$index)
-    }
-    
     if (num.gen > 1) {
+      if (sel.on) {
+        # add selection to generation1
+        ind.ordered <-
+          selects(pop = basepop,
+                  decr = decr,
+                  sel.multi = sel.multi,
+                  index.wt = index.wt,
+                  index.tdm = index.tdm,
+                  goal.perc = goal.perc,
+                  pass.perc = pass.perc,
+                  sel.sing = sel.sing,
+                  pop.total = basepop,
+                  pop.pheno = pop1.pheno, 
+                  verbose = verbose)
+        index.tdm <- ind.ordered[1]
+        ind.ordered <- ind.ordered[-1] 
+        ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
+        ind.ordered <-
+          selects(pop = pop2,
+                  decr = decr,
+                  sel.multi = sel.multi,
+                  index.wt = index.wt,
+                  index.tdm = index.tdm,
+                  goal.perc = goal.perc,
+                  pass.perc = pass.perc,
+                  sel.sing = sel.sing,
+                  pop.total = pop2,
+                  pop.pheno = pop2.pheno, 
+                  verbose = verbose)
+        index.tdm <- ind.ordered[1]
+        ind.ordered <- ind.ordered[-1]
+        ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
+        ind.stay <- c(ind.stay1, ind.stay2)
+      } else {
+        ind.stay <- c(basepop$index, pop2$index)
+      }
+      
       for (i in 2:num.gen) {
         pop.gp <-
           reproduces(pop1 = basepop,
                      pop2 = pop2,
                      pop1.geno = basepop.geno.em,
                      pop2.geno = pop2.geno.em,
+                     incols = incols, 
                      ind.stay = ind.stay,
                      mtd.reprod = "singcro",
                      num.prog = num.prog,
@@ -1798,9 +1874,17 @@ simer <-
         
         pop.geno.curr <- pop.gp$geno
         pop.curr <- pop.gp$pop
+        
+        if (i %in% out.geno.gen) {
+          gc <- pop.geno.curr
+          if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
+          out.gg <- out.geno.gen[1:which(out.geno.gen == i)]
+          input.geno(geno.total, gc, outcols * sum(count.ind[out.gg]), mrk.dense)
+        }
+        input.geno(geno.total.temp, pop.geno.curr, outcols*sum(count.ind[1:i]), mrk.dense)
+        
         isd <- c(2, 5, 6)
         pop.total.temp <- rbind(pop.total[1:sum(count.ind[1:(i-1)]), isd], pop.curr[, isd])
-        
         if (sel.on) {
           pop.pheno <-
             phenotype(effs = effs,
@@ -1818,19 +1902,11 @@ simer <-
                       verbose = verbose)
           pop.curr <- pop.pheno$pop
           pop.pheno$pop <- NULL
-          trait[[i]] <- pop.pheno
         }
         
         pop.total <- rbind(pop.total, pop.curr)
-        if (i %in% out.geno.gen) {
-          gc <- geno.cvt(pop.geno.curr)
-          out.gg <- out.geno.gen[1:which(out.geno.gen == i)]
-          input.geno(geno.total, gc, sum(count.ind[out.gg]), mrk.dense)
-        }
-        if (!sel.on) {
-          input.geno(geno.total.temp, pop.geno.curr, 2*sum(count.ind[1:i]), mrk.dense)
-        }
-        logging.log("After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
+        
+        logging.log(" After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
         
         if (i == num.gen) break
         
@@ -1850,13 +1926,14 @@ simer <-
                     verbose = verbose)
           index.tdm <- ind.ordered[1]
           ind.ordered <- ind.ordered[-1]
-          ind.stay <- c(basepop$index, ind.ordered[1:(count.ind[i+1]/(num.prog*(1-ratio)))])
+          ind.stay <- c(ind.stay1, ind.ordered[1:(count.ind[i+1]/(num.prog*(1-ratio)))])
         } else {
           ind.stay <- c(basepop$index, pop.curr$index)
         }
         
         pop2.geno.em <-  # genotype matrix after Exchange and Mutation
           genotype(geno = pop.geno.curr,
+                   incols = incols, 
                    blk.rg = blk.rg,
                    recom.spot = recom.spot,
                    range.hot = range.hot,
@@ -1870,30 +1947,28 @@ simer <-
     
     # if traits have genetic correlation
     # generate phenotype at last
-    if (!sel.on) {
-      pop.pheno <-
-        phenotype(effs = effs,
-                  FR = FR, 
-                  pop = pop.total,
-                  pop.geno = geno.total.temp,
-                  pos.map = pos.map,
-                  h2.tr1 = h2.tr1,
-                  gnt.cov = gnt.cov,
-                  h2.trn = h2.trn, 
-                  sel.crit = sel.crit, 
-                  pop.total = pop.total, 
-                  sel.on = sel.on, 
-                  inner.env =  inner.env, 
-                  verbose = verbose)
-      pop.total <- pop.pheno$pop
-      pop.pheno$pop <- NULL
-      trait <- pop.pheno
-    }
+    pop.pheno <-
+      phenotype(effs = effs,
+                FR = FR, 
+                pop = pop.total,
+                pop.geno = geno.total.temp,
+                pos.map = pos.map,
+                h2.tr1 = h2.tr1,
+                gnt.cov = gnt.cov,
+                h2.trn = h2.trn, 
+                sel.crit = sel.crit, 
+                pop.total = pop.total, 
+                sel.on = FALSE, 
+                inner.env =  inner.env, 
+                verbose = verbose)
+    pop.total <- pop.pheno$pop
+    pop.pheno$pop <- NULL
+    trait <- pop.pheno
     
     if (!is.null(outpath)) {
       flush(geno.total)
       # write files
-      logging.log("---write files of total population...\n", verbose = verbose)
+      logging.log(" --- write files of total population ---\n", verbose = verbose)
       write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, out, directory.rep, out.format, verbose)
     }
     
@@ -1908,12 +1983,12 @@ simer <-
     pop1.geno.copy <- basepop.geno
 
     if (is.null(userped)) {
-      stop("Please input pedigree in the process userped!")
+      stop(" Please input pedigree in the process userped!")
     }
     rawped <- userped
     rawped[is.na(rawped)] <- "0"
     if (as.numeric(rawped[1, 2]) < basepop$index[1]) {
-      stop("The index of the first sir should be in index of pop1!")
+      stop(" The index of the first sir should be in index of pop1!")
     }
 
     # Thanks to YinLL for sharing codes of pedigree sorting
@@ -1933,14 +2008,14 @@ simer <-
     go = TRUE
     i <- 1
     count.ind <- nrow(pedx1)
-    logging.log("After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
+    logging.log(" After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
     while(go == TRUE) {
       i <- i + 1
       Cpedx <- c(pedx1[, 1])
       idx <- (pedx2[, 2] %in% Cpedx) & (pedx2[, 3] %in% Cpedx)
       if (sum(idx) == 0) {
-        logging.log("some individuals in pedigree are not in mating process!\n", verbose = verbose)
-        logging.log("they are", pedx2[, 1], "\n", verbose = verbose)
+        logging.log(" Some individuals in pedigree are not in mating process!\n They are", verbose = verbose)
+        simer.print(pedx2[, 1], verbose = verbose)
         pedx2 <- pedx2[-c(1:nrow(pedx2)), ]
       } else {
         index.sir <- as.numeric(pedx2[idx, 2])
@@ -1950,7 +2025,7 @@ simer <-
         pedx1 <- rbind(pedx1, pedx2[idx, ])
         pedx2 <- pedx2[!idx, ]
         count.ind <- c(count.ind, length(index.dam))
-        logging.log("After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
+        logging.log(" After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
       }
       if (class(pedx2) == "character") pedx2 <- matrix(pedx2, 1)
       if (dim(pedx2)[1] == 0) go = FALSE
@@ -1972,7 +2047,7 @@ simer <-
       
       directory.rep <- paste0(outpath, .Platform$file.sep, "replication", replication)
       if (dir.exists(directory.rep)) {
-        remove_bigmatrix(file.path(directory.rep, "genotype"))
+        remove_bigmatrix(file.path(directory.rep, "simer"))
         unlink(directory.rep, recursive = TRUE)
       }
       dir.create(directory.rep)
@@ -1990,7 +2065,8 @@ simer <-
     gen <- rep(1:length(count.ind), count.ind)
     pop.total <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
     
-    gc <- geno.cvt(pop1.geno.copy)
+    gc <- pop1.geno.copy
+    if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
     if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,
@@ -2032,7 +2108,7 @@ simer <-
     
     if (!is.null(outpath)) {
       flush(geno.total)
-      logging.log("---write files of total population...\n", verbose = verbose)
+      logging.log(" --- write files of total population ---\n", verbose = verbose)
       write.file(pop.total, geno.total, pos.map, index, index, seed.map, out, directory.rep, out.format, verbose)
     }
     
@@ -2046,6 +2122,12 @@ simer <-
   simer.list <- list(pop = pop.total, effs = effs, trait = trait, geno = geno.total, genoid = out.geno.index, map = pos.map, si = sel.i)
   rm(effs); rm(trait); rm(pop.total); rm(geno.total); rm(input.map); rm(pos.map); gc()
   
+  if (!is.null(selPath)) {
+    goal.plan <- complan(simls = simer.list, FR = FR, index.wt = index.wt, decr = decr, selPath = selPath, verbose = verbose)
+    simer.list$goal.plan <- goal.plan
+    rm(goal.plan); gc()
+  }
+
   print_accomplished(width = 70, verbose = verbose)
   # Return the last directory
   ed <- Sys.time()

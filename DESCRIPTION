@@ -26,6 +26,6 @@ BugReports: https://github.com/xiaolei-lab/SIMER/issues
 Imports: utils, stats, methods, MASS, rMVP
 Depends: R (>= 3.5.0), bigmemory
 Suggests: knitr
-RoxygenNote: 6.1.1.9000
+RoxygenNote: 7.1.0
 Encoding: UTF-8
 Maintainer: Xiaolei Liu <xiaoleiliu@mail.hzau.edu.cn>

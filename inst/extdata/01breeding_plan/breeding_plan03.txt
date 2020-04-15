@@ -1,4 +1,17 @@
+# start genotyping
 generation	family_index	within_family_index	sex
-1	"1:3,7"	all	all
-2	"1:3,7"	all	all
-3	"1:3,7"	all	all
+1	1:3,7	all	all
+2	1:3,7	all	all
+3	1:3,7	all	all
+
+# start phenotyping
+generation	family_index	within_family_index	sex
+1	all	all	all
+2	all	all	all
+3	all	all	all
+
+# fixed effect
+mu	sex	a
+mu	diet	season
+
+# random effect
