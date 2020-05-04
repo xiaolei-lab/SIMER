@@ -655,7 +655,7 @@ simer <-
 
     # set total population
     pop.total <- basepop
-    
+
     gc <- basepop.geno
     if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
     if (1 %in% out.geno.gen) {
@@ -785,8 +785,10 @@ simer <-
         }
       }  # end for
     }
-    names(ind.stays) <- paste0("gen", 1:(num.gen-1))
-    if (sel.on & all(ps > 1)) names(core.stays) <- paste0("gen", 1:(num.gen-1))
+    if(num.gen > 1) {
+      names(ind.stays) <- paste0("gen", 1:(num.gen-1))
+      names(core.stays) <- paste0("gen", 1:(num.gen-1))
+    } 
     
     # if traits have genetic correlation
     # generate phenotype at last
@@ -2037,7 +2039,11 @@ simer <-
         pop2 <- pop.curr
       }  # end for
     }
-    names(ind.stays) <- c("basepop", "pop2", paste0("gen", 2:(num.gen-1)))
+    if(num.gen > 1) {
+      names(ind.stays) <- c("basepop", "pop2", paste0("gen", 2:(num.gen-1)))
+      names(core.stays) <- paste0("gen", 1:(num.gen-1))
+    } 
+    
     names(core.stays) <- paste0("gen", 1:(num.gen-1))
     
     # if traits have genetic correlation
