@@ -116,7 +116,7 @@ simer.list <-
            prog.tri = 2,
            prog.doub = 2,
            prog.back = rep(2, 5),
-           ps = 0.8,
+           ps = rep(0.8, 2),
            decr = TRUE,
            sel.multi = "index",
            index.wt = c(0.5, 0.5),

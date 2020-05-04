@@ -111,7 +111,7 @@
 #'            prog.tri = 2,
 #'            prog.doub = 2,
 #'            prog.back = rep(2, 5),
-#'            ps = 0.8,
+#'            ps = rep(0.8, 2),
 #'            decr = TRUE,
 #'            sel.multi = "index",
 #'            index.wt = c(0.5, 0.5),
@@ -333,7 +333,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   logging.log(" \n", verbose = verbose)
 
   # mating for the next generation
-  ps <- 0.8
+  ps <- rep(0.8, 2)
   num.prog <- 4
   ratio <- 0.5
   # extract genotype
@@ -345,10 +345,13 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     ebv.sum <- ebv
     if (ncol(ebv.sum) != 2) ebv.sum <- apply(ebv.sum[, 2:ncol(ebv.sum)], 1, sum)
     ind.score.ordered <- ebv[order(ebv.sum, decreasing=TRUE), 1]
-    ind.stay <- ind.score.ordered[1:(nrow(ebv)*ps)]
-
+    count.sir <- sum(pop.last$sex == 1 | pop.last$sex == 0) * ps[1]
+    count.dam <- sum(pop.last$sex == 2 | pop.last$sex == 0) * ps[2]
+    ind.stay <- getsd(ind.score.ordered, pop.last, count.sir[1], count.dam[1])
+    
     pop.gp.in <- # pop.gp with genotype and pop information
       reproduces(pop1 = pop.last,
+                 pop1.geno.id = pop.last$index, 
                  pop1.geno = pop.geno.last,
                  ind.stay = ind.stay,
                  mtd.reprod = "randmate",

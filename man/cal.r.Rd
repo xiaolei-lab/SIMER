@@ -22,8 +22,9 @@ Last update: Jul 31, 2019
 basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 pop.list <- reproduces(pop1 = basepop,
+                       pop1.geno.id = basepop$index,
                        pop1.geno = basepop.geno,
-                       ind.stay = basepop$index,
+                       ind.stay = list(sir=1:10, dam=11:100),
                        mtd.reprod = "randmate",
                        num.prog = 4,
                        ratio = 0.5)

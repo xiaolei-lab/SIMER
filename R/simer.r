@@ -71,7 +71,9 @@
 #' @param prog.tri litter size of the first single cross process in trible cross process
 #' @param prog.doub litter size of the first two single cross process in double cross process
 #' @param prog.back a vector with litter size in every generation of back-cross
-#' @param ps fraction selected in selection
+#' @param refresh refresh ratio of core population of sires and dams, only used in ps > 1
+#' @param keep.max.gen the max keep generation range in the selection for sires and dams, only used in ps > 1
+#' @param ps if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females
 #' @param decr whether to sort by descreasing
 #' @param sel.multi selection method of multiple traits with options: "tdm", "indcul" and "index"
 #' @param index.wt economic weights of selection index method, its length should equals to the number of traits
@@ -149,7 +151,7 @@
 #'            prog.tri = 2,
 #'            prog.doub = 2,
 #'            prog.back = rep(2, 5),
-#'            ps = 0.8,
+#'            ps = rep(0.8, 2),
 #'            decr = TRUE,
 #'            sel.multi = "index",
 #'            index.wt = c(0.5, 0.5),
@@ -226,7 +228,9 @@ simer <-
              prog.tri = 2,
              prog.doub = 2,
              prog.back = rep(2, num.gen),
-             ps = 0.8,
+             refresh = rep(0.6, 2),
+             keep.max.gen = rep(3, 2),
+             ps = rep(0.8, 2),
              decr = TRUE,
              sel.multi = "index",
              index.wt = c(0.5, 0.5),
@@ -518,47 +522,65 @@ simer <-
   # 2. setting of directory
 
   # adjust for genetic correlation
-  ps <- ifelse(sel.on, ps, 1)
+  if (!(all(ps <= 1) | all(ps > 1))) stop("Please input a correct ps!")
+  ps[1] <- ifelse(sel.on, ps[1], 1)
+  ps[2] <- ifelse(sel.on, ps[2], 1)
   # calculate number of individuals in every generation
-	count.ind <- rep(nind, num.gen)
-  if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol") {
+  count.ind <- rep(nind, num.gen)
+  count.sir <- count.dam <- NULL
+  if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol" || mtd.reprod == "randmate" || mtd.reprod == "randexself") {
     if (num.gen > 1) {
       for(i in 2:num.gen) {
-        count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
+        count.sir[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * ratio * ps[1]), ps[1])
+        count.dam[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * (1-ratio) * ps[2]), ps[2])
+        count.ind[i] <- count.dam[i-1] * num.prog
       }
     }
     
-  } else if (mtd.reprod == "randmate" || mtd.reprod == "randexself") {
-    if (num.gen > 1) {
-      for(i in 2:num.gen) {
-        count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
-      }
-    }
-
   } else if (mtd.reprod == "singcro") {
-    sing.ind <- round(nrow(pop2) * ps) * num.prog
+    count.sir <- ifelse(all(ps <= 1), round(nrow(basepop) * ps[1]), ps[1])
+    count.dam <- ifelse(all(ps <= 1), round(nrow(pop2) * ps[2]), ps[2])
+    sing.ind <- count.dam * num.prog
     count.ind <- c(nrow(basepop), nrow(pop2), sing.ind)
 
   } else if (mtd.reprod == "tricro") {
-    dam21.ind <- round(nrow(pop2) * ps) * prog.tri
-    tri.ind <- round(dam21.ind * (1-ratio) * ps) * num.prog
+    num.sir2 <- ifelse(all(ps <= 1), round(nrow(pop2) * ps[1]), ps[1])
+    num.dam1 <- ifelse(all(ps <= 1), round(nrow(pop3) * ps[2]), ps[2])
+    dam21.ind <- num.dam1 * prog.tri
+    num.sir1 <- ifelse(all(ps <= 1), round(nrow(basepop) * ps[1]), ps[1])
+    num.dam21 <- ifelse(all(ps <= 1), round(dam21.ind * (1-ratio) * ps[2]), ps[2])
+    tri.ind <- num.dam21 * num.prog
+    count.sir <- c(num.sir2, num.sir1)
+    count.dam <- c(num.dam1, num.dam21)
     count.ind <- c(nrow(basepop), nrow(pop2), nrow(pop3), dam21.ind, tri.ind)
-
+    
   } else if (mtd.reprod == "doubcro") {
-    sir11.ind <- round(nrow(pop2) * ps) * prog.doub
-    dam22.ind <- round(nrow(pop4) * ps) * prog.doub
-    doub.ind <- round(dam22.ind * (1-ratio) * ps) * num.prog
+    num.sir1 <- ifelse(all(ps <= 1), round(nrow(basepop) * ps[1]), ps[1])
+    num.dam1 <- ifelse(all(ps <= 1), round(nrow(pop2) * ps[2]), ps[2])
+    sir11.ind <- num.dam1 * prog.doub
+    num.sir2 <- ifelse(all(ps <= 1), round(nrow(pop3) * ps[1]), ps[1])
+    num.dam2 <- ifelse(all(ps <= 1), round(nrow(pop4) * ps[2]), ps[2])
+    dam22.ind <- num.dam2 * prog.doub
+    num.sir11 <- ifelse(all(ps <= 1), round(sir11.ind * ratio * ps[2]), ps[2])
+    num.dam22 <- ifelse(all(ps <= 1), round(dam22.ind * (1-ratio) * ps[2]), ps[2])
+    doub.ind <- num.dam22 * num.prog
+    count.sir <- c(num.sir1, num.sir2, num.sir11)
+    count.dam <- c(num.dam1, num.dam2, num.dam22)
     count.ind <- c(nrow(basepop), nrow(pop2), nrow(pop3), nrow(pop4), sir11.ind, dam22.ind, doub.ind)
-
+    
   } else if (mtd.reprod == "backcro") {
     count.ind[1] <- nrow(basepop) + nrow(pop2)
     if (num.gen > 1) {
-      count.ind[2] <- round(nrow(pop2) * ps) * num.prog
+      count.sir[1] <- ifelse(all(ps <= 1), round(nrow(basepop) * ps[1]), ps[1])
+      count.dam[1] <- ifelse(all(ps <= 1), round(nrow(pop2) * ps[2]), ps[2])
+      count.ind[2] <- count.dam[1] * num.prog
       for(i in 3:num.gen) {
-        count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
+        count.sir[i-1] <- count.sir[i-2]
+        count.dam[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * (1-ratio) * ps[2]), ps[2])
+        count.ind[i] <- count.dam[i-1] * num.prog
       }
     }
-  }
+  } # end if mtd.reprod
 
   if (mtd.reprod != "userped") {
     # Create a folder to save files
@@ -582,11 +604,17 @@ simer <-
     }
   }
 
-	# calculate selection intensity
-	sel.i <- dnorm(qnorm(1 -ps)) / ps 
-	logging.log(" --- selection intensity ---\n", verbose = verbose)
-	logging.log(" Selection intensity is", sel.i, "\n", verbose = verbose)
-	
+  if (all(ps <= 1)) {
+    # calculate selection intensity
+    sel.i <- dnorm(qnorm(1 -ps)) / ps 
+    logging.log(" --- selection intensity ---\n", verbose = verbose)
+    logging.log(" Selection intensity is", sel.i, "for males and females\n", verbose = verbose)
+  } else if (all(ps > 1)) {
+    sel.i <- ps
+    logging.log(" --- selected individuals number ---\n", verbose = verbose)
+    logging.log(" Number of selected individuals is", sel.i, "for males and females in every generation\n", verbose = verbose)
+  }
+ 
   ################### REPRODUCTION_PROCESS ###################
   # 1. Reproduction based on basepop and basepop.geno according
   #    to different reproduction method.
@@ -594,6 +622,8 @@ simer <-
   # multi-generation: clone, dh, selpol, randmate, randexself
 	geno.back <- paste0(out, ".geno.bin")
 	geno.desc <- paste0(out, ".geno.desc")
+	ind.stays <- ind.stay <- NULL
+	core.stays <- core.stay <- NULL
   if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol" || mtd.reprod == "randmate" || mtd.reprod == "randexself") {
     out.geno.gen <- out.geno.gen[out.geno.gen > 0]
     out.pheno.gen <- out.pheno.gen[out.pheno.gen > 0]
@@ -639,8 +669,8 @@ simer <-
     logging.log(" After generation 1 ,", count.ind[1], "individuals are generated...\n", verbose = verbose)
 
     if (num.gen > 1) {
+      # add selection to generation1
       if (sel.on) {
-        # add selection to generation1
         ind.ordered <-
           selects(pop = basepop,
                   decr = decr,
@@ -655,16 +685,19 @@ simer <-
                   verbose = verbose)
         index.tdm <- ind.ordered[1]
         ind.ordered <- ind.ordered[-1]
-        ind.stay <- ind.ordered[1:(count.ind[2]/num.prog/(1-ratio))]
       } else {
-        ind.stay <- basepop$index
+        ind.ordered <- basepop$index
       }
-      
+      core.stays[[1]] <- core.stay <- ind.stays[[1]] <- ind.stay <- getsd(ind.ordered, basepop, count.sir[1], count.dam[1])
+
       pop.last <- basepop
       pop.geno.last <- basepop.geno.em
+      pop.geno.core <- basepop.geno.em[, c(ind.stay$sir, ind.stay$dam)]
+      pop1.geno.id <- basepop$index
       for (i in 2:num.gen) {
         pop.gp <- # pop.gp with genotype and pop information
           reproduces(pop1 = pop.last,
+                     pop1.geno.id = pop1.geno.id, 
                      pop1.geno = pop.geno.last,
                      incols = incols, 
                      ind.stay = ind.stay,
@@ -674,6 +707,7 @@ simer <-
         
         pop.geno.curr <- pop.gp$geno
         pop.curr <- pop.gp$pop
+        pop1.geno.id <- pop.curr$index
         isd <- c(2, 5, 6)
         
         # input genotype
@@ -711,8 +745,8 @@ simer <-
 
         if (i == num.gen) break
         
+        # output index.tdm and ordered individuals indice
         if (sel.on) {
-          # output index.tdm and ordered individuals indice
           ind.ordered <-
             selects(pop = pop.curr,
                     decr = decr,
@@ -727,11 +761,11 @@ simer <-
                     verbose = verbose)
           index.tdm <- ind.ordered[1]
           ind.ordered <- ind.ordered[-1]
-          ind.stay <- ind.ordered[1:(count.ind[i+1]/num.prog/(1-ratio))]
         } else {
-          ind.stay <- pop.curr$index
+          ind.ordered <- pop.curr$index
         }
-        
+        core.stays[[i]] <- core.stay <- ind.stays[[i]] <- ind.stay <- getsd(ind.ordered, pop.curr, count.sir[i], count.dam[i])
+
         pop.geno.last <-  # genotype matrix after Exchange and Mutation
           genotype(geno = pop.geno.curr,
                    incols = incols, 
@@ -743,8 +777,19 @@ simer <-
                    rate.mut = rate.mut, 
                    verbose = verbose)
         pop.last <- pop.curr
+        
+        if (sel.on & all(ps > 1)) {
+          info.core <- sel.core(ind.stay, core.stay, refresh, keep.max.gen, 
+              pop.total = pop.total, pop.geno.core, pop.geno.curr)
+          core.stays[[i]] <- core.stay <- info.core$core.stay
+          pop.geno.last <- pop.geno.core <- info.core$core.geno
+          pop1.geno.id <- c(core.stay$sir, core.stay$dam)       
+          ind.stay <- core.stay
+        }
       }  # end for
     }
+    names(ind.stays) <- paste0("gen", 1:(num.gen-1))
+    if (sel.on & all(ps > 1)) names(core.stays) <- paste0("gen", 1:(num.gen-1))
     
     # if traits have genetic correlation
     # generate phenotype at last
@@ -854,8 +899,7 @@ simer <-
                 pop.pheno = pop1.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog/nrow(pop2)*nrow(basepop))]
+      ind.ordered1 <- ind.ordered[-1]
       ind.ordered <-
         selects(pop = pop2,
                 decr = decr,
@@ -869,16 +913,27 @@ simer <-
                 pop.pheno = pop2.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
-      ind.stay <- c(ind.stay1, ind.stay2)
+      ind.ordered2 <- ind.ordered[-1]
     } else {
-      ind.stay <- c(basepop$index, pop2$index)
+      ind.ordered1 <- basepop$index
+      ind.ordered2 <- pop2$index
     }
+    ind.stays[[1]] <- getsd(ind.ordered1, basepop, count.sir, 0)
+    ind.stays[[2]] <- getsd(ind.ordered2, pop2, 0, count.dam)
+    names(ind.stays) <- c("basepop", "pop2")
+    ind.stay$sir <- ind.stays[[1]]$sir
+    ind.stay$dam <- ind.stays[[2]]$dam
+    core.stays[[1]] <- ind.stay
+    names(core.stays) <- "gen1"
+      
+    pop1.geno.id <- basepop$index
+    pop2.geno.id <- pop2$index
     
     pop.gp <-
         reproduces(pop1 = basepop,
                    pop2 = pop2,
+                   pop1.geno.id = basepop$index, 
+                   pop2.geno.id = pop2$index, 
                    pop1.geno = basepop.geno.em,
                    pop2.geno = pop2.geno.em,
                    incols = incols, 
@@ -1084,8 +1139,7 @@ simer <-
                 pop.pheno = pop2.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[4]/prog.tri/nrow(pop3)*nrow(pop2))]
+      ind.ordered1 <- ind.ordered[-1]
       ind.ordered <-
         selects(pop = pop3,
                 decr = decr,
@@ -1099,17 +1153,23 @@ simer <-
                 pop.pheno = pop3.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[4]/prog.tri)]
-      ind.stay <- c(ind.stay1, ind.stay2)
+      ind.ordered2 <- ind.ordered[-1]
     } else {
-      ind.stay <- c(pop2$index, pop3$index)
+      ind.ordered1 <- pop2$index
+      ind.ordered2 <- pop3$index
     }
+    core.stays[[1]] <- core.stay <- ind.stays[[1]] <- getsd(ind.ordered1, pop2, count.sir[1], 0)
+    core.stays[[2]] <- core.stay <- ind.stays[[2]] <- getsd(ind.ordered2, pop3, 0, count.dam[1])
+    ind.stay$sir <- ind.stays[[1]]$sir
+    ind.stay$dam <- ind.stays[[2]]$dam
+    core.stays[[1]] <- ind.stay
     
     # the first generation to the second generation
     pop.gp <-
         reproduces(pop1 = pop2,
                    pop2 = pop3,
+                   pop1.geno.id = pop2$index, 
+                   pop2.geno.id = pop3$index, 
                    pop1.geno = pop2.geno.em,
                    pop2.geno = pop3.geno.em,
                    incols = incols, 
@@ -1156,8 +1216,7 @@ simer <-
                 pop.pheno = pop1.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[5]/num.prog/(1-ratio)/nrow(pop.dam21)*nrow(basepop))]
+      ind.ordered1 <- ind.ordered[-1]
       ind.ordered <-
         selects(pop = pop.dam21,
                 decr = decr,
@@ -1171,12 +1230,18 @@ simer <-
                 pop.pheno = pop.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[5]/num.prog/(1-ratio))]
-      ind.stay <- c(ind.stay1, ind.stay2)
+      ind.ordered2 <- ind.ordered[-1]
     } else {
-      ind.stay <- c(basepop$index, pop.dam21$index)
+      ind.ordered1 <- basepop$index
+      ind.ordered2 <- pop.dam21$index
     }
+    ind.stays[[3]] <- getsd(ind.ordered1, basepop, count.sir[2], 0)
+    ind.stays[[4]] <- getsd(ind.ordered2, pop.dam21, 0, count.dam[2])
+    names(ind.stays) <- c("pop2", "pop3", "basepop", "pop.dam21")
+    ind.stay$sir <- ind.stays[[3]]$sir
+    ind.stay$dam <- ind.stays[[4]]$dam
+    core.stays[[2]] <- ind.stay
+    names(core.stays) <- c("gen1", "gen2")
     
     logging.log(" After generation", 2, ",", sum(count.ind[1:4]), "individuals are generated...\n", verbose = verbose)
     
@@ -1195,6 +1260,8 @@ simer <-
     pop.gp <-
         reproduces(pop1 = basepop,
                    pop2 = pop.dam21,
+                   pop1.geno.id = basepop$index, 
+                   pop2.geno.id = pop.dam21$index, 
                    pop1.geno = basepop.geno.em,
                    pop2.geno = pop.geno.dam21.em,
                    incols = incols, 
@@ -1444,8 +1511,7 @@ simer <-
                 pop.pheno = pop1.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[5]/prog.doub/nrow(pop2)*nrow(basepop))]
+      ind.ordered1 <- ind.ordered[-1]
       ind.ordered <-
         selects(pop = pop2,
                 decr = decr,
@@ -1459,17 +1525,23 @@ simer <-
                 pop.pheno = pop2.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[5]/prog.doub)]
-      ind.stay <- c(ind.stay1, ind.stay2)
+      ind.ordered2 <- ind.ordered[-1]
     } else {
-      ind.stay <- c(basepop$index, pop2$index)
+      ind.ordered1 <- basepop$index
+      ind.ordered2 <- pop2$index
     }
+    ind.stays[[1]]  <- getsd(ind.ordered1, basepop, count.sir[1], 0)
+    ind.stays[[2]]  <- getsd(ind.ordered2, pop2, 0, count.dam[1])
+    ind.stay$sir <- ind.stays[[1]]$sir
+    ind.stay$dam <- ind.stays[[2]]$dam
+    core.stays[[1]] <- ind.stay
     
     # the first generation to the second generation(the first two populations)
     pop.gp <-
         reproduces(pop1 = basepop,
                    pop2 = pop2,
+                   pop1.geno.id = basepop$index, 
+                   pop2.geno.id = pop2$index,
                    pop1.geno = basepop.geno.em,
                    pop2.geno = pop2.geno.em,
                    incols = incols, 
@@ -1518,8 +1590,11 @@ simer <-
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
       ind.ordered.sir11 <- ind.ordered[-1]
-    } 
-    
+    } else {
+      ind.ordered.sir11 <- pop.sir11$index
+    }
+    ind.stays[[5]] <- getsd(ind.ordered.sir11, pop.sir11, count.sir[3], 0)
+
     pop.geno.sir11.em <-  # genotype matrix after Exchange and Mutation
         genotype(geno = pop.geno.sir11,
                  incols = incols, 
@@ -1546,8 +1621,7 @@ simer <-
                 pop.pheno = pop3.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay1 <- ind.ordered[1:(count.ind[6]/prog.doub/nrow(pop4)*nrow(pop3))]
+      ind.ordered1 <- ind.ordered[-1]
       ind.ordered <-
         selects(pop = pop4,
                 decr = decr,
@@ -1561,17 +1635,23 @@ simer <-
                 pop.pheno = pop4.pheno, 
                 verbose = verbose)
       index.tdm <- ind.ordered[1]
-      ind.ordered <- ind.ordered[-1]
-      ind.stay2 <- ind.ordered[1:(count.ind[6]/prog.doub)]
-      ind.stay <- c(ind.stay1, ind.stay2)
+      ind.ordered2 <- ind.ordered[-1]
     } else {
-      ind.stay <- c(pop3$index, pop4$index)
+      ind.ordered1 <- pop3$index
+      ind.ordered2 <- pop4$index
     }
+    ind.stays[[3]] <- getsd(ind.ordered1, pop3, count.sir[2], 0)
+    ind.stays[[4]] <- getsd(ind.ordered2, pop4, 0, count.dam[2])
+    ind.stay$sir <- ind.stays[[3]]$sir
+    ind.stay$dam <- ind.stays[[4]]$dam
+    core.stays[[2]] <- ind.stay
     
     # the first generation to the second generation(the last two populations)
     pop.gp <-
         reproduces(pop1 = pop3,
                    pop2 = pop4,
+                   pop1.geno.id = pop3$index, 
+                   pop2.geno.id = pop4$index, 
                    pop1.geno = pop3.geno.em,
                    pop2.geno = pop4.geno.em,
                    incols = incols, 
@@ -1619,13 +1699,15 @@ simer <-
                 verbose = verbose)
       # index.tdm <- ind.ordered[1]
       ind.ordered.dam22 <- ind.ordered[-1]
-      ind.stay.dam22 <- ind.ordered.dam22[1:(count.ind[7]/num.prog/ratio)]
-      ind.stay.sir11 <- ind.ordered.sir11[1:(count.ind[7]/num.prog/ratio/nrow(pop.dam22)*nrow(pop.sir11))]
     } else {
-      ind.stay.dam22 <- pop.dam22$index
-      ind.stay.sir11 <- pop.sir11$index
+      ind.ordered.dam22 <- pop.dam22$index
     }
-    ind.stay <- c(ind.stay.sir11, ind.stay.dam22)
+    ind.stays[[6]] <- getsd(ind.ordered.dam22, pop.dam22, 0, count.dam[3])
+    names(ind.stays) <- c("basepop", "pop2", "pop3", "pop4", "pop.sir11", "pop.dam22")
+    ind.stay$sir <- ind.stays[[5]]$sir
+    ind.stay$dam <- ind.stays[[6]]$dam
+    core.stays[[3]] <- ind.stay
+    names(core.stays) <- c("gen1.0", "gen1.5", "gen2")
     
     pop.geno.dam22.em <-  # genotype matrix after Exchange and Mutation
         genotype(geno = pop.geno.dam22,
@@ -1639,11 +1721,13 @@ simer <-
                  verbose = verbose)
 
     logging.log(" After generation", 2, ",", sum(count.ind[1:6]), "individuals are generated...\n", verbose = verbose)
-    
+   
     # the second generation to the third generation
     pop.gp <-
         reproduces(pop1 = pop.sir11,
                    pop2 = pop.dam22,
+                   pop1.geno.id = pop.sir11$index, 
+                   pop2.geno.id = pop.dam22$index, 
                    pop1.geno = pop.geno.sir11.em,
                    pop2.geno = pop.geno.dam22.em,
                    incols = incols, 
@@ -1842,8 +1926,7 @@ simer <-
                   pop.pheno = pop1.pheno, 
                   verbose = verbose)
         index.tdm <- ind.ordered[1]
-        ind.ordered <- ind.ordered[-1] 
-        ind.stay1 <- ind.ordered[1:(count.ind[2]/num.prog)]
+        ind.ordered1 <- ind.ordered[-1] 
         ind.ordered <-
           selects(pop = pop2,
                   decr = decr,
@@ -1857,17 +1940,23 @@ simer <-
                   pop.pheno = pop2.pheno, 
                   verbose = verbose)
         index.tdm <- ind.ordered[1]
-        ind.ordered <- ind.ordered[-1]
-        ind.stay2 <- ind.ordered[1:(count.ind[2]/num.prog)]
-        ind.stay <- c(ind.stay1, ind.stay2)
+        ind.ordered2 <- ind.ordered[-1]
       } else {
-        ind.stay <- c(basepop$index, pop2$index)
+        ind.ordered1 <- basepop$index
+        ind.ordered2 <- pop2$index
       }
+      ind.stays[[1]] <- getsd(ind.ordered1, basepop, count.sir[1], 0)
+      ind.stays[[2]] <- getsd(ind.ordered2, pop2, 0, count.dam[1])
+      ind.stay$sir <- ind.stays[[1]]$sir
+      ind.stay$dam <- ind.stays[[2]]$dam
+      core.stays[[1]] <- ind.stay
       
       for (i in 2:num.gen) {
         pop.gp <-
           reproduces(pop1 = basepop,
                      pop2 = pop2,
+                     pop1.geno.id = basepop$index, 
+                     pop2.geno.id = pop2$index, 
                      pop1.geno = basepop.geno.em,
                      pop2.geno = pop2.geno.em,
                      incols = incols, 
@@ -1929,11 +2018,14 @@ simer <-
                     pop.pheno = pop.pheno, 
                     verbose = verbose)
           index.tdm <- ind.ordered[1]
-          ind.ordered <- ind.ordered[-1]
-          ind.stay <- c(ind.stay1, ind.ordered[1:(count.ind[i+1]/(num.prog*(1-ratio)))])
+          ind.ordered2 <- ind.ordered[-1]
         } else {
-          ind.stay <- c(basepop$index, pop.curr$index)
+          ind.ordered2 <- pop.curr$index
         }
+        ind.stays[[i+1]] <- getsd(ind.ordered2, pop.curr, 0, count.dam[i])
+        ind.stay$sir <- ind.stays[[1]]$sir
+        ind.stay$dam <- ind.stays[[i+1]]$dam
+        core.stays[[i]] <- ind.stay
         
         pop2.geno.em <-  # genotype matrix after Exchange and Mutation
           genotype(geno = pop.geno.curr,
@@ -1948,6 +2040,8 @@ simer <-
         pop2 <- pop.curr
       }  # end for
     }
+    names(ind.stays) <- c("basepop", "pop2", paste0("gen", 2:(num.gen-1)))
+    names(core.stays) <- paste0("gen", 1:(num.gen-1))
     
     # if traits have genetic correlation
     # generate phenotype at last
@@ -2123,8 +2217,8 @@ simer <-
   }
 
   # total information list
-  simer.list <- list(pop = pop.total, effs = effs, trait = trait, geno = geno.total, genoid = out.geno.index, map = pos.map, si = sel.i)
-  rm(effs); rm(trait); rm(pop.total); rm(geno.total); rm(input.map); rm(pos.map); gc()
+  simer.list <- list(pop = pop.total, effs = effs, trait = trait, geno = geno.total, genoid = out.geno.index, map = pos.map, si = sel.i, ind.stays = ind.stays, core.stays = core.stays)
+  rm(ind.stays); rm(effs); rm(trait); rm(pop.total); rm(geno.total); rm(input.map); rm(pos.map); gc()
   
   if (!is.null(selPath)) {
     goal.plan <- complan(simls = simer.list, FR = FR, index.wt = index.wt, decr = decr, selPath = selPath, verbose = verbose)

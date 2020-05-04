@@ -58,7 +58,9 @@ simer(
   prog.tri = 2,
   prog.doub = 2,
   prog.back = rep(2, num.gen),
-  ps = 0.8,
+  refresh = rep(0.6, 2),
+  keep.max.gen = rep(3, 2),
+  ps = rep(0.8, 2),
   decr = TRUE,
   sel.multi = "index",
   index.wt = c(0.5, 0.5),
@@ -175,7 +177,11 @@ simer(
 
 \item{prog.back}{a vector with litter size in every generation of back-cross}
 
-\item{ps}{fraction selected in selection}
+\item{refresh}{refresh ratio of core population of sires and dams, only used in ps > 1}
+
+\item{keep.max.gen}{the max keep generation range in the selection for sires and dams, only used in ps > 1}
+
+\item{ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females}
 
 \item{decr}{whether to sort by descreasing}
 
@@ -258,7 +264,7 @@ simer.list <-
            prog.tri = 2,
            prog.doub = 2,
            prog.back = rep(2, 5),
-           ps = 0.8,
+           ps = rep(0.8, 2),
            decr = TRUE,
            sel.multi = "index",
            index.wt = c(0.5, 0.5),

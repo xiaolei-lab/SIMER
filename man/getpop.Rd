@@ -4,7 +4,7 @@
 \alias{getpop}
 \title{Generate population according to number of individauls}
 \usage{
-getpop(nind, from, ratio)
+getpop(nind, from, ratio, gen = 1)
 }
 \arguments{
 \item{nind}{number of the individuals in a population}
@@ -12,6 +12,8 @@ getpop(nind, from, ratio)
 \item{from}{initial index of the population}
 
 \item{ratio}{ratio of males in a population}
+
+\item{gen}{generation ID of the population}
 }
 \value{
 population information

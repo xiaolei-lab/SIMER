@@ -451,8 +451,9 @@ A.cal <- function(s, d) {
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 #' pop.list <- reproduces(pop1 = basepop,
+#'                        pop1.geno.id = basepop$index,
 #'                        pop1.geno = basepop.geno,
-#'                        ind.stay = basepop$index,
+#'                        ind.stay = list(sir=1:10, dam=11:100),
 #'                        mtd.reprod = "randmate",
 #'                        num.prog = 4,
 #'                        ratio = 0.5)
@@ -547,4 +548,118 @@ cal.idx <- function(pop.pheno, index.wt) {
   A <- var(TBV)
   b <- iP %*% A %*% index.wt
   b <- as.vector(b)
+}
+
+#' Get core population ID and genotype
+#'
+#' Build date: May 2, 2020
+#' Last update: May 2, 2020
+#'
+#' @author Dong Yin
+#'
+#' @param ind.stay ID of the sires and the dams passing selection
+#' @param core.stay ID the core sires and dams
+#' @param refresh refresh ratio of core population of sires and dams, only used in ps > 1
+#' @param keep.max.gen if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females
+#' @param pop.total total population information
+#' @param pop.geno.curr genotype matrix of current population
+#' @param pop.geno.core genotype matrix of core population
+#'
+#' @return core population list
+#' @export
+#'
+#' @examples
+#' pop1 <- getpop(nind = 100, from =   1, ratio = 0.5)
+#' pop2 <- getpop(nind = 100, from = 101, ratio = 0.5, gen = 2)
+#' pop.total <- rbind(pop1, pop2)
+#' pop.geno.core <- matrix(1, 500, 80 )
+#' pop.geno.curr <- matrix(2, 500, 100)
+#' core.stay <- list(sir =   1: 30, dam =  51:100)
+#'  ind.stay <- list(sir = 101:130, dam = 151:200)
+#' info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, 
+#'     refresh = rep(0.6, 2), keep.max.gen = rep(1, 2), pop.total = pop.total, 
+#'     pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
+#' str(info.core)
+#' 
+#' # change the individual 101 to the individual 1
+#' # the individual must be removed in the test
+#' core.stay <- info.core$core.stay
+#' pop.geno.core <- info.core$core.geno
+#' core.stay$sir[1] <- 1
+#' pop.geno.core[, 1] <- 1
+#' 
+#' pop3 <- getpop(nind = 100, from = 201, ratio = 0.5, gen = 3)
+#' pop.total <- rbind(pop.total, pop3)
+#' ind.stay <- list(sir = 201:230, dam = 251:300)
+#' pop.geno.curr <- matrix(3, 500, 100)
+#' info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, 
+#'     refresh = rep(0.6, 2), keep.max.gen = rep(2, 2), pop.total = pop.total, 
+#'     pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
+#' str(info.core)
+sel.core <- function(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2), keep.max.gen = rep(3, 2), pop.total, pop.geno.curr, pop.geno.core) {
+  if (any(refresh < 0.5)) 
+    stop("Refresh ratio of the core population should be not less than 0.5!")
+  if (length(refresh) != 2) 
+    stop("refresh should be set only for sires and dams!")
+  if (length(keep.max.gen) != 2)
+    stop("keep.max.gen should be set only for sires and dams!")
+  refresh[keep.max.gen == 1] <- 1
+  
+  gen <- pop.total$gen[nrow(pop.total)]
+  index.curr <- pop.total[pop.total$gen == gen, ]$index
+  incols <- ncol(pop.geno.curr) / length(index.curr)
+  if (incols != 1 & incols != 2) stop("Individual genotype column only be 1 or 2!")
+  gen.core.sir <- pop.total[core.stay$sir, ]$gen
+  gen.core.dam <- pop.total[core.stay$dam, ]$gen
+  f.gen.sir <- gen.core.sir <= gen - keep.max.gen[1]
+  f.gen.dam <- gen.core.dam <= gen - keep.max.gen[2]
+  sf.gen.sir <- sum(f.gen.sir)
+  sf.gen.dam <- sum(f.gen.dam)
+  
+  num.refresh.sir <- round(length(core.stay$sir) * refresh[1])
+  num.refresh.dam <- round(length(core.stay$dam) * refresh[2])
+  if (num.refresh.sir < sf.gen.sir) 
+    stop("Refresh sires should be not less than old sires!")
+  if (num.refresh.dam < sf.gen.dam) 
+    stop("Refresh dams should be not less than old dams!")
+  
+  if (num.refresh.sir > sf.gen.sir) {
+    id.add.sir <- sample(which(f.gen.sir == FALSE), size = num.refresh.sir-sf.gen.sir)
+    f.gen.sir[id.add.sir] <- TRUE
+  }
+  if (num.refresh.dam > sf.gen.dam) {
+    id.add.dam <- sample(which(f.gen.dam == FALSE), size = num.refresh.dam-sf.gen.dam)
+    f.gen.dam[id.add.dam] <- TRUE
+  }
+  
+  sir.stay <- ind.stay$sir[1:num.refresh.sir]
+  dam.stay <- ind.stay$dam[1:num.refresh.dam]
+  core.stay$sir[f.gen.sir] <- sir.stay
+  core.stay$dam[f.gen.dam] <- dam.stay
+  if (incols == 2) {
+    gmt.dam.curr <- cal.genoloc(c(sir.stay, dam.stay), index.curr)
+    gmt.dam.curr <- gmt.dam.curr * 2
+    gmt.sir.curr <- gmt.dam.curr - 1
+    gmt.comb.curr <- c(gmt.sir.curr, gmt.dam.curr)
+    gmt.comb.curr[seq(1, length(gmt.comb.curr), 2)] <- gmt.sir.curr
+    gmt.comb.curr[seq(2, length(gmt.comb.curr), 2)] <- gmt.dam.curr
+
+    core.id <- c(core.stay$sir, core.stay$dam)
+    core.id.gen <- c(core.stay$sir[which(f.gen.sir == TRUE)], core.stay$dam[which(f.gen.dam == TRUE)])
+    gmt.dam.core <- cal.genoloc(core.id.gen, core.id)
+    gmt.dam.core <- gmt.dam.core * 2
+    gmt.sir.core <- gmt.dam.core - 1
+    gmt.comb.core <- c(gmt.sir.core, gmt.dam.core)
+    gmt.comb.core[seq(1, length(gmt.comb.core), 2)] <- gmt.sir.core
+    gmt.comb.core[seq(2, length(gmt.comb.core), 2)] <- gmt.dam.core
+  
+    pop.geno.core[, gmt.comb.core] <- pop.geno.curr[, gmt.comb.curr]
+    
+  } else {
+    gmt.comb <- cal.genoloc(c(sir.stay, dam.stay), index.curr)
+    pop.geno.core[, c(f.gen.sir, f.gen.dam)] <- pop.geno.curr[, gmt.comb]
+  }
+  
+  core.list <- list(core.stay = core.stay, core.geno = pop.geno.core)
+  return(core.list)
 }

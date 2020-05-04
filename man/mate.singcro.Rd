@@ -7,6 +7,8 @@
 mate.singcro(
   pop1,
   pop2,
+  pop1.geno.id,
+  pop2.geno.id,
   pop1.geno,
   pop2.geno,
   incols = 2,
@@ -19,6 +21,10 @@ mate.singcro(
 \item{pop1}{population information of population1}
 
 \item{pop2}{population information of population2}
+
+\item{pop1.geno.id}{genotype id of population1}
+
+\item{pop2.geno.id}{genotype id of population2}
 
 \item{pop1.geno}{genotype matrix of population1}
 
@@ -44,8 +50,9 @@ pop1 <- getpop(nind = 100, from = 1, ratio = 0.1)
 pop2 <- getpop(nind = 100, from = 101, ratio = 0.1)
 pop1.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 pop2.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-ind.stay <- c(pop1$index, pop2$index)
+ind.stay <- list(sir = pop1$index, dam = pop2$index)
 pop.singcro <- mate.singcro(pop1 = pop2, pop2 = pop2,
+    pop1.geno.id = pop1$index, pop2.geno.id = pop2$index, 
     pop1.geno = pop1.geno, pop2.geno = pop2.geno,
     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
 pop <- pop.singcro$pop

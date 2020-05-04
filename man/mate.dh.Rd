@@ -4,10 +4,12 @@
 \alias{mate.dh}
 \title{Doubled haploid process}
 \usage{
-mate.dh(pop1, pop1.geno, incols = 2, ind.stay, num.prog)
+mate.dh(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog)
 }
 \arguments{
 \item{pop1}{population information of population1}
+
+\item{pop1.geno.id}{genotype id of population1}
 
 \item{pop1.geno}{genotype matrix of population1}
 
@@ -27,8 +29,9 @@ Last update: Aug 1, 2019
 \examples{
 basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-pop.dh <- mate.dh(pop1 = basepop, pop1.geno = basepop.geno,
-            ind.stay = basepop$index, num.prog = 2)
+ind.stay <- list(sir = basepop$index, dam = basepop$index)
+pop.dh <- mate.dh(pop1 = basepop, pop1.geno.id = basepop$index, 
+    pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2)
 pop <- pop.dh$pop
 geno <- pop.dh$geno
 str(pop)

@@ -20,6 +20,8 @@
 #'
 #' @param pop1 population information of population1
 #' @param pop2 population information of population2
+#' @param pop1.geno.id genotype id of population1
+#' @param pop2.geno.id genotype id of population2
 #' @param pop1.geno genotype matrix of population1
 #' @param pop2.geno genotype matrix of population2
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
@@ -35,11 +37,12 @@
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 #' pop.list <- reproduces(pop1 = basepop,
-#'                       pop1.geno = basepop.geno,
-#'                       ind.stay = basepop$index,
-#'                       mtd.reprod = "randmate",
-#'                       num.prog = 2,
-#'                       ratio = 0.5)
+#'                        pop1.geno.id = basepop$index,  
+#'                        pop1.geno = basepop.geno,
+#'                        ind.stay = list(sir=1:10, dam=11:90),
+#'                        mtd.reprod = "randmate",
+#'                        num.prog = 2,
+#'                        ratio = 0.5)
 #' pop <- pop.list$pop
 #' geno <- pop.list$geno
 #' str(pop)
@@ -47,6 +50,8 @@
 reproduces <-
     function(pop1 = NULL,
              pop2 = NULL,
+             pop1.geno.id = NULL,
+             pop2.geno.id = NULL,
              pop1.geno = NULL,
              pop2.geno = NULL,
              incols = 2, 
@@ -58,22 +63,22 @@ reproduces <-
 # Start reproduction
 
   if (mtd.reprod == "clone") {
-    pop <- mate.clone(pop1, pop1.geno, incols, ind.stay, num.prog)
+    pop <- mate.clone(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog)
 
   } else if (mtd.reprod == "dh") {
-    pop <- mate.dh(pop1, pop1.geno, incols, ind.stay, num.prog)
+    pop <- mate.dh(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog)
 
   } else if (mtd.reprod == "selfpol") {
-    pop <- mate.selfpol(pop1, pop1.geno, incols, ind.stay, num.prog, ratio)
+    pop <- mate.selfpol(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog, ratio)
 
   } else if (mtd.reprod == "singcro") {
-    pop <- mate.singcro(pop1, pop2, pop1.geno, pop2.geno, incols, ind.stay, num.prog, ratio)
+    pop <- mate.singcro(pop1, pop2, pop1.geno.id, pop2.geno.id, pop1.geno, pop2.geno, incols, ind.stay, num.prog, ratio)
 
   } else if (mtd.reprod == "randmate") {
-    pop <- mate.randmate(pop1, pop1.geno, incols, ind.stay, num.prog, ratio)
+    pop <- mate.randmate(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog, ratio)
 
   } else if (mtd.reprod == "randexself") {
-    pop <- mate.randexself(pop1, pop1.geno, incols, ind.stay, num.prog, ratio)
+    pop <- mate.randexself(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog, ratio)
 
   } else {
     stop("Please input a right option within mtd.reprod!")
@@ -152,6 +157,7 @@ mate <- function(pop.geno, incols = 2, index.sir, index.dam) {
 #' @author Dong Yin
 #'
 #' @param pop1 population information of population1
+#' @param pop1.geno.id genotype id of population1
 #' @param pop1.geno genotype matrix of population1
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param ind.stay selected individuals regarded as parents
@@ -163,16 +169,17 @@ mate <- function(pop.geno, incols = 2, index.sir, index.dam) {
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' pop.clone <- mate.clone(pop1 = basepop, pop1.geno = basepop.geno,
-#'                ind.stay = basepop$index, num.prog = 2)
+#' ind.stay <- list(sir =  basepop$index, dam = basepop$index)
+#' pop.clone <- mate.clone(pop1 = basepop, pop1.geno.id = basepop$index, 
+#'     pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2)
 #' pop <- pop.clone$pop
 #' geno <- pop.clone$geno
 #' str(pop)
 #' str(geno)
-mate.clone <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
+mate.clone <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog) {
 
   num.marker <- nrow(pop1.geno)
-  ped.dam <- sort(intersect(ind.stay, pop1$index))
+  ped.dam <- ind.stay$dam
   num.2ind <- length(ped.dam) * incols
 
   pop.geno.curr <- matrix(3, nrow = num.marker, ncol = num.2ind*num.prog)
@@ -183,13 +190,14 @@ mate.clone <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
   # options(bigmemory.typecast.warning=FALSE)
   
   if (incols == 2) {
-    gmt.dam <- (ped.dam-pop1$index[1]+1) * 2
+    gmt.dam <- cal.genoloc(ped.dam, pop1.geno.id)
+    gmt.dam <- gmt.dam * 2
     gmt.sir <- gmt.dam - 1
     gmt.comb <- c(gmt.sir, gmt.dam)
     gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
     gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
   } else {
-    gmt.comb <- ped.dam-pop1$index[1]+1
+    gmt.comb <- cal.genoloc(ped.dam, pop1.geno.id)
   }
   pop.geno.adj <- pop1.geno[, gmt.comb]
   
@@ -220,6 +228,7 @@ mate.clone <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
 #' @author Dong Yin
 #'
 #' @param pop1 population information of population1
+#' @param pop1.geno.id genotype id of population1
 #' @param pop1.geno genotype matrix of population1
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param ind.stay selected individuals regarded as parents
@@ -231,16 +240,17 @@ mate.clone <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' pop.dh <- mate.dh(pop1 = basepop, pop1.geno = basepop.geno,
-#'             ind.stay = basepop$index, num.prog = 2)
+#' ind.stay <- list(sir = basepop$index, dam = basepop$index)
+#' pop.dh <- mate.dh(pop1 = basepop, pop1.geno.id = basepop$index, 
+#'     pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2)
 #' pop <- pop.dh$pop
 #' geno <- pop.dh$geno
 #' str(pop)
 #' str(geno)
-mate.dh <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
+mate.dh <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog) {
 
   num.marker <- nrow(pop1.geno)
-  ped.dam <- sort(intersect(ind.stay, pop1$index))
+  ped.dam <- ind.stay$dam
   num.2ind <- length(ped.dam) * incols
   if (num.prog %% 2 != 0) {
     stop("num.prog should be an even in dh option!")
@@ -254,13 +264,14 @@ mate.dh <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
   # options(bigmemory.typecast.warning=FALSE)
 
   if (incols == 2) {
-    gmt.dam <- (ped.dam-pop1$index[1]+1) * 2
+    gmt.dam <- cal.genoloc(ped.dam, pop1.geno.id)
+    gmt.dam <- gmt.dam * 2
     gmt.sir <- gmt.dam - 1
     gmt.comb <- c(gmt.sir, gmt.dam)
     gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
     gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
   } else {
-    gmt.comb <- ped.dam-pop1$index[1]+1
+    gmt.comb <- cal.genoloc(ped.dam, pop1.geno.id)
   }
   pop.geno.adj <- pop1.geno[, gmt.comb]
   
@@ -295,6 +306,7 @@ mate.dh <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
 #' @author Dong Yin
 #'
 #' @param pop1 population information of population1
+#' @param pop1.geno.id genotype id of population1
 #' @param pop1.geno genotype matrix of population1
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param ind.stay selected individuals regarded as parents
@@ -307,23 +319,24 @@ mate.dh <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog) {
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' pop.selfpol <- mate.selfpol(pop1 = basepop, pop1.geno = basepop.geno,
-#'                  ind.stay = basepop$index, num.prog = 2, ratio = 0.5)
+#' ind.stay <- list(sir = basepop$index, dam = basepop$index)
+#' pop.selfpol <- mate.selfpol(pop1 = basepop, pop1.geno.id = basepop$index, 
+#'     pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
 #' pop <- pop.selfpol$pop
 #' geno <- pop.selfpol$geno
 #' str(pop)
 #' str(geno)
-mate.selfpol <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
+mate.selfpol <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
 
   if (floor(num.prog * ratio) != num.prog * ratio) {
     stop("The product of num.prog and ratio should be a integer!")
   }
 
-  ped.dam <- sort(intersect(ind.stay, pop1$index))
+  ped.dam <- ind.stay$dam
   ped.sir <- rep(ped.dam, each = num.prog)
   ped.dam <- rep(ped.dam, each = num.prog)
-  index.sir <- ped.sir - pop1$index[1] + 1
-  index.dam <- ped.dam - pop1$index[1] + 1
+  index.sir <- cal.genoloc(ped.dam, pop1.geno.id)
+  index.dam <- index.sir
 
   pop.geno.curr <- mate(pop.geno = pop1.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
 
@@ -346,6 +359,8 @@ mate.selfpol <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio)
 #'
 #' @param pop1 population information of population1
 #' @param pop2 population information of population2
+#' @param pop1.geno.id genotype id of population1
+#' @param pop2.geno.id genotype id of population2
 #' @param pop1.geno genotype matrix of population1
 #' @param pop2.geno genotype matrix of population2
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
@@ -361,15 +376,16 @@ mate.selfpol <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio)
 #' pop2 <- getpop(nind = 100, from = 101, ratio = 0.1)
 #' pop1.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 #' pop2.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- c(pop1$index, pop2$index)
+#' ind.stay <- list(sir = pop1$index, dam = pop2$index)
 #' pop.singcro <- mate.singcro(pop1 = pop2, pop2 = pop2,
+#'     pop1.geno.id = pop1$index, pop2.geno.id = pop2$index, 
 #'     pop1.geno = pop1.geno, pop2.geno = pop2.geno,
 #'     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
 #' pop <- pop.singcro$pop
 #' geno <- pop.singcro$geno
 #' str(pop)
 #' str(geno)
-mate.singcro <- function(pop1, pop2, pop1.geno, pop2.geno, incols = 2, ind.stay, num.prog, ratio) {
+mate.singcro <- function(pop1, pop2, pop1.geno.id, pop2.geno.id, pop1.geno, pop2.geno, incols = 2, ind.stay, num.prog, ratio) {
 
   if (is.null(pop1) || is.null(pop2) || is.null(pop1.geno) || is.null(pop2.geno)) {
     stop("Only two breeds are needed in the single cross!")
@@ -381,20 +397,16 @@ mate.singcro <- function(pop1, pop2, pop1.geno, pop2.geno, incols = 2, ind.stay,
     stop("The product of num.prog and ratio should be a integer!")
   }
 
-  ratio1 <- 1 - sum(pop2$sex == 2) / (nrow(pop1) + nrow(pop2))
-  ped.sir <- intersect(ind.stay, pop1$index[pop1$sex==1])
-  ped.dam <- intersect(ind.stay, pop2$index[pop2$sex==2])
-  ped.dam <- adj.dam(ped.dam, ind.stay, ratio1)
+  ped.sir <- ind.stay$sir
+  ped.dam <- ind.stay$dam
   num.dam <- length(ped.dam)
-  if (length(ped.sir) == 1) {
-    ped.sir <- rep(ped.sir, 2)
-  }
+  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
   ped.sir <- sample(ped.sir, size = num.dam, replace = TRUE)
   ped.sir <- rep(ped.sir, each = num.prog)
   ped.dam <- rep(ped.dam, each = num.prog)
 
-  index.sir <- ped.sir - pop1$index[1] + 1
-  index.dam <- ped.dam - pop2$index[1] + 1 + length(pop1$index)
+  index.sir <- cal.genoloc(ped.sir, pop1.geno.id)
+  index.dam <- cal.genoloc(ped.dam, pop2.geno.id)
   pop12.geno <- cbind(pop1.geno[], pop2.geno[])
   
   pop.geno.curr <- mate(pop.geno = pop12.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
@@ -417,6 +429,7 @@ mate.singcro <- function(pop1, pop2, pop1.geno, pop2.geno, incols = 2, ind.stay,
 #' @author Dong Yin
 #'
 #' @param pop1 population information of population1
+#' @param pop1.geno.id genotype id of population1
 #' @param pop1.geno genotype matrix of population1
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param ind.stay selected individuals regarded as parents
@@ -429,36 +442,30 @@ mate.singcro <- function(pop1, pop2, pop1.geno, pop2.geno, incols = 2, ind.stay,
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' pop.randmate <- mate.randmate(pop1 = basepop, pop1.geno = basepop.geno,
-#'     ind.stay = basepop$index, num.prog = 2, ratio = 0.5)
+#' ind.stay <- list(sir = basepop$index[basepop$sex == 1], 
+#'                  dam = basepop$index[basepop$sex == 2])
+#' pop.randmate <- mate.randexself(pop1 = basepop,
+#'     pop1.geno.id = basepop$index, pop1.geno = basepop.geno, 
+#'     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
 #' pop <- pop.randmate$pop
 #' geno <- pop.randmate$geno
 #' str(pop)
 #' str(geno)
-mate.randmate <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
+mate.randmate <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
 
   if (floor(num.prog * ratio) != num.prog * ratio) {
     stop("The product of num.prog and ratio should be a integer!")
   }
 
-  ps <- length(ind.stay) / length(pop1$index)
-  if (all(pop1$sex == 0)) { # if1
-    ped.sir <- intersect(ind.stay, pop1$index)
-    ped.dam <- intersect(ind.stay, pop1$index)
-  } else {
-    ped.sir <- intersect(ind.stay, pop1$index[pop1$sex==1])
-    ped.dam <- intersect(ind.stay, pop1$index[pop1$sex==2])
-  } # end if1
-  ped.dam <- adj.dam(ped.dam, ind.stay, ratio)
+  ped.sir <- ind.stay$sir
+  ped.dam <- ind.stay$dam
   num.dam <- length(ped.dam)
-  if (length(ped.sir) == 1) {
-    ped.sir <- rep(ped.sir, 2)
-  }
+  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
   ped.sir <- sample(ped.sir, size = num.dam, replace = TRUE)
   ped.sir <- rep(ped.sir, each = num.prog)
   ped.dam <- rep(ped.dam, each = num.prog)
-  index.sir <- ped.sir - pop1$index[1] + 1
-  index.dam <- ped.dam - pop1$index[1] + 1
+  index.sir <- cal.genoloc(ped.sir, pop1.geno.id)
+  index.dam <- cal.genoloc(ped.dam, pop1.geno.id)
 
   pop.geno.curr <- mate(pop.geno = pop1.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
 
@@ -484,6 +491,7 @@ mate.randmate <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio
 #' @author Dong Yin
 #'
 #' @param pop1 population information of population1
+#' @param pop1.geno.id genotype id of population1
 #' @param pop1.geno genotype matrix of population1
 #' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param ind.stay selected individuals regarded as parents
@@ -496,32 +504,25 @@ mate.randmate <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
+#' ind.stay <- list(sir = basepop$index[basepop$sex == 1], 
+#'                  dam = basepop$index[basepop$sex == 2])
 #' pop.randexself <- mate.randexself(pop1 = basepop,
-#'     pop1.geno = basepop.geno, ind.stay = basepop$index,
-#'     num.prog = 2, ratio = 0.5)
+#'     pop1.geno.id = basepop$index, pop1.geno = basepop.geno, 
+#'     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
 #' pop <- pop.randexself$pop
 #' geno <- pop.randexself$geno
 #' str(pop)
 #' str(geno)
-mate.randexself <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
+mate.randexself <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
 
   if (floor(num.prog * ratio) != num.prog * ratio) {
     stop("The product of num.prog and ratio should be a integer!")
   }
 
-  ps <- length(ind.stay) / length(pop1$index)
-  if (all(pop1$sex == 0)) { # if1
-    ped.sir <- intersect(ind.stay, pop1$index)
-    ped.dam <- intersect(ind.stay, pop1$index)
-  } else {
-    ped.sir <- intersect(ind.stay, pop1$index[pop1$sex==1])
-    ped.dam <- intersect(ind.stay, pop1$index[pop1$sex==2])
-  } # end if1
-  ped.dam <- adj.dam(ped.dam, ind.stay, ratio)
+  ped.sir <- ind.stay$sir
+  ped.dam <- ind.stay$dam
   num.dam <- length(ped.dam)
-  if (length(ped.sir) == 1) {
-    ped.sir <- rep(ped.sir, 2)
-  }
+  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
   ped.sir <- sample(ped.sir, size = num.dam, replace = TRUE)
 
   # To make sure ped.sir is different from ped.dam
@@ -535,8 +536,8 @@ mate.randexself <- function(pop1, pop1.geno, incols = 2, ind.stay, num.prog, rat
 
   ped.sir <- rep(ped.sir, each = num.prog)
   ped.dam <- rep(ped.dam, each = num.prog)
-  index.sir <- ped.sir - pop1$index[1] + 1
-  index.dam <- ped.dam - pop1$index[1] + 1
+  index.sir <- cal.genoloc(ped.sir, pop1.geno.id)
+  index.dam <- cal.genoloc(ped.dam, pop1.geno.id)
 
   pop.geno.curr <- mate(pop.geno = pop1.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
 
@@ -617,6 +618,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
 #' @param nind number of the individuals in a population
 #' @param from initial index of the population
 #' @param ratio ratio of males in a population
+#' @param gen generation ID of the population
 #'
 #' @return population information
 #' @export
@@ -624,9 +626,9 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' str(basepop)
-getpop <- function(nind, from, ratio) {
+getpop <- function(nind, from, ratio, gen = 1) {
   pop <- data.frame(
-    gen   = rep(1, nind),
+    gen   = rep(gen, nind),
     index = seq(from = from, length.out = nind),
     fam   = seq(from = from, length.out = nind),
     infam = seq(from = from, length.out = nind),
@@ -669,37 +671,51 @@ getindex <- function(count.ind, out.gen) {
   return(out.index)
 }
 
-#' Adjust ped.dam for correcting litter size
+#' Get selected sires and dams
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 30, 2020
 #'
 #' @author Dong Yin
 #'
-#' @param ped.dam indice of dams in the pedigree
-#' @param ind.stay selected individuals regarded as parents
-#' @param ratio ratio of males in all individuals
+#' @param ind.ordered individual ID after sorting
+#' @param pop population information
+#' @param num.sir number of sires
+#' @param num.dam number of dams
 #'
-#' @return indice of dams after adjustment
+#' @return sire ID and dam ID after selection
 #' @export
 #'
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.5)
-#' ped.dam <- basepop$dam
-#' ind.stay <- basepop$index
-#' idx.dam <- adj.dam(ped.dam = ped.dam, ind.stay = ind.stay, ratio = 0.5)
-#' str(idx.dam)
-adj.dam <- function(ped.dam, ind.stay, ratio) {
-  if (length(ped.dam) == 1) {
-    ped.dam <- rep(ped.dam, 2)
-  }
-  expect.dam <- length(ind.stay) * (1-ratio)
-  if (length(ped.dam) < expect.dam) {
-    ped.dam.rest <- sample(ped.dam, size=expect.dam-length(ped.dam), replace = TRUE)
-    ped.dam <- sort(c(ped.dam, ped.dam.rest))
+#' ind.ordered <- sample.int(100)
+#' 
+#' ind.stay <- getsd(ind.ordered = ind.ordered, pop = basepop, 
+#'                   num.sir = 10, num.dam = 40)
+#' str(ind.stay)
+getsd <- function(ind.ordered, pop, num.sir, num.dam) {
+  ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
+  ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+  sir.ordered <- intersect(ind.ordered, ind.sir)
+  dam.ordered <- intersect(ind.ordered, ind.dam)
+  if (length(sir.ordered) == 0 | num.sir == 0) {
+    sir.stay <- NULL
   } else {
-    ped.dam <- sort(ped.dam[1:(expect.dam)])
+    if (num.sir <= length(ind.sir)) {
+      sir.stay <- sir.ordered[1:num.sir]
+    } else {
+      sir.stay <- c(sir.ordered, sample(sir.ordered, num.sir-length(ind.sir), replace = TRUE))
+    }
   }
-
-  return(ped.dam)
+  if (length(dam.ordered) == 0 | num.dam == 0) {
+    dam.stay <- NULL
+  } else {
+    if (num.dam <= length(ind.dam)) {
+      dam.stay <- dam.ordered[1:num.dam]
+    } else {
+      dam.stay <- c(dam.ordered, sample(dam.ordered, num.dam-length(ind.dam), replace = TRUE))
+    }
+  }
+  ind.stay <- list(sir = sir.stay, dam = dam.stay)
+  return(ind.stay)
 }

@@ -7,6 +7,8 @@
 reproduces(
   pop1 = NULL,
   pop2 = NULL,
+  pop1.geno.id = NULL,
+  pop2.geno.id = NULL,
   pop1.geno = NULL,
   pop2.geno = NULL,
   incols = 2,
@@ -20,6 +22,10 @@ reproduces(
 \item{pop1}{population information of population1}
 
 \item{pop2}{population information of population2}
+
+\item{pop1.geno.id}{genotype id of population1}
+
+\item{pop2.geno.id}{genotype id of population2}
 
 \item{pop1.geno}{genotype matrix of population1}
 
@@ -46,11 +52,12 @@ Last update: Aug 1, 2019
 basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
 pop.list <- reproduces(pop1 = basepop,
-                      pop1.geno = basepop.geno,
-                      ind.stay = basepop$index,
-                      mtd.reprod = "randmate",
-                      num.prog = 2,
-                      ratio = 0.5)
+                       pop1.geno.id = basepop$index,  
+                       pop1.geno = basepop.geno,
+                       ind.stay = list(sir=1:10, dam=11:90),
+                       mtd.reprod = "randmate",
+                       num.prog = 2,
+                       ratio = 0.5)
 pop <- pop.list$pop
 geno <- pop.list$geno
 str(pop)
