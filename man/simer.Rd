@@ -16,7 +16,6 @@ simer(
   selPath = NULL,
   out.format = "numeric",
   seed.sim = runif(1, 0, 100),
-  seed.map = 12345,
   out.geno.gen = (num.gen - 2):num.gen,
   out.pheno.gen = 1:num.gen,
   rawgeno1 = NULL,
@@ -92,8 +91,6 @@ simer(
 \item{out.format}{format of output, "numeric" or "plink"}
 
 \item{seed.sim}{random seed of a simulation process}
-
-\item{seed.map}{random seed of map file}
 
 \item{out.geno.gen}{indice of generations of output genotype}
 
@@ -222,7 +219,6 @@ simer.list <-
            selPath = NULL, 
            out.format = "numeric",
            seed.sim = runif(1, 0, 100),
-           seed.map = 12345,
            out.geno.gen = 3:5,
            out.pheno.gen = 1:5,
            rawgeno1 = rawgeno,

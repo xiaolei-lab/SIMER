@@ -561,6 +561,7 @@ cal.idx <- function(pop.pheno, index.wt) {
 #' @param core.stay ID the core sires and dams
 #' @param refresh refresh ratio of core population of sires and dams, only used in ps > 1
 #' @param keep.max.gen if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females
+#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param pop.total total population information
 #' @param pop.geno.curr genotype matrix of current population
 #' @param pop.geno.core genotype matrix of core population
@@ -576,7 +577,7 @@ cal.idx <- function(pop.pheno, index.wt) {
 #' pop.geno.curr <- matrix(2, 500, 100)
 #' core.stay <- list(sir =   1: 30, dam =  51:100)
 #'  ind.stay <- list(sir = 101:130, dam = 151:200)
-#' info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, 
+#' info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = 1, 
 #'     refresh = rep(0.6, 2), keep.max.gen = rep(1, 2), pop.total = pop.total, 
 #'     pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
 #' str(info.core)
@@ -592,11 +593,11 @@ cal.idx <- function(pop.pheno, index.wt) {
 #' pop.total <- rbind(pop.total, pop3)
 #' ind.stay <- list(sir = 201:230, dam = 251:300)
 #' pop.geno.curr <- matrix(3, 500, 100)
-#' info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, 
+#' info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = 1, 
 #'     refresh = rep(0.6, 2), keep.max.gen = rep(2, 2), pop.total = pop.total, 
-#'     pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
+#'     pop.geno.curr = pop.geno.curr, pop.geno.core = pop.geno.core)
 #' str(info.core)
-sel.core <- function(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2), keep.max.gen = rep(3, 2), pop.total, pop.geno.curr, pop.geno.core) {
+sel.core <- function(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2), keep.max.gen = rep(3, 2), incols = 2, pop.total, pop.geno.curr, pop.geno.core) {
   if (any(refresh < 0.5)) 
     stop("Refresh ratio of the core population should be not less than 0.5!")
   if (length(refresh) != 2) 
@@ -607,8 +608,6 @@ sel.core <- function(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2), k
   
   gen <- pop.total$gen[nrow(pop.total)]
   index.curr <- pop.total[pop.total$gen == gen, ]$index
-  incols <- ncol(pop.geno.curr) / length(index.curr)
-  if (incols != 1 & incols != 2) stop("Individual genotype column only be 1 or 2!")
   gen.core.sir <- pop.total[core.stay$sir, ]$gen
   gen.core.dam <- pop.total[core.stay$dam, ]$gen
   f.gen.sir <- gen.core.sir <= gen - keep.max.gen[1]
@@ -657,7 +656,7 @@ sel.core <- function(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2), k
     
   } else {
     gmt.comb <- cal.genoloc(c(sir.stay, dam.stay), index.curr)
-    pop.geno.core[, c(f.gen.sir, f.gen.dam)] <- pop.geno.curr[, gmt.comb]
+    pop.geno.core[c(f.gen.sir, f.gen.dam)] <- pop.geno.curr[, gmt.comb]
   }
   
   core.list <- list(core.stay = core.stay, core.geno = pop.geno.core)

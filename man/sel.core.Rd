@@ -9,6 +9,7 @@ sel.core(
   core.stay = NULL,
   refresh = rep(0.6, 2),
   keep.max.gen = rep(3, 2),
+  incols = 2,
   pop.total,
   pop.geno.curr,
   pop.geno.core
@@ -22,6 +23,8 @@ sel.core(
 \item{refresh}{refresh ratio of core population of sires and dams, only used in ps > 1}
 
 \item{keep.max.gen}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
 
 \item{pop.total}{total population information}
 
@@ -44,7 +47,7 @@ pop.geno.core <- matrix(1, 500, 80 )
 pop.geno.curr <- matrix(2, 500, 100)
 core.stay <- list(sir =   1: 30, dam =  51:100)
  ind.stay <- list(sir = 101:130, dam = 151:200)
-info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, 
+info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = 1, 
     refresh = rep(0.6, 2), keep.max.gen = rep(1, 2), pop.total = pop.total, 
     pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
 str(info.core)
@@ -60,9 +63,9 @@ pop3 <- getpop(nind = 100, from = 201, ratio = 0.5, gen = 3)
 pop.total <- rbind(pop.total, pop3)
 ind.stay <- list(sir = 201:230, dam = 251:300)
 pop.geno.curr <- matrix(3, 500, 100)
-info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, 
+info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = 1, 
     refresh = rep(0.6, 2), keep.max.gen = rep(2, 2), pop.total = pop.total, 
-    pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
+    pop.geno.curr = pop.geno.curr, pop.geno.core = pop.geno.core)
 str(info.core)
 }
 \author{

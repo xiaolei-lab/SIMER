@@ -29,7 +29,6 @@
 #' @param selPath the path of breeding_plan
 #' @param out.format format of output, "numeric" or "plink"
 #' @param seed.sim random seed of a simulation process
-#' @param seed.map random seed of map file
 #' @param out.geno.gen indice of generations of output genotype
 #' @param out.pheno.gen indice of generations of output phenotype
 #' @param rawgeno1 extrinsic genotype matrix1
@@ -109,7 +108,6 @@
 #'            selPath = NULL, 
 #'            out.format = "numeric",
 #'            seed.sim = runif(1, 0, 100),
-#'            seed.map = 12345,
 #'            out.geno.gen = 3:5,
 #'            out.pheno.gen = 1:5,
 #'            rawgeno1 = rawgeno,
@@ -186,7 +184,6 @@ simer <-
              selPath = NULL, 
              out.format = "numeric",
              seed.sim = runif(1, 0, 100),
-             seed.map = 12345,
              out.geno.gen = (num.gen-2):num.gen,
              out.pheno.gen = 1:num.gen,
              rawgeno1 = NULL,
@@ -780,7 +777,7 @@ simer <-
         
         if (sel.on & all(ps > 1)) {
           info.core <- sel.core(ind.stay, core.stay, refresh, keep.max.gen, 
-              pop.total = pop.total, pop.geno.core, pop.geno.curr)
+              incols, pop.total = pop.total, pop.geno.curr, pop.geno.core)
           core.stays[[i]] <- core.stay <- info.core$core.stay
           pop.geno.last <- pop.geno.core <- info.core$core.geno
           pop1.geno.id <- c(core.stay$sir, core.stay$dam)       
@@ -814,7 +811,7 @@ simer <-
     if (!is.null(outpath)) {
       # write files
       logging.log(" --- write files of total population ---\n", verbose = verbose)
-      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, out, directory.rep, out.format, verbose)
+      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, out, directory.rep, out.format, verbose)
       flush(geno.total)
     }
     
@@ -1014,11 +1011,11 @@ simer <-
       flush(geno.singcro)
       # write files
       logging.log(" --- write files of sirs ---\n", verbose = verbose)
-      write.file(basepop, geno.sir, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir, out.format, verbose)
+      write.file(basepop, geno.sir, pos.map, 1:nrow(basepop), 1:nrow(basepop), out, dir.sir, out.format, verbose)
       logging.log(" --- write files of dams ---\n", verbose = verbose)
-      write.file(pop2, geno.dam, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.dam, out.format, verbose)
+      write.file(pop2, geno.dam, pos.map, 1:nrow(pop2), 1:nrow(pop2), out, dir.dam, out.format, verbose)
       logging.log(" --- write files of progenies ---\n", verbose = verbose)
-      write.file(pop.singcro, geno.singcro, pos.map, 1:nrow(pop.singcro), 1:nrow(pop.singcro), seed.map, out, dir.sgc, out.format, verbose)
+      write.file(pop.singcro, geno.singcro, pos.map, 1:nrow(pop.singcro), 1:nrow(pop.singcro), out, dir.sgc, out.format, verbose)
     }
     
     # set total information of population and genotype
@@ -1352,15 +1349,15 @@ simer <-
       flush(geno.tricro)
       # write files
       logging.log(" --- write files of sir1s ---\n", verbose = verbose)
-      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir1, out.format, verbose)
+      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), out, dir.sir1, out.format, verbose)
       logging.log(" --- write files of sir2s ---\n", verbose = verbose)
-      write.file(pop2, geno.sir2, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.sir2, out.format, verbose)
+      write.file(pop2, geno.sir2, pos.map, 1:nrow(pop2), 1:nrow(pop2), out, dir.sir2, out.format, verbose)
       logging.log(" --- write files of dam1s ---\n", verbose = verbose)
-      write.file(pop3, geno.dam1, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, out, dir.dam1, out.format, verbose)
+      write.file(pop3, geno.dam1, pos.map, 1:nrow(pop3), 1:nrow(pop3), out, dir.dam1, out.format, verbose)
       logging.log(" --- write files of dam21s ---\n", verbose = verbose)
-      write.file(pop.dam21, geno.dam21, pos.map, 1:nrow(pop.dam21), 1:nrow(pop.dam21), seed.map, out, dir.dam21, out.format, verbose)
+      write.file(pop.dam21, geno.dam21, pos.map, 1:nrow(pop.dam21), 1:nrow(pop.dam21), out, dir.dam21, out.format, verbose)
       logging.log(" --- write files of progenies ---\n", verbose = verbose)
-      write.file(pop.tricro, geno.tricro, pos.map, 1:nrow(pop.tricro), 1:nrow(pop.tricro), seed.map, out, dir.trc, out.format, verbose)
+      write.file(pop.tricro, geno.tricro, pos.map, 1:nrow(pop.tricro), 1:nrow(pop.tricro), out, dir.trc, out.format, verbose)
     }
     
     # set total information of population and genotype
@@ -1828,19 +1825,19 @@ simer <-
     
       # write files
       logging.log(" --- write files of sir1s ---\n", verbose = verbose)
-      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), seed.map, out, dir.sir1, out.format, verbose)
+      write.file(basepop, geno.sir1, pos.map, 1:nrow(basepop), 1:nrow(basepop), out, dir.sir1, out.format, verbose)
       logging.log(" --- write files of dam1s ---\n", verbose = verbose)
-      write.file(pop2, geno.dam1, pos.map, 1:nrow(pop2), 1:nrow(pop2), seed.map, out, dir.dam1, out.format, verbose)
+      write.file(pop2, geno.dam1, pos.map, 1:nrow(pop2), 1:nrow(pop2), out, dir.dam1, out.format, verbose)
       logging.log(" --- write files of sir2s ---\n", verbose = verbose)
-      write.file(pop3, geno.sir2, pos.map, 1:nrow(pop3), 1:nrow(pop3), seed.map, out, dir.sir2, out.format, verbose)
+      write.file(pop3, geno.sir2, pos.map, 1:nrow(pop3), 1:nrow(pop3), out, dir.sir2, out.format, verbose)
       logging.log(" --- write files of dam2s ---\n", verbose = verbose)
-      write.file(pop4, geno.dam2, pos.map, 1:nrow(pop4), 1:nrow(pop4),seed.map, out, dir.dam2, out.format, verbose)
+      write.file(pop4, geno.dam2, pos.map, 1:nrow(pop4), 1:nrow(pop4), out, dir.dam2, out.format, verbose)
       logging.log(" --- write files of sir11s ---\n", verbose = verbose)
-      write.file(pop.sir11, geno.sir11, pos.map, 1:nrow(pop.sir11), 1:nrow(pop.sir11), seed.map, out, dir.sir11, out.format, verbose)
+      write.file(pop.sir11, geno.sir11, pos.map, 1:nrow(pop.sir11), 1:nrow(pop.sir11), out, dir.sir11, out.format, verbose)
       logging.log(" --- write files of dam22s ---\n", verbose = verbose)
-      write.file(pop.dam22, geno.dam22, pos.map, 1:nrow(pop.dam22), 1:nrow(pop.dam22), seed.map, out, dir.dam22, out.format, verbose)
+      write.file(pop.dam22, geno.dam22, pos.map, 1:nrow(pop.dam22), 1:nrow(pop.dam22), out, dir.dam22, out.format, verbose)
       logging.log(" --- write files of progenies ---\n", verbose = verbose)
-      write.file(pop.doubcro, geno.doubcro, pos.map, 1:nrow(pop.doubcro), 1:nrow(pop.doubcro), seed.map, out, dir.dbc, out.format, verbose)
+      write.file(pop.doubcro, geno.doubcro, pos.map, 1:nrow(pop.doubcro), 1:nrow(pop.doubcro), out, dir.dbc, out.format, verbose)
     }
   
     # set total information of population and genotype
@@ -2067,7 +2064,7 @@ simer <-
       flush(geno.total)
       # write files
       logging.log(" --- write files of total population ---\n", verbose = verbose)
-      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, seed.map, out, directory.rep, out.format, verbose)
+      write.file(pop.total, geno.total, pos.map, out.geno.index, out.pheno.index, out, directory.rep, out.format, verbose)
     }
     
     if (num.gen > 1) {
@@ -2207,7 +2204,7 @@ simer <-
     if (!is.null(outpath)) {
       flush(geno.total)
       logging.log(" --- write files of total population ---\n", verbose = verbose)
-      write.file(pop.total, geno.total, pos.map, index, index, seed.map, out, directory.rep, out.format, verbose)
+      write.file(pop.total, geno.total, pos.map, index, index, out, directory.rep, out.format, verbose)
     }
     
     rm(basepop); rm(basepop.geno); rm(basepop.geno.em); rm(userped); rm(rawped); rm(ped); gc()

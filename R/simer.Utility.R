@@ -471,7 +471,6 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' @param map map information of markers
 #' @param out.geno.index indice of individuals outputting genotype
 #' @param out.pheno.index indice of individuals outputting phenotype
-#' @param seed.map random seed of map file
 #' @param out prefix of output file name
 #' @param outpath path of output files
 #' @param out.format format of output, "numeric" or "plink"
@@ -520,19 +519,18 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' basepop <- pop.pheno$pop
 #' pop.pheno$pop <- NULL           
 #' idx <- basepop$index
-#' seed.map <- 888888
 #' # convert (0, 1) to (0, 1, 2)
 #' basepop.geno <- geno.cvt(basepop.geno)
 #' basepop.geno <- as.big.matrix(basepop.geno)
 #' write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
-#'     out.geno.index = idx, out.pheno.index = idx, seed.map = seed.map, 
+#'     out.geno.index = idx, out.pheno.index = idx, 
 #'     outpath = tempdir(), out.format = "numeric", verbose = TRUE)
 #' file.remove(file.path(tempdir(), "simer.geno.id"))
 #' file.remove(file.path(tempdir(), "simer.map"))
 #' file.remove(file.path(tempdir(), "simer.ped"))
 #' file.remove(file.path(tempdir(), "simer.phe"))
 #' }
-write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, seed.map, out = "simer", outpath, out.format, verbose) {
+write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "simer", outpath, out.format, verbose) {
     if (is.null(outpath)) return(invisible())
     
     if (out.format == "numeric") {

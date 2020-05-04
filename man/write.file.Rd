@@ -10,7 +10,6 @@ write.file(
   map,
   out.geno.index,
   out.pheno.index,
-  seed.map,
   out = "simer",
   outpath,
   out.format,
@@ -27,8 +26,6 @@ write.file(
 \item{out.geno.index}{indice of individuals outputting genotype}
 
 \item{out.pheno.index}{indice of individuals outputting phenotype}
-
-\item{seed.map}{random seed of map file}
 
 \item{out}{prefix of output file name}
 
@@ -85,12 +82,11 @@ pop.pheno <-
 basepop <- pop.pheno$pop
 pop.pheno$pop <- NULL           
 idx <- basepop$index
-seed.map <- 888888
 # convert (0, 1) to (0, 1, 2)
 basepop.geno <- geno.cvt(basepop.geno)
 basepop.geno <- as.big.matrix(basepop.geno)
 write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
-    out.geno.index = idx, out.pheno.index = idx, seed.map = seed.map, 
+    out.geno.index = idx, out.pheno.index = idx, 
     outpath = tempdir(), out.format = "numeric", verbose = TRUE)
 file.remove(file.path(tempdir(), "simer.geno.id"))
 file.remove(file.path(tempdir(), "simer.map"))
