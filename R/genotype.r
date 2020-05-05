@@ -91,8 +91,16 @@ genotype <-
 
   } else if (!is.null(num.marker) && !is.null(num.ind)){
     logging.log(" Establish genotype matrix of base-population...\n", verbose = verbose)
-    outgeno <- matrix(sample(c(0, 1), num.marker*num.ind*incols, prob = prob, replace = TRUE), num.marker, incols*num.ind)
-
+    if (incols == 2) {
+      codes <- c(0, 1)
+    } else if (incols == 1) {
+      codes <- c(0, 1, 2)
+      prob <- c(0.25, 0.5, 0.25)
+    } else {
+      stop("incols should only be 1 or 2!")
+    }
+    outgeno <- matrix(sample(codes, num.marker*num.ind*incols, prob = prob, replace = TRUE), num.marker, incols*num.ind)
+    
   } else if (!is.null(geno) & !is.null(recom.spot) & incols == 2) {
     logging.log(" Chromosome exchange and mutation on genotype matrix...\n", verbose = verbose)
     num.marker <- nrow(geno)
