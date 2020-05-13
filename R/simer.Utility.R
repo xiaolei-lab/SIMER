@@ -533,20 +533,24 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "simer", outpath, out.format, verbose) {
     if (is.null(outpath)) return(invisible())
     
+    # correct out.geno.index and out.pheno.index
+    out.geno.index.new <- match(out.geno.index, pop$index)
+    out.pheno.index.new <- match(out.pheno.index, pop$index)
+    
     if (out.format == "numeric") {
-        write.table(pop[out.geno.index, 2], file = file.path(outpath, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+        write.table(pop[out.geno.index.new, 2], file = file.path(outpath, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
         logging.log(" Generate genoid successfully!\n", verbose = verbose)
         write.table(map, file = file.path(outpath, paste0(out, ".map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
         logging.log(" Generate map successfully!\n", verbose = verbose)
-        write.table(pop[out.pheno.index, c(2, 5, 6)], file = file.path(outpath, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+        write.table(pop[out.pheno.index.new, c(2, 5, 6)], file = file.path(outpath, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
         logging.log(" Generate pedigree successfully!\n", verbose = verbose)
-        write.table(pop[out.pheno.index, c(1, 2, 5, 7, 8:ncol(pop))], file = file.path(outpath, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+        write.table(pop[out.pheno.index.new, c(1, 2, 5, 7, 8:ncol(pop))], file = file.path(outpath, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
         logging.log(" Generate phenotype successfully!\n", verbose = verbose)
         
     } else if (out.format == "plink") {
         f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = TRUE)
         pheno <- subset(pop, select = c("index", f1))
-        pheno <- pheno[out.geno.index, ]
+        pheno <- pheno[out.geno.index.new, ]
         MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pheno, out = file.path(outpath, "mvp.plink"), verbose = verbose)
     }  
 }

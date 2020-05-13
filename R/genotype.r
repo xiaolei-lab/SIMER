@@ -313,25 +313,3 @@ input.geno <- function(bigmtr, mtr, ed, mrk.dense) {
     bigmtr[, op:ed] <- mtr[]
   }
 }
-
-#' Calculate the location of the individual ID in the genotype matrix
-#'
-#' Build date: May 4, 2020
-#' Last update: May 4, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param stay.id the individual ID
-#' @param geno.id genotype ID
-#'
-#' @return the location of the individual ID in the genotype matrix
-#' @export
-#'
-#' @examples
-#' stay.id <- c(1, 4, 5)
-#' geno.id <- c(1, 5, 9, 4, 2)
-#' loc <- cal.genoloc(stay.id, geno.id)
-#' loc
-cal.genoloc <- function(stay.id, geno.id) {
-  return(sapply(stay.id, function(id) { return(which(geno.id == id)[1]) }))
-}

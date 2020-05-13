@@ -57,7 +57,7 @@ simer(
   prog.tri = 2,
   prog.doub = 2,
   prog.back = rep(2, num.gen),
-  refresh = rep(0.6, 2),
+  refresh = c(1, 0.6),
   keep.max.gen = rep(3, 2),
   ps = rep(0.8, 2),
   decr = TRUE,

@@ -225,7 +225,7 @@ simer <-
              prog.tri = 2,
              prog.doub = 2,
              prog.back = rep(2, num.gen),
-             refresh = rep(0.6, 2),
+             refresh = c(1, 0.6),
              keep.max.gen = rep(3, 2),
              ps = rep(0.8, 2),
              decr = TRUE,
@@ -252,7 +252,7 @@ simer <-
 # TODO: inbreeding change in every generations
   
   simer.Version(width = 70, verbose = verbose)    
-      
+  
   inner.env <- environment()    
   # initialize logging
   if (!is.null(outpath)) {
@@ -273,6 +273,25 @@ simer <-
   # stablish genotype of base population if there isn't by two ways:
   # 1. input rawgeno
   # 2. input num.marker and num.ind
+  
+  nmrk <- nrow(input.map)
+  # combine genotype matrix
+  if (is.list(rawgeno1)) {
+    if (!(mtd.reprod == "randmate" || mtd.reprod == "randexself")) 
+      stop("Only random matings support genotype list!")
+    nsir <- ncol(rawgeno1$sir) / incols
+    ndam <- ncol(rawgeno1$dam) / incols
+    nind <- nsir + ndam
+    basepop <- getpop(nind, 1, nsir/nind)
+    rawgeno1 <- cbind(rawgeno1$sir[], rawgeno1$dam[])
+  } else {
+    # set base population information
+    nind <- ncol(rawgeno1) / incols
+    nsir <- nind * ratio
+    ndam <- nind * (1-ratio)
+    basepop <- getpop(nind, 1, ratio)
+  }
+  
   num.marker <- nrow(input.map)
   logging.log(" --- base population 1 ---\n", verbose = verbose)
   basepop.geno <-
@@ -284,15 +303,10 @@ simer <-
                verbose = verbose)
 
   # set block information and recombination information
-  nmrk <- nrow(basepop.geno)
-  nind <- ncol(basepop.geno) / incols
   num.ind <- nind
   pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = len.block)
   blk.rg <- cal.blk(pos.map)
   recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
-
-  # set base population information
-  basepop <- getpop(nind, 1, ratio)
 
   # calculate for marker information
   effs <-
@@ -527,10 +541,15 @@ simer <-
   count.sir <- count.dam <- NULL
   if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol" || mtd.reprod == "randmate" || mtd.reprod == "randexself") {
     if (num.gen > 1) {
-      for(i in 2:num.gen) {
-        count.sir[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * ratio * ps[1]), ps[1])
-        count.dam[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * (1-ratio) * ps[2]), ps[2])
-        count.ind[i] <- count.dam[i-1] * num.prog
+      count.sir <- ifelse(all(ps <= 1), round(nsir * ps[1]), ps[1])
+      count.dam <- ifelse(all(ps <= 1), round(ndam * ps[2]), ps[2])
+      count.ind[2] <- count.dam * num.prog
+      if (num.gen > 2) {
+        for(i in 3:num.gen) {
+          count.sir[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * ratio * ps[1]), ps[1])
+          count.dam[i-1] <- ifelse(all(ps <= 1), round(count.ind[i-1] * (1-ratio) * ps[2]), ps[2])
+          count.ind[i] <- count.dam[i-1] * num.prog
+        }
       }
     }
     
@@ -655,11 +674,11 @@ simer <-
 
     # set total population
     pop.total <- basepop
-
+print(count.ind); print(dim(geno.total)); print(dim(basepop.geno))
     gc <- basepop.geno
     if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
     if (1 %in% out.geno.gen) {
-      input.geno(geno.total, gc, outcols * count.ind[1], mrk.dense)
+      input.geno(geno.total, gc, outcols*count.ind[1], mrk.dense)
     }
     input.geno(geno.total.temp, gc, outcols*count.ind[1], mrk.dense)
 
@@ -706,7 +725,7 @@ simer <-
         pop.curr <- pop.gp$pop
         pop1.geno.id <- pop.curr$index
         isd <- c(2, 5, 6)
-        
+print(dim(pop.geno.curr))        
         # input genotype
         gc <- pop.geno.curr
         if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)

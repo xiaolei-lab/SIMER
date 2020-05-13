@@ -43,27 +43,28 @@ Last update: May 2, 2020
 pop1 <- getpop(nind = 100, from =   1, ratio = 0.5)
 pop2 <- getpop(nind = 100, from = 101, ratio = 0.5, gen = 2)
 pop.total <- rbind(pop1, pop2)
-pop.geno.core <- matrix(1, 500, 80 )
-pop.geno.curr <- matrix(2, 500, 100)
+incols <- 2
+pop.geno.core <- genotype(num.marker=500, num.ind= 80, incols=incols)
+pop.geno.curr <- genotype(num.marker=500, num.ind=100, incols=incols)
 core.stay <- list(sir =   1: 30, dam =  51:100)
  ind.stay <- list(sir = 101:130, dam = 151:200)
-info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = 1, 
+info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = incols, 
     refresh = rep(0.6, 2), keep.max.gen = rep(1, 2), pop.total = pop.total, 
     pop.geno.core = pop.geno.core, pop.geno.curr = pop.geno.curr)
 str(info.core)
 
 # change the individual 101 to the individual 1
-# the individual must be removed in the test
+# individual 1 must be removed in the test
 core.stay <- info.core$core.stay
 pop.geno.core <- info.core$core.geno
 core.stay$sir[1] <- 1
-pop.geno.core[, 1] <- 1
+pop.geno.core[, 1] <- pop.geno.curr[, 1]
 
 pop3 <- getpop(nind = 100, from = 201, ratio = 0.5, gen = 3)
 pop.total <- rbind(pop.total, pop3)
 ind.stay <- list(sir = 201:230, dam = 251:300)
-pop.geno.curr <- matrix(3, 500, 100)
-info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = 1, 
+pop.geno.curr <- genotype(num.marker=500, num.ind=100, incols=incols)
+info.core <- sel.core(ind.stay = ind.stay, core.stay = core.stay, incols = incols, 
     refresh = rep(0.6, 2), keep.max.gen = rep(2, 2), pop.total = pop.total, 
     pop.geno.curr = pop.geno.curr, pop.geno.core = pop.geno.core)
 str(info.core)
