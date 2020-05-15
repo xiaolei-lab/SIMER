@@ -282,7 +282,7 @@ mate.dh <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.pro
   } else {
     gmt.comb <- match(ped.dam, pop1.geno.id)
   }
-  gmt.comb.adj <- rep(gmt.comb.adj, each = 2)
+  gmt.comb.adj <- rep(gmt.comb, each = 2)
   pop.geno.comb <- pop1.geno[, gmt.comb.adj]
 
   for (i in 2*1:(num.prog/2)) {

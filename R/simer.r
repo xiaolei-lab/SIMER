@@ -674,7 +674,7 @@ simer <-
 
     # set total population
     pop.total <- basepop
-print(count.ind); print(dim(geno.total)); print(dim(basepop.geno))
+
     gc <- basepop.geno
     if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
     if (1 %in% out.geno.gen) {
@@ -725,7 +725,7 @@ print(count.ind); print(dim(geno.total)); print(dim(basepop.geno))
         pop.curr <- pop.gp$pop
         pop1.geno.id <- pop.curr$index
         isd <- c(2, 5, 6)
-print(dim(pop.geno.curr))        
+   
         # input genotype
         gc <- pop.geno.curr
         if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
