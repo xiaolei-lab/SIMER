@@ -72,7 +72,6 @@
 #'            selPath = NULL, 
 #'            out.format = "numeric",
 #'            seed.sim = runif(1, 0, 100),
-#'            seed.map = 12345,
 #'            out.geno.gen = 1:6,
 #'            out.pheno.gen = 1:6,
 #'            rawgeno1 = rawgeno,
