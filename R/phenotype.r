@@ -338,7 +338,7 @@ phenotype <-
         fcf[[i]] <- fr[[i]]$fix
         fcr[[i]] <- fr[[i]]$rand
       }
-      names(fcr) <- names(fcf) <- nts
+      names(fcr) <- names(fcf) <- paste0("tr", 1:length(fr))
     }
     if (!is.null(fcf)) {
       CV.t <- lapply(1:length(fcf), function(jf) {
@@ -368,7 +368,7 @@ phenotype <-
     
     gebv <- NULL
     eval(parse(text = "tryCatch({
-      if (!(\"hiblup\" %in% .packages())) suppressMessages(library(hiblup))
+      if (!(\"hiblup\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblup)))
       gebv <- hiblup(pheno = pheno1, bivar.pos = bivar.pos, geno = geno, map = map, 
                      geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode, 
                      CV = CV, R = R, bivar.CV = bivar.CV, bivar.R = bivar.R, snp.solution = FALSE)

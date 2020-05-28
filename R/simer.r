@@ -286,7 +286,7 @@ simer <-
     rawgeno1 <- cbind(rawgeno1$sir[], rawgeno1$dam[])
   } else {
     # set base population information
-    nind <- ncol(rawgeno1) / incols
+    nind <- ifelse(is.null(rawgeno1), num.ind, ncol(rawgeno1) / incols)
     nsir <- nind * ratio
     ndam <- nind * (1-ratio)
     basepop <- getpop(nind, 1, ratio)
