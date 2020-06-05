@@ -106,14 +106,14 @@ genotype <-
     num.marker <- nrow(geno)
     num.ind <- ncol(geno) / incols
     # outgeno <- deepcopy(geno) # deepcopy() in bigmemory
-    ind.swap <- sample(c(0, 1), num.ind, replace = TRUE)
+    # ind.swap <- sample(c(0, 1), num.ind, replace = TRUE)
 
     geno.swap <- function(ind) {
-      if (ind.swap[ind] == 0) {
-        t1 <- geno[, 2*ind-1]
-        t2 <- geno[, 2*ind]
-        return(cbind(t1, t2))
-      }
+      # if (ind.swap[ind] == 0) {
+      #   t1 <- geno[, 2*ind-1]
+      #   t2 <- geno[, 2*ind]
+      #   return(cbind(t1, t2))
+      # }
 
       # find swap range in the chromosome
       swap.rg <- do.call(rbind, lapply(1:nrow(blk.rg), function(blk) {
