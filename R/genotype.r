@@ -313,3 +313,34 @@ input.geno <- function(bigmtr, mtr, ed, mrk.dense) {
     bigmtr[, op:ed] <- mtr[]
   }
 }
+
+
+#' Get true position in the genotype matrix
+#'
+#' Build date: June 11, 2020
+#' Last update: June 11, 2020
+#'
+#' @param index the position of individual in the genotype matrix
+#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
+#'
+#' @return sub-genotype matrix
+#' @export
+#'
+#' @examples
+#' index <- c(1:2, 5:6)
+#' gmt <- getgmt(index = index, incols = 2)
+getgmt <- function(index, incols = 2) {
+  if (incols == 2) {
+    gmt.dam <- index * 2
+    gmt.sir <- gmt.dam - 1
+    gmt.comb <- c(gmt.sir, gmt.dam)
+    gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
+    gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
+  } else if (incols == 1) {
+    gmt.comb <- index
+  } else {
+    stop("Please input a correct incols!")
+  }
+  
+  return(gmt.comb)
+}

@@ -198,16 +198,8 @@ mate.clone <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.
   #     type = "char")
   # options(bigmemory.typecast.warning=FALSE)
   
-  if (incols == 2) {
-    gmt.dam <- match(ped.dam, pop1.geno.id)
-    gmt.dam <- gmt.dam * 2
-    gmt.sir <- gmt.dam - 1
-    gmt.comb <- c(gmt.sir, gmt.dam)
-    gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
-    gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
-  } else {
-    gmt.comb <- match(ped.dam, pop1.geno.id)
-  }
+  gmt.dam <- match(ped.dam, pop1.geno.id)
+  gmt.comb <- getgmt(gmt.dam, incols = incols)
   pop.geno.adj <- pop1.geno[, gmt.comb]
   
   for (i in 1:num.prog) {
@@ -272,16 +264,8 @@ mate.dh <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.pro
   #    type = "char")
   # options(bigmemory.typecast.warning=FALSE)
 
-  if (incols == 2) {
-    gmt.dam <- match(ped.dam, pop1.geno.id)
-    gmt.dam <- gmt.dam * 2
-    gmt.sir <- gmt.dam - 1
-    gmt.comb <- c(gmt.sir, gmt.dam)
-    gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
-    gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
-  } else {
-    gmt.comb <- match(ped.dam, pop1.geno.id)
-  }
+  gmt.dam <- match(ped.dam, pop1.geno.id)
+  gmt.comb <- getgmt(gmt.dam, incols = incols)
   gmt.comb.adj <- rep(gmt.comb, each = 2)
   pop.geno.comb <- pop1.geno[, gmt.comb.adj]
 

@@ -636,19 +636,11 @@ sel.core <- function(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2), k
   dam.stay <- ind.stay$dam[1:num.refresh.dam]
   if (incols == 2) {
     gmt.dam.curr <- match(c(sir.stay, dam.stay), index.curr)
-    gmt.dam.curr <- gmt.dam.curr * 2
-    gmt.sir.curr <- gmt.dam.curr - 1
-    gmt.comb.curr <- c(gmt.sir.curr, gmt.dam.curr)
-    gmt.comb.curr[seq(1, length(gmt.comb.curr), 2)] <- gmt.sir.curr
-    gmt.comb.curr[seq(2, length(gmt.comb.curr), 2)] <- gmt.dam.curr
-
     gmt.dam.core <- which(c(f.gen.sir, f.gen.dam))
-    gmt.dam.core <- gmt.dam.core * 2
-    gmt.sir.core <- gmt.dam.core - 1
-    gmt.comb.core <- c(gmt.sir.core, gmt.dam.core)
-    gmt.comb.core[seq(1, length(gmt.comb.core), 2)] <- gmt.sir.core
-    gmt.comb.core[seq(2, length(gmt.comb.core), 2)] <- gmt.dam.core
-  
+    
+    gmt.comb.curr <- getgmt(gmt.dam.curr, incols = incols)
+    gmt.comb.core <- getgmt(gmt.dam.core, incols = incols)
+
     pop.geno.core[, gmt.comb.core] <- pop.geno.curr[, gmt.comb.curr]
   } else {
     gmt.comb <- match(c(sir.stay, dam.stay), index.curr)

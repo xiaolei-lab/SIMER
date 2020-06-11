@@ -708,7 +708,8 @@ simer <-
 
       pop.last <- basepop
       pop.geno.last <- basepop.geno.em
-      pop.geno.core <- basepop.geno.em[, c(ind.stay$sir, ind.stay$dam)]
+      
+      pop.geno.core <- basepop.geno.em[, getgmt(c(ind.stay$sir, ind.stay$dam), incols = incols)]
       pop1.geno.id <- basepop$index
       for (i in 2:num.gen) {
         pop.gp <- # pop.gp with genotype and pop information
