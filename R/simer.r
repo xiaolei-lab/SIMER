@@ -44,6 +44,7 @@
 #' @param rate.mut mutation rate between 1e-8 and 1e-6
 #' @param cal.model phenotype model with the options: "A", "AD", "ADI"
 #' @param FR list of fixed effects, random effects, and their combination
+#' @param cv list of population Coefficient of Variation or family Coefficient of Variation
 #' @param h2.tr1 heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param num.qtn.tr1 integer or integer vector, the number of QTN in a single trait
 #' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
@@ -123,6 +124,7 @@
 #'            rate.mut = 1e-8,
 #'            cal.model = "A",
 #'            FR = NULL, 
+#'            cv = NULL, 
 #'            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
 #'            num.qtn.tr1 = 500,
 #'            sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
@@ -199,6 +201,7 @@ simer <-
              rate.mut = 1e-8,
              cal.model = "A",
              FR = NULL, 
+             cv = NULL, 
              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
              num.qtn.tr1 = 500,
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
@@ -334,6 +337,7 @@ simer <-
     pop1.pheno <-
       phenotype(effs = effs,
                 FR = FR, 
+                cv = cv, 
                 pop = basepop,
                 pop.geno = basepop.geno,
                 pos.map = pos.map,
@@ -387,7 +391,8 @@ simer <-
     if (sel.on) {
       pop2.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop2,
                   pop.geno = pop2.geno,
                   pos.map = pos.map,
@@ -446,7 +451,8 @@ simer <-
     if (sel.on) {
       pop3.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop3,
                   pop.geno = pop3.geno,
                   pos.map = pos.map,
@@ -499,7 +505,8 @@ simer <-
     if (sel.on) {
       pop4.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop4,
                   pop.geno = pop4.geno,
                   pos.map = pos.map,
@@ -740,7 +747,8 @@ simer <-
         if (sel.on) {
           pop.pheno <-
             phenotype(effs = effs,
-                      FR = FR, 
+                      FR = FR,  
+                      cv = cv, 
                       pop = pop.curr,
                       pop.geno = pop.geno.curr,
                       pos.map = pos.map,
@@ -814,7 +822,8 @@ simer <-
     # generate phenotype at last
     pop.pheno <-
       phenotype(effs = effs,
-                FR = FR, 
+                FR = FR,  
+                cv = cv, 
                 pop = pop.total,
                 pop.geno = geno.total.temp,
                 pos.map = pos.map,
@@ -969,7 +978,8 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.singcro,
                   pop.geno = pop.geno.singcro,
                   pos.map = pos.map,
@@ -1007,7 +1017,8 @@ simer <-
       geno.total <- cbind(basepop.geno, pop2.geno, pop.geno.singcro)
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
@@ -1205,7 +1216,8 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.dam21,
                   pop.geno = pop.geno.dam21,
                   pos.map = pos.map,
@@ -1297,7 +1309,8 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.tricro,
                   pop.geno = pop.geno.tricro,
                   pos.map = pos.map,
@@ -1341,7 +1354,8 @@ simer <-
       geno.total <- cbind(basepop.geno, pop2.geno, pop3.geno, pop.geno.dam21[], pop.geno.tricro[])
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
@@ -1578,7 +1592,8 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.sir11,
                   pop.geno = pop.geno.sir11,
                   pos.map = pos.map,
@@ -1687,7 +1702,8 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.dam22,
                   pop.geno = pop.geno.dam22,
                   pos.map = pos.map,
@@ -1762,7 +1778,8 @@ simer <-
     if (sel.on) {
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.doubcro,
                   pop.geno = pop.geno.doubcro,
                   pos.map = pos.map,
@@ -1812,7 +1829,8 @@ simer <-
       geno.total <- cbind(basepop.geno, pop2.geno, pop3.geno, pop4.geno, pop.geno.sir11[], pop.geno.dam22[], pop.geno.doubcro[])
       pop.pheno <-
         phenotype(effs = effs,
-                  FR = FR, 
+                  FR = FR,  
+                  cv = cv, 
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
@@ -2000,7 +2018,8 @@ simer <-
         if (sel.on) {
           pop.pheno <-
             phenotype(effs = effs,
-                      FR = FR, 
+                      FR = FR,  
+                      cv = cv, 
                       pop = pop.curr,
                       pop.geno = pop.geno.curr,
                       pos.map = pos.map,
@@ -2070,7 +2089,8 @@ simer <-
     # generate phenotype at last
     pop.pheno <-
       phenotype(effs = effs,
-                FR = FR, 
+                FR = FR,  
+                cv = cv, 
                 pop = pop.total,
                 pop.geno = geno.total.temp,
                 pos.map = pos.map,
@@ -2211,7 +2231,8 @@ simer <-
     isd <- c(2, 5, 6)
     pop.pheno <-
       phenotype(effs = effs,
-                FR = FR, 
+                FR = FR,  
+                cv = cv, 
                 pop = pop.total,
                 pop.geno = pop1.geno.copy,
                 pos.map = pos.map,

@@ -7,6 +7,7 @@
 phenotype(
   effs = NULL,
   FR = NULL,
+  cv = NULL,
   pop = NULL,
   pop.geno = NULL,
   pos.map = NULL,
@@ -24,6 +25,8 @@ phenotype(
 \item{effs}{a list of selected markers and their effects}
 
 \item{FR}{list of fixed effects, random effects, and their combination}
+
+\item{cv}{list of population Coefficient of Variation or family Coefficient of Variation}
 
 \item{pop}{population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex}
 
@@ -107,6 +110,7 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               FR = FR, 
+              cv = list(fam = 0.5), 
               pop = pop,
               pop.geno = pop.geno,
               pos.map = NULL,
@@ -143,6 +147,7 @@ effs <-
 pop.pheno <-
     phenotype(effs = effs,
               FR = FR, 
+              cv = list(fam = c(0.3, 0.7)), 
               pop = pop,
               pop.geno = pop.geno,
               pos.map = NULL,

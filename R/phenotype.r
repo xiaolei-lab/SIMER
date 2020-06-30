@@ -20,6 +20,7 @@
 #'
 #' @param effs a list of selected markers and their effects
 #' @param FR list of fixed effects, random effects, and their combination
+#' @param cv list of population Coefficient of Variation or family Coefficient of Variation
 #' @param pop population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex
 #' @param pop.geno genotype matrix of the population, an individual has two columns
 #' @param pos.map marker information of the population
@@ -88,6 +89,7 @@
 #' pop.pheno <-
 #'     phenotype(effs = effs,
 #'               FR = FR, 
+#'               cv = list(fam = 0.5), 
 #'               pop = pop,
 #'               pop.geno = pop.geno,
 #'               pos.map = NULL,
@@ -124,6 +126,7 @@
 #' pop.pheno <-
 #'     phenotype(effs = effs,
 #'               FR = FR, 
+#'               cv = list(fam = c(0.3, 0.7)), 
 #'               pop = pop,
 #'               pop.geno = pop.geno,
 #'               pos.map = NULL,
@@ -143,6 +146,7 @@
 phenotype <-
     function(effs = NULL,
              FR = NULL, 
+             cv = NULL, 
              pop = NULL,
              pop.geno = NULL,
              pos.map = NULL,
@@ -282,6 +286,7 @@ phenotype <-
     }
     
   } else {
+    nqt <- 1
     # calculate for genetic effects
     info.eff <- cal.gnt(geno = geno, h2 = h2.tr1, effs = effs, sel.on = sel.on, inner.env = inner.env, verbose = verbose)
     
@@ -305,14 +310,83 @@ phenotype <-
     pheno <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2.tr1, num.ind = nind, var.pheno = var.pheno, verbose = verbose)
     
     # check data quality
-    idx.len <- unlist(lapply(1:ncol(pheno$info.eff), function(i) {  return(length(unique(pheno$info.eff[, i]))) }))
-    info.eff.t <- pheno$info.eff[, idx.len != 1]
-    info.eff.cor <- cor(info.eff.t)
-    info.eff.f <- names(info.eff.t)[names(info.eff.t) %in% c("ind.d", "ind.aa", "ind.ad", "ind.da", "ind.dd")]
-    info.eff.cor[info.eff.f, ] <- 0
-    info.eff.cor[, info.eff.f] <- 0
-    if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
-      warning(" There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects in the simulation!")
+    if (options("simer.show.warning") == TRUE) {
+      idx.len <- unlist(lapply(1:ncol(pheno$info.eff), function(i) {  return(length(unique(pheno$info.eff[, i]))) }))
+      info.eff.t <- pheno$info.eff[, idx.len != 1]
+      info.eff.cor <- cor(info.eff.t)
+      info.eff.f <- names(info.eff.t)[names(info.eff.t) %in% c("ind.d", "ind.aa", "ind.ad", "ind.da", "ind.dd")]
+      info.eff.cor[info.eff.f, ] <- 0
+      info.eff.cor[, info.eff.f] <- 0
+      if (any(info.eff.cor[lower.tri(info.eff.cor)] > 0.5))
+        warning(" There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects in the simulation!")
+    }
+  }
+  
+  # adjust phenotype for C.V.
+  if (!is.null(cv)) {
+    logging.log(" Adjust phenotype for C.V. ...\n", verbose = verbose)
+    if (length(cv[[1]]) != nqt) stop("The length of C.V. should be consistent with the number of traits!")
+    if (!is.null(cv$fam) & is.null(cv$pop)) {
+      for (i in 1:nqt) {
+        if (nqt == 1) {
+          fam.var <- tapply(pheno$info.pheno$pheno, pop$fam, var)
+          fam.mu  <- tapply(pheno$info.pheno$pheno, pop$fam, mean)
+          dev.mu <- sqrt(fam.var) / unlist(cv)[i] - fam.mu
+          if (any(is.na(dev.mu))) dev.mu[is.na(dev.mu)] <- 0
+          mu <- rep(dev.mu, table(pop$fam))
+          if (is.null(pheno$info.eff$mu)) {
+            pheno$info.eff <- cbind(mu, pheno$info.eff)
+          } else {
+            pheno$info.eff$mu <- pheno$info.eff$mu + mu
+          }
+          pheno$info.pheno$pheno <- pheno$info.pheno$pheno + mu
+          
+        } else {
+          fam.var <- tapply(pheno$info.pheno[, 2*nqt+i], pop$fam, var)
+          fam.mu  <- tapply(pheno$info.pheno[, 2*nqt+i], pop$fam, mean)
+          dev.mu <- sqrt(fam.var) / unlist(cv)[i] - fam.mu
+          if (any(is.na(dev.mu))) dev.mu[is.na(dev.mu)] <- 0
+          mu <- rep(dev.mu, table(pop$fam))
+          if (is.null(pheno$info.eff[[i]]$mu)) {
+            pheno$info.eff[[i]] <- cbind(mu, pheno$info.eff[[i]])
+          } else {
+            pheno$info.eff[[i]]$mu <- pheno$info.eff[[i]]$mu + mu
+          }
+          pheno$info.pheno[, 2*nqt+i] <- pheno$info.pheno[, 2*nqt+i] + mu
+        }
+      } # end for (i in 1:nqt) 
+      
+    } else if (is.null(cv$fam) & !is.null(cv$pop)) {
+      for (i in 1:nqt) {
+        if (nqt == 1) {
+          pop.var <- var(pheno$info.pheno$pheno)
+          pop.mu  <- mean(pheno$info.pheno$pheno)
+          mu <- sqrt(pop.var) / unlist(cv)[i] - pop.mu
+          if (any(is.na(mu))) mu[is.na(mu)] <- 0
+          if (is.null(pheno$info.eff$mu)) {
+            pheno$info.eff <- cbind(mu, pheno$info.eff)
+          } else {
+            pheno$info.eff$mu <- pheno$info.eff$mu + mu
+          }
+          pheno$info.pheno$pheno <- pheno$info.pheno$pheno + mu
+          
+        } else {
+          pop.var <- var(pheno$info.pheno[, 2*nqt+i])
+          pop.mu  <- mean(pheno$info.pheno[, 2*nqt+i])
+          if (any(is.na(pop.var))) { break  }
+          mu <- sqrt(pop.var) / unlist(cv)[i] - pop.mu
+          if (is.null(pheno$info.eff[[i]]$mu)) {
+            pheno$info.eff[[i]] <- cbind(mu, pheno$info.eff[[i]])
+          } else {
+            pheno$info.eff[[i]]$mu <- pheno$info.eff[[i]]$mu + mu
+          }
+          pheno$info.pheno[, 2*nqt+i] <- pheno$info.pheno[, 2*nqt+i] + mu
+        }
+      } # end for (i in 1:nqt) 
+      
+    } else {
+      stop("cv should only has fam or pop!")
+    }
   }
   
   if (sel.crit == "pEBVs" | sel.crit == "gEBVs" | sel.crit == "ssEBVs") {
