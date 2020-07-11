@@ -39,27 +39,26 @@ Last update: Jul 31, 2019
 data(simdata)
 
 # combination of fixed effects
-cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
+cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
                 tr2 = c("mu", "diet", "season")) # trait 2
-            
+      
 fix <- list( 
-         mu = list(level = "mu", eff = 2),  				      
+         mu = list(level = "mu", eff = 20),  				      
         gen = FALSE,         
-        sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
-       diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
-     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
-          a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
-
+        sex = list(level = c("1", "2"), eff = c(50, 30)), 
+       diet = list(level = c("d1", "d2", "d3"), eff = c(10, 20, 30)),
+     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
+          a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
+          
 # combination and ralation of random effects
-tr1 <- list(rn = c("PE"), ratio = 0.03)
-tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
-            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
+tr1 <- list(rn = c("PE"), ratio = 0.1)
+tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
       
 rand <- list(       
-         PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
-     litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
-          b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
+         PE = list(level = paste0("p", 1:50), eff = rnorm(50)), 
+     litter = list(level = paste0("l", 1:50), eff = rnorm(50)),    
+          b = list(level = paste0("b", 1:50), eff = rnorm(50)))      
   
 FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
 selPath <- system.file("extdata", "01breeding_plan", package = "simer")

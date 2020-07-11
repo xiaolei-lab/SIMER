@@ -85,7 +85,7 @@
 #' @return a list with population information, genotype matrix, map information, selection intensity
 #' @export
 #' @import bigmemory
-#' @importFrom stats aov cor dnorm qnorm rgamma rnorm rbeta rgeom runif var
+#' @importFrom stats aov cor dnorm qnorm rgamma rnorm rbeta rgeom runif var shapiro.test
 #' @importFrom utils write.table read.delim packageVersion
 #' @importFrom methods getPackageName
 #' @importFrom MASS ginv mvrnorm
@@ -683,7 +683,7 @@ simer <-
     pop.total <- basepop
 
     gc <- basepop.geno
-    if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
+    if (incols == 2 & outcols == 1) gc <- geno.cvt1(gc)
     if (1 %in% out.geno.gen) {
       input.geno(geno.total, gc, outcols*count.ind[1], mrk.dense)
     }
@@ -736,7 +736,7 @@ simer <-
    
         # input genotype
         gc <- pop.geno.curr
-        if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
+        if (incols == 2 & outcols == 1) gc <- geno.cvt1(gc)
         if (i %in% out.geno.gen) {
           out.gg <- out.geno.gen[1:which(out.geno.gen == i)]
           input.geno(geno.total, gc, outcols * sum(count.ind[out.gg]), mrk.dense)
@@ -1002,9 +1002,9 @@ simer <-
     gc.dam <- pop2.geno
     gc.singcro <- pop.geno.singcro
     if (incols == 2 & outcols == 1) {
-      gc.sir <- geno.cvt(gc.sir)
-      gc.dam <- geno.cvt(gc.dam)
-      gc.singcro <- geno.cvt(gc.singcro)
+      gc.sir <- geno.cvt1(gc.sir)
+      gc.dam <- geno.cvt1(gc.dam)
+      gc.singcro <- geno.cvt1(gc.singcro)
     }
     input.geno(geno.sir, gc.sir, ncol(geno.sir), mrk.dense)
     input.geno(geno.dam, gc.dam, ncol(geno.dam), mrk.dense)
@@ -1335,11 +1335,11 @@ simer <-
     gc.dam21 <- pop.geno.dam21
     gc.tricro <- pop.geno.tricro
     if (incols == 2 & outcols == 1) {
-      gc.sir1 <- geno.cvt(gc.sir1)
-      gc.sir2 <- geno.cvt(gc.sir2)
-      gc.dam1 <- geno.cvt(gc.dam1)
-      gc.dam21 <- geno.cvt(gc.dam21)
-      gc.tricro <- geno.cvt(gc.tricro)
+      gc.sir1 <- geno.cvt1(gc.sir1)
+      gc.sir2 <- geno.cvt1(gc.sir2)
+      gc.dam1 <- geno.cvt1(gc.dam1)
+      gc.dam21 <- geno.cvt1(gc.dam21)
+      gc.tricro <- geno.cvt1(gc.tricro)
     }
     input.geno(geno.sir1, gc.sir1, ncol(geno.sir1), mrk.dense)
     input.geno(geno.sir2, gc.sir2, ncol(geno.dam1), mrk.dense)
@@ -1806,13 +1806,13 @@ simer <-
     gc.dam22 <- pop.geno.dam22
     gc.doubcro <- pop.geno.doubcro
     if (incols == 2 & outcols == 1) {
-      gc.sir1 <- geno.cvt(gc.sir1)
-      gc.dam1 <- geno.cvt(gc.dam1)
-      gc.sir2 <- geno.cvt(gc.sir2)
-      gc.dam2 <- geno.cvt(gc.dam2)
-      gc.sir11 <- geno.cvt(gc.sir11)
-      gc.dam22 <- geno.cvt(gc.dam22)
-      gc.doubcro <- geno.cvt(gc.doubcro)
+      gc.sir1 <- geno.cvt1(gc.sir1)
+      gc.dam1 <- geno.cvt1(gc.dam1)
+      gc.sir2 <- geno.cvt1(gc.sir2)
+      gc.dam2 <- geno.cvt1(gc.dam2)
+      gc.sir11 <- geno.cvt1(gc.sir11)
+      gc.dam22 <- geno.cvt1(gc.dam22)
+      gc.doubcro <- geno.cvt1(gc.doubcro)
     }
     input.geno(geno.sir1, gc.sir1, ncol(geno.sir1), mrk.dense)
     input.geno(geno.dam1, gc.dam1, ncol(geno.dam1), mrk.dense)
@@ -1934,8 +1934,8 @@ simer <-
     gc.base <- basepop.geno
     gc.pop2 <- pop2.geno
     if (incols == 2 & outcols == 1) {
-      gc.base <- geno.cvt(gc.base)
-      gc.pop2 <- geno.cvt(gc.pop2)
+      gc.base <- geno.cvt1(gc.base)
+      gc.pop2 <- geno.cvt1(gc.pop2)
     }
     if (1 %in% out.geno.gen) {
       input.geno(geno.total, gc.base, outcols * nrow(basepop), mrk.dense)
@@ -2007,7 +2007,7 @@ simer <-
         
         if (i %in% out.geno.gen) {
           gc <- pop.geno.curr
-          if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
+          if (incols == 2 & outcols == 1) gc <- geno.cvt1(gc)
           out.gg <- out.geno.gen[1:which(out.geno.gen == i)]
           input.geno(geno.total, gc, outcols * sum(count.ind[out.gg]), mrk.dense)
         }
@@ -2207,7 +2207,7 @@ simer <-
     pop.total <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
     
     gc <- pop1.geno.copy
-    if (incols == 2 & outcols == 1) gc <- geno.cvt(gc)
+    if (incols == 2 & outcols == 1) gc <- geno.cvt1(gc)
     if (!is.null(outpath)) {
       geno.total <- filebacked.big.matrix(
         nrow = num.marker,

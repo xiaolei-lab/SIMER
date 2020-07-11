@@ -665,3 +665,154 @@ simer.show.file <- function(filename = NULL, verbose = TRUE) {
     close.connection(fileImage)
     return(invisible())
 }
+
+#' Convert genotype matrix from (0, 1) to (0, 1, 2)
+#'
+#' Build date: Nov 14, 2018
+#' Last update: Jul 30, 2019
+#'
+#' @author Dong Yin
+#'
+#' @param pop.geno genotype matrix of (0, 1)
+#'
+#' @return genotype matrix of (0, 1, 2)
+#' @export
+#'
+#' @examples
+#' num.marker <- 48353
+#' num.ind <- 100
+#' geno1 <- genotype(num.marker = num.marker, num.ind = num.ind, verbose = TRUE)
+#' geno2 <- geno.cvt1(pop.geno = geno1)
+#' geno1[1:5, 1:10]
+#' geno2[1:5, 1:5]
+geno.cvt1 <- function(pop.geno) {
+    if (is.null(pop.geno)) return(NULL)
+    num.ind <- ncol(pop.geno) / 2
+    v.odd <- (1:num.ind) * 2 - 1
+    v.even <- (1:num.ind) * 2
+    geno <- pop.geno[, v.odd] + pop.geno[, v.even]
+    return(geno)
+}
+
+#' Convert genotype matrix from (0, 1, 2) to (0, 1)
+#'
+#' Build date: Jul 11, 2020
+#' Last update: Jul 11, 2020
+#'
+#' @author Dong Yin
+#'
+#' @param pop.geno genotype matrix of (0, 1, 2)
+#' 
+#' @return genotype matrix of (0, 1)
+#' @export
+#'
+#' @examples
+#' data(simdata)
+#' geno1 <- geno.cvt1(rawgeno)
+#' geno1[1:5, 1:5]
+#' geno <- geno.cvt2(pop.geno = geno1)
+#' geno[1:5, 1:10]
+geno.cvt2 <- function(pop.geno) {
+    if (is.null(pop.geno)) return(NULL)
+    nind <- ncol(pop.geno)
+    nmrk <- nrow(pop.geno)
+    geno <- matrix(3, nmrk, 2*nind)
+    
+    v.odd <- (1:nind) * 2 - 1
+    v.even <- (1:nind) * 2
+    
+    for (i in 1:nind) {
+        tmp1 <- pop.geno[, i]
+        tmp1[tmp1 == 2] <- 1
+        geno[, v.even[i]] <- tmp1
+        tmp2 <- pop.geno[, i] - 1
+        tmp2[tmp2 == -1] <- 0
+        geno[, v.odd[i]] <- tmp2
+    }
+    
+    return(geno)
+}
+
+#' To bulid correlation of variables
+#'
+#' Build date: Oct 10, 2019
+#' Last update: Oct 10, 2019
+#'
+#' @author Dong Yin and R
+#'
+#' @param df data.frame without correlation
+#' @param mu means of the variables 
+#' @param Sigma covariance matrix of variables
+#' @param tol tolerance (relative to largest variance) for numerical 
+#'       lack of positive-definiteness in Sigma.
+#'
+#' @return data.frame with correlaion
+#' @export
+#' @references B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98
+#'
+#' @examples
+#' Sigma <- matrix(c(14, 10, 10, 15), 2, 2)
+#' Sigma
+#' df <- cbind(rnorm(100), 0)
+#' df <- as.data.frame(df)
+#' names(df) <- paste0(" tr", 1:ncol(df))
+#' df.cov <- build.cov(df, Sigma = Sigma)
+#' var(df.cov)
+build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
+    if (!is.data.frame(df)) {
+        df.nm <- paste0(" tr", 1:ncol(df))
+    } else {
+        df.nm <- names(df)
+    }
+    
+    # get zero-var index
+    df.var <- apply(df, 2, var)
+    idx <- which(df.var == 0)
+    df.t <- df[, idx]
+    df[, idx] <- rnorm(nrow(df))
+    
+    p <- length(mu)
+    eS <- eigen(Sigma, symmetric = TRUE)
+    ev <- eS$values
+    if (!all(ev >= -tol * abs(ev[1L]))) 
+        stop("'Sigma' is not positive definite")
+    
+    df <- scale(df, center = TRUE, scale = FALSE)
+    df <- df %*% svd(df, nu = 0)$v
+    df <- scale(df, center = FALSE, scale = TRUE)
+    
+    df <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(df)
+    df <- t(df)
+    df <- as.data.frame(df)
+    names(df) <- df.nm
+    df[, idx] <- df.t
+    
+    return(df)
+}
+
+#' Sample process with all needed elements
+#'
+#' Build date: Jul 11, 2020
+#' Last update: Jul 11, 2020
+#'
+#' @author Dong Yin
+#'
+#' @param x either a vector of one or more elements from which to choose, or a positive integer
+#' @param size a non-negative integer giving the number of items to choose
+#' @param replace should sampling be with replacement?
+#' @param prob a vector of probability weights for obtaining the elements of the vector being sampled
+#' 
+#' @return sampled elements with all needed elements
+#' @export
+#'
+#' @examples
+#' sam <- simer.sample(x = paste0("a", 1:3), 100)
+#' sam
+#' unique(sam)
+simer.sample <- function(x, size, replace = TRUE, prob = NULL) {
+    sam <- sample(x, size, replace, prob)
+    while (length(unique(sam)) != length(x)) {
+        sam <- sample(x, size, replace, prob)
+    }
+    return(sam)
+}

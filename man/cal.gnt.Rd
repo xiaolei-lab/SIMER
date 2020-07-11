@@ -36,7 +36,7 @@ Last update: Nov 3, 2019
 \examples{
 basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-geno <- geno.cvt(basepop.geno)
+geno <- geno.cvt1(basepop.geno)
 effs <-
     cal.effs(pop.geno = basepop.geno,
              cal.model = "A",

@@ -22,8 +22,6 @@ Set the phenotype of the population
 \examples{
 pop <- getpop(nind = 100, from = 1, ratio = 0.1)
 pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-geno <- geno.cvt(pop.geno)
-nind <- nrow(pop)
 effs <-
     cal.effs(pop.geno = pop.geno,
              cal.model = "A",
@@ -39,51 +37,24 @@ effs <-
              qtn.spot = rep(0.1, 10),
              maf = 0, 
              verbose = TRUE)
-h2 <- c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01)             
-info.eff <- cal.gnt(geno = geno, h2 = h2, effs = effs, 
-    sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 
-# calculate for phenotype variance
-ind.a <- info.eff$ind.a
-var.pheno <- var(ind.a) / h2[1]
-        
-a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
-b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
-pop$a <- a # load your fixed  effects
-pop$b <- b # load your random effects
-pop.env <- environment()
-
-# combination of fixed effects
-cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
-                tr2 = c("mu", "diet", "season")) # trait 2
-            
-fix <- list( 
-         mu = list(level = "mu", eff = 2),  				      
-        gen = FALSE,         
-        sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
-       diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
-     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
-          a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
-
-# combination and ralation of random effects
-tr1 <- list(rn = c("PE"), ratio = 0.03)
-tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
-            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
-cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
-      
-rand <- list(       
-         PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
-     litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
-          b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
-  
-FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-fr <- cal.FR(pop = pop, FR = FR, var.pheno = var.pheno, pop.env = pop.env, verbose = TRUE)
-
-pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2,
-    num.ind = nind, var.pheno = var.pheno, verbose = TRUE)
-str(pheno.list)
+pop.pheno <-
+    phenotype(effs = effs,
+              FR = NULL, 
+              cv = list(fam = 0.5), 
+              pop = pop,
+              pop.geno = pop.geno,
+              pos.map = NULL,
+              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+              h2.trn = c(0.3, 0.5),  
+              sel.crit = "pheno", 
+              pop.total = pop, 
+              sel.on = TRUE, 
+              inner.env = pop.env, 
+              verbose = TRUE)
 
 str(pop)
-pop <- set.pheno(pop, pheno.list, sel.crit = "pheno")
+pop <- set.pheno(pop, pop.pheno, sel.crit = "pheno")
 str(pop)
 }

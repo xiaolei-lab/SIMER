@@ -37,36 +37,35 @@
 #' @export
 #'
 #' @examples
-#' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
+#' pop <- getpop(100, 1, 0.5)
 #' pop.geno <- genotype(num.marker = 49336, num.ind = 100, verbose = TRUE)
-#' a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
-#' b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
+#' a <- simer.sample(paste0("a", 1:3), 100)
+#' b <- simer.sample(paste0("b", 1:50), 100)
 #' pop$a <- a # load your fixed  effects
 #' pop$b <- b # load your random effects
 #' pop.env <- environment()
 #' 
 #' # combination of fixed effects
-#' cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
+#' cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
 #'                 tr2 = c("mu", "diet", "season")) # trait 2
 #'             
 #' fix <- list( 
-#'          mu = list(level = "mu", eff = 2),  				      
+#'          mu = list(level = "mu", eff = 20),  				      
 #'         gen = FALSE,         
-#'         sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
-#'        diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
-#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
-#'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
-#' 
+#'         sex = list(level = c("1", "2"), eff = c(50, 30)), 
+#'        diet = list(level = c("d1", "d2", "d3"), eff = c(10, 20, 30)),
+#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
+#'           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
+#'           
 #' # combination and ralation of random effects
-#' tr1 <- list(rn = c("PE"), ratio = 0.03)
-#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
+#' tr1 <- list(rn = c("PE"), ratio = 0.1)
+#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
 #'       
 #' rand <- list(       
-#'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
-#'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
-#'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
+#'          PE = list(level = paste0("p", 1:50), eff = rnorm(50)), 
+#'      litter = list(level = paste0("l", 1:50), eff = rnorm(50)),    
+#'           b = list(level = paste0("b", 1:50), eff = rnorm(50)))      
 #'   
 #' FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
 #' 
@@ -170,7 +169,7 @@ phenotype <-
   } else {
     multrait <- length(effs) > 2
     if (ncol(pop.geno) == 2*nind) {
-      geno <- geno.cvt(pop.geno)
+      geno <- geno.cvt1(pop.geno)
     } else if (ncol(pop.geno) == nind) {
       geno <- pop.geno
     } else {
@@ -483,7 +482,7 @@ phenotype <-
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' geno <- geno.cvt(basepop.geno)
+#' geno <- geno.cvt1(basepop.geno)
 #' effs <-
 #'     cal.effs(pop.geno = basepop.geno,
 #'              cal.model = "A",
@@ -642,37 +641,36 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
 #'
 #' @examples
 #' pop <- getpop(100, 1, 0.5)
-#' a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
-#' b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
+#' a <- simer.sample(paste0("a", 1:3), 100)
+#' b <- simer.sample(paste0("b", 1:50), 100)
 #' pop$a <- a # load your fixed  effects
 #' pop$b <- b # load your random effects
 #' pop.env <- environment()
 #' 
 #' # combination of fixed effects
-#' cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
+#' cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
 #'                 tr2 = c("mu", "diet", "season")) # trait 2
 #'             
 #' fix <- list( 
-#'          mu = list(level = "mu", eff = 2),  				      
+#'          mu = list(level = "mu", eff = 20),  				      
 #'         gen = FALSE,         
-#'         sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
-#'        diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
-#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
-#'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
-#' 
+#'         sex = list(level = c("1", "2"), eff = c(50, 30)), 
+#'        diet = list(level = c("d1", "d2", "d3"), eff = c(10, 20, 30)),
+#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
+#'           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
+#'           
 #' # combination and ralation of random effects
-#' tr1 <- list(rn = c("PE"), ratio = 0.03)
-#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
+#' tr1 <- list(rn = c("PE"), ratio = 0.1)
+#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
 #'       
 #' rand <- list(       
-#'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
-#'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
-#'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
+#'          PE = list(level = paste0("p", 1:50), eff = rnorm(50)), 
+#'      litter = list(level = paste0("l", 1:50), eff = rnorm(50)),    
+#'           b = list(level = paste0("b", 1:50), eff = rnorm(50)))      
 #'   
 #' FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-#' fr <- cal.FR(pop = pop, FR = FR, var.pheno = c(10, 10), pop.env = pop.env, verbose = TRUE)
+#' fr <- cal.FR(pop = pop, FR = FR, var.pheno = c(100, 100), pop.env = pop.env, verbose = TRUE)
 #' str(fr) 	          	         	          	         
 cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = TRUE) {
   
@@ -695,33 +693,33 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     names(fes) <- fn
     for (i in 1:length(fix)) { # for
       if (!is.list(fix[[i]])) next
-      lev.fix <- as.character(fix[[i]]$level)
-      len.fix <- length(lev.fix)
+      lev.fix <- fix[[i]]$level
       eff.fix <- fix[[i]]$eff
+      if (length(lev.fix) != length(eff.fix)) stop(fn[i], ": Levels should be consistent with effects!")
+      len.fix <- length(lev.fix)
       if (fn[i] %in% names(pop)) {
-        pt <- pop[, names(pop) == fn[i]]
+        pt <- pop[fn[i]]
         fe <- rep(0, nind)
-        ele.pt <- as.character(unique(pt))
+        ele.pt <- unique(as.character(unlist(pt)))
         if (len.fix != length(ele.pt)) { 
-          stop("Level length should be equal to effects length!")
+          stop(fn[i], ": Level length should be equal to effects length in the population!")
         } else if (!setequal(lev.fix, ele.pt)) {
-          stop(fn[i], " in fix should be corresponding to ", fn[i], " in pop!")
-        } 
+          stop(fn[i], " in fix should be corresponding to ", fn[i], " in the poplation!")
+        }
         for (j in 1:len.fix) {
           fe[pt == lev.fix[j]] <- eff.fix[j]
         }
         
       } else {
-        sam <- sample(1:len.fix, nind, replace = TRUE, prob = rep(0.2, len.fix))
-        while (length(unique(sam)) != len.fix) {
-          sam <- sample(1:len.fix, nind, replace = TRUE, prob = rep(0.2, len.fix))
-        }
+        sam <- simer.sample(1:len.fix, nind)
         fl <- lev.fix[sam]
-        pop.adj <- get("pop", envir = pop.env)
-        logging.log(" Add", fn[i], "to population...\n", verbose = verbose)
-        pop.adj <- cbind(pop.adj, fl)
-        names(pop.adj)[names(pop.adj) == "fl"] <- fn[i]
-        assign("pop", pop.adj, envir = pop.env)
+        if (fn[i] %in% unlist(cmb.fix)) {
+          pop.adj <- get("pop", envir = pop.env)
+          logging.log(" Add", fn[i], "to population...\n", verbose = verbose)
+          pop.adj <- cbind(pop.adj, fl)
+          names(pop.adj)[names(pop.adj) == "fl"] <- fn[i]
+          assign("pop", pop.adj, envir = pop.env)
+        }
         fe <- eff.fix[sam]
       }
  
@@ -744,56 +742,42 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     names(res) <- rn
     for (i in 1:length(rand)) { # for
       if (!is.list(rand[[i]])) next
-      if (rn[i] == "sir" | rn[i] == "dam") {
-        pt <- pop[, names(pop) == rn[i]]
+      lev.rand <- rand[[i]]$level
+      eff.rand <- rand[[i]]$eff
+      if (length(lev.rand) != length(eff.rand)) stop(rn[i], ": Levels should be consistent with effects!")
+      len.rand <- length(lev.rand)
+      if (len.rand < 50)
+        stop("Group number must be no less than 50 in random effects!")
+      while (shapiro.test(eff.rand)$p.value < 0.05) {
+        eff.rand <- rnorm(length(eff.rand))
+      }
+      
+      if (rn[i] %in% names(pop)) {
+        pt <- pop[rn[i]]
         re <- rep(0, nind)
-        ele.pt <- as.character(unique(pt))
-        lev.rand <- as.character(unique(pt))
-        len.rand <- length(lev.rand)
-        if (len.rand == 1) {
-          stop("Group number must be more than 1 in random effects!")
-          
-        } else {
-          eff.rand <- rnorm(len.rand, mean = rand[[i]]$mean, sd = rand[[i]]$sd)
-          for (j in 1:len.rand) {
-            re[pt == lev.rand[j]] <- eff.rand[j]
-          }
+        ele.pt <- unique(as.character(unlist(pt)))
+        if (len.rand != length(ele.pt)) { 
+          stop(rn[i], ": Level length should be equal to effects length!")
+        } else if (!setequal(lev.rand, ele.pt)) {
+          stop(rn[i], " in rand should be corresponding to ", rn[i], " in the poplation!")
+        }
+        for (j in 1:len.rand) {
+          re[pt == lev.rand[j]] <- eff.rand[j]
         }
         
       } else {
-        lev.rand <- as.character(rand[[i]]$level)
-        len.rand <- length(lev.rand)
-        if (len.rand == 1)
-          stop("Group number must be more than 1 in random effects!")
-        eff.rand <- rand[[i]]$eff
-        
-        if (rn[i] %in% names(pop)) {
-          pt <- pop[, names(pop) == rn[i]]
-          re <- rep(0, nind)
-          ele.pt <- as.character(unique(pt))
-          if (len.rand != length(ele.pt)) { 
-            stop("Level length should be equal to effects length!")
-          } else if (!setequal(lev.rand, ele.pt)) {
-            stop(rn[i], " in rand should be corresponding to ", rn[i], " in pop!")
-          } 
-          for (j in 1:len.rand) {
-            re[pt == lev.rand[j]] <- eff.rand[j]
-          }
-        
-        } else {
-          sam <- sample(1:len.rand, nind, replace = TRUE, prob = rep(0.2, len.rand))
-          while (length(unique(sam)) != len.rand) {
-            sam <- sample(1:len.rand, nind, replace = TRUE, prob = rep(0.2, len.rand))
-          }
-          rl <- lev.rand[sam]
+        sam <- simer.sample(1:len.rand, nind)
+        rl <- lev.rand[sam]
+        if (rn[i] %in% unlist(cmb.rand)) {
           pop.adj <- get("pop", envir = pop.env)
           logging.log(" Add", rn[i], "to population...\n", verbose = verbose)
           pop.adj <- cbind(pop.adj, rl)
           names(pop.adj)[names(pop.adj) == "rl"] <- rn[i]
           assign("pop", pop.adj, envir = pop.env)
-          re <- eff.rand[sam]
         }
+        re <- eff.rand[sam]
       }
+      
       res[[i]] <- re
     } # end for
   }
@@ -806,21 +790,8 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
     if (length(rn) != length(ratio))
       stop("Phenotype variance ratio of random effects should be corresponding to random effects names!")
     rt <- res[rn]
-
-    if (is.null(cmb.rand[[i]]$cr)) {
-      cr <- diag(rep(1, length(rn)))
-    } else {
-      cr <- cmb.rand[[i]]$cr
-      if (nrow(cr) != length(rn) | ncol(cr) != length(rn))
-        stop("Random correlation matrix should be corresponding to random effects names!")
-    }
-    if (length(ratio) == 1) ratio <- as.matrix(ratio)
-    sd <- diag(sqrt(ratio * var.pheno[i]))
-    Sigma <- sd %*% cr %*% sd
-    mu <- colMeans(rt)
-    # adjust random effects
-    rt <- build.cov(rt, mu = mu, Sigma = Sigma, tol = 1e-06)
-     
+    scale <- sqrt(var.pheno[i]*ratio / apply(rt, 2, var))
+    rt <- sweep(rt, 2, scale, "*")
     var.r <- apply(rt, 2, var)
     logging.log(" The variance of", names(rt), "of", paste("trait", paste0(i, ":")), var.r, "\n", verbose = verbose)
     return(rt)
@@ -852,7 +823,9 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
 #' @examples
 #' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' geno <- geno.cvt(pop.geno)
+#' geno <- geno.cvt1(pop.geno)
+#' num.ind <- ncol(geno)
+#' h2 <- 0.3
 #' effs <-
 #'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
@@ -868,48 +841,12 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
 #'              qtn.spot = rep(0.1, 10),
 #'              maf = 0, 
 #'              verbose = TRUE)
-#' h2 <- c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01)             
+#'         
 #' info.eff <- cal.gnt(geno = geno, h2 = h2, effs = effs, 
 #'     sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 #' 
-#' # calculate for phenotype variance
-#' ind.a <- info.eff$ind.a
-#' var.pheno <- var(ind.a) / h2[1]
-#' num.ind <- nrow(pop)
-#'         
-#' a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
-#' b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
-#' pop$a <- a # load your fixed  effects
-#' pop$b <- b # load your random effects
-#' pop.env <- environment()
-#' 
-#' # combination of fixed effects
-#' cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
-#'                 tr2 = c("mu", "diet", "season")) # trait 2
-#'             
-#' fix <- list( 
-#'          mu = list(level = "mu", eff = 2),  				      
-#'         gen = FALSE,         
-#'         sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
-#'        diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
-#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
-#'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
-#' 
-#' # combination and ralation of random effects
-#' tr1 <- list(rn = c("PE"), ratio = 0.03)
-#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
-#' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
-#'       
-#' rand <- list(       
-#'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
-#'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
-#'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
-#'   
-#' FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-#' fr <- cal.FR(pop = pop, FR = FR, var.pheno = var.pheno, pop.env = pop.env, verbose = TRUE)
-#' 
-#' pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2,
+#' var.pheno <- var(info.eff$ind.a) / h2
+#' pheno.list <- cal.pheno(fr = NULL, info.eff = info.eff, h2 = h2,
 #'     num.ind = num.ind, var.pheno = var.pheno, verbose = TRUE)
 #' str(pheno.list)
 cal.pheno <- function(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL, var.pheno = NULL, verbose = TRUE) {
@@ -1035,7 +972,7 @@ cal.effs <-
   if (is.null(pop.geno)) return(multrait)
   if (incols == 2) {
     # combine odd and even columns genotype matrix
-    geno <- geno.cvt(pop.geno)
+    geno <- geno.cvt1(pop.geno)
   } else {
     geno <- pop.geno
   }
@@ -1185,91 +1122,6 @@ cal.eff <- function(num.qtn, eff.sd, dist.qtn, prob, shape, scale, shape1, shape
   return(eff.qtn)
 }
 
-#' Convert genotype matrix from (0, 1) to (0, 1, 2)
-#'
-#' Build date: Nov 14, 2018
-#' Last update: Jul 30, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param pop.geno genotype matrix of (0, 1)
-#'
-#' @return genotype matrix of (0, 1, 2)
-#' @export
-#'
-#' @examples
-#' num.marker <- 48353
-#' num.ind <- 100
-#' geno1 <- genotype(num.marker = num.marker, num.ind = num.ind, verbose = TRUE)
-#' geno2 <- geno.cvt(pop.geno = geno1)
-#' geno1[1:5, 1:10]
-#' geno2[1:5, 1:5]
-geno.cvt <- function(pop.geno) {
-  if (is.null(pop.geno)) return(NULL)
-  num.ind <- ncol(pop.geno) / 2
-  v.odd <- (1:num.ind) * 2 - 1
-  v.even <- (1:num.ind) * 2
-  geno <- pop.geno[, v.odd] + pop.geno[, v.even]
-  return(geno)
-}
-
-#' To bulid correlation of variables
-#'
-#' Build date: Oct 10, 2019
-#' Last update: Oct 10, 2019
-#'
-#' @author Dong Yin and R
-#'
-#' @param df data.frame without correlation
-#' @param mu means of the variables 
-#' @param Sigma covariance matrix of variables
-#' @param tol tolerance (relative to largest variance) for numerical 
-#'       lack of positive-definiteness in Sigma.
-#'
-#' @return data.frame with correlaion
-#' @export
-#' @references B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98
-#'
-#' @examples
-#' Sigma <- matrix(c(14, 10, 10, 15), 2, 2)
-#' Sigma
-#' df <- cbind(rnorm(100), 0)
-#' df <- as.data.frame(df)
-#' names(df) <- paste0(" tr", 1:ncol(df))
-#' df.cov <- build.cov(df, Sigma = Sigma)
-#' var(df.cov)
-build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
-  if (!is.data.frame(df)) {
-    df.nm <- paste0(" tr", 1:ncol(df))
-  } else {
-    df.nm <- names(df)
-  }
-  
-  # get zero-var index
-  df.var <- apply(df, 2, var)
-  idx <- which(df.var == 0)
-  df.t <- df[, idx]
-  df[, idx] <- rnorm(nrow(df))
-  
-  p <- length(mu)
-  eS <- eigen(Sigma, symmetric = TRUE)
-  ev <- eS$values
-  if (!all(ev >= -tol * abs(ev[1L]))) 
-    stop("'Sigma' is not positive definite")
-  
-  df <- scale(df, center = TRUE, scale = FALSE)
-  df <- df %*% svd(df, nu = 0)$v
-  df <- scale(df, center = FALSE, scale = TRUE)
-
-  df <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(df)
-  df <- t(df)
-  df <- as.data.frame(df)
-  names(df) <- df.nm
-  df[, idx] <- df.t
-  
-  return(df)
-}
-
 #' Set the phenotype of the population
 #'
 #' @param pop population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex
@@ -1282,8 +1134,6 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #' @examples
 #' pop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' geno <- geno.cvt(pop.geno)
-#' nind <- nrow(pop)
 #' effs <-
 #'     cal.effs(pop.geno = pop.geno,
 #'              cal.model = "A",
@@ -1299,52 +1149,25 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #'              qtn.spot = rep(0.1, 10),
 #'              maf = 0, 
 #'              verbose = TRUE)
-#' h2 <- c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01)             
-#' info.eff <- cal.gnt(geno = geno, h2 = h2, effs = effs, 
-#'     sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 #' 
-#' # calculate for phenotype variance
-#' ind.a <- info.eff$ind.a
-#' var.pheno <- var(ind.a) / h2[1]
-#'         
-#' a <- sample(c("a1", "a2", "a3"), 100, replace = TRUE)
-#' b <- sample(c("b1", "b2", "b3"), 100, replace = TRUE)
-#' pop$a <- a # load your fixed  effects
-#' pop$b <- b # load your random effects
-#' pop.env <- environment()
-#' 
-#' # combination of fixed effects
-#' cmb.fix <- list(tr1 = c("mu", "gen", "sex"), # trait 1
-#'                 tr2 = c("mu", "diet", "season")) # trait 2
-#'             
-#' fix <- list( 
-#'          mu = list(level = "mu", eff = 2),  				      
-#'         gen = FALSE,         
-#'         sex = list(level = c("1", "2"), eff = c(0.5, 0.3)), 
-#'        diet = list(level = c("d1", "d2", "d3"), eff = c(0.1, 0.2, 0.3)),
-#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(0.1, 0.2, 0.3, 0.2)), 
-#'           a = list(level = c("a1", "a2", "a3"), eff = c(0.1, 0.2, 0.3))) 
-#' 
-#' # combination and ralation of random effects
-#' tr1 <- list(rn = c("PE"), ratio = 0.03)
-#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.01, 0.03), 
-#'             cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))          
-#' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
-#'       
-#' rand <- list(       
-#'          PE = list(level = c("p1", "p2", "p3"), eff = c(0.01, 0.02, 0.03)), 
-#'      litter = list(level = c("l1", "l2"), eff = c(0.01, 0.02)),    
-#'           b = list(level = c("b1", "b2", "b3"), eff = c(0.01, 0.02, 0.03)))
-#'   
-#' FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-#' fr <- cal.FR(pop = pop, FR = FR, var.pheno = var.pheno, pop.env = pop.env, verbose = TRUE)
-#' 
-#' pheno.list <- cal.pheno(fr = fr, info.eff = info.eff, h2 = h2,
-#'     num.ind = nind, var.pheno = var.pheno, verbose = TRUE)
-#' str(pheno.list)
+#' pop.pheno <-
+#'     phenotype(effs = effs,
+#'               FR = NULL, 
+#'               cv = list(fam = 0.5), 
+#'               pop = pop,
+#'               pop.geno = pop.geno,
+#'               pos.map = NULL,
+#'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+#'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
+#'               h2.trn = c(0.3, 0.5),  
+#'               sel.crit = "pheno", 
+#'               pop.total = pop, 
+#'               sel.on = TRUE, 
+#'               inner.env = pop.env, 
+#'               verbose = TRUE)
 #' 
 #' str(pop)
-#' pop <- set.pheno(pop, pheno.list, sel.crit = "pheno")
+#' pop <- set.pheno(pop, pop.pheno, sel.crit = "pheno")
 #' str(pop)
 set.pheno <- function(pop, pop.pheno, sel.crit) {
   f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = FALSE)
