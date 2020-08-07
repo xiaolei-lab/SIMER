@@ -83,7 +83,7 @@ basepop <- pop.pheno$pop
 pop.pheno$pop <- NULL           
 idx <- basepop$index
 # convert (0, 1) to (0, 1, 2)
-basepop.geno <- geno.cvt(basepop.geno)
+basepop.geno <- geno.cvt1(basepop.geno)
 basepop.geno <- as.big.matrix(basepop.geno)
 write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
     out.geno.index = idx, out.pheno.index = idx, 

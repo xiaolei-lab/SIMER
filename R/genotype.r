@@ -95,7 +95,8 @@ genotype <-
       codes <- c(0, 1)
     } else if (incols == 1) {
       codes <- c(0, 1, 2)
-      prob <- c(0.25, 0.5, 0.25)
+      if (!is.null(prob))
+        prob <- c(prob[1]^2, 2*prob[1]*prob[2], prob[2]^2)
     } else {
       stop("incols should only be 1 or 2!")
     }

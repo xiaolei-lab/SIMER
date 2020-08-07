@@ -986,13 +986,15 @@ cal.effs <-
   num.inblock <- c(rep(len.block, (num.block-1)), tail.block)
   wt.marker <- rep(qtn.spot / num.inblock, num.inblock)
 
-  pop.maf <- rep(0, nrow(geno))
-  for (i in 1:nrow(geno)) {
-    v <- geno[i, ]
-    pop.maf[i] <- min(c(sum(v == 0)+sum(v == 1)/2, sum(v == 2)+sum(v == 1)/2) / length(v))
+  if (maf != 0) {
+    pop.maf <- rep(0, nrow(geno))
+    for (i in 1:nrow(geno)) {
+      v <- geno[i, ]
+      pop.maf[i] <- min(c(sum(v == 0)+sum(v == 1)/2, sum(v == 2)+sum(v == 1)/2) / length(v))
+    }
+    wt.marker[pop.maf < maf] <- 0
   }
-  wt.marker[pop.maf < maf] <- 0
-
+  
   if (multrait) {
     if (nrow(num.qtn.trn) != ncol(num.qtn.trn) || any(num.qtn.trn != t(num.qtn.trn)))
       stop("num.qtn.trn should be symmetric matrix!")
