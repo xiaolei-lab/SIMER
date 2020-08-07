@@ -24,7 +24,7 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
     - [Set block information and recombination information](#set-block-information-and-recombination-information)
-    - [Add chromosome crossovers and mutaions to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
+    - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)  
     - [Gallery of phenotype simulation input parameters](#gallery-of-phenotype-simulation-input-parameters)  
     - [Generate base population information](#generate-base-population-information)  
@@ -108,7 +108,7 @@ Typing ```?simer``` could get the details of all parameters.
 ## Genotype
 **[back to top](#contents)**  
 
-Genotype data should be  Numeric (m rows and (2 * n) columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
+Genotype data should be Numeric (m rows and (2 * n) columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
@@ -177,7 +177,7 @@ Map file is necessary in **SIMER**. It will generate genotype matrix according t
 
 ## Pedigree
 **[back to top](#contents)**  
-**SIMER** supports user designed pedigree to control mating process. User designed pedigree is useful only in "userped" reproduction. Pedigree should at least start with generation 2. The first column is sample id, the sescond column is paternal id, and the third column is maternal id. Please make sure that paternal id and maternal id can be found in the last generation. 
+**SIMER** supports user designed pedigree to control mating process. User designed pedigree is useful only in "userped" reproduction. Pedigree should at least start with generation 2. The first column is sample id, the second column is paternal id, and the third column is maternal id. Please make sure that paternal id and maternal id can be found in the last generation. 
 
 > `userped.txt`
 
@@ -199,7 +199,7 @@ Map file is necessary in **SIMER**. It will generate genotype matrix according t
 At least you should prepare two datasets: genotypic map and genotype.  
 
 **genotype**, genotype data in **Numeric** format (m * (2 * n), m rows and n columns, m is the number of SNPs, n is the number of individuals)
-**genotypic map**, SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, and the fifth column is ALT  
+**genotypic map**, SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is physical position, the fourth column is REF, and the fifth column is ALT  
 
 ```r
 rawgeno <- read.table("genotype.txt")
@@ -257,8 +257,8 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
 **num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
 **eff.sd**, a matrix with the standard deviation of QTN effects  
-**gnt.cov**, genetic covaiance matrix among all traits  
-**env.cov**, environment covaiance matrix among all traits  
+**gnt.cov**, genetic covariance matrix among all traits  
+**env.cov**, environment covariance matrix among all traits  
 **qtn.spot**, QTN probability in every blocks  
 **maf**, Minor Allele Frequency, markers selection range is from  maf to 0.5  
 **sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
@@ -271,7 +271,7 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **prog.doub**, litter size of the first two single cross process in double cross process  
 **prog.back**, a vector with litter size in every generation of back-cross  
 **ps**, fraction selected in selection  
-**decr**, whether to sort by descreasing  
+**decr**, whether to sort by decreasing  
 **sel.multi**, selection method of multiple traits with options: "tdm", "indcul" and "index"  
 **index.wt**, economic weights of selection index method, its length should equals to the number of traits  
 **index.tdm**, index represents which trait is being selected  
@@ -319,7 +319,7 @@ for (i in 1:rep) {
 # Genotype Simulation
 **[back to top](#contents)** 
 
-Genotype data in SIMER will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination informaion of map. 
+Genotype data in SIMER will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of map. 
 
 ## Gallery of genotype simulation input parameters
 **[back to top](#contents)** 
@@ -387,7 +387,7 @@ blk.rg <- cal.blk(pos.map)
 recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
 ```
 
-## Add chromosome crossovers and mutaions to genotype matrix
+## Add chromosome crossovers and mutations to genotype matrix
 **[back to top](#contents)** 
 
 After getting block information and recombination information, you can add chromosome crossovers and mutations to genotype matrix.  
@@ -433,7 +433,7 @@ Phenotype data in **SIMER** will be generated according to different phenotype m
 **pop.geno**, genotype matrix of population, two columns represent a individual  
 **pos.map**, marker information of population  
 **h2.tr1**, heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**gnt.cov**, genetic covaiance matrix among all traits  
+**gnt.cov**, genetic covariance matrix among all traits  
 **h2.trn**, heritability among all traits  
 **sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
 **pop.total**, total population infarmation  
@@ -574,7 +574,7 @@ basepop1 <- pop.pheno$pop
 pop.pheno$pop <- NULL
 ```
 
-Note that real variance components ratio may not be consistent with expected herirability **h2.tr1**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
+Note that real variance components ratio may not be consistent with expected heritability **h2.tr1**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
 
 ```r
 ####################
