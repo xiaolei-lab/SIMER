@@ -191,7 +191,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
         
       } else if (tt == "# fixed effect") {
         ttt <- readLines(fileImage, n=1)
-        eff_fixed <- NULL
+        eff_fixed <- list()
         fj <- 0
         if (length(ttt) == 0) {
           inFile <- FALSE
@@ -211,7 +211,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
         
       } else if (tt == "# random effect") {
         ttt <- readLines(fileImage, n=1)
-        eff_random <- NULL
+        eff_random <- list()
         rj <- 0
         if (length(ttt) == 0) {
           inFile <- FALSE
