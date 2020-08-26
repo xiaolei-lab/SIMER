@@ -236,9 +236,10 @@ phenotype <-
 
     # calculate for environmental effects
     var.env <- var.pheno - var.fr - diag(var.add)
-    mat.env <- mvrnorm(n = nind, mu = rep(0, length(var.env)), Sigma = diag(var.env), empirical = TRUE)
+    mat.env <- matrix(rnorm(nind*nqt), ncol = nqt)
     mat.env <- as.data.frame(mat.env)
     names(mat.env) <- nts
+    mat.env <- build.cov(df = mat.env, mu = rep(0, length(var.env)), Sigma = diag(var.env))
     var.env <- var(mat.env)
     h2 <- diag(var.add) / (diag(var.add) + var.fr + diag(var.env))
     

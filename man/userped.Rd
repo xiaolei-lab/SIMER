@@ -4,9 +4,7 @@
 \name{userped}
 \alias{userped}
 \title{User-specific pedigree in simdata}
-\format{
-list
-}
+\format{list}
 \usage{
 data(simdata)
 }

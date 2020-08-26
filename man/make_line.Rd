@@ -4,7 +4,8 @@
 \alias{make_line}
 \title{make line}
 \usage{
-make_line(string, width, linechar = " ", align = "center", margin = 1)
+make_line(string, width, linechar = " ", align = "center",
+  margin = 1)
 }
 \description{
 Build date: Dec 12, 2018

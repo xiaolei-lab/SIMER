@@ -4,19 +4,10 @@
 \alias{print_bar}
 \title{Print progress bar}
 \usage{
-print_bar(
-  i,
-  n,
-  type = c("type1", "type3"),
-  symbol = "-",
-  tmp.file = NULL,
-  symbol.head = ">>>",
-  symbol.tail = ">",
-  fixed.points = TRUE,
-  points = seq(0, 100, 1),
-  symbol.len = 48,
-  verbose = TRUE
-)
+print_bar(i, n, type = c("type1", "type3"), symbol = "-",
+  tmp.file = NULL, symbol.head = ">>>", symbol.tail = ">",
+  fixed.points = TRUE, points = seq(0, 100, 1), symbol.len = 48,
+  verbose = TRUE)
 }
 \arguments{
 \item{i}{the current loop number}

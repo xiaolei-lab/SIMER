@@ -4,14 +4,8 @@
 \alias{cal.gnt}
 \title{Generate genetic effects}
 \usage{
-cal.gnt(
-  geno = NULL,
-  h2 = NULL,
-  effs = NULL,
-  sel.on = TRUE,
-  inner.env = NULL,
-  verbose = TRUE
-)
+cal.gnt(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE,
+  inner.env = NULL, verbose = TRUE)
 }
 \arguments{
 \item{geno}{genotype matrix of the population, an individual has two columns}

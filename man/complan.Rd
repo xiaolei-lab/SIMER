@@ -4,14 +4,8 @@
 \alias{complan}
 \title{Read and compare breeding plans}
 \usage{
-complan(
-  simls = NULL,
-  FR = NULL,
-  index.wt = c(0.5, 0.5),
-  decr = TRUE,
-  selPath = NULL,
-  verbose = TRUE
-)
+complan(simls = NULL, FR = NULL, index.wt = c(0.5, 0.5),
+  decr = TRUE, selPath = NULL, verbose = TRUE)
 }
 \arguments{
 \item{simls}{a list with all simer result information}

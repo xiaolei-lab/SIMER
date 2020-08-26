@@ -4,7 +4,8 @@
 \alias{cal.eff}
 \title{Calculate for genetic effects vector of selected markers}
 \usage{
-cal.eff(num.qtn, eff.sd, dist.qtn, prob, shape, scale, shape1, shape2, ncp = 0)
+cal.eff(num.qtn, eff.sd, dist.qtn, prob, shape, scale, shape1, shape2,
+  ncp = 0)
 }
 \arguments{
 \item{num.qtn}{number of QTN}
