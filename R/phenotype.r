@@ -24,6 +24,7 @@
 #' @param pop population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex
 #' @param pop.geno genotype matrix of the population, an individual has two columns
 #' @param pos.map marker information of the population
+#' @param var.pheno the phenotype variance, only used in single-trait simulation
 #' @param h2.tr1 heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param gnt.cov genetic covaiance matrix among all traits
 #' @param h2.trn heritability among all traits
@@ -149,6 +150,7 @@ phenotype <-
              pop = NULL,
              pop.geno = NULL,
              pos.map = NULL,
+             var.pheno = NULL, 
              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
              gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
              h2.trn = c(0.3, 0.5), 
@@ -236,10 +238,9 @@ phenotype <-
 
     # calculate for environmental effects
     var.env <- var.pheno - var.fr - diag(var.add)
-    mat.env <- matrix(rnorm(nind*nqt), ncol = nqt)
+    mat.env <- mvrnorm(nind, mu = rep(0, length(var.env)), Sigma = diag(var.env), empirical = TRUE)
     mat.env <- as.data.frame(mat.env)
     names(mat.env) <- nts
-    mat.env <- build.cov(df = mat.env, mu = rep(0, length(var.env)), Sigma = diag(var.env))
     var.env <- var(mat.env)
     h2 <- diag(var.add) / (diag(var.add) + var.fr + diag(var.env))
     
@@ -288,15 +289,16 @@ phenotype <-
   } else {
     nqt <- 1
     # calculate for genetic effects
-    info.eff <- cal.gnt(geno = geno, h2 = h2.tr1, effs = effs, sel.on = sel.on, inner.env = inner.env, verbose = verbose)
+    info.eff <- cal.gnt(geno = geno, h2 = h2.tr1, var.pheno = var.pheno, effs = effs, sel.on = sel.on, inner.env = inner.env, verbose = verbose)
     
     if (!is.null(info.eff)) {
       # calculate for phenotype variance
       ind.a <- info.eff$ind.a
       var.pheno <- var(ind.a) / h2.tr1[1]
+
     } else {
       ind.a <- rep(0, nind)
-      var.pheno <- sample(100, 1)
+      if (is.null(var.pheno)) {  var.pheno <- sample(100, 1) }
     }
     
     # calculate for fixed effects and random effects
@@ -471,6 +473,7 @@ phenotype <-
 #'
 #' @param geno genotype matrix of the population, an individual has two columns
 #' @param h2 heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
+#' @param var.pheno the phenotype variance, only used in single-trait simulation
 #' @param effs a list of selected markers and their effects
 #' @param sel.on whether to add selection
 #' @param inner.env R environment of parameter "effs"
@@ -502,7 +505,7 @@ phenotype <-
 #' info.eff <- cal.gnt(geno = geno, h2 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01), 
 #'     effs = effs, sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 #' str(info.eff)
-cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.env = NULL, verbose = TRUE) {
+cal.gnt <- function(geno = NULL, h2 = NULL, var.pheno = NULL, effs = NULL, sel.on = TRUE, inner.env = NULL, verbose = TRUE) {
   if (is.null(geno)) return(NULL)
   
   mrk1 <- effs$mrk1
@@ -514,6 +517,19 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
   qtn.a <- qtn1 - 1
   eff.a <- eff1$eff.a
   ind.a <- as.vector(crossprod(qtn.a, eff.a))
+  var.add <- var(ind.a)
+  
+  # adjust effects according to var.pheno
+  if (!is.null(var.pheno)) {
+    sel.on <- FALSE
+    ind.a <- ind.a * sqrt(var.pheno * h2[1] / var.add)
+    eff.a <- eff.a * sqrt(var.pheno * h2[1] / var.add)
+    effs.adj <- get("effs", envir = inner.env)
+    logging.log(" Adjust additive effects of markers...\n", verbose = verbose)
+    effs.adj$eff1$eff.a <- eff.a
+    assign("effs", effs.adj, envir = inner.env)
+  }
+  
   info.eff <- data.frame(ind.a = ind.a)
   var.add <- var(ind.a)
   if (verbose) logging.log(" Total additive            variance:", var.add, "\n", verbose = verbose)
@@ -538,11 +554,11 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
     ind.d <- as.vector(crossprod(qtn.d, eff.d))
     var.dom <- var(ind.d)
 
-    if (!sel.on) {
+    if (!sel.on ) {
       if (var.dom != 0) {
         # adjust domimance effect according to ratio of additive variance and dominance variance
         ind.d <- ind.d * sqrt(var.pheno * h2[2] / var.dom)
-        eff.d <- c(crossprod(ginv(qtn.d), ind.d))
+        eff.d <- eff.d * sqrt(var.pheno * h2[2] / var.dom)
         var.dom <- var(ind.d)
       }
       effs.adj <- get("effs", envir = inner.env)
@@ -582,21 +598,22 @@ cal.gnt <- function(geno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.en
       # adjust iteraction effect according to ratio of additive variance and iteraction variance
       if (var.aa != 0) {
         ind.aa <- ind.aa * sqrt(var.pheno * h2[3] / var.aa)
-        eff.aa <- c(crossprod(ginv(qtn.aa), ind.aa))
+        eff.aa <- eff.aa * sqrt(var.pheno * h2[3] / var.aa)
         var.aa <- var(ind.aa)
       }
       if (var.ad != 0) {
         ind.ad <- ind.ad * sqrt(var.pheno * h2[4] / var.ad)
-        eff.ad <- c(crossprod(ginv(qtn.ad), ind.ad))
+        eff.ad <- eff.ad * sqrt(var.pheno * h2[4] / var.ad)
         var.ad <- var(ind.ad)
       }
       if (var.da != 0) {
         ind.da <- ind.da * sqrt(var.pheno * h2[5] / var.da)
-        eff.da <- c(crossprod(ginv(qtn.da), ind.da))
+        eff.da <- eff.da * sqrt(var.pheno * h2[5] / var.da)
         var.da <- var(ind.da)
       }
       if (var.dd != 0) {
         ind.dd <- ind.dd * sqrt(var.pheno * h2[6] / var.dd)
+        eff.dd <- eff.dd * sqrt(var.pheno * h2[6] / var.dd)
         eff.dd <- c(crossprod(ginv(qtn.dd), ind.dd))
         var.dd <- var(ind.dd)
       } 

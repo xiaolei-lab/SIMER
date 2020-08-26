@@ -7,7 +7,7 @@
 genotype(rawgeno = NULL, geno = NULL, incols = 2,
   num.marker = NULL, num.ind = NULL, prob = c(0.5, 0.5),
   blk.rg = NULL, recom.spot = NULL, range.hot = 4:6,
-  range.cold = 1:5, rate.mut = 0.00000001, verbose = TRUE)
+  range.cold = 1:5, rate.mut = 1e-08, verbose = TRUE)
 }
 \arguments{
 \item{rawgeno}{extrinsic genotype matrix}
