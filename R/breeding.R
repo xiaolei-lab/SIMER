@@ -438,7 +438,8 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   } else {
     idx.goal <- which.min(score.curr)
   }
-  plan.goal <- idx4hi[[idx.goal]]
+  plan.goal <- list(plan_name = plan.names[idx.goal], plan_cont = idx4hi[[idx.goal]], plan_gains = score.curr)
+  
   logging.log(" Individuals should be genotyping are:\n", verbose = verbose)
   simer.print(plan.goal$idx_geno, verbose = verbose)
   logging.log(" Individuals should be phenotyping are:\n", verbose = verbose)

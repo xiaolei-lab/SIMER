@@ -4,7 +4,7 @@
 \alias{check.map}
 \title{Get map containing block and recombination information}
 \usage{
-check.map(input.map = NULL, num.marker = NULL, len.block = 5e+07)
+check.map(input.map = NULL, num.marker = NULL, len.block = 50000000)
 }
 \arguments{
 \item{input.map}{map that should be input, the marker number should be consistent in both map file and genotype data}

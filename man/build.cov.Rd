@@ -4,7 +4,7 @@
 \alias{build.cov}
 \title{To bulid correlation of variables}
 \usage{
-build.cov(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06)
+build.cov(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 0.000001)
 }
 \arguments{
 \item{df}{data.frame without correlation}
