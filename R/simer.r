@@ -45,6 +45,7 @@
 #' @param cal.model phenotype model with the options: "A", "AD", "ADI"
 #' @param FR list of fixed effects, random effects, and their combination
 #' @param cv list of population Coefficient of Variation or family Coefficient of Variation
+#' @param var.pheno the phenotype variance, only used in single-trait simulation
 #' @param h2.tr1 heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param num.qtn.tr1 integer or integer vector, the number of QTN in a single trait
 #' @param sd.tr1 standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a
@@ -88,7 +89,7 @@
 #' @importFrom stats aov cor dnorm qnorm rgamma rnorm rbeta rgeom runif var shapiro.test
 #' @importFrom utils write.table read.delim packageVersion
 #' @importFrom methods getPackageName
-#' @importFrom MASS ginv mvrnorm
+#' @importFrom MASS mvrnorm ginv
 #' @importFrom rMVP MVP.Data.MVP2Bfile
 #'
 #' @examples
@@ -202,6 +203,7 @@ simer <-
              cal.model = "A",
              FR = NULL, 
              cv = NULL, 
+             var.pheno = NULL, 
              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
              num.qtn.tr1 = 500,
              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
@@ -341,6 +343,7 @@ simer <-
                 pop = basepop,
                 pop.geno = basepop.geno,
                 pos.map = pos.map,
+                var.pheno = var.pheno, 
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
                 h2.trn = h2.trn, 
@@ -396,6 +399,7 @@ simer <-
                   pop = pop2,
                   pop.geno = pop2.geno,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -456,6 +460,7 @@ simer <-
                   pop = pop3,
                   pop.geno = pop3.geno,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -510,6 +515,7 @@ simer <-
                   pop = pop4,
                   pop.geno = pop4.geno,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -752,6 +758,7 @@ simer <-
                       pop = pop.curr,
                       pop.geno = pop.geno.curr,
                       pos.map = pos.map,
+                      var.pheno = var.pheno, 
                       h2.tr1 = h2.tr1,
                       gnt.cov = gnt.cov,
                       h2.trn = h2.trn, 
@@ -827,6 +834,7 @@ simer <-
                 pop = pop.total,
                 pop.geno = geno.total.temp,
                 pos.map = pos.map,
+                var.pheno = var.pheno, 
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
                 h2.trn = h2.trn, 
@@ -983,6 +991,7 @@ simer <-
                   pop = pop.singcro,
                   pop.geno = pop.geno.singcro,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1022,6 +1031,7 @@ simer <-
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1221,6 +1231,7 @@ simer <-
                   pop = pop.dam21,
                   pop.geno = pop.geno.dam21,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1314,6 +1325,7 @@ simer <-
                   pop = pop.tricro,
                   pop.geno = pop.geno.tricro,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1359,6 +1371,7 @@ simer <-
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1597,6 +1610,7 @@ simer <-
                   pop = pop.sir11,
                   pop.geno = pop.geno.sir11,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1707,6 +1721,7 @@ simer <-
                   pop = pop.dam22,
                   pop.geno = pop.geno.dam22,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1783,6 +1798,7 @@ simer <-
                   pop = pop.doubcro,
                   pop.geno = pop.geno.doubcro,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -1834,6 +1850,7 @@ simer <-
                   pop = pop.total,
                   pop.geno = geno.total,
                   pos.map = pos.map,
+                  var.pheno = var.pheno, 
                   h2.tr1 = h2.tr1,
                   gnt.cov = gnt.cov,
                   h2.trn = h2.trn, 
@@ -2023,6 +2040,7 @@ simer <-
                       pop = pop.curr,
                       pop.geno = pop.geno.curr,
                       pos.map = pos.map,
+                      var.pheno = var.pheno, 
                       h2.tr1 = h2.tr1,
                       gnt.cov = gnt.cov,
                       h2.trn = h2.trn, 
@@ -2094,6 +2112,7 @@ simer <-
                 pop = pop.total,
                 pop.geno = geno.total.temp,
                 pos.map = pos.map,
+                var.pheno = var.pheno, 
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
                 h2.trn = h2.trn, 
@@ -2236,6 +2255,7 @@ simer <-
                 pop = pop.total,
                 pop.geno = pop1.geno.copy,
                 pos.map = pos.map,
+                var.pheno = var.pheno, 
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
                 h2.trn = h2.trn, 

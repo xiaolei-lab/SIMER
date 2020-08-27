@@ -289,7 +289,7 @@ phenotype <-
   } else {
     nqt <- 1
     # calculate for genetic effects
-    info.eff <- cal.gnt(geno = geno, h2 = h2.tr1, var.pheno = var.pheno, effs = effs, sel.on = sel.on, inner.env = inner.env, verbose = verbose)
+    info.eff <- cal.gnt(geno = geno, var.pheno = var.pheno, h2 = h2.tr1, effs = effs, sel.on = sel.on, inner.env = inner.env, verbose = verbose)
     
     if (!is.null(info.eff)) {
       # calculate for phenotype variance
@@ -472,8 +472,8 @@ phenotype <-
 #' @author Dong Yin
 #'
 #' @param geno genotype matrix of the population, an individual has two columns
-#' @param h2 heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param var.pheno the phenotype variance, only used in single-trait simulation
+#' @param h2 heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param effs a list of selected markers and their effects
 #' @param sel.on whether to add selection
 #' @param inner.env R environment of parameter "effs"
@@ -505,7 +505,7 @@ phenotype <-
 #' info.eff <- cal.gnt(geno = geno, h2 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01), 
 #'     effs = effs, sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 #' str(info.eff)
-cal.gnt <- function(geno = NULL, h2 = NULL, var.pheno = NULL, effs = NULL, sel.on = TRUE, inner.env = NULL, verbose = TRUE) {
+cal.gnt <- function(geno = NULL, var.pheno = NULL, h2 = NULL, effs = NULL, sel.on = TRUE, inner.env = NULL, verbose = TRUE) {
   if (is.null(geno)) return(NULL)
   
   mrk1 <- effs$mrk1
@@ -614,7 +614,6 @@ cal.gnt <- function(geno = NULL, h2 = NULL, var.pheno = NULL, effs = NULL, sel.o
       if (var.dd != 0) {
         ind.dd <- ind.dd * sqrt(var.pheno * h2[6] / var.dd)
         eff.dd <- eff.dd * sqrt(var.pheno * h2[6] / var.dd)
-        eff.dd <- c(crossprod(ginv(qtn.dd), ind.dd))
         var.dd <- var(ind.dd)
       } 
       effs.adj <- get("effs", envir = inner.env)

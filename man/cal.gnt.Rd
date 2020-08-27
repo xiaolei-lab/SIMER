@@ -4,15 +4,15 @@
 \alias{cal.gnt}
 \title{Generate genetic effects}
 \usage{
-cal.gnt(geno = NULL, h2 = NULL, var.pheno = NULL, effs = NULL,
+cal.gnt(geno = NULL, var.pheno = NULL, h2 = NULL, effs = NULL,
   sel.on = TRUE, inner.env = NULL, verbose = TRUE)
 }
 \arguments{
 \item{geno}{genotype matrix of the population, an individual has two columns}
 
-\item{h2}{heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
-
 \item{var.pheno}{the phenotype variance, only used in single-trait simulation}
+
+\item{h2}{heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 
 \item{effs}{a list of selected markers and their effects}
 

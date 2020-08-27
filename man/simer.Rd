@@ -12,9 +12,9 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
   rawgeno3 = NULL, rawgeno4 = NULL, num.ind = 100, prob = c(0.5,
   0.5), input.map = NULL, len.block = 5e+07, range.hot = 4:6,
   range.cold = 1:5, rate.mut = 1e-08, cal.model = "A", FR = NULL,
-  cv = NULL, h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-  num.qtn.tr1 = 500, sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02),
-  dist.qtn.tr1 = rep("normal", 6), prob.tr1 = rep(0.5, 6),
+  cv = NULL, var.pheno = NULL, h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05,
+  0.01), num.qtn.tr1 = 500, sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02,
+  0.02), dist.qtn.tr1 = rep("normal", 6), prob.tr1 = rep(0.5, 6),
   shape.tr1 = rep(1, 6), scale.tr1 = rep(1, 6), shape1.tr1 = rep(1,
   6), shape2.tr1 = rep(1, 6), ncp.tr1 = rep(0, 6), multrait = FALSE,
   num.qtn.trn = matrix(c(400, 100, 100, 400), 2, 2),
@@ -81,6 +81,8 @@ simer(num.gen = 5, replication = 1, verbose = TRUE,
 \item{FR}{list of fixed effects, random effects, and their combination}
 
 \item{cv}{list of population Coefficient of Variation or family Coefficient of Variation}
+
+\item{var.pheno}{the phenotype variance, only used in single-trait simulation}
 
 \item{h2.tr1}{heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
 

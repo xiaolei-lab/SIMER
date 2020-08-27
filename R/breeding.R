@@ -125,6 +125,7 @@
 complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selPath=NULL, verbose=TRUE) {
   if (!dir.exists(selPath)) stop("Please input a right selection path!")
   
+  var.pheno <- simls$trait$info.tr$Vg[1] / simls$trait$info.tr$h2[1]
   pop <- simls$pop
   pop.last <- pop[pop$gen == pop$gen[length(pop$gen)], ]
   f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = FALSE)
@@ -153,8 +154,6 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     logging.log(" Read breeding plan ", filenames[i], "...", sep = "", verbose = verbose)
     #Initialization for iteration within file
     inFile=TRUE
-    eff_fixed <- NULL
-    eff_random <- NULL
     while (inFile) {
       tt <- readLines(fileImage, n=1)
       if (length(tt) == 0) {
@@ -246,14 +245,14 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   ls.fr <- lapply(idx4hi, function(idx) {
     fac_fixed <- NULL
     fac_random <- NULL
-    if (!is.null(idx$eff_fixed)) {
+    if (length(idx$eff_fixed) != 0) {
       ntr <- length(idx$eff_fixed)
       trn <- paste0("tr", 1:ntr)
       for (i in 1:ntr)
         fac_fixed[[i]] <- pop[, idx$eff_fixed[[i]]]
       names(fac_fixed) <- trn
     }
-    if (!is.null(idx$eff_random)) {
+    if (length(idx$eff_random) != 0) {
       ntr <- length(idx$eff_random)
       trn <- paste0("tr", 1:ntr)
       for (i in 1:ntr)
@@ -365,7 +364,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   effs <- simls$effs
   h2.tr1 <- 0.3
   sel.on <- TRUE
-  inner.env <- NULL
+  inner.env <- environment()
   verbose <- TRUE
   if (length(simls$trait$info.tr$h2) == 1) {
     h2.tr1 <- simls$trait$info.tr$h2
@@ -386,13 +385,14 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
                 pop = gp$pop,
                 pop.geno = gp$geno,
                 pos.map = NULL,
+                var.pheno = var.pheno, 
                 h2.tr1 = h2.tr1,
                 gnt.cov = gnt.cov,
                 h2.trn = h2.trn,
                 sel.crit = "pheno",
                 pop.total = rbind(pop[, 1:7], gp$pop),
                 sel.on = TRUE,
-                inner.env =  NULL,
+                inner.env =  inner.env,
                 verbose = verbose)
     pop.curr <- pop1.pheno$pop
     pheno <- subset(pop.curr, select = f1)
@@ -441,20 +441,20 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   plan.goal <- list(plan_name = plan.names[idx.goal], plan_cont = idx4hi[[idx.goal]], plan_gains = score.curr)
   
   logging.log(" Individuals should be genotyping are:\n", verbose = verbose)
-  simer.print(plan.goal$idx_geno, verbose = verbose)
+  simer.print(plan.goal$plan_cont$idx_geno, verbose = verbose)
   logging.log(" Individuals should be phenotyping are:\n", verbose = verbose)
-  simer.print(plan.goal$idx_pheno, verbose = verbose)
+  simer.print(plan.goal$plan_cont$idx_pheno, verbose = verbose)
 
-  if (length(plan.goal$eff_fixed) > 0) {
+  if (length(plan.goal$plan_cont$eff_fixed) > 0) {
     logging.log(" Fixed effects should be in the model are:\n", verbose = verbose)
-    for (i in 1:length(plan.goal$eff_fixed)) {
-      logging.log(" Trait", i, ":", plan.goal$eff_fixed[[i]], "\n", verbose = verbose)
+    for (i in 1:length(plan.goal$plan_cont$eff_fixed)) {
+      logging.log(" Trait", i, ":", plan.goal$plan_cont$eff_fixed[[i]], "\n", verbose = verbose)
     }
   }
-  if (length(plan.goal$eff_fixed) > 0) {
+  if (length(plan.goal$plan_cont$eff_random) > 0) {
     logging.log(" Random effects should be in the model are:\n", verbose = verbose)
-    for (i in 1:length(plan.goal$eff_fixed)) {
-      logging.log(" Trait", i, ":", plan.goal$eff_random[[i]], "\n", verbose = verbose)
+    for (i in 1:length(plan.goal$plan_cont$eff_random)) {
+      logging.log(" Trait", i, ":", plan.goal$plan_cont$eff_random[[i]], "\n", verbose = verbose)
     }
   }
   if (length(pheno.curr[[idx.goal]]$b) != 1) {
