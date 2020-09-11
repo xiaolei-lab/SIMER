@@ -62,7 +62,7 @@ reproduces <-
 
 # Start reproduction
 
-  if (!is.null(pop2.geno.id) & !is.null(pop2.geno)) {
+  if (!is.null(pop1.geno.id) & !is.null(pop1.geno)) {
     if (length(pop1.geno.id)*incols != ncol(pop1.geno)) 
       stop("Genotype ID should match genotype matrix in the first population!")
   }
