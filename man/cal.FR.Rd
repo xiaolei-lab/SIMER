@@ -4,8 +4,7 @@
 \alias{cal.FR}
 \title{Calculate for fixed effects and random effects}
 \usage{
-cal.FR(pop = NULL, FR, var.pheno = NULL, pop.env = NULL,
-  verbose = TRUE)
+cal.FR(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = TRUE)
 }
 \arguments{
 \item{pop}{population information}

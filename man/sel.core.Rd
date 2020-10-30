@@ -4,9 +4,16 @@
 \alias{sel.core}
 \title{Get core population ID and genotype}
 \usage{
-sel.core(ind.stay = NULL, core.stay = NULL, refresh = rep(0.6, 2),
-  keep.max.gen = rep(3, 2), incols = 2, pop.total, pop.geno.curr,
-  pop.geno.core)
+sel.core(
+  ind.stay = NULL,
+  core.stay = NULL,
+  refresh = rep(0.6, 2),
+  keep.max.gen = rep(3, 2),
+  incols = 2,
+  pop.total,
+  pop.geno.curr,
+  pop.geno.core
+)
 }
 \arguments{
 \item{ind.stay}{ID of the sires and the dams passing selection}

@@ -4,10 +4,19 @@
 \alias{reproduces}
 \title{Do reproducion by different mate design}
 \usage{
-reproduces(pop1 = NULL, pop2 = NULL, pop1.geno.id = NULL,
-  pop2.geno.id = NULL, pop1.geno = NULL, pop2.geno = NULL,
-  incols = 2, ind.stay = NULL, mtd.reprod = "randmate",
-  num.prog = 2, ratio = 0.5)
+reproduces(
+  pop1 = NULL,
+  pop2 = NULL,
+  pop1.geno.id = NULL,
+  pop2.geno.id = NULL,
+  pop1.geno = NULL,
+  pop2.geno = NULL,
+  incols = 2,
+  ind.stay = NULL,
+  mtd.reprod = "randmate",
+  num.prog = 2,
+  ratio = 0.5
+)
 }
 \arguments{
 \item{pop1}{population information of population1}

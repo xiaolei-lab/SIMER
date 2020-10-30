@@ -4,10 +4,19 @@
 \alias{selects}
 \title{Select individuals by combination of secletion method and criterion}
 \usage{
-selects(pop, decr = TRUE, sel.multi = "index", index.wt = c(0.5,
-  0.5), index.tdm = 1, goal.perc = 0.1, pass.perc = 0.9,
-  sel.sing = "comb", pop.total = NULL, pop.pheno = NULL,
-  verbose = TRUE)
+selects(
+  pop,
+  decr = TRUE,
+  sel.multi = "index",
+  index.wt = c(0.5, 0.5),
+  index.tdm = 1,
+  goal.perc = 0.1,
+  pass.perc = 0.9,
+  sel.sing = "comb",
+  pop.total = NULL,
+  pop.pheno = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{pop}{population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, sex, and phenotype}

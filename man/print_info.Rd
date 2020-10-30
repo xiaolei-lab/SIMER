@@ -4,9 +4,18 @@
 \alias{print_info}
 \title{Print R Package information, include title, short_title, logo, version, authors, contact}
 \usage{
-print_info(welcome = NULL, title = NULL, short_title = NULL,
-  logo = NULL, version = NULL, authors = NULL, contact = NULL,
-  linechar = "=", width = NULL, verbose = TRUE)
+print_info(
+  welcome = NULL,
+  title = NULL,
+  short_title = NULL,
+  logo = NULL,
+  version = NULL,
+  authors = NULL,
+  contact = NULL,
+  linechar = "=",
+  width = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{welcome}{welcome text, for example: "Welcom to <Packagename>"}

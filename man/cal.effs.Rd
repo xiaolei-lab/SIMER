@@ -4,15 +4,26 @@
 \alias{cal.effs}
 \title{Calculate for genetic effects list of selected markers}
 \usage{
-cal.effs(pop.geno = NULL, incols = 2, cal.model = "A",
-  num.qtn.tr1 = c(2, 6, 10), sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02,
-  0.02, 0.02, 0.001), dist.qtn.tr1 = rep("normal", 6),
-  prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5), shape.tr1 = c(1, 1, 1, 1,
-  1, 1), scale.tr1 = c(1, 1, 1, 1, 1, 1), shape1.tr1 = c(1, 1, 1, 1, 1,
-  1), shape2.tr1 = c(1, 1, 1, 1, 1, 1), ncp.tr1 = c(0, 0, 0, 0, 0, 0),
-  multrait = FALSE, num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-  sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2), qtn.spot = rep(0.1, 10),
-  maf = 0, verbose = TRUE)
+cal.effs(
+  pop.geno = NULL,
+  incols = 2,
+  cal.model = "A",
+  num.qtn.tr1 = c(2, 6, 10),
+  sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
+  dist.qtn.tr1 = rep("normal", 6),
+  prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+  shape.tr1 = c(1, 1, 1, 1, 1, 1),
+  scale.tr1 = c(1, 1, 1, 1, 1, 1),
+  shape1.tr1 = c(1, 1, 1, 1, 1, 1),
+  shape2.tr1 = c(1, 1, 1, 1, 1, 1),
+  ncp.tr1 = c(0, 0, 0, 0, 0, 0),
+  multrait = FALSE,
+  num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
+  sd.trn = matrix(c(1, 0, 0, 0.5), 2, 2),
+  qtn.spot = rep(0.1, 10),
+  maf = 0,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{pop.geno}{genotype of population, a individual has two columns}

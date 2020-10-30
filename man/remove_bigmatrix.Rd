@@ -4,8 +4,7 @@
 \alias{remove_bigmatrix}
 \title{Remove big.matrix safely}
 \usage{
-remove_bigmatrix(x, desc_suffix = ".geno.desc",
-  bin_suffix = ".geno.bin")
+remove_bigmatrix(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.bin")
 }
 \arguments{
 \item{x}{filename of big.matrix}
