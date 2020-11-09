@@ -202,7 +202,7 @@ genotype <-
 #' pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
 #' str(pos.map)
 check.map <- function(input.map = NULL, num.marker = NULL, len.block = 5e7) {
-  if (is.null(input.map))
+  if (is.null(input.map)) 
     stop("Please input a map file!")
   if (num.marker != nrow(input.map))
     stop("The number of markers should be equal between genotype file and map file!")
@@ -244,6 +244,52 @@ check.map <- function(input.map = NULL, num.marker = NULL, len.block = 5e7) {
   return(map)
 }
 
+
+#' Generate Marker information
+#' 
+#' Build date: Nov 9, 2020
+#' Last update: Nov 9, 2020
+#'
+#' @author Dong Yin
+#'
+#' @param num.marker the number of markers
+#' @param num.chr the number of chromosomes
+#' @param len.chr the length of chromosomes
+#'
+#' @return marker information
+#' @export
+#'
+#' @examples
+#' input.map <- generate.map(num.marker = 50671)
+#' str(input.map)
+generate.map <- function(num.marker = NULL, num.chr = 18, len.chr = 1.5e8) {
+  
+  if(is.null(num.marker))
+    stop("Please specify the number of markers!")
+
+  # Number of markers in every chromosome
+  num.every <- rep(num.marker %/% num.chr, num.chr)
+  num.every[num.chr] <- num.every[num.chr] + num.marker %% num.chr
+  
+  SNP <- paste("M", 1:(num.marker), sep = "")
+  Chrom <- rep(1:num.chr, num.every)
+  BP <- do.call('c', lapply(1:num.chr, function(chr) {
+    return(sort(sample(1:len.chr, num.every[chr]))) 
+  }))
+  
+  base <- c("A", "T", "C", "G")
+  ALT <- sample(base, num.marker, replace = TRUE)
+  REF <- sample(base, num.marker, replace = TRUE)
+  ff <- ALT == REF
+  while (sum(ff) > 0) {
+    REF[ff] <- sample(base, sum(ff), replace = TRUE)
+    ff <- ALT == REF
+  }
+  
+  # set map
+  map <- data.frame(SNP, Chrom, BP, ALT, REF)
+  return(map)
+}
 
 #' Calculate for block ranges in map
 #'

@@ -4,15 +4,8 @@
 \alias{mate.randmate}
 \title{Random mating process}
 \usage{
-mate.randmate(
-  pop1,
-  pop1.geno.id,
-  pop1.geno,
-  incols = 2,
-  ind.stay,
-  num.prog,
-  ratio
-)
+mate.randmate(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay,
+  num.prog, ratio)
 }
 \arguments{
 \item{pop1}{population information of population1}

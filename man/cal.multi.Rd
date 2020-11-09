@@ -4,16 +4,8 @@
 \alias{cal.multi}
 \title{Multiple trait selection method}
 \usage{
-cal.multi(
-  pop,
-  decr,
-  sel.multi,
-  index.wt,
-  index.tdm,
-  goal,
-  pass.perc,
-  pop.pheno
-)
+cal.multi(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc,
+  pop.pheno)
 }
 \arguments{
 \item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}

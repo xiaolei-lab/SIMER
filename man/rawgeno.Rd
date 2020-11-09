@@ -4,9 +4,7 @@
 \name{rawgeno}
 \alias{rawgeno}
 \title{Raw genotype matrix from outside in simdata}
-\format{
-big.matrix
-}
+\format{big.matrix}
 \usage{
 data(simdata)
 }

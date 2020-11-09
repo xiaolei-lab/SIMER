@@ -4,17 +4,8 @@
 \alias{write.file}
 \title{Write files of simer}
 \usage{
-write.file(
-  pop,
-  geno,
-  map,
-  out.geno.index,
-  out.pheno.index,
-  out = "simer",
-  outpath,
-  out.format,
-  verbose
-)
+write.file(pop, geno, map, out.geno.index, out.pheno.index,
+  out = "simer", outpath, out.format, verbose)
 }
 \arguments{
 \item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
