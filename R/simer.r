@@ -59,7 +59,7 @@
 #' @param multrait whether to apply multiple traits, TRUE represents applying, FALSE represents not
 #' @param num.qtn.trn QTN distribution matrix, diagonal elements are total QTN number of the trait, non-diagonal elements are QTN number of overlap QTN between two traits
 #' @param sd.trn a matrix with the standard deviation of the QTN effects
-#' @param gnt.cov genetic covaiance matrix among all traits
+#' @param gnt.cov genetic covariance matrix among all traits
 #' @param h2.trn heritability among all traits
 #' @param qtn.spot QTN probability in every block
 #' @param maf Minor Allele Frequency, marker selection range is from maf to 0.5
@@ -94,7 +94,7 @@
 #'
 #' @examples
 #' \donttest{
-#' # get map file, map is neccessary
+#' # get map file, map is necessary
 #' data(simdata)
 #'
 #' # run simer
@@ -250,8 +250,8 @@ simer <-
 # TODO: add superior limit of homo   
 # TODO: add multiple fix and random effects
 # TODO: add summary() to population information
-# TODO: add inbreeding coeficient
-# TODO: updata index selection
+# TODO: add inbreeding coefficient
+# TODO: update index selection
 # TODO: add true block distribution  
 # TODO: genomic mating
 # TODO: inbreeding change in every generations
@@ -275,7 +275,7 @@ simer <-
   if (incols == 1) outcols <- 1
 
 	################### BASE_POPULATION ###################
-  # stablish genotype of base population if there isn't by two ways:
+  # establish genotype of base population if there isn't by two ways:
   # 1. input rawgeno
   # 2. input num.marker and num.ind
   

@@ -11,7 +11,7 @@
 # limitations under the License.
 
 
-#' Select individuals by combination of secletion method and criterion
+#' Select individuals by combination of selection method and criterion
 #'
 #' Build date: Sep 8, 2018
 #' Last update: Oct 13, 2019
@@ -26,7 +26,7 @@
 #' @param goal.perc percentage of goal more than the mean of scores of individuals
 #' @param pass.perc percentage of expected excellent individuals
 #' @param sel.sing selection methods of single trait with the options: "ind", "fam", "infam", and "comb"
-#' @param pop.total total population infarmation
+#' @param pop.total total population information
 #' @param pop.pheno list of all phenotype information
 #' @param verbose whether to print detail
 
@@ -186,8 +186,8 @@ selects <-
 #'
 #' @author Dong Yin
 #'
-#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye
-#' @param decr whether to sorting with descreasing
+#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotype
+#' @param decr whether to sorting with decreasing
 #' @param sel.sing selection method of single trait with "ind", "fam", "infam", "comb"
 #' @param cor.r average relationship of population
 #'
@@ -305,8 +305,8 @@ cal.sing <- function(pop, decr, sel.sing, cor.r) {
 #'
 #' @author Dong Yin
 #'
-#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye
-#' @param decr whether to sorting with descreasing
+#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotype
+#' @param decr whether to sorting with decreasing
 #' @param sel.multi selection method of multiple traits with options: "tdm", "indcul" and "index"
 #' @param index.wt economic weights of selection index method, its length should equals to the number of traits
 #' @param index.tdm index represents which trait is being selected

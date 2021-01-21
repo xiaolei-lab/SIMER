@@ -29,7 +29,7 @@
 #' @param gnt.cov genetic covaiance matrix among all traits
 #' @param h2.trn heritability among all traits
 #' @param sel.crit selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"
-#' @param pop.total total population infarmation
+#' @param pop.total total population information
 #' @param sel.on whether to add selection
 #' @param inner.env R environment of parameter "effs"
 #' @param verbose whether to print detail
@@ -58,7 +58,7 @@
 #'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
 #'           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
 #'           
-#' # combination and ralation of random effects
+#' # combination and variance ratio of random effects
 #' tr1 <- list(rn = c("PE"), ratio = 0.1)
 #' tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
@@ -556,7 +556,7 @@ cal.gnt <- function(geno = NULL, var.pheno = NULL, h2 = NULL, effs = NULL, sel.o
 
     if (!sel.on ) {
       if (var.dom != 0) {
-        # adjust domimance effect according to ratio of additive variance and dominance variance
+        # adjust dominance effect according to ratio of additive variance and dominance variance
         ind.d <- ind.d * sqrt(var.pheno * h2[2] / var.dom)
         eff.d <- eff.d * sqrt(var.pheno * h2[2] / var.dom)
         var.dom <- var(ind.d)
@@ -595,7 +595,7 @@ cal.gnt <- function(geno = NULL, var.pheno = NULL, h2 = NULL, effs = NULL, sel.o
     var.dd <- var(ind.dd)
     
     if (!sel.on) {
-      # adjust iteraction effect according to ratio of additive variance and iteraction variance
+      # adjust interaction effect according to ratio of additive variance and interaction variance
       if (var.aa != 0) {
         ind.aa <- ind.aa * sqrt(var.pheno * h2[3] / var.aa)
         eff.aa <- eff.aa * sqrt(var.pheno * h2[3] / var.aa)
@@ -676,7 +676,7 @@ cal.gnt <- function(geno = NULL, var.pheno = NULL, h2 = NULL, effs = NULL, sel.o
 #'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
 #'           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
 #'           
-#' # combination and ralation of random effects
+#' # combination and variance ratio of random effects
 #' tr1 <- list(rn = c("PE"), ratio = 0.1)
 #' tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 #' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
@@ -831,7 +831,7 @@ cal.FR <- function(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = T
 #' @param info.eff list of phenotype decomposition
 #' @param h2 heritability vector of the trait, every elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively
 #' @param num.ind population size
-#' @param var.pheno phenotype variace
+#' @param var.pheno phenotype variance
 #' @param verbose whether to print detail
 #'
 #' @return list of phenotype
@@ -1147,7 +1147,7 @@ cal.eff <- function(num.qtn, eff.sd, dist.qtn, prob, shape, scale, shape1, shape
 #' @param pop.pheno phenotype information
 #' @param sel.crit selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"
 #'
-#' @return popluation information with phenotype
+#' @return population information with phenotype
 #' @export
 #'
 #' @examples

@@ -11,7 +11,7 @@
 # limitations under the License.
 
 
-#' Do reproducion by different mate design
+#' Do reproduction by different mate design
 #'
 #' Build date: Nov 14, 2018
 #' Last update: Aug 1, 2019
@@ -96,8 +96,7 @@ reproduces <-
   return(pop)
 }
 
-# mate process
-#' Mating according to indice of sires and dams
+#' Mating according to the indice of sires and dams
 #'
 #' Build date: Nov 14, 2018
 #' Last update: Aug 1, 2019
@@ -172,7 +171,7 @@ mate <- function(pop.geno, incols = 2, index.sir, index.dam) {
 #' @param ind.stay selected individuals regarded as parents
 #' @param num.prog litter size of dams
 #'
-#' @return population information and genotype matrix of population after clone procecss
+#' @return population information and genotype matrix of population after clone process
 #' @export
 #'
 #' @examples
@@ -235,7 +234,7 @@ mate.clone <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.
 #' @param ind.stay selected individuals regarded as parents
 #' @param num.prog litter size of dams
 #'
-#' @return population information and genotype matrix of population after doubled haploid procecss
+#' @return population information and genotype matrix of population after doubled haploid process
 #' @export
 #'
 #' @examples
@@ -598,7 +597,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
   return(cbind(fam, infam))
 }
 
-#' Generate population according to number of individauls
+#' Generate population according to number of individuals
 #'
 #' Build date: Nov 14, 2018
 #' Last update: Aug 1, 2019
@@ -637,7 +636,7 @@ getpop <- function(nind, from, ratio, gen = 1) {
 #' @author Dong Yin
 #'
 #' @param count.ind a vector with population size of every generations
-#' @param out.gen a vector with generations needing ouputting
+#' @param out.gen a vector with generations needing outputting
 #'
 #' @return individuals indice need outputting
 #' @export
