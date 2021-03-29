@@ -615,7 +615,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
 #' @examples
 #' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
 #' str(basepop)
-getpop <- function(nind, from, ratio, gen = 1) {
+getpop <- function(nind, from=1, ratio=0.5, gen = 1) {
   pop <- data.frame(
     gen   = rep(gen, nind),
     index = seq(from = from, length.out = nind),

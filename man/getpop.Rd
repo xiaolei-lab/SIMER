@@ -4,7 +4,7 @@
 \alias{getpop}
 \title{Generate population according to number of individuals}
 \usage{
-getpop(nind, from, ratio, gen = 1)
+getpop(nind, from = 1, ratio = 0.5, gen = 1)
 }
 \arguments{
 \item{nind}{number of the individuals in a population}

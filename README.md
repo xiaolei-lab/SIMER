@@ -20,6 +20,10 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
     - [Basic](#basic)
     - [Optional](#optional)
 - [Quick Start](#quick-start)
+    - [Complete Simulation](#complete-simulation)
+    - [Genotype Simulation](#genotype-simulation)
+    - [Phenotype Simulation](#phenotype-simulation)
+    - [Marker Information Simulation](#marker-information-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
@@ -279,6 +283,9 @@ After obtaining genotypic map data and genotype data, we can start our simulatio
 **pass.perc**, percentage of expected excellent individuals  
 **sel.sing**, selection method of single trait with options: "ind", "fam", "infam" and "comb"  
 
+## Complete Simulation
+**[back to top](#contents)**
+
 ```r
 # simdata: rawgeno input.map userped
 data(simdata)
@@ -312,6 +319,45 @@ for (i in 1:rep) {
               num.prog = 2,
               ratio = 0.5)
 }
+```
+
+## Genotype Simulation
+**[back to top](#contents)** 
+
+SIMER can simulate genotype matrix with random elements and receive real genotype data. 
+
+```r
+# receive real genotype data
+geno <- genotype(rawgeno = your_genotype)
+
+# use num.marker and num.ind to generate a new genotype matrix
+geno <- genotype(num.marker = 1e5, num.ind = 1e3)
+```
+
+## Phenotype Simulation
+**[back to top](#contents)** 
+
+Phenotype simulation needs marker effects, population information, and genotype matrix. 
+
+```r
+# generate marker effects
+effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01)
+
+# generate population information
+pop = getpop(nind = ncol(geno))
+
+# generate phenotype
+pheno <- phenotype(effs = effs, pop = pop, pop.geno = geno, h2.tr1 = 0.8,)
+
+```
+
+## Marker Information Simulation
+**[back to top](#contents)** 
+
+```r
+# generate marker information
+map <- generate.map(num.marker = 5e5, num.chr = 18, len.chr = 1.5e8)
+
 ```
 
 ---
