@@ -347,7 +347,7 @@ effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01)
 pop = getpop(nind = ncol(geno))
 
 # generate phenotype
-pheno <- phenotype(effs = effs, pop = pop, pop.geno = geno, h2.tr1 = 0.8,)
+pheno <- phenotype(effs = effs, pop = pop, pop.geno = geno, h2.tr1 = 0.8)
 
 ```
 
