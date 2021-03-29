@@ -253,7 +253,7 @@ simer <-
 # TODO: add inbreeding coefficient
 # TODO: update index selection
 # TODO: add true block distribution  
-# TODO: genomic mating for future
+# TODO: genomic mating
 # TODO: inbreeding change in every generations
   
   simer.Version(width = 70, verbose = verbose)    
