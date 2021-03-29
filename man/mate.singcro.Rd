@@ -4,8 +4,18 @@
 \alias{mate.singcro}
 \title{Single cross process}
 \usage{
-mate.singcro(pop1, pop2, pop1.geno.id, pop2.geno.id, pop1.geno, pop2.geno,
-  incols = 2, ind.stay, num.prog, ratio)
+mate.singcro(
+  pop1,
+  pop2,
+  pop1.geno.id,
+  pop2.geno.id,
+  pop1.geno,
+  pop2.geno,
+  incols = 2,
+  ind.stay,
+  num.prog,
+  ratio
+)
 }
 \arguments{
 \item{pop1}{population information of population1}

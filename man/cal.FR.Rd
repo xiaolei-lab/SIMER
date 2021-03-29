@@ -4,8 +4,7 @@
 \alias{cal.FR}
 \title{Calculate for fixed effects and random effects}
 \usage{
-cal.FR(pop = NULL, FR, var.pheno = NULL, pop.env = NULL,
-  verbose = TRUE)
+cal.FR(pop = NULL, FR, var.pheno = NULL, pop.env = NULL, verbose = TRUE)
 }
 \arguments{
 \item{pop}{population information}
@@ -45,7 +44,7 @@ fix <- list(
      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
           
-# combination and ralation of random effects
+# combination and variance ratio of random effects
 tr1 <- list(rn = c("PE"), ratio = 0.1)
 tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 cmb.rand <- list(tr1 = tr1, tr2 = tr2)   

@@ -4,12 +4,23 @@
 \alias{phenotype}
 \title{Generate phenotype and other values according to selection criterion}
 \usage{
-phenotype(effs = NULL, FR = NULL, cv = NULL, pop = NULL,
-  pop.geno = NULL, pos.map = NULL, var.pheno = NULL,
-  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01), gnt.cov = matrix(c(1,
-  2, 2, 16), 2, 2), h2.trn = c(0.3, 0.5), sel.crit = "pheno",
-  pop.total = NULL, sel.on = TRUE, inner.env = NULL,
-  verbose = TRUE)
+phenotype(
+  effs = NULL,
+  FR = NULL,
+  cv = NULL,
+  pop = NULL,
+  pop.geno = NULL,
+  pos.map = NULL,
+  var.pheno = NULL,
+  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
+  gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
+  h2.trn = c(0.3, 0.5),
+  sel.crit = "pheno",
+  pop.total = NULL,
+  sel.on = TRUE,
+  inner.env = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{effs}{a list of selected markers and their effects}
@@ -34,7 +45,7 @@ phenotype(effs = NULL, FR = NULL, cv = NULL, pop = NULL,
 
 \item{sel.crit}{selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"}
 
-\item{pop.total}{total population infarmation}
+\item{pop.total}{total population information}
 
 \item{sel.on}{whether to add selection}
 
@@ -70,7 +81,7 @@ fix <- list(
      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
           
-# combination and ralation of random effects
+# combination and variance ratio of random effects
 tr1 <- list(rn = c("PE"), ratio = 0.1)
 tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
 cmb.rand <- list(tr1 = tr1, tr2 = tr2)   

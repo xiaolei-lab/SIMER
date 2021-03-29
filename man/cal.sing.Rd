@@ -7,9 +7,9 @@
 cal.sing(pop, decr, sel.sing, cor.r)
 }
 \arguments{
-\item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
+\item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotype}
 
-\item{decr}{whether to sorting with descreasing}
+\item{decr}{whether to sorting with decreasing}
 
 \item{sel.sing}{selection method of single trait with "ind", "fam", "infam", "comb"}
 

@@ -20,7 +20,7 @@ mate.clone(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog)
 \item{num.prog}{litter size of dams}
 }
 \value{
-population information and genotype matrix of population after clone procecss
+population information and genotype matrix of population after clone process
 }
 \description{
 Build date: Nov 14, 2018

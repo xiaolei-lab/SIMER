@@ -4,8 +4,14 @@
 \alias{cal.pheno}
 \title{Calculate for phenotype}
 \usage{
-cal.pheno(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL,
-  var.pheno = NULL, verbose = TRUE)
+cal.pheno(
+  fr = NULL,
+  info.eff = NULL,
+  h2 = NULL,
+  num.ind = NULL,
+  var.pheno = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{fr}{list of fixed effects and random effects}
@@ -16,7 +22,7 @@ cal.pheno(fr = NULL, info.eff = NULL, h2 = NULL, num.ind = NULL,
 
 \item{num.ind}{population size}
 
-\item{var.pheno}{phenotype variace}
+\item{var.pheno}{phenotype variance}
 
 \item{verbose}{whether to print detail}
 }

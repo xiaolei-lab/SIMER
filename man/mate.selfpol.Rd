@@ -4,8 +4,15 @@
 \alias{mate.selfpol}
 \title{Self-pollination}
 \usage{
-mate.selfpol(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay,
-  num.prog, ratio)
+mate.selfpol(
+  pop1,
+  pop1.geno.id,
+  pop1.geno,
+  incols = 2,
+  ind.stay,
+  num.prog,
+  ratio
+)
 }
 \arguments{
 \item{pop1}{population information of population1}

@@ -2,12 +2,21 @@
 % Please edit documentation in R/selects.r
 \name{selects}
 \alias{selects}
-\title{Select individuals by combination of secletion method and criterion}
+\title{Select individuals by combination of selection method and criterion}
 \usage{
-selects(pop, decr = TRUE, sel.multi = "index", index.wt = c(0.5,
-  0.5), index.tdm = 1, goal.perc = 0.1, pass.perc = 0.9,
-  sel.sing = "comb", pop.total = NULL, pop.pheno = NULL,
-  verbose = TRUE)
+selects(
+  pop,
+  decr = TRUE,
+  sel.multi = "index",
+  index.wt = c(0.5, 0.5),
+  index.tdm = 1,
+  goal.perc = 0.1,
+  pass.perc = 0.9,
+  sel.sing = "comb",
+  pop.total = NULL,
+  pop.pheno = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{pop}{population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, sex, and phenotype}
@@ -26,7 +35,7 @@ selects(pop, decr = TRUE, sel.multi = "index", index.wt = c(0.5,
 
 \item{sel.sing}{selection methods of single trait with the options: "ind", "fam", "infam", and "comb"}
 
-\item{pop.total}{total population infarmation}
+\item{pop.total}{total population information}
 
 \item{pop.pheno}{list of all phenotype information}
 

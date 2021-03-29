@@ -2,7 +2,7 @@
 % Please edit documentation in R/reproduces.r
 \name{mate}
 \alias{mate}
-\title{Mating according to indice of sires and dams}
+\title{Mating according to the indice of sires and dams}
 \usage{
 mate(pop.geno, incols = 2, index.sir, index.dam)
 }

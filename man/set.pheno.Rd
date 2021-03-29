@@ -14,7 +14,7 @@ set.pheno(pop, pop.pheno, sel.crit)
 \item{sel.crit}{selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"}
 }
 \value{
-popluation information with phenotype
+population information with phenotype
 }
 \description{
 Set the phenotype of the population

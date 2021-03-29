@@ -9,7 +9,7 @@ getindex(count.ind, out.gen)
 \arguments{
 \item{count.ind}{a vector with population size of every generations}
 
-\item{out.gen}{a vector with generations needing ouputting}
+\item{out.gen}{a vector with generations needing outputting}
 }
 \value{
 individuals indice need outputting

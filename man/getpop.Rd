@@ -2,7 +2,7 @@
 % Please edit documentation in R/reproduces.r
 \name{getpop}
 \alias{getpop}
-\title{Generate population according to number of individauls}
+\title{Generate population according to number of individuals}
 \usage{
 getpop(nind, from, ratio, gen = 1)
 }

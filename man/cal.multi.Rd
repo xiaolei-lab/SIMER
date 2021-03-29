@@ -4,13 +4,21 @@
 \alias{cal.multi}
 \title{Multiple trait selection method}
 \usage{
-cal.multi(pop, decr, sel.multi, index.wt, index.tdm, goal, pass.perc,
-  pop.pheno)
+cal.multi(
+  pop,
+  decr,
+  sel.multi,
+  index.wt,
+  index.tdm,
+  goal,
+  pass.perc,
+  pop.pheno
+)
 }
 \arguments{
-\item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
+\item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotype}
 
-\item{decr}{whether to sorting with descreasing}
+\item{decr}{whether to sorting with decreasing}
 
 \item{sel.multi}{selection method of multiple traits with options: "tdm", "indcul" and "index"}
 
