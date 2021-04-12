@@ -344,7 +344,7 @@ Phenotype simulation needs marker effects, population information, and genotype 
 # 1 column of genotype represents an individual
 effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01, incols = 1)
 # 2 columns of genotype represent an individual
-# effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01, incols = 1)
+# effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01, incols = 2)
 
 # generate population information
 pop = getpop(nind = ncol(geno))
