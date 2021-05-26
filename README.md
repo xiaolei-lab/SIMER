@@ -1,4 +1,4 @@
-# SIMER [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/XiaoleiLiuBio/rMVP/issues/new) 
+# SIMER [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/xiaolei-lab/SIMER/issues/new) 
 
 ## Data Simulation for Life Science and Breeding
 
