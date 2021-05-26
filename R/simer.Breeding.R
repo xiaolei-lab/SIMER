@@ -118,9 +118,10 @@
 #'            pass.perc = 0.9, 
 #'            sel.sing = "comb") 
 #' 
-#' goal.plan <- complan(simls = simer.list, FR = FR, index.wt = c(0.5, 0.5), 
-#'                      decr = TRUE, selPath = selPath, verbose = TRUE)
-#' str(goal.plan)
+#' # follow code can be run only if you have installd hiblup package
+#' # goal.plan <- complan(simls = simer.list, FR = FR, index.wt = c(0.5, 0.5), 
+#' #                      decr = TRUE, selPath = selPath, verbose = TRUE)
+#' # str(goal.plan)
 #' }
 complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selPath=NULL, verbose=TRUE) {
   if (!dir.exists(selPath)) stop("Please input a right selection path!")
