@@ -555,14 +555,16 @@ write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "s
     }  
 }
 
-#' Build design matrix according to covariate
+#' Build design matrix according to fixed effects, covariants or random effects
 #'
 #' Build date: Jan 20, 2020
 #' Last update: Jan 20, 2020
 #'
 #' @author Dong Yin
 #'
-#' @param cv.name covariate names
+#' @param fixed_eff the names of fixed effects by vector or list
+#' @param covar the names of covariants by vector or list
+#' @param hasMu whether to add mu to effect matrix
 #' @param data a data frame
 #'
 #' @return design matrix
@@ -572,17 +574,64 @@ write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "s
 #' dat <- data.frame(
 #' f1 = sample(LETTERS[1:3], 20, TRUE),
 #' f2 = sample(LETTERS[4:5], 20, TRUE),
+#' cov = sample.int(20),
 #' row.names = paste0("id_", 1:20))
-#' cv.name <- c("f1", "f2")
-#' CV <- build.CV(cv.name = cv.name, data = dat)
-build.CV <- function(cv.name, data) {
-    design <- do.call(cbind, lapply(cv.name, function(cv){
-        apply(outer(data[[cv]], unique(data[[cv]]), FUN = "=="), 2, as.integer)[, -1]
-    }))
-    rownames(design) <- rownames(data)
-    colnames(design) <- unlist(sapply(cv.name, function(cv) unique(data[[cv]])[-1]))
-    if (ncol(design) > 1)
-        design <- design[, !duplicated(colnames(design))] # duplicated colnames happen sometimes
+#' fixed_eff <- list(c("f1", "f2"), c("f1"))
+#' covar <- list("cov", NULL)
+#' CV <- build.effMat(fixed_eff=fixed_eff, covar=covar, data = dat)
+build.effMat <- function(fixed_eff=NULL, covar=NULL, hasMu=TRUE, data) {
+    
+    sub.build.CV <- function(fix, cov, data) {
+        design <- NULL
+        if (!is.null(fix)) {
+            design <- do.call(cbind, lapply(fix, function(cv){
+                dt <- apply(outer(data[[cv]], unique(data[[cv]]), FUN = "=="), 2, as.integer)
+                return(dt)
+            }))
+            rownames(design) <- rownames(data)
+            colnames(design) <- unlist(sapply(fix, function(cv) unique(data[[cv]])))
+            
+        }
+        if (!is.null(cov)){
+            co <- do.call(cbind, lapply(cov, function(cv){
+                dt <- data[[cv]]
+                if (!is.numeric(dt)) dt <- as.numeric(dt)
+                if (all(is.na(dt))) stop("Please specify numeric covariants!")
+                return(dt)
+            }))
+            rownames(co) <- rownames(data)
+            if (is.numeric(cov)) {
+                colnames(co) <- colnames(data)[cov]
+            } else {
+                colnames(co) <- cov
+            }
+            design <- cbind(design, co)
+        }
+        if (hasMu) {
+            mu <- rep(1, nrow(data))
+            design <- cbind(mu,design)
+        }
+        return(design)
+    }
+    
+    if ((is.list(fixed_eff) & !is.list(covar) & is.vector(covar)) |
+        (is.list(covar) & !is.list(fixed_eff) & is.vector(fixed_eff)))
+        stop("fixed_eff and covar should have the same type!")
+    
+    if (is.list(fixed_eff) | is.list(covar)) {
+        nTrait <- max(length(fixed_eff), length(covar))
+        if (!is.null(fixed_eff) & !is.null(covar)) {
+            if (length(fixed_eff) != length(covar)) 
+                stop("fixed_eff and covar should have the same length!")
+        }
+        design <- lapply(1:nTrait, function(i) {
+            return(sub.build.CV(fixed_eff[[i]], covar[[i]], data))
+        })
+        
+    } else {
+        design <- sub.build.CV(fixed_eff, covar, data)
+    }
+    
     return(design)
 }
 

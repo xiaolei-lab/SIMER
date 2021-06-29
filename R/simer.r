@@ -238,18 +238,19 @@ simer <-
 # Start simer
 
 # TODO: How to generate inbreeding sirs and uninbreeding dams
-# TODO: optcontri.sel
-# TODO: add MVP for output
-# TODO: correct pedigree     
-# TODO: add superior limit of homo   
-# TODO: add multiple fix and random effects
+# TODO: optcontri.sel  
+# TODO: add superior limit of homo
 # TODO: add summary() to population information
 # TODO: add inbreeding coefficient
 # TODO: update index selection
 # TODO: add true block distribution  
 # TODO: genomic mating
 # TODO: inbreeding change in every generations
-  
+# TODO: breeding literature from ZhenST
+# TODO: extend genotype and phenotype data
+# TODO: repeat records
+# TODO: add GxE
+      
   simer.Version(width = 70, verbose = verbose)    
   
   inner.env <- environment()    

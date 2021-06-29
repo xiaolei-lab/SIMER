@@ -293,7 +293,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     }
     if (!is.null(fcf)) {
       CV.t <- lapply(1:length(fcf), function(jf) {
-        cv.t <- build.CV(names(fcf[[jf]]), fcf[[jf]])[idx4hi[[i]]$idx_pheno, ]
+        cv.t <- build.effMat(names(fcf[[jf]]), fcf[[jf]])[idx4hi[[i]]$idx_pheno, ]
         if (!is.data.frame(cv.t)) cv.t <- as.data.frame(cv.t)
         return(cv.t)
       })

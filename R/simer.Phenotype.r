@@ -418,7 +418,7 @@ phenotype <-
     }
     if (!is.null(fcf)) {
       CV.t <- lapply(1:length(fcf), function(jf) {
-        cv.t <- build.CV(names(fcf[[jf]]), fcf[[jf]])
+        cv.t <- build.effMat(names(fcf[[jf]]), fcf[[jf]])
         if (!is.data.frame(cv.t)) cv.t <- as.data.frame(cv.t)
         return(cv.t)
       })
