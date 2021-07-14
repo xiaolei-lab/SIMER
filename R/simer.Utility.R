@@ -580,7 +580,14 @@ write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "s
 #' covar <- list("cov", NULL)
 #' CV <- build.effMat(fixed_eff=fixed_eff, covar=covar, data = dat)
 build.effMat <- function(fixed_eff=NULL, covar=NULL, hasMu=TRUE, data) {
-    
+    NAPos <- is.na(data)
+    dropRow <- apply(NAPos, 1, sum)
+    dropRow <- dropRow > 0
+    if (sum(dropRow) > 0) {
+      data <- data[!dropRow, ]
+    }
+    uniFlag <- sapply(1:ncol(data), function(i) { return(length(unique(data[, i]))) })
+    if (any(uniFlag == 1)) { stop("there should be more than one level in the variables") }
     sub.build.CV <- function(fix, cov, data) {
         design <- NULL
         if (!is.null(fix)) {
