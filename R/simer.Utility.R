@@ -872,3 +872,63 @@ simer.sample <- function(x, size, replace = TRUE, prob = NULL) {
     }
     return(sam)
 }
+
+
+#' Call HIBLUP function
+#'
+#' Build date: Jul 16, 2021
+#' Last update: Jul 16, 2021
+#'
+#' @author Dong Yin
+#'
+#' @param pheno the full phenotype data
+#' @param cols the column which users need
+#' @param covar the covariate list
+#' @param fixed_eff the fixed effect list
+#' @param random_eff the randm effect list
+#' @param geno the genotype data
+#' @param geno.id the id of genotyped individual
+#' @param map the marker information map
+#' @param pedigree the pedigree data
+#' @param mode 'A' or 'AD' for additive effect model or additive and dominance model
+#'
+#' @return gebv
+#' @export
+#'
+#' @examples
+#' # with data(hidata) in HIBLUP software
+#' # gebv <- call.HIBLUP(pheno = pheno, pedigree = pedigree)
+call.HIBLUP <- function(pheno, cols = NULL, covar = NULL, fixed_eff = NULL, random_eff = NULL, geno = NULL, geno.id = NULL, map = NULL, pedigree = NULL, mode = 'A') {
+    multrait <- ifelse(length(cols) > 2, TRUE, FALSE)
+    pheno <- pheno[, cols]
+    # prepare fixed effects and random effects
+    CV <- NULL
+    R <- NULL
+    bivar.CV <- NULL
+    bivar.R <- NULL
+    bivar.pos <- NULL
+    if (multrait) {
+        bivar.pos <- cols[-1]
+        if (!is.null(fixed_eff) | !is.null(covar)) 
+            bivar.CV <- build.effMat(fixed_eff, covar, pheno)
+        if (!is.null(random_eff))
+            bivar.R <- build.effMat(covar = random_eff, hasMu = FALSE, data = pheno)
+    } else {
+        if (!is.null(fixed_eff) | !is.null(covar)) 
+            CV <- build.effMat(fixed_eff, covar, pheno)
+        if (!is.null(random_eff))
+            R <- build.effMat(covar = random_eff, hasMu = FALSE, data = pheno)
+    }
+    
+    gebv <- NULL
+    eval(parse(text = "tryCatch({
+      # if (!(\"hiblup\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblup)))
+      if (!(\"hiblupsrc\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblupsrc)))
+      gebv <- hiblup(pheno = pheno, bivar.pos = bivar.pos, geno = geno, map = map, 
+                     geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode, 
+                     CV = CV, R = R, bivar.CV = bivar.CV, bivar.R = bivar.R, snp.solution = FALSE)
+    }, error=function(e) { 
+      stop(\"Something wrong when running HIBLUP!\") })"))
+    
+    return(gebv)
+}
