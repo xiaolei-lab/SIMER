@@ -900,7 +900,20 @@ simer.sample <- function(x, size, replace = TRUE, prob = NULL) {
 #' # gebv <- call.HIBLUP(pheno = pheno, pedigree = pedigree)
 call.HIBLUP <- function(pheno, cols = NULL, covar = NULL, fixed_eff = NULL, random_eff = NULL, geno = NULL, geno.id = NULL, map = NULL, pedigree = NULL, mode = 'A') {
     multrait <- ifelse(length(cols) > 2, TRUE, FALSE)
-    pheno <- pheno[, cols]
+    
+    DropRow <- function(data) {
+      NAPos <- is.na(data)
+      dropRow <- apply(NAPos, 1, sum)
+      dropRow <- dropRow > 0
+      if (sum(dropRow) > 0) {
+        data <- data[!dropRow, ]
+      }
+      return(data)
+    }
+    
+    # to avoid NAs in fixed effect, covariate or random effect
+    pheno <- DropRow(pheno)
+    
     # prepare fixed effects and random effects
     CV <- NULL
     R <- NULL
@@ -909,15 +922,22 @@ call.HIBLUP <- function(pheno, cols = NULL, covar = NULL, fixed_eff = NULL, rand
     bivar.pos <- NULL
     if (multrait) {
         bivar.pos <- cols[-1]
-        if (!is.null(fixed_eff) | !is.null(covar)) 
-            bivar.CV <- build.effMat(fixed_eff, covar, pheno)
-        if (!is.null(random_eff))
-            bivar.R <- build.effMat(covar = random_eff, hasMu = FALSE, data = pheno)
+        if (!is.null(fixed_eff) | !is.null(covar)) {
+          bivar.CV <- build.effMat(fixed_eff, covar, data = pheno)
+        }
+        if (!is.null(random_eff)) {
+          bivar.R <- lapply(1:length(random_eff), function(i) {
+            return(pheno[, c(random_eff[[i]])])
+          }) 
+        }
+            
     } else {
-        if (!is.null(fixed_eff) | !is.null(covar)) 
-            CV <- build.effMat(fixed_eff, covar, pheno)
-        if (!is.null(random_eff))
-            R <- build.effMat(covar = random_eff, hasMu = FALSE, data = pheno)
+        if (!is.null(fixed_eff) | !is.null(covar)) {
+          CV <- build.effMat(fixed_eff, covar, data = pheno)
+        }
+        if (!is.null(random_eff)) {
+          R <- pheno[, random_eff]
+        }
     }
     
     gebv <- NULL
