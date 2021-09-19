@@ -27,19 +27,19 @@
 #' @examples
 #' simer.Version()
 simer.Version <- function(width=60, verbose=TRUE) {
-    welcome <- "Welcome to SIMER"
-    title   <- "Data Simulation for Life Science and Breeding"
-    authors <- c("Designed and Maintained by Dong Yin, Xuanning Zhang, Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
-                 "Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan, and Shuhong Zhao")
-    contact <- "Contact: xiaoleiliu@mail.hzau.edu.cn"
-    logo_s  <- c(" ____ ___ __  __ _____ ____  ", 
-                 "/ ___|_ _|  \\/  | ____|  _ \\ ", 
-                 "\\___ \\| || |\\/| |  _| | |_) |", 
-                 " ___) | || |  | | |___|  _ < ", 
-                 "|____/___|_|  |_|_____|_| \\_\\")
-                                
-    version <- print_info(welcome = welcome, title = title, logo = logo_s, authors = authors, contact = contact, linechar = '=', width = width, verbose = verbose)
-    return(invisible(version))
+  welcome <- "Welcome to SIMER"
+  title   <- "Data Simulation for Life Science and Breeding"
+  authors <- c("Designed and Maintained by Dong Yin, Xuanning Zhang, Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
+               "Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan, and Shuhong Zhao")
+  contact <- "Contact: xiaoleiliu@mail.hzau.edu.cn"
+  logo_s  <- c(" ____ ___ __  __ _____ ____  ", 
+               "/ ___|_ _|  \\/  | ____|  _ \\ ", 
+               "\\___ \\| || |\\/| |  _| | |_) |", 
+               " ___) | || |  | | |___|  _ < ", 
+               "|____/___|_|  |_|_____|_| \\_\\")
+                              
+  version <- print_info(welcome = welcome, title = title, logo = logo_s, authors = authors, contact = contact, linechar = '=', width = width, verbose = verbose)
+  return(invisible(version))
 }
 
 
@@ -69,113 +69,113 @@ print_bar <- function(i,
                       symbol.len = 48,
                       verbose = TRUE
 ) {
-    switch(
-        match.arg(type), 
-        "type1"={
-            if(fixed.points){
-                point.index <- points
-                point.index <- point.index[point.index > floor(100*(i-1)/n)]
-                if(floor(100*i/n) %in% point.index){
-                    if(floor(100*i/n) != max(point.index)){
-                        print.len <- floor(symbol.len*i/n)
-                        logging.log(
-                            paste("\r", 
-                                  paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-                                  paste(rep(" ", symbol.len-print.len), collapse=""),
-                                  sprintf("%.2f%%", 100*i/n)
-                                  , sep=""),
-                            verbose = verbose
-                        )
-                    }else{
-                        print.len <- floor(symbol.len*i/n)
-                        logging.log(
-                            paste("\r", 
-                                  paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-                                  sprintf("%.2f%%", 100*i/n), "\n"
-                                  , sep=""),
-                            verbose = verbose
-                        )
-                    }
-                }
-            }else{
-                if(i < n){
-                    print.len <- floor(symbol.len*i/n)
-                    logging.log(
-                        paste("\r", 
-                              paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-                              paste(rep(" ", symbol.len-print.len), collapse=""),
-                              sprintf("%.2f%%", 100*i/n)
-                              , sep=""),
-                        verbose = verbose
-                    )
-                }else{
-                    print.len <- floor(symbol.len*i/n)
-                    logging.log(
-                        paste("\r", 
-                              paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-                              sprintf("%.2f%%", 100*i/n), "\n"
-                              , sep=""),
-                        verbose = verbose
-                    )
-                }
-            }
-        },
-        # "type2"={
-        #     if(inherits(parallel:::mcfork(), "masterProcess")) {
-        #         progress <- 0.0
-        #         while(progress < n && !isIncomplete(tmp.file)){
-        #             msg <- readBin(tmp.file, "double")
-        #             progress <- progress + as.numeric(msg)
-        #             print.len <- round(symbol.len * progress / n)
-        #             if(fixed.points){
-        #                 if(progress %in% round(points * n / 100)){
-        #                     logging.log(paste("\r", 
-        #                               paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-        #                               paste(rep(" ", symbol.len-print.len), collapse=""),
-        #                               sprintf("%.2f%%", progress * 100 / n), sep=""))
-        #                 }
-        #             }else{
-        #                 logging.log(paste("\r", 
-        #                           paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-        #                           paste(rep(" ", symbol.len-print.len), collapse=""),
-        #                           sprintf("%.2f%%", progress * 100 / n), sep=""))
-        #             }
-        #         }
-        #         parallel:::mcexit()
-        #     }
-        # },
-        "type3"={
-            progress <- readBin(tmp.file, "double") + 1
-            writeBin(progress, tmp.file)
-            print.len <- round(symbol.len * progress / n)
-            if(fixed.points){
-                if(progress %in% round(points * n / 100)){
-                    logging.log(
-                        paste("\r", 
-                              paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-                              paste(rep(" ", symbol.len-print.len), collapse=""),
-                              sprintf("%.2f%%", progress * 100 / n)
-                              , sep=""),
-                        verbose = verbose
-                    )
-                }
-            }else{
-                logging.log(
-                    paste("\r", 
-                          paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-                          paste(rep(" ", symbol.len-print.len), collapse=""),
-                          sprintf("%.2f%%", progress * 100 / n)
-                          , sep=""),
-                    verbose = verbose
-                )
-            }
+  switch(
+    match.arg(type), 
+    "type1"={
+      if(fixed.points){
+        point.index <- points
+        point.index <- point.index[point.index > floor(100*(i-1)/n)]
+        if(floor(100*i/n) %in% point.index){
+          if(floor(100*i/n) != max(point.index)){
+            print.len <- floor(symbol.len*i/n)
+            logging.log(
+              paste("\r", 
+                    paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+                    paste(rep(" ", symbol.len-print.len), collapse=""),
+                    sprintf("%.2f%%", 100*i/n)
+                    , sep=""),
+              verbose = verbose
+            )
+          }else{
+            print.len <- floor(symbol.len*i/n)
+            logging.log(
+              paste("\r", 
+                paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+                sprintf("%.2f%%", 100*i/n), "\n"
+                , sep=""),
+              verbose = verbose
+            )
+          }
         }
-    )
+      }else{
+        if(i < n){
+          print.len <- floor(symbol.len*i/n)
+          logging.log(
+            paste("\r", 
+                  paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+                  paste(rep(" ", symbol.len-print.len), collapse=""),
+                  sprintf("%.2f%%", 100*i/n)
+                  , sep=""),
+            verbose = verbose
+          )
+        }else{
+          print.len <- floor(symbol.len*i/n)
+          logging.log(
+            paste("\r", 
+                  paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+                  sprintf("%.2f%%", 100*i/n), "\n"
+                  , sep=""),
+            verbose = verbose
+          )
+        }
+      }
+    },
+    # "type2"={
+    #    if(inherits(parallel:::mcfork(), "masterProcess")) {
+    #      progress <- 0.0
+    #      while(progress < n && !isIncomplete(tmp.file)){
+    #        msg <- readBin(tmp.file, "double")
+    #        progress <- progress + as.numeric(msg)
+    #        print.len <- round(symbol.len * progress / n)
+    #        if(fixed.points){
+    #          if(progress %in% round(points * n / 100)){
+    #              logging.log(paste("\r", 
+    #                        paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+    #                        paste(rep(" ", symbol.len-print.len), collapse=""),
+    #                        sprintf("%.2f%%", progress * 100 / n), sep=""))
+    #          }
+    #        }else{
+    #          logging.log(paste("\r", 
+    #                    paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+    #                    paste(rep(" ", symbol.len-print.len), collapse=""),
+    #                    sprintf("%.2f%%", progress * 100 / n), sep=""))
+    #        }
+    #      }
+    #      parallel:::mcexit()
+    #    }
+    # },
+    "type3"={
+      progress <- readBin(tmp.file, "double") + 1
+      writeBin(progress, tmp.file)
+      print.len <- round(symbol.len * progress / n)
+      if(fixed.points){
+        if(progress %in% round(points * n / 100)){
+          logging.log(
+            paste("\r", 
+                  paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+                  paste(rep(" ", symbol.len-print.len), collapse=""),
+                  sprintf("%.2f%%", progress * 100 / n)
+                  , sep=""),
+            verbose = verbose
+          )
+        }
+      }else{
+        logging.log(
+          paste("\r", 
+                paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
+                paste(rep(" ", symbol.len-print.len), collapse=""),
+                sprintf("%.2f%%", progress * 100 / n)
+                , sep=""),
+          verbose = verbose
+        )
+      }
+    }
+  )
 }
 
 
 print_accomplished <- function(width = 60, verbose = TRUE) {
-    logging.log(make_line("SIMER ACCOMPLISHED", width = width, linechar = '='), "\n", verbose = verbose)
+  logging.log(make_line("SIMER ACCOMPLISHED", width = width, linechar = '='), "\n", verbose = verbose)
 }
 
 #' Print R Package information, include title, short_title, logo, version, authors, contact
@@ -214,62 +214,62 @@ print_accomplished <- function(width = 60, verbose = TRUE) {
 #' print_info(welcome = welcome, title = title, logo = logo_s, authors = authors, 
 #'            contact = contact, linechar = '=', width = 70)
 print_info <- function(welcome=NULL, title=NULL, short_title=NULL, logo=NULL, version=NULL, authors=NULL, contact=NULL, linechar = '=', width=NULL, verbose=TRUE) {
-    msg <- c()
-    # width
-    if (is.null(width)) { width <- getOption('width') }
-    # version
-    if (is.null(version)) {
-        if (getPackageName() == ".GlobalEnv") {
-            version <- "devel"
-        } else {
-            version <- as.character(packageVersion(getPackageName()))
-        }
+  msg <- c()
+  # width
+  if (is.null(width)) { width <- getOption('width') }
+  # version
+  if (is.null(version)) {
+    if (getPackageName() == ".GlobalEnv") {
+      version <- "devel"
+    } else {
+      version <- as.character(packageVersion(getPackageName()))
     }
-    # welcome
-    if (is.null(welcome)) { 
-        if (getPackageName() == ".GlobalEnv") {
-            welcome <- ""
-        } else {
-            welcome <- paste0("Welcome to ", getPackageName())
-        }
+  }
+  # welcome
+  if (is.null(welcome)) { 
+    if (getPackageName() == ".GlobalEnv") {
+      welcome <- ""
+    } else {
+      welcome <- paste0("Welcome to ", getPackageName())
     }
-    msg <- c(msg, make_line(welcome, linechar = linechar, width = width))
-    # title
-    if (!is.null(title)) {
-        msg <- c(msg, rule_wrap(string = title, width = width, align = "center"))
-    }
-    
-    # align logo
-    logo_width <- max(sapply(logo, nchar))
-    for (i in 1:length(logo)) {
-        l <- paste0(logo[i], paste(rep(" ", logo_width - nchar(logo[i])), collapse = ""))
-        l <- make_line(l, width)
-        msg <- c(msg, l)
-    }
-    
-    # paste short_title label to logo top-left
-    if (!is.null(short_title)) {
-        i <- length(msg) - length(logo) + 1
-        msg[i] <- paste_label(msg[i], paste0(short_title), side = "left")
-    }
-    
-    # paste version label to logo bottom-right
-    msg[length(msg)] <- paste_label(msg[length(msg)], paste0("Version: ", version), side = "right")
-    
-    # authors
-    if (!is.null(authors)) {
-        msg <- c(msg, rule_wrap(string = authors, align = "left", linechar = " ", width = width))
-    }
-    # contact
-    if (!is.null(contact)) {
-        msg <- c(msg, rule_wrap(string = contact, align = "left", linechar = " ", width = width))
-    }
-    # bottom line
-    msg <- c(msg, paste0(rep(linechar, width), collapse = ''))
-    
-    logging.log(msg, sep = "\n", verbose = verbose)
-    
-    return(version)
+  }
+  msg <- c(msg, make_line(welcome, linechar = linechar, width = width))
+  # title
+  if (!is.null(title)) {
+    msg <- c(msg, rule_wrap(string = title, width = width, align = "center"))
+  }
+  
+  # align logo
+  logo_width <- max(sapply(logo, nchar))
+  for (i in 1:length(logo)) {
+    l <- paste0(logo[i], paste(rep(" ", logo_width - nchar(logo[i])), collapse = ""))
+    l <- make_line(l, width)
+    msg <- c(msg, l)
+  }
+  
+  # paste short_title label to logo top-left
+  if (!is.null(short_title)) {
+    i <- length(msg) - length(logo) + 1
+    msg[i] <- paste_label(msg[i], paste0(short_title), side = "left")
+  }
+  
+  # paste version label to logo bottom-right
+  msg[length(msg)] <- paste_label(msg[length(msg)], paste0("Version: ", version), side = "right")
+  
+  # authors
+  if (!is.null(authors)) {
+    msg <- c(msg, rule_wrap(string = authors, align = "left", linechar = " ", width = width))
+  }
+  # contact
+  if (!is.null(contact)) {
+    msg <- c(msg, rule_wrap(string = contact, align = "left", linechar = " ", width = width))
+  }
+  # bottom line
+  msg <- c(msg, paste0(rep(linechar, width), collapse = ''))
+  
+  logging.log(msg, sep = "\n", verbose = verbose)
+  
+  return(version)
 }
 
 #' make line
@@ -280,28 +280,28 @@ print_info <- function(welcome=NULL, title=NULL, short_title=NULL, logo=NULL, ve
 #' @keywords internal
 #' @author Haohao Zhang
 make_line <- function(string, width, linechar = " ", align = "center", margin = 1) {
-    string <- paste0(paste0(rep(" ", margin), collapse = ""),
-                     string,
-                     paste0(rep(" ", margin), collapse = ""))
-    
-    if (align == "center") {
-        if (width > nchar(string)) {
-            left_width <- (width - nchar(string)) %/% 2
-            right_width <- width - nchar(string) - left_width
-            string <-
-                paste0(paste0(rep(linechar, left_width), collapse = ""),
-                       string,
-                       paste0(rep(linechar, right_width), collapse = ""))
-        }
-    } else if (align == "left") {
-        if (width > nchar(string)) {
-            string <-
-                paste0(linechar,
-                       string,
-                       paste0(rep(linechar, width - nchar(string) - 1), collapse = ""))
-        }
+  string <- paste0(paste0(rep(" ", margin), collapse = ""),
+                   string,
+                   paste0(rep(" ", margin), collapse = ""))
+  
+  if (align == "center") {
+    if (width > nchar(string)) {
+      left_width <- (width - nchar(string)) %/% 2
+      right_width <- width - nchar(string) - left_width
+      string <-
+        paste0(paste0(rep(linechar, left_width), collapse = ""),
+               string,
+               paste0(rep(linechar, right_width), collapse = ""))
     }
-    return(string)
+  } else if (align == "left") {
+    if (width > nchar(string)) {
+      string <-
+        paste0(linechar,
+               string,
+               paste0(rep(linechar, width - nchar(string) - 1), collapse = ""))
+    }
+  }
+  return(string)
 }
 
 #' wrap text to multiple line, align left, right or center.
@@ -313,16 +313,16 @@ make_line <- function(string, width, linechar = " ", align = "center", margin = 
 #' @keywords internal
 #' @author Haohao Zhang
 rule_wrap <- function(string, width, align = "center", linechar = " ") {
-    # define
-    msg <- c()
-    lines <- strwrap(string, width = width - 4)
-
-    # wrap
-    for (i in 1:length(lines)) {
-        l <- make_line(lines[i], width = width, linechar = linechar, align = align)
-        msg <- c(msg, l)
-    }
-    return(msg)
+  # define
+  msg <- c()
+  lines <- strwrap(string, width = width - 4)
+  
+  # wrap
+  for (i in 1:length(lines)) {
+    l <- make_line(lines[i], width = width, linechar = linechar, align = align)
+    msg <- c(msg, l)
+  }
+  return(msg)
 }
 
 #' Paste label to a line
@@ -338,15 +338,15 @@ rule_wrap <- function(string, width, align = "center", linechar = " ") {
 #' @keywords internal
 #' @author Haohao Zhang
 paste_label <- function(line, label, side = "right", margin = 2) {
-    if (side == "right") {
-        end   <- nchar(line) - margin
-        start <- end - (nchar(label) - 1)
-    } else {
-        start <- 1 + margin
-        end   <- start + (nchar(label) - 1)
-    }
-    substr(line, start, end) <- label
-    return(line)
+  if (side == "right") {
+    end   <- nchar(line) - margin
+    start <- end - (nchar(label) - 1)
+  } else {
+    start <- 1 + margin
+    end   <- start + (nchar(label) - 1)
+  }
+  substr(line, start, end) <- label
+  return(line)
 }
 
 #' format time
@@ -357,37 +357,37 @@ paste_label <- function(line, label, side = "right", margin = 2) {
 #' @export
 #' @author Lilin Yin
 format_time <- function(x) {
-    h <- x %/% 3600
-    m <- (x %% 3600) %/% 60
-    s <- ((x %% 3600) %% 60)
-    index <- which(c(h, m, s) != 0)
-    num <- c(h, m, s)[index]
-    num <- round(num, 0)
-    char <- c("h", "m", "s")[index]
-    return(paste0(num, char, collapse = ""))
+  h <- x %/% 3600
+  m <- (x %% 3600) %/% 60
+  s <- ((x %% 3600) %% 60)
+  index <- which(c(h, m, s) != 0)
+  num <- c(h, m, s)[index]
+  num <- round(num, 0)
+  char <- c("h", "m", "s")[index]
+  return(paste0(num, char, collapse = ""))
 }
 
 
 load_if_installed <- function(package) {
-    if (!identical(system.file(package = package), "")) {
-        do.call('library', list(package))
-        return(TRUE)
-    } else {
-        return(FALSE) 
-    }
+  if (!identical(system.file(package = package), "")) {
+    do.call('library', list(package))
+    return(TRUE)
+  } else {
+    return(FALSE) 
+  }
 }
 
 
 mkl_env <- function(exprs, threads = 1) {
-    if (load_if_installed("RevoUtilsMath")) {
-        math.cores <- eval(parse(text = "getMKLthreads()"))
-        eval(parse(text = "setMKLthreads(threads)"))
-    }
-    result <- exprs
-    if (load_if_installed("RevoUtilsMath")) {
-        eval(parse(text = "setMKLthreads(math.cores)"))
-    }
-    return(result)
+  if (load_if_installed("RevoUtilsMath")) {
+    math.cores <- eval(parse(text = "getMKLthreads()"))
+    eval(parse(text = "setMKLthreads(threads)"))
+  }
+  result <- exprs
+  if (load_if_installed("RevoUtilsMath")) {
+    eval(parse(text = "setMKLthreads(math.cores)"))
+  }
+  return(result)
 }
 
 
@@ -420,42 +420,42 @@ mkl_env <- function(exprs, threads = 1) {
 #'
 #' remove_bigmatrix(x = "simer")
 remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin") {
-    name <- basename(x)
-    path <- dirname(x)
-    
-    descfile <- paste0(name, desc_suffix)
-    binfile  <- paste0(name, bin_suffix)
-    
-    remove_var <- function(binfile, envir) {
-        for (v in ls(envir = envir)) {
-            if (class(get(v, envir = envir)) == "big.matrix") {
-                desc <- describe(get(v, envir = envir))@description
-                if (desc$filename == binfile) { # TODO: Risky deletion
-                    rm(list = v, envir = envir)
-                }
-            } else if (class(get(v, envir = envir)) == "list") {
-                if (is.null(get(v, envir = envir)$geno)) next
-                if (class(get(v, envir = envir)$geno) == "big.matrix") {
-                    desc <- describe(get(v, envir = envir)$geno)@description
-                    if (desc$filename == binfile) { # TODO: Risky deletion
-                        rm(list = v, envir = envir)
-                    }
-                }
-            }
+  name <- basename(x)
+  path <- dirname(x)
+  
+  descfile <- paste0(name, desc_suffix)
+  binfile  <- paste0(name, bin_suffix)
+  
+  remove_var <- function(binfile, envir) {
+    for (v in ls(envir = envir)) {
+      if (class(get(v, envir = envir)) == "big.matrix") {
+        desc <- describe(get(v, envir = envir))@description
+        if (desc$filename == binfile) { # TODO: Risky deletion
+         rm(list = v, envir = envir)
         }
+      } else if (class(get(v, envir = envir)) == "list") {
+        if (is.null(get(v, envir = envir)$geno)) next
+        if (class(get(v, envir = envir)$geno) == "big.matrix") {
+          desc <- describe(get(v, envir = envir)$geno)@description
+          if (desc$filename == binfile) { # TODO: Risky deletion
+            rm(list = v, envir = envir)
+          }
+        }
+      }
     }
-    
-    # Delete objects that occupy binfile in the global environment
-    remove_var(binfile, as.environment(-1L))
-    remove_var(binfile, globalenv())
-    gc()
-    
-    if (file.exists(descfile)) {
-        file.remove(descfile)
-    }
-    if (file.exists(binfile)) {
-        file.remove(binfile)
-    }
+  }
+  
+  # Delete objects that occupy binfile in the global environment
+  remove_var(binfile, as.environment(-1L))
+  remove_var(binfile, globalenv())
+  gc()
+  
+  if (file.exists(descfile)) {
+   file.remove(descfile)
+  }
+  if (file.exists(binfile)) {
+    file.remove(binfile)
+  }
 }
 
 
@@ -531,115 +531,28 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' file.remove(file.path(tempdir(), "simer.phe"))
 #' }
 write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "simer", outpath, out.format, verbose) {
-    if (is.null(outpath)) return(invisible())
-    
-    # correct out.geno.index and out.pheno.index
-    out.geno.index.new <- match(out.geno.index, pop$index)
-    out.pheno.index.new <- match(out.pheno.index, pop$index)
-    
-    if (out.format == "numeric") {
-        write.table(pop[out.geno.index.new, 2], file = file.path(outpath, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
-        logging.log(" Generate genoid successfully!\n", verbose = verbose)
-        write.table(map, file = file.path(outpath, paste0(out, ".map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
-        logging.log(" Generate map successfully!\n", verbose = verbose)
-        write.table(pop[out.pheno.index.new, c(2, 5, 6)], file = file.path(outpath, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-        logging.log(" Generate pedigree successfully!\n", verbose = verbose)
-        write.table(pop[out.pheno.index.new, c(1, 2, 5, 7, 8:ncol(pop))], file = file.path(outpath, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-        logging.log(" Generate phenotype successfully!\n", verbose = verbose)
-        
-    } else if (out.format == "plink") {
-        f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = TRUE)
-        pheno <- subset(pop, select = c("index", f1))
-        pheno <- pheno[out.geno.index.new, ]
-        MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pheno, out = file.path(outpath, "mvp.plink"), verbose = verbose)
-    }  
-}
-
-#' Build design matrix according to fixed effects, covariants or random effects
-#'
-#' Build date: Jan 20, 2020
-#' Last update: Jan 20, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param fixed_eff the names of fixed effects by vector or list
-#' @param covar the names of covariants by vector or list
-#' @param hasMu whether to add mu to effect matrix
-#' @param data a data frame
-#'
-#' @return design matrix
-#' @export
-#'
-#' @examples
-#' dat <- data.frame(
-#' f1 = sample(LETTERS[1:3], 20, TRUE),
-#' f2 = sample(LETTERS[4:5], 20, TRUE),
-#' cov = sample.int(20),
-#' row.names = paste0("id_", 1:20))
-#' fixed_eff <- list(c("f1", "f2"), c("f1"))
-#' covar <- list("cov", NULL)
-#' CV <- build.effMat(fixed_eff=fixed_eff, covar=covar, data = dat)
-build.effMat <- function(fixed_eff=NULL, covar=NULL, hasMu=TRUE, data) {
-    NAPos <- is.na(data)
-    dropRow <- apply(NAPos, 1, sum)
-    dropRow <- dropRow > 0
-    if (sum(dropRow) > 0) {
-      data <- data[!dropRow, ]
-    }
-    uniFlag <- sapply(1:ncol(data), function(i) { return(length(unique(data[, i]))) })
-    if (any(uniFlag == 1)) { stop("there should be more than one level in the variables") }
-    sub.build.CV <- function(fix, cov, data) {
-        design <- NULL
-        if (!is.null(fix)) {
-            design <- do.call(cbind, lapply(fix, function(cv){
-                dt <- apply(outer(data[[cv]], unique(data[[cv]]), FUN = "=="), 2, as.integer)
-                return(dt)
-            }))
-            rownames(design) <- rownames(data)
-            colnames(design) <- unlist(sapply(fix, function(cv) unique(data[[cv]])))
-            
-        }
-        if (!is.null(cov)){
-            co <- do.call(cbind, lapply(cov, function(cv){
-                dt <- data[[cv]]
-                if (!is.numeric(dt)) dt <- as.numeric(dt)
-                if (all(is.na(dt))) stop("Please specify numeric covariants!")
-                return(dt)
-            }))
-            rownames(co) <- rownames(data)
-            if (is.numeric(cov)) {
-                colnames(co) <- colnames(data)[cov]
-            } else {
-                colnames(co) <- cov
-            }
-            design <- cbind(design, co)
-        }
-        if (hasMu) {
-            mu <- rep(1, nrow(data))
-            design <- cbind(mu,design)
-        }
-        return(design)
-    }
-    
-    if ((is.list(fixed_eff) & !is.list(covar) & is.vector(covar)) |
-        (is.list(covar) & !is.list(fixed_eff) & is.vector(fixed_eff)))
-        stop("fixed_eff and covar should have the same type!")
-    
-    if (is.list(fixed_eff) | is.list(covar)) {
-        nTrait <- max(length(fixed_eff), length(covar))
-        if (!is.null(fixed_eff) & !is.null(covar)) {
-            if (length(fixed_eff) != length(covar)) 
-                stop("fixed_eff and covar should have the same length!")
-        }
-        design <- lapply(1:nTrait, function(i) {
-            return(sub.build.CV(fixed_eff[[i]], covar[[i]], data))
-        })
-        
-    } else {
-        design <- sub.build.CV(fixed_eff, covar, data)
-    }
-    
-    return(design)
+  if (is.null(outpath)) return(invisible())
+  
+  # correct out.geno.index and out.pheno.index
+  out.geno.index.new <- match(out.geno.index, pop$index)
+  out.pheno.index.new <- match(out.pheno.index, pop$index)
+  
+  if (out.format == "numeric") {
+    write.table(pop[out.geno.index.new, 2], file = file.path(outpath, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+    logging.log(" Generate genoid successfully!\n", verbose = verbose)
+    write.table(map, file = file.path(outpath, paste0(out, ".map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+    logging.log(" Generate map successfully!\n", verbose = verbose)
+    write.table(pop[out.pheno.index.new, c(2, 5, 6)], file = file.path(outpath, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+    logging.log(" Generate pedigree successfully!\n", verbose = verbose)
+    write.table(pop[out.pheno.index.new, c(1, 2, 5, 7, 8:ncol(pop))], file = file.path(outpath, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+    logging.log(" Generate phenotype successfully!\n", verbose = verbose)
+      
+  } else if (out.format == "plink") {
+    f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = TRUE)
+    pheno <- subset(pop, select = c("index", f1))
+    pheno <- pheno[out.geno.index.new, ]
+    MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pheno, out = file.path(outpath, "mvp.plink"), verbose = verbose)
+  }  
 }
 
 #' Print things into file
@@ -662,31 +575,30 @@ build.effMat <- function(fixed_eff=NULL, covar=NULL, hasMu=TRUE, data) {
 #' x <- list(a = "a", b = "b")
 #' simer.print(x)
 simer.print <- function(x, file = NULL, append = TRUE, verbose = TRUE) {
-    if (verbose) {
-        
-        if (is.numeric(x) & is.vector(x)) {
-            if (length(x) <= 10) {
-                cat("", x, "\n")
-            } else {
-                cat("", x[1:10], "...(more IDs in the logging file)\n")
-            }
-        } else {
-            print(x)
-        }
-        
-        if (is.null(file)) {
-            try(file <- get("logging.file", envir = package.env), silent = TRUE)
-        }
-        if (!is.null(file)) {
-            sink(file = file, append = append)
-            if (is.numeric(x) & is.vector(x)) {
-                cat("", x, "\n")
-            } else {
-                print(x)
-            }
-            sink()
-        }
+  if (verbose) {
+    if (is.numeric(x) & is.vector(x)) {
+      if (length(x) <= 10) {
+          cat("", x, "\n")
+      } else {
+          cat("", x[1:10], "...(more IDs in the logging file)\n")
+      }
+    } else {
+      print(x)
     }
+    
+    if (is.null(file)) {
+      try(file <- get("logging.file", envir = package.env), silent = TRUE)
+    }
+    if (!is.null(file)) {
+      sink(file = file, append = append)
+      if (is.numeric(x) & is.vector(x)) {
+        cat("", x, "\n")
+      } else {
+        print(x)
+      }
+      sink()
+    }
+  }
 }
 
 #' Show file content
@@ -707,19 +619,19 @@ simer.print <- function(x, file = NULL, append = TRUE, verbose = TRUE) {
 #' filename <- file.path(selPath, "breeding_plan01.txt")
 #' simer.show.file(filename = filename, verbose = TRUE)
 simer.show.file <- function(filename = NULL, verbose = TRUE) {
-    if (is.null(filename)) stop("Please input a filename!")
-    fileImage <- file(description=filename, open="r")
-    inFile <- TRUE
-    while (inFile) {
-        tt <- readLines(fileImage, n=1)
-        if (length(tt) == 0) {
-            inFile = FALSE
-            next
-        }
-        logging.log(tt, "\n", verbose = verbose)
+  if (is.null(filename)) stop("Please input a filename!")
+  fileImage <- file(description=filename, open="r")
+  inFile <- TRUE
+  while (inFile) {
+    tt <- readLines(fileImage, n=1)
+    if (length(tt) == 0) {
+      inFile = FALSE
+      next
     }
-    close.connection(fileImage)
-    return(invisible())
+    logging.log(tt, "\n", verbose = verbose)
+  }
+  close.connection(fileImage)
+  return(invisible())
 }
 
 #' Convert genotype matrix from (0, 1) to (0, 1, 2)
@@ -742,12 +654,12 @@ simer.show.file <- function(filename = NULL, verbose = TRUE) {
 #' geno1[1:5, 1:10]
 #' geno2[1:5, 1:5]
 geno.cvt1 <- function(pop.geno) {
-    if (is.null(pop.geno)) return(NULL)
-    num.ind <- ncol(pop.geno) / 2
-    v.odd <- (1:num.ind) * 2 - 1
-    v.even <- (1:num.ind) * 2
-    geno <- pop.geno[, v.odd] + pop.geno[, v.even]
-    return(geno)
+  if (is.null(pop.geno)) return(NULL)
+  num.ind <- ncol(pop.geno) / 2
+  v.odd <- (1:num.ind) * 2 - 1
+  v.even <- (1:num.ind) * 2
+  geno <- pop.geno[, v.odd] + pop.geno[, v.even]
+  return(geno)
 }
 
 #' Convert genotype matrix from (0, 1, 2) to (0, 1)
@@ -769,24 +681,24 @@ geno.cvt1 <- function(pop.geno) {
 #' geno <- geno.cvt2(pop.geno = geno1)
 #' geno[1:5, 1:10]
 geno.cvt2 <- function(pop.geno) {
-    if (is.null(pop.geno)) return(NULL)
-    nind <- ncol(pop.geno)
-    nmrk <- nrow(pop.geno)
-    geno <- matrix(3, nmrk, 2*nind)
-    
-    v.odd <- (1:nind) * 2 - 1
-    v.even <- (1:nind) * 2
-    
-    for (i in 1:nind) {
-        tmp1 <- pop.geno[, i]
-        tmp1[tmp1 == 2] <- 1
-        geno[, v.even[i]] <- tmp1
-        tmp2 <- pop.geno[, i] - 1
-        tmp2[tmp2 == -1] <- 0
-        geno[, v.odd[i]] <- tmp2
-    }
-    
-    return(geno)
+  if (is.null(pop.geno)) return(NULL)
+  nind <- ncol(pop.geno)
+  nmrk <- nrow(pop.geno)
+  geno <- matrix(3, nmrk, 2*nind)
+  
+  v.odd <- (1:nind) * 2 - 1
+  v.even <- (1:nind) * 2
+  
+  for (i in 1:nind) {
+    tmp1 <- pop.geno[, i]
+    tmp1[tmp1 == 2] <- 1
+    geno[, v.even[i]] <- tmp1
+    tmp2 <- pop.geno[, i] - 1
+    tmp2[tmp2 == -1] <- 0
+    geno[, v.odd[i]] <- tmp2
+  }
+  
+  return(geno)
 }
 
 #' To bulid correlation of variables
@@ -815,35 +727,35 @@ geno.cvt2 <- function(pop.geno) {
 #' df.cov <- build.cov(df, Sigma = Sigma)
 #' var(df.cov)
 build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
-    if (!is.data.frame(df)) {
-        df.nm <- paste0(" tr", 1:ncol(df))
-    } else {
-        df.nm <- names(df)
-    }
-    
-    # get zero-var index
-    df.var <- apply(df, 2, var)
-    idx <- which(df.var == 0)
-    df.t <- df[, idx]
-    df[, idx] <- rnorm(nrow(df))
-    
-    p <- length(mu)
-    eS <- eigen(Sigma, symmetric = TRUE)
-    ev <- eS$values
-    if (!all(ev >= -tol * abs(ev[1L]))) 
-        stop("'Sigma' is not positive definite")
-    
-    df <- scale(df, center = TRUE, scale = FALSE)
-    df <- df %*% svd(df, nu = 0)$v
-    df <- scale(df, center = FALSE, scale = TRUE)
-    
-    df <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(df)
-    df <- t(df)
-    df <- as.data.frame(df)
-    names(df) <- df.nm
-    df[, idx] <- df.t
-    
-    return(df)
+  if (!is.data.frame(df)) {
+    df.nm <- paste0(" tr", 1:ncol(df))
+  } else {
+    df.nm <- names(df)
+  }
+  
+  # get zero-var index
+  df.var <- apply(df, 2, var)
+  idx <- which(df.var == 0)
+  df.t <- df[, idx]
+  df[, idx] <- rnorm(nrow(df))
+  
+  p <- length(mu)
+  eS <- eigen(Sigma, symmetric = TRUE)
+  ev <- eS$values
+  if (!all(ev >= -tol * abs(ev[1L]))) 
+    stop("'Sigma' is not positive definite")
+  
+  df <- scale(df, center = TRUE, scale = FALSE)
+  df <- df %*% svd(df, nu = 0)$v
+  df <- scale(df, center = FALSE, scale = TRUE)
+  
+  df <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(df)
+  df <- t(df)
+  df <- as.data.frame(df)
+  names(df) <- df.nm
+  df[, idx] <- df.t
+  
+  return(df)
 }
 
 #' Sample process with all needed elements
@@ -866,89 +778,48 @@ build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
 #' sam
 #' unique(sam)
 simer.sample <- function(x, size, replace = TRUE, prob = NULL) {
+  sam <- sample(x, size, replace, prob)
+  while (length(unique(sam)) != length(x)) {
     sam <- sample(x, size, replace, prob)
-    while (length(unique(sam)) != length(x)) {
-        sam <- sample(x, size, replace, prob)
-    }
-    return(sam)
+  }
+  return(sam)
 }
 
-
-#' Call HIBLUP function
+#' Check the levels of environmental factors
 #'
-#' Build date: Jul 16, 2021
-#' Last update: Jul 16, 2021
+#' Build date: Sep 10, 2021
+#' Last update: Sep 10, 2021
 #'
 #' @author Dong Yin
 #'
-#' @param pheno the full phenotype data
-#' @param cols the column which users need
-#' @param covar the covariate list
-#' @param fixed_eff the fixed effect list
-#' @param random_eff the randm effect list
-#' @param geno the genotype data
-#' @param geno.id the id of genotyped individual
-#' @param map the marker information map
-#' @param pedigree the pedigree data
-#' @param mode 'A' or 'AD' for additive effect model or additive and dominance model
-#'
-#' @return gebv
+#' @param data data needing check
+#' @param envName the environmental factor name in the data
+#' 
+#' @return data without environmental factors of wrong level
 #' @export
 #'
 #' @examples
-#' # with data(hidata) in HIBLUP software
-#' # gebv <- call.HIBLUP(pheno = pheno, pedigree = pedigree)
-call.HIBLUP <- function(pheno, cols = NULL, covar = NULL, fixed_eff = NULL, random_eff = NULL, geno = NULL, geno.id = NULL, map = NULL, pedigree = NULL, mode = 'A') {
-    multrait <- ifelse(length(cols) > 2, TRUE, FALSE)
-    
-    DropRow <- function(data) {
-      NAPos <- is.na(data)
-      dropRow <- apply(NAPos, 1, sum)
-      dropRow <- dropRow > 0
-      if (sum(dropRow) > 0) {
-        data <- data[!dropRow, ]
+#' data <- data.frame(a = rep(1, 3), b = 1:3, c = c(1, 1, 5))
+#' envName <- c("a", "b", "c")
+#' data <- checkEnv(data = data, envName = envName)
+checkEnv <- function(data, envName) {
+  if (is.numeric(envName)) {
+    envName <- names(data)[envName]
+  }
+
+  # remove column of one level or full levels
+  drop <- c()
+  for (i in 1:ncol(data)) {
+    if (names(data)[i] %in% envName) {
+      numUni <- length(unique(data[[i]]))
+      if (numUni == 1 || numUni == length(data[[i]])) {
+        drop <- c(drop, i)
       }
-      return(data)
     }
-    
-    # to avoid NAs in fixed effect, covariate or random effect
-    pheno <- DropRow(pheno)
-    
-    # prepare fixed effects and random effects
-    CV <- NULL
-    R <- NULL
-    bivar.CV <- NULL
-    bivar.R <- NULL
-    bivar.pos <- NULL
-    if (multrait) {
-        bivar.pos <- cols[-1]
-        if (!is.null(fixed_eff) | !is.null(covar)) {
-          bivar.CV <- build.effMat(fixed_eff, covar, data = pheno)
-        }
-        if (!is.null(random_eff)) {
-          bivar.R <- lapply(1:length(random_eff), function(i) {
-            return(pheno[, c(random_eff[[i]])])
-          }) 
-        }
-            
-    } else {
-        if (!is.null(fixed_eff) | !is.null(covar)) {
-          CV <- build.effMat(fixed_eff, covar, data = pheno)
-        }
-        if (!is.null(random_eff)) {
-          R <- pheno[, random_eff]
-        }
-    }
-    
-    gebv <- NULL
-    eval(parse(text = "tryCatch({
-      # if (!(\"hiblup\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblup)))
-      if (!(\"hiblupsrc\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblupsrc)))
-      gebv <- hiblup(pheno = pheno, bivar.pos = bivar.pos, geno = geno, map = map, 
-                     geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode, 
-                     CV = CV, R = R, bivar.CV = bivar.CV, bivar.R = bivar.R, snp.solution = FALSE)
-    }, error=function(e) { 
-      stop(\"Something wrong when running HIBLUP!\") })"))
-    
-    return(gebv)
+  }
+  if (length(drop) > 0) {
+    warning(paste(names(data)[drop], collapse=', '), ' has been remove because of its one or full levels!')
+    data <- data[, -drop, drop = FALSE]
+  }
+  return(data)
 }

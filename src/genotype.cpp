@@ -1,0 +1,532 @@
+#include <RcppArmadillo.h>
+#include "simer_omp.h"
+#include <bigmemory/BigMatrix.h>
+#include <bigmemory/MatrixAccessor.hpp>
+
+// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(bigmemory, BH)]]
+using namespace std;
+using namespace Rcpp;
+using namespace arma;
+
+static const double kSmallEpsilon = 0.00000000000005684341886080801486968994140625;
+static const double kExactTestBias = 0.00000000000000000000000010339757656912845935892608650874535669572651386260986328125;
+static const double kExactTestEpsilon2 = 0.0000000000009094947017729282379150390625;
+
+template<typename T>
+NumericVector FilterMind(XPtr<BigMatrix> pMat, double NA_C, int threads=0) {
+  omp_setup(threads);
+  
+  MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
+  
+  size_t i, j, m = pMat->nrow(), n = pMat->ncol();
+  NumericVector colNumNA(n, 0);
+  
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (j = 0; j < n; j++) {
+    for (i = 0; i < m; i++) {
+      if (bigm[j][i] == NA_C) { colNumNA[j] += 1;  }
+    }
+  }
+  
+  return colNumNA;
+}
+
+NumericVector FilterMind(const SEXP pBigMat, double NA_C, int threads=0) {
+    XPtr<BigMatrix> xpMat(pBigMat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return FilterMind<char>(xpMat, NA_CHAR, threads);
+  case 2:
+    return FilterMind<short>(xpMat, NA_SHORT, threads);
+  case 4:
+    return FilterMind<int>(xpMat, NA_INTEGER, threads);
+  case 8:
+    return FilterMind<double>(xpMat, NA_REAL, threads);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+template<typename T>
+NumericVector FilterGeno(XPtr<BigMatrix> pMat, double NA_C, IntegerVector rowIdx, IntegerVector colIdx, int threads=0) {
+  omp_setup(threads);
+  
+  MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
+  size_t i, j;
+  NumericVector rowNumNA(rowIdx.size(), 0);
+  
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (j = 0; j < colIdx.size(); j++) {
+    for (i = 0; i < rowIdx.size(); i++) {
+      if (bigm[colIdx[j]][rowIdx[i]] == NA_C) { rowNumNA[i] += 1;  }
+    }
+  }
+  
+  return rowNumNA;
+}
+
+NumericVector FilterGeno(const SEXP pBigMat, double NA_C, IntegerVector rowIdx, IntegerVector colIdx, int threads=0) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return FilterGeno<char>(xpMat, NA_CHAR, rowIdx, colIdx, threads);
+  case 2:
+    return FilterGeno<short>(xpMat, NA_SHORT, rowIdx, colIdx, threads);
+  case 4:
+    return FilterGeno<int>(xpMat, NA_INTEGER, rowIdx, colIdx, threads);
+  case 8:
+    return FilterGeno<double>(xpMat, NA_REAL, rowIdx, colIdx, threads);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+template<typename T>
+arma::mat CalGenoFreq(XPtr<BigMatrix> pMat, double NA_C, IntegerVector rowIdx, IntegerVector colIdx, int threads=0) {
+  omp_setup(threads);
+  
+  MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
+  
+  size_t i, j;
+  arma::mat genoFreq(rowIdx.size(), 3, fill::zeros);
+
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (i = 0; i < rowIdx.size(); i++) {
+    for (j = 0; j < colIdx.size(); j++) {
+      if (bigm[colIdx[j]][rowIdx[i]] == 0) {
+        genoFreq(i, 0) = genoFreq(i, 0) + 1; 
+      } else if (bigm[colIdx[j]][rowIdx[i]] == 1) {
+        genoFreq(i, 1) = genoFreq(i, 1) + 1;
+      } else if (bigm[colIdx[j]][rowIdx[i]] == 2) {
+        genoFreq(i, 2) = genoFreq(i, 2) + 1;
+      }
+    }
+  }
+  
+  return genoFreq;
+}
+
+arma::mat CalGenoFreq(const SEXP pBigMat, IntegerVector rowIdx, IntegerVector colIdx, int threads=0) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return CalGenoFreq<char>(xpMat, NA_CHAR, rowIdx, colIdx, threads);
+  case 2:
+    return CalGenoFreq<short>(xpMat, NA_SHORT, rowIdx, colIdx, threads);
+  case 4:
+    return CalGenoFreq<int>(xpMat, NA_INTEGER, rowIdx, colIdx, threads);
+  case 8:
+    return CalGenoFreq<double>(xpMat, NA_REAL, rowIdx, colIdx, threads);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+NumericVector FilterMAF(arma::mat genoFreq, int threads=0) {
+  omp_setup(threads);
+  
+  IntegerVector freq0 = wrap(genoFreq.col(0));
+  IntegerVector freq1 = wrap(genoFreq.col(1));
+  IntegerVector freq2 = wrap(genoFreq.col(2));
+
+  size_t i, j;
+  NumericVector MAF(genoFreq.n_rows); MAF.fill(0);
+  
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (i = 0; i < genoFreq.n_rows; i++) {
+    MAF[i] = (freq0[i] + freq1[i] * 0.5) / 
+      (freq0[i]+ freq1[i] + freq2[i]);
+    MAF[i] = MAF[i] <= 0.5 ? MAF[i] : (1 - MAF[i]);
+  }
+  
+  return MAF;
+}
+
+double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
+{
+  if (obs_hom1 < 0 || obs_hom2 < 0 || obs_hets < 0) 
+  {
+    Rcpp::stop("FATAL ERROR - SNP-HWE: Current genotype configuration (%d  %d %d ) includes a"
+             " negative count", obs_hets, obs_hom1, obs_hom2);
+  }
+  
+  int obs_homc = obs_hom1 < obs_hom2 ? obs_hom2 : obs_hom1;
+  int obs_homr = obs_hom1 < obs_hom2 ? obs_hom1 : obs_hom2;
+  
+  int rare_copies = 2 * obs_homr + obs_hets;
+  int genotypes   = obs_hets + obs_homc + obs_homr;
+  
+  double * het_probs = (double *) malloc((size_t) (rare_copies + 1) * sizeof(double));
+  if (het_probs == NULL) 
+  {
+    Rcpp::stop("FATAL ERROR - SNP-HWE: Unable to allocate array for heterozygote probabilities" );
+  }
+  
+  int i;
+  for (i = 0; i <= rare_copies; i++)
+    het_probs[i] = 0.0;
+  
+  /* start at midpoint */
+  int mid = rare_copies * (2 * genotypes - rare_copies) / (2 * genotypes);
+  
+  /* check to ensure that midpoint and rare alleles have same parity */
+  if ((rare_copies & 1) ^ (mid & 1))
+    mid++;
+  
+  int curr_hets = mid;
+  int curr_homr = (rare_copies - mid) / 2;
+  int curr_homc = genotypes - curr_hets - curr_homr;
+  
+  het_probs[mid] = 1.0;
+  double sum = het_probs[mid];
+  for (curr_hets = mid; curr_hets > 1; curr_hets -= 2)
+  {
+    het_probs[curr_hets - 2] = het_probs[curr_hets] * curr_hets * (curr_hets - 1.0)
+    / (4.0 * (curr_homr + 1.0) * (curr_homc + 1.0));
+    sum += het_probs[curr_hets - 2];
+    
+    /* 2 fewer heterozygotes for next iteration -> add one rare, one common homozygote */
+    curr_homr++;
+    curr_homc++;
+  }
+  
+  curr_hets = mid;
+  curr_homr = (rare_copies - mid) / 2;
+  curr_homc = genotypes - curr_hets - curr_homr;
+  for (curr_hets = mid; curr_hets <= rare_copies - 2; curr_hets += 2)
+  {
+    het_probs[curr_hets + 2] = het_probs[curr_hets] * 4.0 * curr_homr * curr_homc
+    /((curr_hets + 2.0) * (curr_hets + 1.0));
+    sum += het_probs[curr_hets + 2];
+    
+    /* add 2 heterozygotes for next iteration -> subtract one rare, one common homozygote */
+    curr_homr--;
+    curr_homc--;
+  }
+  
+  for (i = 0; i <= rare_copies; i++)
+    het_probs[i] /= sum;
+  
+  /* alternate p-value calculation for p_hi/p_lo
+   double p_hi = het_probs[obs_hets];
+   for (i = obs_hets + 1; i <= rare_copies; i++)
+   p_hi += het_probs[i];
+   
+   double p_lo = het_probs[obs_hets];
+   for (i = obs_hets - 1; i >= 0; i--)
+   p_lo += het_probs[i];
+   
+   
+   double p_hi_lo = p_hi < p_lo ? 2.0 * p_hi : 2.0 * p_lo;
+   */
+  
+  double p_hwe = 0.0;
+  /*  p-value calculation for p_hwe  */
+  for (i = 0; i <= rare_copies; i++)
+  {
+    if (het_probs[i] > het_probs[obs_hets])
+      continue;
+    p_hwe += het_probs[i];
+  }
+  
+  p_hwe = p_hwe > 1.0 ? 1.0 : p_hwe;
+  
+  free(het_probs);
+  
+  return p_hwe;
+}
+
+// [[Rcpp::export]]
+double SNPHWE2(int32_t obs_hets, int32_t obs_hom1, int32_t obs_hom2, uint32_t midp) {
+  // This function implements an exact SNP test of Hardy-Weinberg
+  // Equilibrium as described in Wigginton, JE, Cutler, DJ, and
+  // Abecasis, GR (2005) A Note on Exact Tests of Hardy-Weinberg
+  // Equilibrium. American Journal of Human Genetics. 76: 887 - 893.
+  //
+  // The original version was written by Jan Wigginton.
+  //
+  // This version was written by Christopher Chang.  It contains the following
+  // improvements over the original SNPHWE():
+  // - Proper handling of >64k genotypes.  Previously, there was a potential
+  //   integer overflow.
+  // - Detection and efficient handling of floating point overflow and
+  //   underflow.  E.g. instead of summing a tail all the way down, the loop
+  //   stops once the latest increment underflows the partial sum's 53-bit
+  //   precision; this results in a large speedup when max heterozygote count
+  //   >1k.
+  // - No malloc() call.  It's only necessary to keep track of a few partial
+  //   sums.
+  // - Support for the mid-p variant of this test.  See Graffelman J, Moreno V
+  //   (2013) The mid p-value in exact tests for Hardy-Weinberg equilibrium.
+  //
+  // Note that the SNPHWE_t() function below is a lot more efficient for
+  // testing against a p-value inclusion threshold.  SNPHWE2() should only be
+  // used if you need the actual p-value.
+  intptr_t obs_homc;
+  intptr_t obs_homr;
+  if (obs_hom1 < obs_hom2) {
+    obs_homc = obs_hom2;
+    obs_homr = obs_hom1;
+  } else {
+    obs_homc = obs_hom1;
+    obs_homr = obs_hom2;
+  }
+  const int64_t rare_copies = 2LL * obs_homr + obs_hets;
+  const int64_t genotypes2 = (obs_hets + obs_homc + obs_homr) * 2LL;
+  if (!genotypes2) {
+    if (midp) {
+      return 0.5;
+    }
+    return 1;
+  }
+  int32_t tie_ct = 1;
+  double curr_hets_t2 = obs_hets;
+  double curr_homr_t2 = obs_homr;
+  double curr_homc_t2 = obs_homc;
+  double tailp = (1 - kSmallEpsilon) * kExactTestBias;
+  double centerp = 0;
+  double lastp2 = tailp;
+  double lastp1 = tailp;
+  
+  if (obs_hets * genotypes2 > rare_copies * (genotypes2 - rare_copies)) {
+    // tail 1 = upper
+    while (curr_hets_t2 > 1.5) {
+      // het_probs[curr_hets] = 1
+      // het_probs[curr_hets - 2] = het_probs[curr_hets] * curr_hets * (curr_hets - 1.0)
+      curr_homr_t2 += 1;
+      curr_homc_t2 += 1;
+      lastp2 *= (curr_hets_t2 * (curr_hets_t2 - 1)) / (4 * curr_homr_t2 * curr_homc_t2);
+      curr_hets_t2 -= 2;
+      if (lastp2 < kExactTestBias) {
+        tie_ct += (lastp2 > (1 - 2 * kSmallEpsilon) * kExactTestBias);
+        tailp += lastp2;
+        break;
+      }
+      centerp += lastp2;
+      // doesn't seem to make a difference, but seems best to minimize use of
+      // INFINITY
+      if (centerp > std::numeric_limits<double>::max()) {
+        return 0;
+      }
+    }
+    if ((centerp == 0) && (!midp)) {
+      return 1;
+    }
+    while (curr_hets_t2 > 1.5) {
+      curr_homr_t2 += 1;
+      curr_homc_t2 += 1;
+      lastp2 *= (curr_hets_t2 * (curr_hets_t2 - 1)) / (4 * curr_homr_t2 * curr_homc_t2);
+      curr_hets_t2 -= 2;
+      const double preaddp = tailp;
+      tailp += lastp2;
+      if (tailp <= preaddp) {
+        break;
+      }
+    }
+    double curr_hets_t1 = obs_hets + 2;
+    double curr_homr_t1 = obs_homr;
+    double curr_homc_t1 = obs_homc;
+    while (curr_homr_t1 > 0.5) {
+      // het_probs[curr_hets + 2] = het_probs[curr_hets] * 4 * curr_homr * curr_homc / ((curr_hets + 2) * (curr_hets + 1))
+      lastp1 *= (4 * curr_homr_t1 * curr_homc_t1) / (curr_hets_t1 * (curr_hets_t1 - 1));
+      const double preaddp = tailp;
+      tailp += lastp1;
+      if (tailp <= preaddp) {
+        break;
+      }
+      curr_hets_t1 += 2;
+      curr_homr_t1 -= 1;
+      curr_homc_t1 -= 1;
+    }
+  } else {
+    // tail 1 = lower
+    while (curr_homr_t2 > 0.5) {
+      curr_hets_t2 += 2;
+      lastp2 *= (4 * curr_homr_t2 * curr_homc_t2) / (curr_hets_t2 * (curr_hets_t2 - 1));
+      curr_homr_t2 -= 1;
+      curr_homc_t2 -= 1;
+      if (lastp2 < kExactTestBias) {
+        tie_ct += (lastp2 > (1 - 2 * kSmallEpsilon) * kExactTestBias);
+        tailp += lastp2;
+        break;
+      }
+      centerp += lastp2;
+      if (centerp > std::numeric_limits<double>::max()) {
+        return 0;
+      }
+    }
+    if ((centerp == 0) && (!midp)) {
+      return 1;
+    }
+    while (curr_homr_t2 > 0.5) {
+      curr_hets_t2 += 2;
+      lastp2 *= (4 * curr_homr_t2 * curr_homc_t2) / (curr_hets_t2 * (curr_hets_t2 - 1));
+      curr_homr_t2 -= 1;
+      curr_homc_t2 -= 1;
+      const double preaddp = tailp;
+      tailp += lastp2;
+      if (tailp <= preaddp) {
+        break;
+      }
+    }
+    double curr_hets_t1 = obs_hets;
+    double curr_homr_t1 = obs_homr;
+    double curr_homc_t1 = obs_homc;
+    while (curr_hets_t1 > 1.5) {
+      curr_homr_t1 += 1;
+      curr_homc_t1 += 1;
+      lastp1 *= (curr_hets_t1 * (curr_hets_t1 - 1)) / (4 * curr_homr_t1 * curr_homc_t1);
+      const double preaddp = tailp;
+      tailp += lastp1;
+      if (tailp <= preaddp) {
+        break;
+      }
+      curr_hets_t1 -= 2;
+    }
+  }
+  if (!midp) {
+    return tailp / (tailp + centerp);
+  }
+  return (tailp - ((1 - kSmallEpsilon) * kExactTestBias * 0.5) * tie_ct) / (tailp + centerp);
+}
+
+NumericVector FilterHWE(arma::mat genoFreq, int threads=0) {
+  omp_setup(threads);
+  
+  size_t i;
+  IntegerVector freq0 = wrap(genoFreq.col(0));
+  IntegerVector freq1 = wrap(genoFreq.col(1));
+  IntegerVector freq2 = wrap(genoFreq.col(2));
+  NumericVector PVAL(genoFreq.n_rows); PVAL.fill(0);
+  
+  #pragma omp parallel for schedule(dynamic) private(i)
+  for (i = 0; i < genoFreq.n_rows; i++) {
+    // PVAL[i] = SNPHWE(freq1[i], freq0[i], freq2[i]);
+    PVAL[i] = SNPHWE2(freq1[i], freq0[i], freq2[i], false);
+  }
+  
+  return PVAL;
+}
+
+template<typename T>
+List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> keepInds=R_NilValue, Nullable<double> filterGeno=R_NilValue, Nullable<double> filterHWE=R_NilValue, Nullable<double> filterMind=R_NilValue, Nullable<double> filterMAF=R_NilValue, int threads=0, bool verbose=true) {
+
+  double m = pMat->nrow(), n = pMat->ncol();
+  IntegerVector  keepRows = seq(0, m - 1);
+  IntegerVector keepCols;
+  if (keepInds.isNull()) {
+    keepCols = seq(0, n - 1);
+  } else {
+    keepCols = as<IntegerVector>(keepInds);
+    keepCols = keepCols - 1;
+    n = keepCols.size();
+  }
+  
+  double fgeno, fhwe, fmaf, fmind;
+  if (filterGeno.isNotNull()) { fgeno = as<double>(filterGeno); }
+  if (filterHWE.isNotNull() ) { fhwe  = as<double>(filterHWE ); }
+  if (filterMAF.isNotNull() ) { fmaf  = as<double>(filterMAF); }
+  if (filterMind.isNotNull()) { fmind = as<double>(filterMind); }
+  
+  if (verbose) {
+    Rcout << " Options in effect:" << endl;
+    if (keepInds.isNotNull()  ) { Rcout << "   --keep-ind filePed "       << endl; }
+    if (filterGeno.isNotNull()) { Rcout << "   --geno " << fgeno  << endl; }
+    if (filterHWE.isNotNull() ) { Rcout << "   --hwe "  << fhwe   << endl; }
+    if (filterMAF.isNotNull() ) { Rcout << "   --maf "  << fmaf   << endl; }
+    if (filterMind.isNotNull()) { Rcout << "   --mind " << fmind  << endl; }
+    Rcout << endl;
+    Rcout << " Detect " << n << " samples and " << m << " variants" << endl;
+    Rcout << endl;
+  }
+  
+  if (filterMind.isNotNull()) {
+    if (verbose) { Rcout << " Calculating sample missingness rates..."; }
+    NumericVector colNumNA = FilterMind(pMat, NA_C, threads);
+    if (verbose) {  Rcout << " done." << endl; }
+    keepCols = keepCols[colNumNA/m < fmind];
+    if (verbose) {
+      Rcout << " " << (n - keepCols.size())  << " samples removed due to missing genotype data (--mind)." << endl;
+      n = keepCols.size();
+      Rcout << " " << n << " samples remaining after main filters." << endl;
+      Rcout << endl;
+    }
+  }
+  
+  if (filterGeno.isNotNull()) {
+    if (verbose) { Rcout << " Calculating variant missingness rates..."; }
+    NumericVector rowNumNA = FilterGeno(pMat, NA_C, keepRows, keepCols, threads);
+    if (verbose) {  Rcout << " done." << endl; }
+    keepRows = keepRows[rowNumNA/n < fgeno];
+    if (verbose) {
+      Rcout << " " << (m - keepRows.size()) << " variants removed due to missing genotype data (--geno)." << endl;
+      m = keepRows.size();
+      Rcout << " " << m << " variants remaining after main filters." << endl;
+      Rcout << endl;
+    }
+  }
+  
+  arma::mat genoFreq;
+  if (filterMAF.isNotNull() | filterHWE.isNotNull()) {
+    if (verbose) { Rcout << " Calculating Genotype Frequencies..."; }
+    genoFreq = CalGenoFreq(pMat, keepRows, keepCols, threads);
+    if (verbose) {  Rcout << " done." << endl << endl; }
+  }
+  
+  if (filterHWE.isNotNull()) {
+    if (verbose) { Rcout << " Performing Hardy-Weinberg test..."; }
+    NumericVector PVAL = FilterHWE(genoFreq, threads);
+    if (verbose) {  Rcout << " done." << endl; }
+    keepRows = keepRows[PVAL > fhwe];
+    arma::vec armaPVAL = as<arma::vec>(PVAL);
+    genoFreq = genoFreq.rows(arma::find(armaPVAL > fhwe));
+    if (verbose) {
+      Rcout << " " << (m - keepRows.size()) << " variants removed due to exceeding HWE-P-Value (--hwe)." << endl;
+      m = keepRows.size();
+      Rcout << " " << m << " variants remaining after main filters." << endl;
+      Rcout << endl;
+    }
+  }
+  
+  if (filterMAF.isNotNull()) {
+    if (verbose) { Rcout << " Calculating Minor Allele Frequencies..."; }
+    NumericVector MAF = FilterMAF(genoFreq, threads);
+    if (verbose) {  Rcout << " done." << endl; }
+    keepRows = keepRows[MAF >= fmaf];
+    if (verbose) {
+      Rcout << " " << (m - keepRows.size()) << " variants removed due to exceeding MAF (--maf)." << endl;
+      m = keepRows.size();
+      Rcout << " " << m << " variants remaining after main filters." << endl;
+      Rcout << endl;
+    }
+  }
+  
+  keepRows = keepRows + 1;
+  keepCols = keepCols + 1;
+  List genoInfo = List::create(Named("keepRows") = keepRows,
+                                   _["keepCols"] = keepCols);
+  return genoInfo;
+}
+
+// [[Rcpp::export]]
+List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepInds=R_NilValue, Nullable<double> filterGeno=R_NilValue, Nullable<double> filterHWE=R_NilValue, Nullable<double> filterMind=R_NilValue, Nullable<double> filterMAF=R_NilValue, int threads=0, bool verbose=true) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return GenoFilter<char>(xpMat, NA_CHAR, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
+  case 2:
+    return GenoFilter<short>(xpMat, NA_SHORT, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
+  case 4:
+    return GenoFilter<int>(xpMat, NA_INTEGER, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
+  case 8:
+    return GenoFilter<double>(xpMat, NA_REAL, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}

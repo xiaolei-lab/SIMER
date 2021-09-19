@@ -1,0 +1,65 @@
+{
+    "genotype": ["/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/01bigmemory"],
+    "pedigree": ["/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/pedigree.txt"],
+    "selection_index": "100 - 3 * 校正100kg日增重 + 3 * 结测背膘厚",
+    "quality_control_plan": {
+        "genotype_quality_control":{
+            "filter_geno": 0.1,
+            "filter_mind": 0.1,
+            "filter_maf": 0.05,
+            "filter_hwe": 0.001
+        },
+        "pedigree_quality_control":{
+            "standard_ID": false,
+            "candidate_sire_file": [],
+            "candidate_dam_file": [],
+            "exclude_threshold": 0.01, 
+            "assign_threshold": 0.005
+        },
+        "phenotype_quality_control":[
+            {
+                "job_name": "Data Quality Control Demo",
+                "sample_info": "/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/phenotype.txt",
+                "repeated_records": false,
+                "multi_trait": true,
+                "job_traits": [
+                    {
+                        "traits": "BF1",
+                        "definition": "BF1",
+                        "range": []
+                    },
+                    {
+                        "traits": "BF2",
+                        "definition": "BF2",
+                        "range": []
+                    },
+                    {
+                        "environments": "sex",
+                        "definition": "sex",
+                        "range": []
+                    },
+                    {
+                        "environments": "diet",
+                        "definition": "diet",
+                        "range": []
+                    },
+                    {
+                        "environments": "season",
+                        "definition": "season",
+                        "range": []
+                    },
+                    {
+                        "environments": "PE",
+                        "definition": "PE",
+                        "range": []
+                    },
+                    {
+                        "environments": "litter",
+                        "definition": "litter",
+                        "range": []
+                    }
+                ]
+            }
+        ]
+    }
+}
