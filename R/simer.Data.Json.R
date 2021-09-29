@@ -95,6 +95,7 @@ JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, verbose = 
   jsonList <- rjson::fromJSON(file = jsonFile)
   outpath <- getwd()
   out <- NULL
+  logging.initialize("Simer.Data", outpath)
   
   # check genotype parameters
   genoPath <- jsonList$genotype

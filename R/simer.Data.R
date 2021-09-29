@@ -431,18 +431,39 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
       if (sum(nchar(id) != 15) > 0)
         stop(paste("The format of below individuals don't meet the requirements:","\n", id[nchar(id) != 15], sep = ""))
     }
+    # Ind Sir  SS  SD SSS SSD SDS SDD Dam  DS  DD DSS DSD DDS DDD
+    #   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+    # pedx <- rbind(
+    #   pedigree[, c(1, 2, 9)],
+    #   pedigree[, c(2, 3, 4)],
+    #   pedigree[, c(9, 10, 11)],
+    #   pedigree[, c(3, 5, 6)],
+    #   pedigree[, c(4, 7, 8)],
+    #   pedigree[, c(10, 12, 13)],
+    #   pedigree[, c(11, 14, 15)],
+    #   cbind(pedigree[, 5], 0, 0),
+    #   cbind(pedigree[, 6], 0, 0),
+    #   cbind(pedigree[, 7], 0, 0),
+    #   cbind(pedigree[, 8], 0, 0),
+    #   cbind(pedigree[, 12], 0, 0),
+    #   cbind(pedigree[, 13], 0, 0),
+    #   cbind(pedigree[, 14], 0, 0),
+    #   cbind(pedigree[, 15], 0, 0)
+    # )
+    # Ind Sir Dam  SS  SD  DS  DD SSS SSD SDS SDD DSS DSD DDS DDD
+    #   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
     pedx <- rbind(
-      pedigree[, c(1, 2, 9)],
-      pedigree[, c(2, 3, 4)],
-      pedigree[, c(9, 10, 11)],
-      pedigree[, c(3, 5, 6)],
-      pedigree[, c(4, 7, 8)],
-      pedigree[, c(10, 12, 13)],
-      pedigree[, c(11, 14, 15)],
-      cbind(pedigree[, 5], 0, 0),
-      cbind(pedigree[, 6], 0, 0),
-      cbind(pedigree[, 7], 0, 0),
+      pedigree[, c(1, 2, 3)],
+      pedigree[, c(2, 4, 5)],
+      pedigree[, c(3, 6, 7)],
+      pedigree[, c(4, 8, 9)],
+      pedigree[, c(5, 10, 11)],
+      pedigree[, c(6, 12, 13)],
+      pedigree[, c(7, 14, 15)],
       cbind(pedigree[, 8], 0, 0),
+      cbind(pedigree[, 9], 0, 0),
+      cbind(pedigree[, 10], 0, 0),
+      cbind(pedigree[, 11], 0, 0),
       cbind(pedigree[, 12], 0, 0),
       cbind(pedigree[, 13], 0, 0),
       cbind(pedigree[, 14], 0, 0),
@@ -1103,7 +1124,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       verbose = TRUE
     )
   }
-  
+
   gebvs <- NULL
   for (i in 1:length(planPhe)) {
     logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
@@ -1168,7 +1189,8 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     out <- paste(traits, collapse = '_')
 
     completeCmd <- 
-      paste("hiblup", nTraitCmd,
+      paste("source /opt/intel/oneapi/setvars.sh --force;",
+          "hiblup", nTraitCmd,
         paste("--pheno", filePhe),
         paste("--pheno-pos", phenoCmd),
         paste("--dcovar", fixedEffectsCmd),
@@ -1283,7 +1305,7 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
 
   gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed)
   
-  pheList <- NULL
+  covPList <- NULL
   covAList <- NULL
   for (i in 1:length(planPhe)) {
     # prepare phenotype data
@@ -1295,20 +1317,24 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
     if (!all(pheName %in% names(BVWeight))) {
       stop(pheName[!(pheName %in% names(BVWeight))], " are not in the 'BVIndex'!")
     }
-    pheList[[i]] <- pheno[c(names(pheno)[1], pheName)]
-    covAList[[i]] <- gebvs[[i]]$covA
+    if (planPhe[[i]]$repeated_records) {
+      usePhe <- sapply(pheName, function(name) {
+        return(tapply(pheno[, name], as.factor(pheno[, 1]), FUN = mean))
+      })
+      covP <- var(usePhe, na.rm = TRUE)
+    } else {
+      covP <- var(pheno[, pheName, drop = FALSE], na.rm = TRUE)
+    }
+    covPList[[i]] <- covP
+    if (planPhe[[i]]$multi_trait) {
+      covAList[[i]] <- gebvs[[i]]$covA
+    } else {
+      covAList[[i]] <- gebvs[[i]]$varList[[1]][1]
+    }
   }
   
-  mergePhe <- Reduce(function(x, y) merge(x, y, all.x = TRUE, all.y = TRUE), pheList, accumulate = FALSE)
-  mergePhe <- mergePhe[, -1]
-  if (any(sort(names(mergePhe) != sort(names(BVWeight))))) {
-    stop("trait names in both 'BVIndex' and  'pheList' should be same!")
-  }
-
+  P <- as.matrix(Matrix::bdiag(covPList))
   A <- as.matrix(Matrix::bdiag(covAList))
-
-  # phenotype covariance matrix
-  P <- var(mergePhe)
   iP <- try(solve(P), silent = TRUE)
   if (inherits(iP, "try-error")) {
     iP <- MASS::ginv(P)
@@ -1317,7 +1343,7 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
   # selection index
   b <- iP %*% A %*% BVWeight
   b <- round(as.vector(b), digits = 2)
-  selIndex <- paste(paste(b, names(BVWeight), sep = " * "), collapse = " + ")
+  selIndex <- paste(paste(b, names(BVWeight), sep = "*"), collapse = " + ")
 
   logging.log(" *********************************************************\n",
                 "General Selection Index is:\n", 
