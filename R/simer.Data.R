@@ -955,7 +955,7 @@ simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
     filePhe <- planPhe[[i]]$sample_info
     pheno <- read.table(filePhe, header = TRUE)
-    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(x$traits))
+    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(x$trait))
     covariates <- unique(c(unlist(sapply(planPhe[[i]]$job_traits, function(x) {
       return(unlist(c(x$covariates)))
     }))))
@@ -1130,7 +1130,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
     filePhe <- planPhe[[i]]$sample_info
     pheno <- read.table(filePhe, header = TRUE)
-    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(x$traits))
+    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(x$trait))
     covariates <- unique(c(unlist(sapply(planPhe[[i]]$job_traits, function(x) {
       return(unlist(c(x$covariates)))
     }))))
@@ -1307,19 +1307,22 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
   
   covPList <- NULL
   covAList <- NULL
+  pheNames <- NULL
   for (i in 1:length(planPhe)) {
     # prepare phenotype data
     filePhe <- planPhe[[i]]$sample_info
     pheno <- read.table(filePhe, header = TRUE)
     pheName <- sapply(planPhe[[i]]$job_traits, function(x) {
-      return(x$traits)
+      return(x$trait)
     })
+    pheNames <- c(pheNames, pheName)
     if (!all(pheName %in% names(BVWeight))) {
       stop(pheName[!(pheName %in% names(BVWeight))], " are not in the 'BVIndex'!")
     }
     if (planPhe[[i]]$repeated_records) {
+      simer.mean <- function(x) { return(mean(x, na.rm = TRUE)) }
       usePhe <- sapply(pheName, function(name) {
-        return(tapply(pheno[, name], as.factor(pheno[, 1]), FUN = mean))
+        return(tapply(pheno[, name], as.factor(pheno[, 1]), FUN = simer.mean))
       })
       covP <- var(usePhe, na.rm = TRUE)
     } else {
@@ -1341,6 +1344,10 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
   }
 
   # selection index
+  if (any(sort(pheNames) != sort(names(BVWeight)))) {
+    stop("Trait names should be consistent between planPhe and BVWeight!")
+  }
+  BVWeight <- BVWeight[match(pheNames, names(BVWeight))]
   b <- iP %*% A %*% BVWeight
   b <- round(as.vector(b), digits = 2)
   selIndex <- paste(paste(b, names(BVWeight), sep = "*"), collapse = " + ")
