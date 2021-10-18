@@ -426,7 +426,7 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
   if (ncol(pedigree) != 3) {
     if (ncol(pedigree) != 15)
       stop("Please check your data! pegigree information in 15 columns which contain 3 generations' information are needed!")
-    if (standardID == TRUE) {
+    if (standardID) {
       id <- unique(c(pedigree))
       if (sum(nchar(id) != 15) > 0)
         stop(paste("The format of below individuals don't meet the requirements:","\n", id[nchar(id) != 15], sep = ""))
@@ -469,6 +469,7 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
       cbind(pedigree[, 14], 0, 0),
       cbind(pedigree[, 15], 0, 0)
     )
+    pedx <- pedx[!duplicated(pedx[, 1]), ]
   }else{
     pedx <- pedigree
     pedx0 <- setdiff(pedx[,c(2:3)], pedx[, 1])
@@ -1189,8 +1190,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     out <- paste(traits, collapse = '_')
 
     completeCmd <- 
-      paste("source /opt/intel/oneapi/setvars.sh --force;",
-          "hiblup", nTraitCmd,
+      paste("hiblup", nTraitCmd,
         paste("--pheno", filePhe),
         paste("--pheno-pos", phenoCmd),
         paste("--dcovar", fixedEffectsCmd),
