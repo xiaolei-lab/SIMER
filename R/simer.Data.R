@@ -686,6 +686,25 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
         pheList <- cbind(pheno, newPheList)
       }
       
+      # data filter & select & arrange
+      if (length(planPhe$filter) > 0) {
+        filterRow <- with(pheList, eval(parse(text = planPhe$filter[1])))
+        filterRow[is.na(filterRow)] <- FALSE
+        pheList <- pheList[filterRow, ] 
+      }
+      if (length(planPhe$select) > 0) {
+        pheList <- pheList[, planPhe$select] 
+      }
+      if (length(planPhe$arrange) > 0) {
+        if (length(planPhe$decreasing) > 0) {
+          decreasing <- planPhe$decreasing
+        } else {
+          decreasing <- FALSE
+        }
+        orderCmd <- paste0("order(", paste0("pheList$", planPhe$arrange, collapse = ","), ",decreasing = decreasing)")
+        pheList <- pheList[eval(parse(text = orderCmd)), ]
+      }
+
       # remove abnormal values
       noRange <- FALSE
       for (i in 1:length(usePheName)) {
@@ -730,20 +749,7 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
       # check non-repeat record trait
       hasRep <- planPhe$repeated_records
       if (!hasRep) {
-        fullPheName <- names(pheList)
-        newPheList <- list(NULL)
-        length(newPheList) <- ncol(pheList) - 1
-        names(newPheList) <- fullPheName[-1]
-        for (i in 2:ncol(pheList)) {
-          tPhe <- data.frame(with(pheList, eval(parse(text = fullPheName[i]))))
-          names(tPhe) <- fullPheName[i]
-          tPhe <- cbind(pheList[1], tPhe)
-          tPhe <- tPhe[!is.na(tPhe[, 2]), ]
-          tPhe <- tPhe[!duplicated(tPhe[, 1]), ]
-          newPheList[[i-1]] <- tPhe
-        }
-        # merge phenotype data
-        pheList <- Reduce(function(x, y) merge(x, y, all.x = TRUE, all.y = TRUE), newPheList, accumulate = FALSE)
+        pheList <- pheList[!duplicated(pheList[, 1]), ]
       }
       
     } # if (is.null(planPhe)) {
@@ -869,7 +875,14 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
                         paste(unlist(c(covariates, fixedEffects)), collapse = "+"), 
                         sep = "+"), data = finalPhe)
       # choose a model by BIC in a stepwise algorithm
+      if (verbose) {
+        try(file <- get("logging.file", envir = package.env), silent = TRUE)
+        sink(file = file, append = TRUE, split = TRUE)
+      }
       slmPhe <- step(lmPhe, k = log(nrow(finalPhe)))
+      if (verbose) {
+        sink()
+      }
       envName <- names(slmPhe$model)[-1]
       covariates <- covariates[covariates %in% envName]
       fixedEffects <- fixedEffects[fixedEffects %in% envName]
@@ -890,7 +903,7 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
       logging.log(" *********************************************************\n",
                   "Model optimized by BIC and random variance ratio is:\n", 
                     paste(c(paste0(traits, "~1"), envFormula), collapse = '+'), "\n",
-                  "*********************************************************\n", verbose = TRUE)
+                  "*********************************************************\n", verbose = verbose)
     }
   }
   
@@ -1036,8 +1049,8 @@ simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     }
     names(varList) <- traits
     gebv$varList <- varList
-    logging.log(" The variance components are: (R, G, E)\n", verbose = TRUE)
-    simer.print(gebv$varList)
+    logging.log(" The variance components are: (R, G, E)\n", verbose = verbose)
+    simer.print(gebv$varList, verbose = verbose)
 
     # prepare genetic covariance matrix
     if (planPhe[[i]]$multi_trait) {
@@ -1060,10 +1073,10 @@ simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       dimnames(covA) <- dimnames(corA) <- list(paste0(" ", traits), paste0(" ", traits))
       gebv$covA <- covA
       gebv$corA <- corA
-      logging.log(" The genetic covariance are:\n", verbose = TRUE)
-      simer.print(gebv$covA)
-      logging.log(" The genetic correlation are:\n", verbose = TRUE)
-      simer.print(gebv$corA)
+      logging.log(" The genetic covariance are:\n", verbose = verbose)
+      simer.print(gebv$covA, verbose = verbose)
+      logging.log(" The genetic correlation are:\n", verbose = verbose)
+      simer.print(gebv$corA, verbose = verbose)
     }
     
     gebvs[[i]] <- gebv
@@ -1197,7 +1210,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
         paste("--qcovar", covariatesCmd),
         paste("--rand", randomEffectsCmd),
         ifelse(is.null(filePed), "", paste("--pedigree", filePed)),
-        ifelse(is.null(fileMVP), "", paste("--bfile", filePed)),
+        ifelse(is.null(fileMVP), "", paste("--bfile", fileMVP)),
         ifelse(mode == "A", "--add", paste("--add", "--dom")),
         paste("--vc-method", vc.method),
         paste("--out", out)
@@ -1218,8 +1231,8 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     })
     names(varList) <- traits
     gebv$varList <- varList
-    logging.log(" The variance components are: (R, G, E)\n", verbose = TRUE)
-    simer.print(gebv$varList)
+    logging.log(" The variance components are: (R, G, E)\n", verbose = verbose)
+    simer.print(gebv$varList, verbose = verbose)
 
     if (planPhe[[i]]$multi_trait) {
       covarFile <- paste0(out, ".covars")
@@ -1239,10 +1252,10 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       dimnames(covA) <- dimnames(corA) <- list(paste0(" ", traits), paste0(" ", traits))
       gebv$covA <- covA
       gebv$corA <- corA
-      logging.log(" The genetic covariance are:\n", verbose = TRUE)
-      simer.print(gebv$covA)
-      logging.log(" The genetic correlation are:\n", verbose = TRUE)
-      simer.print(gebv$corA)
+      logging.log(" The genetic covariance are:\n", verbose = verbose)
+      simer.print(gebv$covA, verbose = verbose)
+      logging.log(" The genetic correlation are:\n", verbose = verbose)
+      simer.print(gebv$corA, verbose = verbose)
     }
     
     gebvs[[i]] <- gebv
@@ -1355,7 +1368,7 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
   logging.log(" *********************************************************\n",
                 "General Selection Index is:\n", 
                 selIndex, "\n",
-                "*********************************************************\n", verbose = TRUE)
+                "*********************************************************\n", verbose = verbose)
 
   t2 <- as.numeric(Sys.time())
   logging.log(" Selection Index Construction is Done within", format_time(t2 - t1), "\n", verbose = verbose)
