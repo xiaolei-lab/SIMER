@@ -13,6 +13,7 @@ simer.Data.Env(
   filePed = NULL,
   header = TRUE,
   sep = "\\t",
+  ncpus = 10,
   verbose = TRUE
 )
 }
@@ -26,6 +27,8 @@ simer.Data.Env(
 \item{header}{the header of file}
 
 \item{sep}{the separator of file}
+
+\item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
 }

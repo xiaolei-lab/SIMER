@@ -4,7 +4,13 @@
 \alias{JsonModel}
 \title{The main function of Constructing Model and Index}
 \usage{
-JsonModel(jsonFile, buildModel = TRUE, buildIndex = TRUE, verbose = TRUE)
+JsonModel(
+  jsonFile,
+  buildModel = TRUE,
+  buildIndex = TRUE,
+  ncpus = 10,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{jsonFile}{the path of json file}
@@ -12,6 +18,8 @@ JsonModel(jsonFile, buildModel = TRUE, buildIndex = TRUE, verbose = TRUE)
 \item{buildModel}{whether to build EBV model}
 
 \item{buildIndex}{whether to build Selection Index}
+
+\item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
 }

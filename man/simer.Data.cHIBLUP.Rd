@@ -13,6 +13,7 @@ simer.Data.cHIBLUP(
   filePed = NULL,
   mode = "A",
   vc.method = "AI",
+  ncpus = 10,
   verbose = TRUE
 )
 }
@@ -26,6 +27,8 @@ simer.Data.cHIBLUP(
 \item{mode}{'A' or 'AD', Additive effect model or Additive and Dominance mode}
 
 \item{vc.method}{default is 'AI', the method of calucating variance components in HIBLUP}
+
+\item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
 }

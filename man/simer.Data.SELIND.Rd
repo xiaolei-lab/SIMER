@@ -12,6 +12,7 @@ simer.Data.SELIND(
   planPhe,
   fileMVP = NULL,
   filePed = NULL,
+  ncpus = 10,
   verbose = TRUE
 )
 }
@@ -23,6 +24,8 @@ simer.Data.SELIND(
 \item{fileMVP}{Genotype in MVP format}
 
 \item{filePed}{the pedigree files, it can be a vector}
+
+\item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
 }

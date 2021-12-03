@@ -809,6 +809,7 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
 #' @param filePed the pedigree files, it can be a vector
 #' @param header the header of file
 #' @param sep the separator of file
+#' @param ncpus the number of threads
 #' @param verbose whether to print detail.
 #'
 #' @return the best effects for EBV model
@@ -833,7 +834,7 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
 #' 
 #' # reset planPhe by optimized model
 #' # planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed)
-simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRUE, sep = '\t', verbose = TRUE) {
+simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   for (i in 1:length(planPhe)) {
@@ -890,7 +891,7 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
       planPheN[[j]]$job_traits[[1]]$covariates <- covariates
       planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
       # select random effect which ratio less than threshold
-      gebv <- simer.Data.cHIBLUP(planPhe = planPheN[j], fileMVP, filePed)
+      gebv <- simer.Data.cHIBLUP(planPhe = planPheN[j], fileMVP, filePed, ncpus = ncpus, verbose = verbose)
       vc <- gebv[[1]]$varList[[1]]
       randomEffectRatio <- vc[1:length(randomEffects)] / sum(vc)
       randomEffects <- randomEffects[randomEffectRatio > randomRatio]
@@ -1098,6 +1099,7 @@ simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
 #' @param filePed the pedigree files, it can be a vector
 #' @param mode 'A' or 'AD', Additive effect model or Additive and Dominance mode
 #' @param vc.method default is 'AI', the method of calucating variance components in HIBLUP
+#' @param ncpus the number of threads
 #' @param verbose whether to print detail.
 #' 
 #' @export
@@ -1123,7 +1125,7 @@ simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
 #' 
 #' # call HIBLUP
 #' # gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed)
-simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc.method = "AI", verbose=TRUE) {
+simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc.method = "AI", ncpus = 10, verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
   
   # convert bigmemory to PLINK
@@ -1213,6 +1215,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
         ifelse(is.null(fileMVP), "", paste("--bfile", fileMVP)),
         ifelse(mode == "A", "--add", paste("--add", "--dom")),
         paste("--vc-method", vc.method),
+        paste("--threads", ncpus),
         paste("--out", out)
       )
     
@@ -1276,6 +1279,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
 #' @param planPhe breeding plans about phenotype
 #' @param fileMVP Genotype in MVP format
 #' @param filePed the pedigree files, it can be a vector
+#' @param ncpus the number of threads
 #' @param verbose whether to print detail.
 #'
 #' @return phenotype economic weight
@@ -1307,7 +1311,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
 #' 
 #' # construct selection index
 #' # selIndex <- simer.Data.SELIND(BVIndex, planPhe, fileMVP, filePed)
-simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verbose=TRUE) {
+simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, ncpus = 10, verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
 
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
@@ -1316,7 +1320,7 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, verb
   BVWeight <- as.numeric(str1[!strIsNA])
   names(BVWeight) <- str1[strIsNA]
 
-  gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed)
+  gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed, ncpus = ncpus)
   
   covPList <- NULL
   covAList <- NULL

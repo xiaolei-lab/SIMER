@@ -83,6 +83,7 @@ JsonQC <- function(jsonFile, verbose=TRUE) {
 #' @param jsonFile the path of json file
 #' @param buildModel whether to build EBV model
 #' @param buildIndex whether to build Selection Index
+#' @param ncpus the number of threads
 #' @param verbose whether to print detail.
 #'
 #' @return report list
@@ -90,7 +91,7 @@ JsonQC <- function(jsonFile, verbose=TRUE) {
 #' @examples
 #' jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 #' # aa <- JsonModel(jsonFile = jsonFile)
-JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, verbose = TRUE) {
+JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
   outpath <- getwd()
@@ -121,7 +122,7 @@ JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, verbose = 
   
   ## step 2. find the best effects for EBV model
   if (buildModel) {
-    planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed, verbose)
+    planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed, ncpus = ncpus, verbose = verbose)
     jsonList$analysis_plan <- planPhe
   }
   
@@ -132,7 +133,7 @@ JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, verbose = 
   ## step 3. construct selection index
   if (buildIndex) {
     BVIndex <- jsonList$breeding_value_index
-    selIndex <- simer.Data.SELIND(BVIndex, planPhe, fileMVP, filePed, verbose)
+    selIndex <- simer.Data.SELIND(BVIndex, planPhe, fileMVP, filePed, ncpus = ncpus, verbose = verbose)
     jsonList$selection_index <- selIndex
     jsonList$breeding_value_index <- NULL
   }
