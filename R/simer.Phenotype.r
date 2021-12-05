@@ -270,6 +270,7 @@ phenotype <-
     }
     names(df.ind.a) <- names(ind.pheno) <- paste("tr", 1:nqt, sep = "")
     info.pheno <- data.frame(TBV = df.ind.a, TGV = df.ind.a, pheno = ind.pheno)
+    names(info.pheno) <- gsub(".", "_", names(info.pheno), fixed = TRUE)
     pheno <- list(info.tr = info.tr, info.eff = info.eff, info.pheno = info.pheno)
     
     # check data quality
