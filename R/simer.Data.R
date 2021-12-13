@@ -1130,12 +1130,15 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
   
   # convert bigmemory to PLINK
   if (!is.null(fileMVP)) {
+    filePhe <- planPhe[[1]]$sample_info
     bigmat <- attach.big.matrix(paste0(fileMVP, ".geno.desc"))
     map <- read.table(paste0(fileMVP, ".geno.map"), header = TRUE)
+    pheno <- read.table(filePhe, header = TRUE)
+    traits <- sapply(planPhe[[1]]$job_traits, function(x) return(x$trait))
     MVP.Data.MVP2Bfile(
       bigmat = bigmat, 
       map = map, 
-      pheno = NULL, 
+      pheno = pheno[, c(1, match(traits[1], names(pheno)))],
       out = fileMVP,
       verbose = TRUE
     )

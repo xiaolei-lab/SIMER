@@ -104,7 +104,7 @@ JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, ncpus = 10
   if (length(genoPath) != 0) {
     genoFiles <- list.files(genoPath)
     fileMVP <- fileBed <- fileNum <- NULL
-    fileMVP <- grep(pattern = "qc.geno.desc", genoFiles, value = TRUE)
+    fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
     fileMVP <- file.path(genoPath, fileMVP)
     if (length(fileMVP) > 0) {
       fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
