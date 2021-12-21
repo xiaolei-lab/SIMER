@@ -1247,7 +1247,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       for (j in 1:length(traits)) {
         for (k in 1:j) {
           if (j == k) {
-            covA[j, k] <- varList[[i]][length(varList[[i]])-1]
+            covA[j, k] <- varList[[j]][length(varList[[j]])-1]
             corA[j, k] <- 1
           } else {
             covA[j, k] <- covA[k, j] <- covars[j+k-2, 2]
