@@ -30,7 +30,7 @@ simer.Data(
   out = "simer",
   maxLine = 10000,
   priority = "speed",
-  ncpus = NULL,
+  ncpus = 0,
   verbose = TRUE
 )
 }

@@ -530,3 +530,203 @@ List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepInds=R_NilValue,
     throw Rcpp::exception("unknown type detected for big.matrix object!");
   }
 }
+
+template<typename T>
+void Mat2BigMat(XPtr<BigMatrix> pMat, IntegerMatrix mat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
+  omp_setup(threads);
+  
+  MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);
+  
+  IntegerVector ci;
+  if (colIdx.isNull()) {
+    ci = seq(0, mat.ncol() - 1);
+  } else {
+    ci = as<IntegerVector>(colIdx);
+    ci = ci - 1;
+  }
+  
+  size_t i, j, m = mat.nrow(), n = ci.length();
+  op = op - 1;
+  if (m != pMat->nrow()) {
+    Rcpp::stop("'bigmat' and 'mat' should have the same marker number!");
+  }
+  if (op + n > pMat->ncol()) {
+    Rcpp::stop("'mat' cannot be intert to bigmat completely!");
+  }
+  if (max(ci) + 1 > mat.ncol()) {
+    Rcpp::stop("'colIdx' is out of bound!");
+  }
+  
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (j = 0; j < n; j++) {
+    for (i = 0; i < m; i++) {
+      bigmat[op + j][i] = mat(i, ci[j]);
+    }
+  }
+
+}
+
+// [[Rcpp::export]]
+void Mat2BigMat(const SEXP pBigMat, IntegerMatrix mat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return Mat2BigMat<char>(xpMat, mat, colIdx, op, threads);
+  case 2:
+    return Mat2BigMat<short>(xpMat, mat, colIdx, op, threads);
+  case 4:
+    return Mat2BigMat<int>(xpMat, mat, colIdx, op, threads);
+  case 8:
+    return Mat2BigMat<double>(xpMat, mat, colIdx, op, threads);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+template<typename T>
+void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
+  omp_setup(threads);
+  
+  MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);
+  MatrixAccessor<T> bigm = MatrixAccessor<T>(*pmat);
+  
+  IntegerVector ci;
+  if (colIdx.isNull()) {
+    ci = seq(0, pmat->ncol() - 1);
+  } else {
+    ci = as<IntegerVector>(colIdx);
+    ci = ci - 1;
+  }
+  
+  size_t i, j, m = pmat->nrow(), n = ci.length();
+  op = op - 1;
+  if (m != pMat->nrow()) {
+    Rcpp::stop("'bigmat' and 'pmat' should have the same marker number!");
+  }
+  if (op + n > pMat->ncol()) {
+    Rcpp::stop("'pmat' cannot be intert to bigmat completely!");
+  }
+  if (max(ci) + 1 > pmat->ncol()) {
+    Rcpp::stop("'colIdx' is out of bound!");
+  }
+  
+  int mat[pmat->nrow()][pmat->ncol()];
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (j = 0; j < pmat->ncol(); j++) {
+    for (i = 0; i < m; i++) {
+      mat[i][j] = bigm[j][i];
+    }
+  }
+  
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (j = 0; j < n; j++) {
+    for (i = 0; i < m; i++) {
+      bigmat[op + j][i] = mat[i][ci[j]];
+    }
+  }
+  
+}
+
+// [[Rcpp::export]]
+void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  XPtr<BigMatrix> xpmat(pBigmat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return BigMat2BigMat<char>(xpMat, xpmat, colIdx, op, threads);
+  case 2:
+    return BigMat2BigMat<short>(xpMat, xpmat, colIdx, op, threads);
+  case 4:
+    return BigMat2BigMat<int>(xpMat, xpmat, colIdx, op, threads);
+  case 8:
+    return BigMat2BigMat<double>(xpMat, xpmat, colIdx, op, threads);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+
+template<typename T>
+void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx, IntegerVector damIdx, int nBlock=100, int op=1, int threads=0) {
+  omp_setup(threads);
+  
+  MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);
+  MatrixAccessor<T> bigm = MatrixAccessor<T>(*pmat);
+  
+  sirIdx = sirIdx - 1;
+  damIdx = damIdx - 1;
+  
+  size_t op_row, ed_row, i, j, k, m, n, judpar, kidIdx;
+  m = pmat->nrow(); 
+  n = damIdx.length();
+  op = op - 1;
+  
+  if (m != pMat->nrow()) {
+    Rcpp::stop("'bigmat' and 'pmat' should have the same marker number!");
+  }
+  if (op + n > pMat->ncol()) {
+    Rcpp::stop("'pmat' cannot be intert to bigmat completely!");
+  }
+  if (max(sirIdx) > pmat->ncol() | max(damIdx) > pmat->ncol()) {
+    Rcpp::stop("'sirIdx' or 'damIdx' is out of bound!");
+  }
+  if (sirIdx.length() != damIdx.length()) {
+    Rcpp::stop("'sirIdx' and 'damIdx' should have the same length!");
+  }
+  
+  int len_block = m / nBlock;
+  int tail_block = m % nBlock + len_block;
+  IntegerVector nInblock(nBlock);
+  IntegerVector accum_block(nBlock);
+  for (i = 0; i < nBlock; i++) {
+    nInblock[i] = len_block;
+  }
+  nInblock[nBlock - 1] = tail_block;
+  accum_block[0] = nInblock[0];
+  for (i = 1; i < nBlock; i++) {
+    accum_block[i] = accum_block[i - 1] + nInblock[i];
+  }
+  
+  int mat[pmat->nrow()][pmat->ncol()];
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (j = 0; j < pmat->ncol(); j++) {
+    for (i = 0; i < m; i++) {
+      mat[i][j] = bigm[j][i];
+    }
+  }
+  
+  #pragma omp parallel for schedule(dynamic) private(i, j, k, op_row, ed_row, judpar, kidIdx)
+  for (k = 0; k < nBlock; k++) {
+    ed_row = accum_block[k];
+    op_row = ed_row - nInblock[k];
+    for (j = 0; j < n; j++) {
+      judpar = rand() % 2;
+      kidIdx = judpar == 0 ? sirIdx[j] : damIdx[j];
+      for (i = op_row; i < ed_row; i++) {
+        bigmat[op + j][i] = mat[i][kidIdx];
+      }
+    }
+  }
+  
+}
+
+// [[Rcpp::export]]
+void GenoMixer(const SEXP pBigMat, const SEXP pBigmat, IntegerVector sirIdx, IntegerVector damIdx, int nBlock=100, int op=1, int threads=0) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  XPtr<BigMatrix> xpmat(pBigmat);
+  
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return GenoMixer<char>(xpMat, xpmat, sirIdx, damIdx, nBlock, op, threads);
+  case 2:
+    return GenoMixer<short>(xpMat, xpmat, sirIdx, damIdx, nBlock, op, threads);
+  case 4:
+    return GenoMixer<int>(xpMat, xpmat, sirIdx, damIdx, nBlock, op, threads);
+  case 8:
+    return GenoMixer<double>(xpMat, xpmat, sirIdx, damIdx, nBlock, op, threads);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}

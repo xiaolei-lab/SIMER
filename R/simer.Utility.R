@@ -42,7 +42,6 @@ simer.Version <- function(width=60, verbose=TRUE) {
   return(invisible(version))
 }
 
-
 #' Print progress bar
 #'
 #' @param i the current loop number
@@ -172,7 +171,6 @@ print_bar <- function(i,
     }
   )
 }
-
 
 print_accomplished <- function(width = 60, verbose = TRUE) {
   logging.log(make_line("SIMER ACCOMPLISHED", width = width, linechar = '='), "\n", verbose = verbose)
@@ -367,7 +365,6 @@ format_time <- function(x) {
   return(paste0(num, char, collapse = ""))
 }
 
-
 load_if_installed <- function(package) {
   if (!identical(system.file(package = package), "")) {
     do.call('library', list(package))
@@ -376,7 +373,6 @@ load_if_installed <- function(package) {
     return(FALSE) 
   }
 }
-
 
 mkl_env <- function(exprs, threads = 1) {
   if (load_if_installed("RevoUtilsMath")) {
@@ -389,7 +385,6 @@ mkl_env <- function(exprs, threads = 1) {
   }
   return(result)
 }
-
 
 #' Remove big.matrix safely
 #'
@@ -430,16 +425,9 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
     for (v in ls(envir = envir)) {
       if (class(get(v, envir = envir)) == "big.matrix") {
         desc <- describe(get(v, envir = envir))@description
-        if (desc$filename == binfile) { # TODO: Risky deletion
-         rm(list = v, envir = envir)
-        }
-      } else if (class(get(v, envir = envir)) == "list") {
-        if (is.null(get(v, envir = envir)$geno)) next
-        if (class(get(v, envir = envir)$geno) == "big.matrix") {
-          desc <- describe(get(v, envir = envir)$geno)@description
-          if (desc$filename == binfile) { # TODO: Risky deletion
-            rm(list = v, envir = envir)
-          }
+        if (desc$filename == binfile) {
+          rm(list = v, envir = envir)
+          gc()
         }
       }
     }
@@ -457,7 +445,6 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
     file.remove(binfile)
   }
 }
-
 
 #' Write files of simer
 #'
@@ -480,79 +467,87 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' data(simdata)
-#' nmrk <- nrow(input.map)
-#' pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- rawgeno
-#' basepop.geno <- as.big.matrix(basepop.geno)
-#' effs <-
-#'     cal.effs(pop.geno = basepop.geno,
-#'              cal.model = "A",
-#'              num.qtn.tr1 = c(2, 6, 10),
-#'              sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-#'              dist.qtn.tr1 = rep("normal", 6),
-#'              prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-#'              shape.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              scale.tr1 = c(1, 1, 1, 1, 1, 1),
-#'              multrait = FALSE,
-#'              num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'              sd.trn = diag(c(1, 0.5)),
-#'              qtn.spot = rep(0.1, 10),
-#'              maf = 0, 
-#'              verbose = TRUE)
-#' str(basepop)
-#' pop.pheno <-
-#'     phenotype(effs = effs,
-#'               pop = basepop,
-#'               pop.geno = basepop.geno,
-#'               pos.map = NULL,
-#'               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-#'               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-#'               h2.trn = c(0.3, 0.5),  
-#'               sel.crit = "pheno", 
-#'               pop.total = basepop, 
-#'               sel.on = TRUE, 
-#'               inner.env = NULL, 
-#'               verbose = TRUE)
-#' basepop <- pop.pheno$pop
-#' pop.pheno$pop <- NULL           
-#' idx <- basepop$index
-#' # convert (0, 1) to (0, 1, 2)
-#' basepop.geno <- geno.cvt1(basepop.geno)
-#' basepop.geno <- as.big.matrix(basepop.geno)
-#' write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
-#'     out.geno.index = idx, out.pheno.index = idx, 
-#'     outpath = tempdir(), out.format = "numeric", verbose = TRUE)
-#' file.remove(file.path(tempdir(), "simer.geno.id"))
-#' file.remove(file.path(tempdir(), "simer.map"))
-#' file.remove(file.path(tempdir(), "simer.ped"))
-#' file.remove(file.path(tempdir(), "simer.phe"))
-#' }
-write.file <- function(pop, geno, map, out.geno.index, out.pheno.index, out = "simer", outpath, out.format, verbose) {
+#' # DO NOT RUN IT
+#' # outpath <- tempdir()
+#' # SP <- param.simer(out = "simer")
+#' # SP <- simer(SP)
+#' # SP$global$outpath <- outpath
+#' # write.file(SP)
+#' # unlink(outpath, recursive = TRUE)
+write.file <- function(SP) {
+  
+  # unfold global parameters
+  replication <- SP$global$replication
+  out <- SP$global$out
+  outpath <- SP$global$outpath
+  out.format <- SP$global$out.format
+  out.geno.gen <- SP$global$out.geno.gen
+  out.pheno.gen <- SP$global$out.pheno.gen
+  verbose <- SP$global$verbose
+  incols <- SP$geno$incols
+  
   if (is.null(outpath)) return(invisible())
   
-  # correct out.geno.index and out.pheno.index
-  out.geno.index.new <- match(out.geno.index, pop$index)
-  out.pheno.index.new <- match(out.pheno.index, pop$index)
+  pop.marker <- nrow(SP$geno$pop.geno[[1]])
+  pop.inds <- sapply(out.geno.gen, function(i) {
+    return(ncol(SP$geno$pop.geno[[i]]) / incols)
+  })[out.geno.gen]
+  pop.ind <- sum(pop.inds)
   
   if (out.format == "numeric") {
-    write.table(pop[out.geno.index.new, 2], file = file.path(outpath, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
-    logging.log(" Generate genoid successfully!\n", verbose = verbose)
-    write.table(map, file = file.path(outpath, paste0(out, ".map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
-    logging.log(" Generate map successfully!\n", verbose = verbose)
-    write.table(pop[out.pheno.index.new, c(2, 5, 6)], file = file.path(outpath, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-    logging.log(" Generate pedigree successfully!\n", verbose = verbose)
-    write.table(pop[out.pheno.index.new, c(1, 2, 5, 7, 8:ncol(pop))], file = file.path(outpath, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-    logging.log(" Generate phenotype successfully!\n", verbose = verbose)
+    outpath = paste0(outpath, .Platform$file.sep, pop.ind, "_Simer_Data_numeric")
+  } else if (out.format == "plink"){
+    outpath = paste0(outpath, .Platform$file.sep, pop.ind, "_Simer_Data_plink")
+  } else {
+    stop("out.format should be 'numeric' or 'plink'!")
+  }
+  if (!dir.exists(outpath)) dir.create(outpath)
+  
+  directory.rep <- paste0(outpath, .Platform$file.sep, "replication", replication)
+  if (dir.exists(directory.rep)) {
+    remove_bigmatrix(file.path(directory.rep, out))
+    unlink(directory.rep, recursive = TRUE)
+  }
+  dir.create(directory.rep)
+  
+  geno.back <- paste0(out, ".geno.bin")
+  geno.desc <- paste0(out, ".geno.desc")
+  geno.total <- filebacked.big.matrix(
+    nrow = pop.marker,
+    ncol = pop.ind,
+    init = 3,
+    type = 'char',
+    backingpath = directory.rep,
+    backingfile = geno.back,
+    descriptorfile = geno.desc
+  )
+  
+  pop.inds <- Reduce("+", pop.inds, accumulate = TRUE)
+  pop.inds <- c(0, pop.inds[-length(pop.inds)]) + 1
+  for (i in 1:length(out.geno.gen)) {
+    BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i])
+  }
+  
+  pheno.total <- do.call(rbind, lapply(out.pheno.gen, function(i) {
+    return(SP$pheno$pop[[i]])
+  }))
+  
+  if (out.format == "numeric") {
+    write.table(pheno.total[, 1], file = file.path(directory.rep, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+    write.table(SP$map$pop.map, file = file.path(directory.rep, paste0(out, ".geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+    if (!is.null(SP$map$pop.map.GxG)) {
+      write.table(SP$map$pop.map.GxG, file = file.path(directory.rep, paste0(out, ".GxG.geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+    }
+    write.table(pheno.total[, c(1, 5, 6)], file = file.path(directory.rep, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+    write.table(pheno.total, file = file.path(directory.rep, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
       
   } else if (out.format == "plink") {
-    f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = TRUE)
-    pheno <- subset(pop, select = c("index", f1))
-    pheno <- pheno[out.geno.index.new, ]
-    MVP.Data.MVP2Bfile(bigmat = geno, map = map, pheno = pheno, out = file.path(outpath, "mvp.plink"), verbose = verbose)
-  }  
+    MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.total[, 1, drop = FALSE], out = file.path(directory.rep, "mvp.plink"), verbose = verbose)
+  }
+  
+  logging.log(" All files have been saved successfully!\n", verbose = verbose)
+  
+  rm(geno.total); rm(pheno.total); gc()
 }
 
 #' Print things into file
@@ -634,157 +629,6 @@ simer.show.file <- function(filename = NULL, verbose = TRUE) {
   return(invisible())
 }
 
-#' Convert genotype matrix from (0, 1) to (0, 1, 2)
-#'
-#' Build date: Nov 14, 2018
-#' Last update: Jul 30, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param pop.geno genotype matrix of (0, 1)
-#'
-#' @return genotype matrix of (0, 1, 2)
-#' @export
-#'
-#' @examples
-#' num.marker <- 48353
-#' num.ind <- 100
-#' geno1 <- genotype(num.marker = num.marker, num.ind = num.ind, verbose = TRUE)
-#' geno2 <- geno.cvt1(pop.geno = geno1)
-#' geno1[1:5, 1:10]
-#' geno2[1:5, 1:5]
-geno.cvt1 <- function(pop.geno) {
-  if (is.null(pop.geno)) return(NULL)
-  num.ind <- ncol(pop.geno) / 2
-  v.odd <- (1:num.ind) * 2 - 1
-  v.even <- (1:num.ind) * 2
-  geno <- pop.geno[, v.odd] + pop.geno[, v.even]
-  return(geno)
-}
-
-#' Convert genotype matrix from (0, 1, 2) to (0, 1)
-#'
-#' Build date: Jul 11, 2020
-#' Last update: Jul 11, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param pop.geno genotype matrix of (0, 1, 2)
-#' 
-#' @return genotype matrix of (0, 1)
-#' @export
-#'
-#' @examples
-#' data(simdata)
-#' geno1 <- geno.cvt1(rawgeno)
-#' geno1[1:5, 1:5]
-#' geno <- geno.cvt2(pop.geno = geno1)
-#' geno[1:5, 1:10]
-geno.cvt2 <- function(pop.geno) {
-  if (is.null(pop.geno)) return(NULL)
-  nind <- ncol(pop.geno)
-  nmrk <- nrow(pop.geno)
-  geno <- matrix(3, nmrk, 2*nind)
-  
-  v.odd <- (1:nind) * 2 - 1
-  v.even <- (1:nind) * 2
-  
-  for (i in 1:nind) {
-    tmp1 <- pop.geno[, i]
-    tmp1[tmp1 == 2] <- 1
-    geno[, v.even[i]] <- tmp1
-    tmp2 <- pop.geno[, i] - 1
-    tmp2[tmp2 == -1] <- 0
-    geno[, v.odd[i]] <- tmp2
-  }
-  
-  return(geno)
-}
-
-#' To bulid correlation of variables
-#'
-#' Build date: Oct 10, 2019
-#' Last update: Oct 10, 2019
-#'
-#' @author Dong Yin and R
-#'
-#' @param df data.frame without correlation
-#' @param mu means of the variables 
-#' @param Sigma covariance matrix of variables
-#' @param tol tolerance (relative to largest variance) for numerical 
-#'       lack of positive-definiteness in Sigma.
-#'
-#' @return data.frame with correlaion
-#' @export
-#' @references B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98
-#'
-#' @examples
-#' Sigma <- matrix(c(14, 10, 10, 15), 2, 2)
-#' Sigma
-#' df <- cbind(rnorm(100), 0)
-#' df <- as.data.frame(df)
-#' names(df) <- paste0(" tr", 1:ncol(df))
-#' df.cov <- build.cov(df, Sigma = Sigma)
-#' var(df.cov)
-build.cov <- function(df = NULL, mu = rep(0, nrow(Sigma)), Sigma, tol = 1e-06) {
-  if (!is.data.frame(df)) {
-    df.nm <- paste0(" tr", 1:ncol(df))
-  } else {
-    df.nm <- names(df)
-  }
-  
-  # get zero-var index
-  df.var <- apply(df, 2, var)
-  idx <- which(df.var == 0)
-  df.t <- df[, idx]
-  df[, idx] <- rnorm(nrow(df))
-  
-  p <- length(mu)
-  eS <- eigen(Sigma, symmetric = TRUE)
-  ev <- eS$values
-  if (!all(ev >= -tol * abs(ev[1L]))) 
-    stop("'Sigma' is not positive definite")
-  
-  df <- scale(df, center = TRUE, scale = FALSE)
-  df <- df %*% svd(df, nu = 0)$v
-  df <- scale(df, center = FALSE, scale = TRUE)
-  
-  df <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(df)
-  df <- t(df)
-  df <- as.data.frame(df)
-  names(df) <- df.nm
-  df[, idx] <- df.t
-  
-  return(df)
-}
-
-#' Sample process with all needed elements
-#'
-#' Build date: Jul 11, 2020
-#' Last update: Jul 11, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param x either a vector of one or more elements from which to choose, or a positive integer
-#' @param size a non-negative integer giving the number of items to choose
-#' @param replace should sampling be with replacement?
-#' @param prob a vector of probability weights for obtaining the elements of the vector being sampled
-#' 
-#' @return sampled elements with all needed elements
-#' @export
-#'
-#' @examples
-#' sam <- simer.sample(x = paste0("a", 1:3), 100)
-#' sam
-#' unique(sam)
-simer.sample <- function(x, size, replace = TRUE, prob = NULL) {
-  sam <- sample(x, size, replace, prob)
-  while (length(unique(sam)) != length(x)) {
-    sam <- sample(x, size, replace, prob)
-  }
-  return(sam)
-}
-
 #' Check the levels of environmental factors
 #'
 #' Build date: Sep 10, 2021
@@ -806,7 +650,7 @@ checkEnv <- function(data, envName) {
   if (is.numeric(envName)) {
     envName <- names(data)[envName]
   }
-
+  
   # remove column of one level or full levels
   drop <- c()
   for (i in 1:ncol(data)) {

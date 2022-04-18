@@ -4,6 +4,9 @@ NULL
 #' @import rMVP
 NULL
 
+#' @import igraph
+NULL
+
 #' @importFrom stats aov cor dnorm qnorm rgamma rnorm rbeta rgeom runif var shapiro.test na.omit lm step formula model.matrix
 NULL
 

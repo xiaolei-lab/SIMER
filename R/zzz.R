@@ -16,6 +16,7 @@ package.env <- NULL
     if (any(toset)) { 
         options(op.simer[toset])
     }
+    options(bigmemory.typecast.warning = FALSE)
     
     # package level environment
     package.env <<- new.env()

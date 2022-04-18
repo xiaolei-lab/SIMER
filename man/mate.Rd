@@ -4,16 +4,18 @@
 \alias{mate}
 \title{Mating according to the indice of sires and dams}
 \usage{
-mate(pop.geno, incols = 2, index.sir, index.dam)
+mate(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0)
 }
 \arguments{
 \item{pop.geno}{genotype matrix of population}
 
-\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
-
 \item{index.sir}{indice of sires}
 
 \item{index.dam}{indice of dams}
+
+\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
+
+\item{ncpus}{the number of threads}
 }
 \value{
 genotype matrix after mating
@@ -23,12 +25,14 @@ Build date: Nov 14, 2018
 Last update: Aug 1, 2019
 }
 \examples{
-pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-index.sir <- rep(c(1, 3, 4, 5, 7, 9), each = 2)
-index.dam <- rep(c(11, 12, 13, 14, 16, 18), each = 2)
+SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
+SP <- genotype(SP)
+pop.geno <- SP$geno$pop.geno$gen1
+index.sir <- rep(1:50, each = 2)
+index.dam <- rep(51:100, each = 2)
 geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
                  index.dam = index.dam)
-str(geno.curr)
+geno.curr[1:5, 1:5]
 }
 \author{
 Dong Yin

@@ -23,6 +23,20 @@ logging.initialize <- function(module, outpath) {
 }
 
 
+#' Print or write log
+#'
+#' @param ... R objects
+#' @param file A connection, or a character string naming the file to print to. If "" (the default), cat prints to the standard output connection, the console unless redirected by sink. If it is "|cmd", the output is piped to the command given by ‘cmd’, by opening a pipe connection.
+#' @param sep a character vector of strings to append after each element.
+#' @param fill a logical or (positive) numeric controlling how the output is broken into successive lines.
+#' @param labels character vector of labels for the lines printed. Ignored if fill is FALSE.
+#' @param verbose whether to print detail
+#'
+#' @return print information
+#' @export
+#'
+#' @examples
+#' logging.log('simer')
 logging.log <- function(..., file = NULL, sep = " ", fill = FALSE, labels = NULL, verbose = TRUE) {
     if (verbose) {
         cat(..., sep = sep, fill = fill, labels = labels)

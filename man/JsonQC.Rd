@@ -4,10 +4,12 @@
 \alias{JsonQC}
 \title{The main function of Data Quality Control}
 \usage{
-JsonQC(jsonFile, verbose = TRUE)
+JsonQC(jsonFile, ncpus = 0, verbose = TRUE)
 }
 \arguments{
 \item{jsonFile}{the path of json file}
+
+\item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
 }

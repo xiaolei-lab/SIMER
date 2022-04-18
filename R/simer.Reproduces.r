@@ -14,86 +14,70 @@
 #' Do reproduction by different mate design
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 12, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop1 population information of population1
-#' @param pop2 population information of population2
-#' @param pop1.geno.id genotype id of population1
-#' @param pop2.geno.id genotype id of population2
-#' @param pop1.geno genotype matrix of population1
-#' @param pop2.geno genotype matrix of population2
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param mtd.reprod different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "randmate", and "randexself"
-#' @param num.prog litter size of dams
-#' @param ratio ratio of the males in all individuals
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
 #'
 #' @return population information and genotype matrix of current population
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' pop.list <- reproduces(pop1 = basepop,
-#'                        pop1.geno.id = basepop$index,  
-#'                        pop1.geno = basepop.geno,
-#'                        ind.stay = list(sir=1:10, dam=11:90),
-#'                        mtd.reprod = "randmate",
-#'                        num.prog = 2,
-#'                        ratio = 0.5)
-#' pop <- pop.list$pop
-#' geno <- pop.list$geno
-#' str(pop)
-#' str(geno)
-reproduces <-
-    function(pop1 = NULL,
-             pop2 = NULL,
-             pop1.geno.id = NULL,
-             pop2.geno.id = NULL,
-             pop1.geno = NULL,
-             pop2.geno = NULL,
-             incols = 2, 
-             ind.stay = NULL,
-             mtd.reprod = "randmate",
-             num.prog = 2,
-             ratio = 0.5) {
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, reprod.way = "randmate")
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- reproduces(SP)
+#' str(SP)
+reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 
 # Start reproduction
 
-  if (!is.null(pop1.geno.id) & !is.null(pop1.geno)) {
-    if (length(pop1.geno.id)*incols != ncol(pop1.geno)) 
-      stop("Genotype ID should match genotype matrix in the first population!")
-  }
-  if (!is.null(pop2.geno.id) & !is.null(pop2.geno)) {
-    if (length(pop2.geno.id)*incols != ncol(pop2.geno)) 
-      stop("Genotype ID should match genotype matrix in the second population!")
-  }
+  reprod.way <- SP$reprod$reprod.way
   
-  if (mtd.reprod == "clone") {
-    pop <- mate.clone(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog)
+  if (reprod.way == "clone") {
+    SP <- mate.clone(SP, ncpus = ncpus, verbose = verbose)
 
-  } else if (mtd.reprod == "dh") {
-    pop <- mate.dh(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog)
+  } else if (reprod.way == "dh") {
+    SP <- mate.dh(SP, ncpus = ncpus, verbose = verbose)
 
-  } else if (mtd.reprod == "selfpol") {
-    pop <- mate.selfpol(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog, ratio)
+  } else if (reprod.way == "selfpol") {
+    SP <- mate.selfpol(SP, ncpus = ncpus, verbose = verbose)
+  
+  } else if (reprod.way == "randmate") {
+    SP <- mate.randmate(SP, ncpus = ncpus, verbose = verbose)
 
-  } else if (mtd.reprod == "singcro") {
-    pop <- mate.singcro(pop1, pop2, pop1.geno.id, pop2.geno.id, pop1.geno, pop2.geno, incols, ind.stay, num.prog, ratio)
-
-  } else if (mtd.reprod == "randmate") {
-    pop <- mate.randmate(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog, ratio)
-
-  } else if (mtd.reprod == "randexself") {
-    pop <- mate.randexself(pop1, pop1.geno.id, pop1.geno, incols, ind.stay, num.prog, ratio)
-
+  } else if (reprod.way == "randexself") {
+    SP <- mate.randexself(SP, ncpus = ncpus, verbose = verbose)
+  
+  } else if (reprod.way == "2waycro") {
+    SP <- mate.2waycro(SP, ncpus = ncpus, verbose = verbose)
+    
+  } else if (reprod.way == "3waycro") {
+    SP <- mate.3waycro(SP, ncpus = ncpus, verbose = verbose)
+    
+  } else if (reprod.way == "4waycro") {
+    SP <- mate.4waycro(SP, ncpus = ncpus, verbose = verbose)
+  
+  } else if (reprod.way == "backcro") {
+    SP <- mate.backcro(SP, ncpus = ncpus, verbose = verbose)
+  
+  } else if (reprod.way == "userped") {
+    SP <- mate.userped(SP, ncpus = ncpus, verbose = verbose)
+    
   } else {
-    stop("Please input a right option within mtd.reprod!")
+    stop("'reprod.way' should be 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro' or 'userped'!")
   }
 
-  return(pop)
+  return(SP)
 }
 
 #' Mating according to the indice of sires and dams
@@ -104,28 +88,32 @@ reproduces <-
 #' @author Dong Yin
 #'
 #' @param pop.geno genotype matrix of population
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
 #' @param index.sir indice of sires
 #' @param index.dam indice of dams
+#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
+#' @param ncpus the number of threads
 #'
 #' @return genotype matrix after mating
 #' @export
 #'
 #' @examples
-#' pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' index.sir <- rep(c(1, 3, 4, 5, 7, 9), each = 2)
-#' index.dam <- rep(c(11, 12, 13, 14, 16, 18), each = 2)
+#' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- genotype(SP)
+#' pop.geno <- SP$geno$pop.geno$gen1
+#' index.sir <- rep(1:50, each = 2)
+#' index.dam <- rep(51:100, each = 2)
 #' geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
 #'                  index.dam = index.dam)
-#' str(geno.curr)
-mate <- function(pop.geno, incols = 2, index.sir, index.dam) {
-  num.marker <- nrow(pop.geno)
-  pop.geno.curr <- matrix(3, nrow = num.marker, ncol = length(index.dam) * incols)
-  # pop.geno.curr <- big.matrix(
-  #     nrow = num.marker,
-  #     ncol = length(index.dam) * incols,
-  #     type = "char")
-  # options(bigmemory.typecast.warning=FALSE)
+#' geno.curr[1:5, 1:5]
+mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
+  
+  pop.marker <- nrow(pop.geno)
+  pop.geno.curr <- big.matrix(
+      nrow = pop.marker,
+      ncol = length(index.dam) * incols,
+      init = 3,
+      type = "char"
+  )
 
   if (incols == 2) {
     s1 <- sample(c(0, 1), size = length(index.dam), replace=TRUE)
@@ -136,22 +124,11 @@ mate <- function(pop.geno, incols = 2, index.sir, index.dam) {
     gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
     gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
     
-    pop.geno.curr <- pop.geno[, gmt.comb]
+    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
     
   } else {
-    # calculate weight of every marker
-    num.block <- 100
-    len.block <- num.marker %/% num.block
-    tail.block <- num.marker %% num.block + len.block
-    num.inblock <- c(rep(len.block, (num.block-1)), tail.block)
-    accum.block <- Reduce("+", num.inblock, accumulate = TRUE)
-    for (i in 1:100) {
-      ed <- accum.block[i]
-      op <- ed - num.inblock[i] + 1
-      judpar <- sample(c(0, 1), length(index.dam), replace = TRUE)
-      index.prog <- judpar * index.sir + (1-judpar) * index.dam
-      pop.geno.curr[op:ed, ] <- pop.geno[op:ed, index.prog]
-    }
+    # mix parent genotype to generate kid genotype
+    GenoMixer(pop.geno.curr@address, pop.geno@address, index.sir, index.dam, threads = ncpus)
   }
   
   return(pop.geno.curr)
@@ -160,388 +137,1043 @@ mate <- function(pop.geno, incols = 2, index.sir, index.dam) {
 #' Clone process
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 10, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop1 population information of population1
-#' @param pop1.geno.id genotype id of population1
-#' @param pop1.geno genotype matrix of population1
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param num.prog litter size of dams
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
 #'
 #' @return population information and genotype matrix of population after clone process
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- list(sir =  basepop$index, dam = basepop$index)
-#' pop.clone <- mate.clone(pop1 = basepop, pop1.geno.id = basepop$index, 
-#'     pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2)
-#' pop <- pop.clone$pop
-#' geno <- pop.clone$geno
-#' str(pop)
-#' str(geno)
-mate.clone <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog) {
-
-  num.marker <- nrow(pop1.geno)
-  ped.dam <- ind.stay$dam
-  num.2ind <- length(ped.dam) * incols
-
-  pop.geno.curr <- matrix(3, nrow = num.marker, ncol = num.2ind*num.prog)
-  # pop.geno.curr <- big.matrix(
-  #     nrow = num.marker,
-  #     ncol = num.2ind*num.prog,
-  #     type = "char")
-  # options(bigmemory.typecast.warning=FALSE)
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.clone(SP)
+#' str(SP)
+mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
   
-  gmt.dam <- match(ped.dam, pop1.geno.id)
-  gmt.comb <- getgmt(gmt.dam, incols = incols)
-  pop.geno.adj <- pop1.geno[, gmt.comb]
+  # unfold reproduction parameters
+  pop.gen <- SP$reprod$pop.gen - 1
+  count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  if (pop.gen == 0) return(SP)
   
-  for (i in 1:num.prog) {
-    ed <- i * num.2ind
-    op <- ed - num.2ind + 1
-    pop.geno.curr[, op:ed] <- pop.geno.adj
-    # input.geno(pop.geno.curr, pop.geno.adj, i * num.2ind, TRUE)
+  for (i in 1:pop.gen) {
+    # unfold reproduction parameters
+    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    pop.geno.id <- pop[, 1]
+    pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+    incols <- SP$geno$incols
+    pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+    if (is.null(pop.sel)) {
+      ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
+      ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      pop.sel <- list(sir = ind.sir , dam = ind.dam)
+    }
+    prog <- SP$reprod$prog
+    
+    pop.marker <- nrow(pop.geno)
+    if (all(pop.sel$sir == pop.sel$dam)) {
+      ped.dam <- pop.sel$dam
+    } else {
+      ped.dam <- c(pop.sel$sir, pop.sel$dam)
+    }
+    gmt.dam <- match(ped.dam, pop.geno.id)
+    num.2ind <- length(ped.dam) * incols
+    
+    # pop.geno.curr <- matrix(3, nrow = pop.marker, ncol = num.2ind*prog)
+    pop.geno.curr <- big.matrix(
+      nrow = pop.marker,
+      ncol = num.2ind*prog,
+      init = 3,
+      type = "char")
+    
+    if (incols == 2) {
+      gmt.dam <- gmt.dam * 2
+      gmt.sir <- gmt.dam - 1
+      gmt.comb <- c(gmt.sir, gmt.dam)
+      gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
+      gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
+    } else if (incols == 1) {
+      gmt.comb <- gmt.dam
+    } else {
+      stop("Please input a correct incols!")
+    }
+    
+    gmt.comb <- rep(gmt.comb, times = prog)
+    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
+    
+    ped.sir <- rep(ped.dam, times = prog)
+    ped.dam <- rep(ped.dam, times = prog)
+    sex <- rep(0, length(ped.dam))
+    index <- seq(pop$index[length(pop$index)]+1, length.out = length(ped.dam))
+    fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+    gen <- rep(pop$gen[1]+1, length(ped.dam))
+    pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+    
+    SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+    SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+    names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+      names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+    
+    ### phenotype and selection ###
+    SP <- phenotype(SP)
+    SP <- selects(SP)
+    count.ind <- c(count.ind, nrow(pop.curr))
+    logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
   
-  ped.sir <- rep(ped.dam, times = num.prog)
-  ped.dam <- rep(ped.dam, times = num.prog)
-  sex <- rep(0, length(ped.dam))
-  index <- seq(pop1$index[length(pop1$index)]+1, length.out = length(ped.dam))
-  fam.temp <- getfam(ped.sir, ped.dam, pop1$fam[length(pop1$fam)]+1, "pm")
-  gen <- rep(pop1$gen[1]+1, length(ped.dam))
-  pop.curr <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
-
-  list.clone <- list(geno = pop.geno.curr, pop = pop.curr)
-  return(list.clone)
+  return(SP)
 }
 
 #' Doubled haploid process
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 4, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop1 population information of population1
-#' @param pop1.geno.id genotype id of population1
-#' @param pop1.geno genotype matrix of population1
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param num.prog litter size of dams
-#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
 #' @return population information and genotype matrix of population after doubled haploid process
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- list(sir = basepop$index, dam = basepop$index)
-#' pop.dh <- mate.dh(pop1 = basepop, pop1.geno.id = basepop$index, 
-#'     pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2)
-#' pop <- pop.dh$pop
-#' geno <- pop.dh$geno
-#' str(pop)
-#' str(geno)
-mate.dh <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog) {
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP,prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.dh(SP)
+#' str(SP)
+mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 
-  num.marker <- nrow(pop1.geno)
-  ped.dam <- ind.stay$dam
-  num.2ind <- length(ped.dam) * incols
-  if (num.prog %% 2 != 0) {
-    stop("num.prog should be an even in dh option!")
-  }
-
-  pop.geno.curr <- matrix(3, nrow = num.marker, ncol = num.2ind*num.prog)
-  # pop.geno.curr <- big.matrix(
-  #    nrow = num.marker,
-  #    ncol = num.2ind*num.prog,
-  #    type = "char")
-  # options(bigmemory.typecast.warning=FALSE)
-
-  gmt.dam <- match(ped.dam, pop1.geno.id)
-  gmt.comb <- getgmt(gmt.dam, incols = incols)
-  gmt.comb.adj <- rep(gmt.comb, each = 2)
-  pop.geno.comb <- pop1.geno[, gmt.comb.adj]
-
-  for (i in 2*1:(num.prog/2)) {
-    ed <- i * num.2ind
-    op <- ed - 2 * num.2ind + 1
-    pop.geno.curr[, op:ed] <- pop.geno.comb
-    # input.geno(pop.geno.curr, pop.geno.comb, i * num.2ind, TRUE)
+  # unfold reproduction parameters
+  pop.gen <- SP$reprod$pop.gen - 1
+  count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  if (pop.gen == 0) return(SP)
+  
+  for (i in 1:pop.gen) {
+    # unfold reproduction parameters
+    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    pop.geno.id <- pop[, 1]
+    pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+    incols <- SP$geno$incols
+    pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+    if (is.null(pop.sel)) {
+      ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
+      ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      pop.sel <- list(sir = ind.sir , dam = ind.dam)
+    }
+    prog <- SP$reprod$prog
+    
+    pop.marker <- nrow(pop.geno)
+    if (all(pop.sel$sir == pop.sel$dam)) {
+      ped.dam <- pop.sel$dam
+    } else {
+      ped.dam <- c(pop.sel$sir, pop.sel$dam)
+    }
+    gmt.dam <- match(ped.dam, pop.geno.id)
+    num.2ind <- length(ped.dam) * incols
+    if (prog %% 2 != 0) {
+      stop("prog should be an even in dh option!")
+    }
+    
+    # pop.geno.curr <- matrix(3, nrow = pop.marker, ncol = num.2ind*prog)
+    pop.geno.curr <- big.matrix(
+      nrow = pop.marker,
+      ncol = num.2ind*prog,
+      init = 3,
+      type = "char")
+    
+    gmt.dam <- match(ped.dam, pop.geno.id)
+    if (incols == 2) {
+      gmt.dam <- gmt.dam * 2
+      gmt.sir <- gmt.dam - 1
+      gmt.comb <- c(gmt.sir, gmt.dam)
+      gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
+      gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
+    } else if (incols == 1) {
+      gmt.comb <- gmt.dam
+    } else {
+      stop("Please input a correct incols!")
+    }
+    
+    gmt.comb <- rep(rep(gmt.comb, each = 2), times = prog/2)
+    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, ncpus = 0)
+    
+    ped.sir <- rep(rep(ped.dam, each = 2), times = prog/2)
+    ped.dam <- rep(rep(ped.dam, each = 2), times = prog/2)
+    sex <- rep(0, length(ped.dam))
+    index <- seq(pop$index[length(pop$index)]+1, length.out = length(ped.dam))
+    fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+    gen <- rep(pop$gen[1]+1, length(ped.dam))
+    pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+    
+    SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+    SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+    names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+      names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+    
+    ### phenotype and selection ###
+    SP <- phenotype(SP)
+    SP <- selects(SP)
+    count.ind <- c(count.ind, nrow(pop.curr))
+    logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
   
-  ped.sir <- rep(rep(ped.dam, each = 2), times = num.prog/2)
-  ped.dam <- rep(rep(ped.dam, each = 2), times = num.prog/2)
-  sex <- rep(0, length(ped.dam))
-  index <- seq(pop1$index[length(pop1$index)]+1, length.out = length(ped.dam))
-  fam.temp <- getfam(ped.sir, ped.dam, pop1$fam[length(pop1$fam)]+1, "pm")
-  gen <- rep(pop1$gen[1]+1, length(ped.dam))
-  pop.curr <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
-
-  list.dh <- list(geno = pop.geno.curr, pop = pop.curr)
-  return(list.dh)
+  return(SP)
 }
 
 #' Self-pollination
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 10, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop1 population information of population1
-#' @param pop1.geno.id genotype id of population1
-#' @param pop1.geno genotype matrix of population1
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param num.prog litter size of dams
-#' @param ratio ratio of males in all individuals
-#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
 #' @return population information and genotype matrix of population after self-pollination process
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- list(sir = basepop$index, dam = basepop$index)
-#' pop.selfpol <- mate.selfpol(pop1 = basepop, pop1.geno.id = basepop$index, 
-#'     pop1.geno = basepop.geno, ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
-#' pop <- pop.selfpol$pop
-#' geno <- pop.selfpol$geno
-#' str(pop)
-#' str(geno)
-mate.selfpol <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.selfpol(SP)
+#' str(SP)
+mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 
-  ped.dam <- ind.stay$dam
-  ped.sir <- rep(ped.dam, each = num.prog)
-  ped.dam <- rep(ped.dam, each = num.prog)
-  index.sir <- match(ped.dam, pop1.geno.id)
-  index.dam <- index.sir
-
-  pop.geno.curr <- mate(pop.geno = pop1.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
-
-  sex <- rep(0, length(index.dam))
-  index <- seq(pop1$index[length(pop1$index)]+1, length.out = length(ped.dam))
-  fam.temp <- getfam(ped.sir, ped.dam, pop1$fam[length(pop1$fam)]+1, "pm")
-  gen <- rep(pop1$gen[1]+1, length(ped.dam))
-  pop.curr <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
-
-  list.selfpol <- list(geno = pop.geno.curr, pop = pop.curr)
-  return(list.selfpol)
-}
-
-#' Single cross process
-#'
-#' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param pop1 population information of population1
-#' @param pop2 population information of population2
-#' @param pop1.geno.id genotype id of population1
-#' @param pop2.geno.id genotype id of population2
-#' @param pop1.geno genotype matrix of population1
-#' @param pop2.geno genotype matrix of population2
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param num.prog litter size of dams
-#' @param ratio ratio of males in all individuals
-#'
-#' @return population information and genotype matrix of population after single cross process
-#' @export
-#' 
-#' @examples
-#' pop1 <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' pop2 <- getpop(nind = 100, from = 101, ratio = 0.1)
-#' pop1.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' pop2.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- list(sir = pop1$index, dam = pop2$index)
-#' pop.singcro <- mate.singcro(pop1 = pop2, pop2 = pop2,
-#'     pop1.geno.id = pop1$index, pop2.geno.id = pop2$index, 
-#'     pop1.geno = pop1.geno, pop2.geno = pop2.geno,
-#'     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
-#' pop <- pop.singcro$pop
-#' geno <- pop.singcro$geno
-#' str(pop)
-#' str(geno)
-mate.singcro <- function(pop1, pop2, pop1.geno.id, pop2.geno.id, pop1.geno, pop2.geno, incols = 2, ind.stay, num.prog, ratio) {
-
-  if (is.null(pop1) || is.null(pop2) || is.null(pop1.geno) || is.null(pop2.geno)) {
-    stop("Only two breeds are needed in the single cross!")
-  }
-  if (nrow(pop1.geno) != nrow(pop2.geno)) {
-    stop("Rows of genotype matrixs should be equal!")
-  }
-
-  ped.sir <- ind.stay$sir
-  ped.dam <- ind.stay$dam
-  num.dam <- length(ped.dam)
-  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
-  ped.sir <- sample(ped.sir, size = num.dam, replace = TRUE)
-  ped.sir <- rep(ped.sir, each = num.prog)
-  ped.dam <- rep(ped.dam, each = num.prog)
-  num.ind <- length(ped.dam)
-  if (floor(num.ind * ratio) != num.ind * ratio) {
-    stop("The product of population size and ratio should be a integer!")
+  # unfold reproduction parameters
+  pop.gen <- SP$reprod$pop.gen - 1
+  count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  if (pop.gen == 0) return(SP)
+  
+  for (i in 1:pop.gen) {
+    # unfold reproduction parameters
+    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    pop.geno.id <- pop[, 1]
+    pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+    incols <- SP$geno$incols
+    pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+    if (is.null(pop.sel)) {
+      ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
+      ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      pop.sel <- list(sir = ind.sir , dam = ind.dam)
+    }
+    prog <- SP$reprod$prog
+    
+    if (all(pop.sel$sir == pop.sel$dam)) {
+      ped.dam <- pop.sel$dam
+    } else {
+      ped.dam <- c(pop.sel$sir, pop.sel$dam)
+    }
+    ped.sir <- rep(ped.dam, each = prog)
+    ped.dam <- rep(ped.dam, each = prog)
+    index.sir <- match(ped.dam, pop.geno.id)
+    index.dam <- index.sir
+    
+    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    
+    sex <- rep(0, length(index.dam))
+    index <- seq(pop$index[length(pop$index)]+1, length.out = length(ped.dam))
+    fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+    gen <- rep(pop$gen[1]+1, length(ped.dam))
+    pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+    
+    SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+    SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+    names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+      names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+    
+    ### phenotype and selection ###
+    SP <- phenotype(SP)
+    SP <- selects(SP)
+    count.ind <- c(count.ind, nrow(pop.curr))
+    logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
   
-  index.sir <- match(ped.sir, pop1.geno.id)
-  index.dam <- match(ped.dam, pop2.geno.id)
-  pop12.geno <- cbind(pop1.geno[], pop2.geno[])
-  
-  pop.geno.curr <- mate(pop.geno = pop12.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
-
-  sex <- rep(2, num.ind)
-  sex[sample(1:num.ind, num.ind * ratio)] <- 1
-  index <- seq(pop2$index[length(pop2$index)]+1, length.out = num.ind)
-  fam.temp <- getfam(ped.sir, ped.dam, pop2$fam[length(pop2$fam)]+1, "pm")
-  gen <- rep(pop2$gen[1]+1, num.ind)
-  pop.curr <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
-
-  list.singcro <- list(geno = pop.geno.curr, pop = pop.curr)
-  return(list.singcro)
+  return(SP)
 }
 
 #' Random mating process
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 10, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop1 population information of population1
-#' @param pop1.geno.id genotype id of population1
-#' @param pop1.geno genotype matrix of population1
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param num.prog litter size of dams
-#' @param ratio ratio of males in all individuals
-#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
 #' @return population information and genotype matrix of population after random mating process
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- list(sir = basepop$index[basepop$sex == 1], 
-#'                  dam = basepop$index[basepop$sex == 2])
-#' pop.randmate <- mate.randexself(pop1 = basepop,
-#'     pop1.geno.id = basepop$index, pop1.geno = basepop.geno, 
-#'     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
-#' pop <- pop.randmate$pop
-#' geno <- pop.randmate$geno
-#' str(pop)
-#' str(geno)
-mate.randmate <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
-
-  ped.sir <- ind.stay$sir
-  ped.dam <- ind.stay$dam
-  num.dam <- length(ped.dam)
-  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
-  ped.sir <- sample(ped.sir, size = num.dam, replace = TRUE)
-  ped.sir <- rep(ped.sir, each = num.prog)
-  ped.dam <- rep(ped.dam, each = num.prog)
-  num.ind <- length(ped.dam)
-  if (floor(num.ind * ratio) != num.ind * ratio) {
-    stop("The product of population size and ratio should be a integer!")
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.randmate(SP)
+#' str(SP)
+mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  # unfold reproduction parameters
+  pop.gen <- SP$reprod$pop.gen - 1
+  count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  if (pop.gen == 0) return(SP)
+  
+  for (i in 1:pop.gen) {
+    # unfold reproduction parameters
+    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    pop.geno.id <- pop[, 1]
+    pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+    incols <- SP$geno$incols
+    pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+    if (is.null(pop.sel)) {
+      ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
+      ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      pop.sel <- list(sir = ind.sir , dam = ind.dam)
+    }
+    sex.rate <- SP$reprod$sex.rate
+    prog <- SP$reprod$prog
+    
+    ped.sir <- pop.sel$sir
+    ped.dam <- pop.sel$dam
+    if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
+    ped.sir <- sample(ped.sir, size = length(ped.dam), replace = TRUE)
+    ped.sir <- rep(ped.sir, each = prog)
+    ped.dam <- rep(ped.dam, each = prog)
+    pop.ind <- length(ped.dam)
+    
+    index.sir <- match(ped.sir, pop.geno.id)
+    index.dam <- match(ped.dam, pop.geno.id)
+    
+    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    
+    if (all(pop$sex == 0)) {
+      sex <- rep(0, length(ped.dam))
+    } else {
+      sex <- rep(2, pop.ind)
+      sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+    }
+    index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+    fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+    gen <- rep(pop$gen[1]+1, pop.ind)
+    pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+    
+    SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+    SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+    names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+      names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+    
+    ### genotype, phenotype, and selection ###
+    SP <- genotype(SP)
+    SP <- phenotype(SP)
+    SP <- selects(SP)
+    count.ind <- c(count.ind, nrow(pop.curr))
+    logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
-  index.sir <- match(ped.sir, pop1.geno.id)
-  index.dam <- match(ped.dam, pop1.geno.id)
-
-  pop.geno.curr <- mate(pop.geno = pop1.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
-
-  if (all(pop1$sex == 0)) {
-    sex <- rep(0, num.prog*num.dam)
-  } else {
-    sex <- rep(2, num.ind)
-    sex[sample(1:num.ind, num.ind * ratio)] <- 1
-  }
-  index <- seq(pop1$index[length(pop1$index)]+1, length.out = num.ind)
-  fam.temp <- getfam(ped.sir, ped.dam, pop1$fam[length(pop1$fam)]+1, "pm")
-  gen <- rep(pop1$gen[1]+1, num.ind)
-  pop.curr <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
-
-  list.randmate <- list(geno = pop.geno.curr, pop = pop.curr)
-  return(list.randmate)
+  
+  return(SP)
 }
 
 #' Random mating excluding self-pollination process
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 10, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop1 population information of population1
-#' @param pop1.geno.id genotype id of population1
-#' @param pop1.geno genotype matrix of population1
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ind.stay selected individuals regarded as parents
-#' @param num.prog litter size of dams
-#' @param ratio ratio of males in all individuals
-#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
 #' @return population information and genotype matrix of population after random mating excluding self-pollination process
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-#' ind.stay <- list(sir = basepop$index[basepop$sex == 1], 
-#'                  dam = basepop$index[basepop$sex == 2])
-#' pop.randexself <- mate.randexself(pop1 = basepop,
-#'     pop1.geno.id = basepop$index, pop1.geno = basepop.geno, 
-#'     ind.stay = ind.stay, num.prog = 2, ratio = 0.5)
-#' pop <- pop.randexself$pop
-#' geno <- pop.randexself$geno
-#' str(pop)
-#' str(geno)
-mate.randexself <- function(pop1, pop1.geno.id, pop1.geno, incols = 2, ind.stay, num.prog, ratio) {
-
-  ped.sir <- ind.stay$sir
-  ped.dam <- ind.stay$dam
-  num.dam <- length(ped.dam)
-  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
-  ped.sir <- sample(ped.sir, size = num.dam, replace = TRUE)
-
-  # To make sure ped.sir is different from ped.dam
-	idt.flag <- ped.sir == ped.dam
-  sum.idt <- sum(idt.flag)
-	while (sum.idt != 0) {
-  	ped.sir[idt.flag] <- sample(ped.sir, size = sum.idt, replace = TRUE)
-  	idt.flag <- ped.sir == ped.dam
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.randexself(SP)
+#' str(SP)
+mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  # unfold reproduction parameters
+  pop.gen <- SP$reprod$pop.gen - 1
+  count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  if (pop.gen == 0) return(SP)
+  
+  for (i in 1:pop.gen) {
+    # unfold reproduction parameters
+    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    pop.geno.id <- pop[, 1]
+    pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+    incols <- SP$geno$incols
+    pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+    if (is.null(pop.sel)) {
+      ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
+      ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      pop.sel <- list(sir = ind.sir , dam = ind.dam)
+    }
+    sex.rate <- SP$reprod$sex.rate
+    prog <- SP$reprod$prog
+    
+    ped.sir <- pop.sel$sir
+    ped.dam <- pop.sel$dam
+    if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
+    ped.sir <- sample(ped.sir, size = length(ped.dam), replace = TRUE)
+    
+    # To make sure ped.sir is different from ped.dam
+    idt.flag <- ped.sir == ped.dam
     sum.idt <- sum(idt.flag)
-	}
-
-  ped.sir <- rep(ped.sir, each = num.prog)
-  ped.dam <- rep(ped.dam, each = num.prog)
-  num.ind <- length(ped.dam)
-  if (floor(num.ind * ratio) != num.ind * ratio) {
-    stop("The product of population size and ratio should be a integer!")
+    while (sum.idt != 0) {
+      ped.sir[idt.flag] <- sample(ped.sir, size = sum.idt, replace = TRUE)
+      idt.flag <- ped.sir == ped.dam
+      sum.idt <- sum(idt.flag)
+    }
+    
+    ped.sir <- rep(ped.sir, each = prog)
+    ped.dam <- rep(ped.dam, each = prog)
+    pop.ind <- length(ped.dam)
+    
+    index.sir <- match(ped.sir, pop.geno.id)
+    index.dam <- match(ped.dam, pop.geno.id)
+    
+    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    
+    if (all(pop$sex == 0)) {
+      sex <- rep(0, length(ped.dam))
+    } else {
+      sex <- rep(2, pop.ind)
+      sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+    }
+    index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+    fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+    gen <- rep(pop$gen[1]+1, pop.ind)
+    pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+    
+    SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+    SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+    names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+      names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+    
+    ### genotype, phenotype, and selection ###
+    SP <- genotype(SP)
+    SP <- phenotype(SP)
+    SP <- selects(SP)
+    count.ind <- c(count.ind, nrow(pop.curr))
+    logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
-  index.sir <- match(ped.sir, pop1.geno.id)
-  index.dam <- match(ped.dam, pop1.geno.id)
+  
+  return(SP)
+}
 
-  pop.geno.curr <- mate(pop.geno = pop1.geno, incols = incols, index.sir = index.sir, index.dam = index.dam)
-
-  if (all(pop1$sex == 0)) {
-    sex <- rep(0, num.prog*num.dam)
-  } else {
-    sex <- rep(2, num.ind)
-    sex[sample(1:num.ind, num.ind * ratio)] <- 1
+#' Two-way cross process
+#'
+#' Build date: Nov 14, 2018
+#' Last update: Apr 10, 2022
+#'
+#' @author Dong Yin
+#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
+#' @return population information and genotype matrix of population after two-way cross process
+#' @export
+#' 
+#' @examples
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.2waycro(SP)
+#' str(SP)
+mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  count.ind <- NULL
+  
+  # unfold reproduction parameters
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- pop[, 1]
+  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  incols <- SP$geno$incols
+  pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  if (is.null(pop.sel)) {
+    ind.sir <- pop$index[pop$sex == 1]
+    ind.dam <- pop$index[pop$sex == 2]
+    pop.sel <- list(sir = ind.sir , dam = ind.dam)
   }
-  index <- seq(pop1$index[length(pop1$index)]+1, length.out = num.ind)
-  fam.temp <- getfam(ped.sir, ped.dam, pop1$fam[length(pop1$fam)]+1, "pm")
-  gen <- rep(pop1$gen[1]+1, num.ind)
-  pop.curr <- data.frame(gen = gen, index = index, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+  sex.rate <- SP$reprod$sex.rate
+  prog <- SP$reprod$prog
+  
+  count.ind <- c(count.ind, nrow(pop))
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  
+  ped.sir <- pop.sel$sir
+  ped.dam <- pop.sel$dam
+  if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
+  ped.sir <- sample(ped.sir, size = length(ped.dam), replace = TRUE)
+  ped.sir <- rep(ped.sir, each = prog)
+  ped.dam <- rep(ped.dam, each = prog)
+  pop.ind <- length(ped.dam)
+  
+  index.sir <- match(ped.sir, pop.geno.id)
+  index.dam <- match(ped.dam, pop.geno.id)
+  
+  pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+  
+  sex <- rep(2, pop.ind)
+  sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+  index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+  fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+  gen <- rep(pop$gen[1]+1, pop.ind)
+  pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+  
+  SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+  SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+  names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  
+  ### genotype, phenotype, and selection ###
+  SP <- genotype(SP)
+  SP <- phenotype(SP)
+  SP <- selects(SP)
+  count.ind <- c(count.ind, nrow(pop.curr))
+  logging.log(" After generation", 2, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
+  
+  return(SP)
+}
 
-  list.randexself <- list(geno = pop.geno.curr, pop = pop.curr)
-  return(list.randexself)
+#' three-way cross process
+#'
+#' Build date: Apr 11, 2022
+#' Last update: Apr 11, 2022
+#'
+#' @author Dong Yin
+#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
+#' @return population information and genotype matrix of population after three-way cross process
+#' @export
+#' 
+#' @examples
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' # three different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1), c(30, 30, 40))
+#' SP <- selects(SP)
+#' SP <- mate.3waycro(SP)
+#' str(SP)
+mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  count.ind <- NULL
+  
+  # unfold reproduction parameters
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- pop[, 1]
+  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  incols <- SP$geno$incols
+  pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  if (is.null(pop.sel)) {
+    ind.sir <- pop$index[pop$sex == 1]
+    ind.dam <- pop$index[pop$sex == 2]
+    pop.sel <- list(sir = ind.sir , dam = ind.dam)
+  }
+  sex.rate <- SP$reprod$sex.rate
+  prog <- SP$reprod$prog
+  
+  count.ind <- c(count.ind, nrow(pop))
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  
+  sex1 <- pop$sex
+  sex2 <- c(1, sex1[-length(sex1)])
+  sex.op <- which(sex1 != sex2)
+  if (length(sex.op) != 2) {
+    stop("Something wrong in the format of three-way cross data!")
+  }
+  
+  ### the first two-way cross ###
+  ped.sir1 <- intersect(pop[1:(sex.op[1]-1), 1], pop.sel$sir)
+  ped.dam1 <- intersect(pop[sex.op[1]:(sex.op[2]-1), 1], pop.sel$dam)
+  ped.sir2 <- intersect(pop[sex.op[2]:nrow(pop), 1], pop.sel$sir)
+  if (length(ped.sir1) == 1) ped.sir1 <- rep(ped.sir1, 2)
+  ped.sir1 <- sample(ped.sir1, size = length(ped.dam1), replace = TRUE)
+  ped.sir1 <- rep(ped.sir1, each = prog)
+  ped.dam1 <- rep(ped.dam1, each = prog)
+  pop.ind <- length(ped.dam1)
+  
+  index.sir1 <- match(ped.sir1, pop.geno.id)
+  index.dam1 <- match(ped.dam1, pop.geno.id)
+  
+  pop.geno.dam2 <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
+  
+  sex <- rep(2, pop.ind)
+  sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+  index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+  fam.temp <- getfam(ped.sir1, ped.dam1, pop$fam[length(pop$fam)]+1, "pm")
+  gen <- rep(pop$gen[1]+1, pop.ind)
+  pop.dam2 <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir1, dam = ped.dam1, sex = sex)
+  
+  SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.dam2
+  SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.dam2
+  names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  
+  ### genotype, phenotype and selection ###
+  SP <- genotype(SP)
+  SP <- phenotype(SP)
+  SP <- selects(SP)
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- c(pop.geno.id, pop[, 1])
+  pop.geno.curr <- big.matrix(
+    nrow = nrow(pop.geno),
+    ncol = length(pop.geno.id),
+    init = 3,
+    type = "char")
+  BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = 1:ncol(pop.geno), threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno.dam2@address, colIdx = 1:ncol(pop.geno.dam2), op = ncol(pop.geno)+1, threads = ncpus)
+  pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  
+  count.ind <- c(count.ind, nrow(pop))
+  logging.log(" After generation", 2, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
+  
+  ### the second two-way cross ###
+  ped.dam2 <- pop.sel$dam
+  if (length(ped.sir2) == 1) ped.sir2 <- rep(ped.sir2, 2)
+  ped.sir2 <- sample(ped.sir2, size = length(ped.dam2), replace = TRUE)
+  ped.sir2 <- rep(ped.sir2, each = prog)
+  ped.dam2 <- rep(ped.dam2, each = prog)
+  pop.ind <- length(ped.dam2)
+  
+  index.sir2 <- match(ped.sir2, pop.geno.id)
+  index.dam2 <- match(ped.dam2, pop.geno.id)
+  
+  pop.geno.curr <- mate(pop.geno = pop.geno.curr, incols = incols, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
+  
+  sex <- rep(2, pop.ind)
+  sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+  index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+  fam.temp <- getfam(ped.sir2, ped.dam2, pop$fam[length(pop$fam)]+1, "pm")
+  gen <- rep(pop$gen[1]+1, pop.ind)
+  pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir2, dam = ped.dam2, sex = sex)
+  
+  SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+  SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+  names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  
+  ### genotype, phenotype, and selection ###
+  SP <- genotype(SP)
+  SP <- phenotype(SP)
+  SP <- selects(SP)
+  count.ind <- c(count.ind, nrow(pop.curr))
+  logging.log(" After generation", 3, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
+  
+  return(SP)
+}
+
+#' four-way cross process
+#'
+#' Build date: Apr 11, 2022
+#' Last update: Apr 11, 2022
+#'
+#' @author Dong Yin
+#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
+#' @return population information and genotype matrix of population after four-way cross process
+#' @export
+#' 
+#' @examples
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' # four different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
+#' SP <- selects(SP)
+#' SP <- mate.4waycro(SP)
+#' str(SP)
+mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  count.ind <- NULL
+  
+  # unfold reproduction parameters
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- pop[, 1]
+  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  incols <- SP$geno$incols
+  pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  if (is.null(pop.sel)) {
+    ind.sir <- pop$index[pop$sex == 1]
+    ind.dam <- pop$index[pop$sex == 2]
+    pop.sel <- list(sir = ind.sir , dam = ind.dam)
+  }
+  sex.rate <- SP$reprod$sex.rate
+  prog <- SP$reprod$prog
+  
+  count.ind <- c(count.ind, nrow(pop))
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  
+  sex1 <- pop$sex
+  sex2 <- c(1, sex1[-length(sex1)])
+  sex.op <- which(sex1 != sex2)
+  if (length(sex.op) != 3) {
+    stop("Something wrong in the format of four-way cross data!")
+  }
+  
+  ### the first two two-way cross ###
+  ped.sir1 <- intersect(pop[1:(sex.op[1]-1), 1], pop.sel$sir)
+  ped.dam1 <- intersect(pop[sex.op[1]:(sex.op[2]-1), 1], pop.sel$dam)
+  ped.sir2 <- intersect(pop[sex.op[2]:(sex.op[3]-1), 1], pop.sel$sir)
+  ped.dam2 <- intersect(pop[sex.op[3]:nrow(pop), 1], pop.sel$dam)
+  if (length(ped.sir1) == 1) ped.sir1 <- rep(ped.sir1, 2)
+  if (length(ped.sir2) == 1) ped.sir2 <- rep(ped.sir2, 2)
+  ped.sir1 <- sample(ped.sir1, size = length(ped.dam1), replace = TRUE)
+  ped.sir2 <- sample(ped.sir2, size = length(ped.dam2), replace = TRUE)
+  ped.sir1 <- rep(ped.sir1, each = prog)
+  ped.dam1 <- rep(ped.dam1, each = prog)
+  ped.sir2 <- rep(ped.sir2, each = prog)
+  ped.dam2 <- rep(ped.dam2, each = prog)
+  pop.ind <- length(ped.dam1) + length(ped.dam2)
+  
+  index.sir1 <- match(ped.sir1, pop.geno.id)
+  index.dam1 <- match(ped.dam1, pop.geno.id)
+  index.sir2 <- match(ped.sir2, pop.geno.id)
+  index.dam2 <- match(ped.dam2, pop.geno.id)
+  
+  pop.geno.sir11 <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
+  pop.geno.dam22 <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
+  pop.geno.curr <- big.matrix(
+    nrow = nrow(pop.geno),
+    ncol = ncol(pop.geno.sir11) + ncol(pop.geno.dam22),
+    init = 3,
+    type = "char")
+  BigMat2BigMat(pop.geno.curr@address, pop.geno.sir11@address, colIdx = 1:ncol(pop.geno.sir11), threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno.dam22@address, colIdx = 1:ncol(pop.geno.dam22), op = ncol(pop.geno.sir11)+1, threads = ncpus)
+  
+  sex <- rep(2, pop.ind)
+  sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+  index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+  fam.temp <- getfam(c(ped.sir1, ped.sir2), c(ped.dam1, ped.dam2), pop$fam[length(pop$fam)]+1, "pm")
+  gen <- rep(pop$gen[1]+1, pop.ind)
+  pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = c(ped.sir1, ped.sir2), dam = c(ped.dam1, ped.dam2), sex = sex)
+  
+  SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+  SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+  names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  
+  ### genotype, phenotype and selection ###
+  SP <- genotype(SP)
+  SP <- phenotype(SP)
+  SP <- selects(SP)
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- pop[, 1]
+  pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  
+  count.ind <- c(count.ind, nrow(pop))
+  logging.log(" After generation", 2, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
+  
+  ### the third two-way cross ###
+  ped.sir11 <- pop.sel$sir
+  ped.dam22 <- pop.sel$dam
+  if (length(ped.sir11) == 1) ped.sir11 <- rep(ped.sir11, 2)
+  ped.sir11 <- sample(ped.sir11, size = length(ped.dam22), replace = TRUE)
+  ped.sir11 <- rep(ped.sir11, each = prog)
+  ped.dam22 <- rep(ped.dam22, each = prog)
+  pop.ind <- length(ped.dam22)
+  
+  index.sir11 <- match(ped.sir11, pop.geno.id)
+  index.dam22 <- match(ped.dam22, pop.geno.id)
+  
+  pop.geno.curr <- mate(pop.geno = pop.geno.curr, incols = incols, index.sir = index.sir11, index.dam = index.dam22, ncpus = ncpus)
+  
+  sex <- rep(2, pop.ind)
+  sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+  index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+  fam.temp <- getfam(ped.sir11, ped.dam22, pop$fam[length(pop$fam)]+1, "pm")
+  gen <- rep(pop$gen[1]+1, pop.ind)
+  pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir11, dam = ped.dam22, sex = sex)
+  
+  SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+  SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+  names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  
+  ### genotype, phenotype, and selection ###
+  SP <- genotype(SP)
+  SP <- phenotype(SP)
+  SP <- selects(SP)
+  count.ind <- c(count.ind, nrow(pop.curr))
+  logging.log(" After generation", 3, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
+  
+  return(SP)
+}
+
+#' Back cross process
+#'
+#' Build date: Apr 12, 2022
+#' Last update: Apr 12, 2022
+#'
+#' @author Dong Yin
+#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#' 
+#' @return population information and genotype matrix of population after back cross process
+#' @export
+#' 
+#' @examples
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' SP <- param.reprod(SP = SP, prog = 2)
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- selects(SP)
+#' SP <- mate.backcro(SP)
+#' str(SP)
+mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  # unfold reproduction parameters
+  pop.gen <- SP$reprod$pop.gen - 1
+  count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
+  logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
+  if (pop.gen == 0) return(SP)
+  
+  # unfold reproduction parameters
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- pop[, 1]
+  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  incols <- SP$geno$incols
+  pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  if (is.null(pop.sel)) {
+    ind.sir <- pop$index[pop$sex == 1]
+    ind.dam <- pop$index[pop$sex == 2]
+    pop.sel <- list(sir = ind.sir , dam = ind.dam)
+  }
+  sex.rate <- SP$reprod$sex.rate
+  prog <- SP$reprod$prog
+  
+  # used in every generation
+  ped.sir.ori <- pop.sel$sir
+  pop.geno.id.ori <- pop.geno.id
+  pop.geno.ori <- pop.geno
+  
+  for (i in 1:pop.gen) {
+    ped.sir <- ped.sir.ori
+    ped.dam <- pop.sel$dam
+    if (length(ped.sir) == 1) ped.sir <- rep(ped.sir, 2)
+    ped.sir <- sample(ped.sir, size = length(ped.dam), replace = TRUE)
+    ped.sir <- rep(ped.sir, each = prog)
+    ped.dam <- rep(ped.dam, each = prog)
+    pop.ind <- length(ped.dam)
+    
+    index.sir <- match(ped.sir, pop.geno.id)
+    index.dam <- match(ped.dam, pop.geno.id)
+    
+    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    
+    sex <- rep(2, pop.ind)
+    sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
+    index <- seq(pop$index[length(pop$index)]+1, length.out = pop.ind)
+    fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+    gen <- rep(pop$gen[1]+1, pop.ind)
+    pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+    
+    SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+    SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+    names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+      names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+    
+    ### genotype, phenotype, and selection ###
+    SP <- genotype(SP)
+    SP <- phenotype(SP)
+    SP <- selects(SP)
+    count.ind <- c(count.ind, nrow(pop.curr))
+    logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
+    
+    # unfold reproduction parameters
+    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    pop.geno.id <- c(pop.geno.id.ori, pop[, 1])
+    pop.geno <- big.matrix(
+      nrow = nrow(pop.geno),
+      ncol = ncol(pop.geno.ori) + ncol(pop.geno.curr),
+      init = 3,
+      type = "char")
+    BigMat2BigMat(pop.geno@address, pop.geno.ori@address, colIdx = 1:ncol(pop.geno.ori), threads = ncpus)
+    BigMat2BigMat(pop.geno@address, pop.geno.curr@address, colIdx = 1:ncol(pop.geno.curr), op = ncol(pop.geno.ori)+1, threads = ncpus)
+    pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
+  }
+  
+  return(SP)
+}
+
+#' User-spicified cross process
+#'
+#' Build date: Apr 12, 2022
+#' Last update: Apr 12, 2022
+#'
+#' @author Dong Yin
+#'
+#' @param SP a list of all simulation parameters
+#' @param ncpus the number of threads
+#' @param verbose whether to print detail
+#'
+#' @return population information and genotype matrix of population after User-spicified cross process
+#' @export
+#' 
+#' @examples
+#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' SP <- param.reprod(SP = SP, reprod.way = "userped")
+#' SP <- annotation(SP)
+#' SP <- genotype(SP)
+#' SP <- phenotype(SP)
+#' SP <- mate.userped(SP)
+#' str(SP)
+mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
+  
+  # unfold reproduction parameters
+  pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  pop.geno.id <- pop[, 1]
+  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  incols <- SP$geno$incols
+  userped <- SP$reprod$userped
+  
+  # Thanks to YinLL for sharing codes of pedigree sorting
+  userped[is.na(userped)] <- "0"
+  pedx <- as.matrix(userped)
+  pedx0 <- c(setdiff(pedx[, 2],pedx[, 1]), setdiff(pedx[, 3],pedx[, 1]))
+  pedx0 <- pedx0[pedx0 != 0]
+  
+  if(length(pedx0) != 0){
+    pedx <- rbind(cbind(pedx0, "0", "0"), pedx)
+  }
+  
+  pedx <- pedx[!duplicated(pedx), ]
+  pedx <- pedx[!duplicated(pedx[, 1]), ]
+  
+  pedx1 <- pedx[ (pedx[, 2] == "0" & pedx[, 3] == "0"), ]
+  pedx2 <- pedx[!(pedx[, 2] == "0" & pedx[, 3] == "0"), ]
+  go <- TRUE
+  i <- 1
+  count.ind <- nrow(pedx1)
+  logging.log(" After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
+  while(go == TRUE) {
+    i <- i + 1
+    Cpedx <- c(pedx1[, 1])
+    idx <- (pedx2[, 2] %in% Cpedx) & (pedx2[, 3] %in% Cpedx)
+    if (sum(idx) == 0) {
+      logging.log(" Some individuals in pedigree are not in mating process!\n They are", verbose = verbose)
+      simer.print(pedx2[, 1], verbose = verbose)
+      pedx2 <- pedx2[-c(1:nrow(pedx2)), ]
+      
+    } else {
+      index <- pedx2[, 1]
+      ped.sir <- pedx2[, 2]
+      ped.dam <- pedx2[, 3]
+      index.sir <- match(ped.sir, pop.geno.id)
+      index.dam <- match(ped.dam, pop.geno.id)
+      pop.ind <- length(index)
+      
+      pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+      
+      sex <- rep(0, length(index))
+      sex[index %in% unique(pedx[, 2])] <- 1
+      sex[index %in% unique(pedx[, 3])] <- 2
+      sex[sex == 0] <- sample(1:2, sum(sex == 0), replace = TRUE)
+      fam.temp <- getfam(ped.sir, ped.dam, pop$fam[length(pop$fam)]+1, "pm")
+      gen <- rep(pop$gen[1]+1, pop.ind)
+      pop.curr <- data.frame(index = index, gen = gen, fam = fam.temp[, 1], infam = fam.temp[, 2], sir = ped.sir, dam = ped.dam, sex = sex)
+      
+      SP$geno$pop.geno[[length(SP$geno$pop.geno) + 1]] <- pop.geno.curr
+      SP$pheno$pop[[length(SP$pheno$pop) + 1]] <- pop.curr
+      names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
+        names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+      
+      ### genotype, phenotype, and selection ###
+      SP <- genotype(SP)
+      SP <- phenotype(SP)
+      
+      pedx1 <- rbind(pedx1, pedx2[idx, ])
+      pedx2 <- pedx2[!idx, ]
+      count.ind <- c(count.ind, pop.ind)
+      logging.log(" After generation", i, ",", sum(count.ind[1:i]), "individuals are generated...\n", verbose = verbose)
+    }
+    if (any(class(pedx2) == "character")) pedx2 <- matrix(pedx2, 1)
+    if (dim(pedx2)[1] == 0) go = FALSE
+  }
+  
+  return(SP)
 }
 
 #' Get indice of family and within-family
@@ -597,35 +1229,103 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
   return(cbind(fam, infam))
 }
 
-#' Generate population according to number of individuals
+#' Calculate the individual number per generation
 #'
-#' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Build date: Apr 12, 2022
+#' Last update: Apr 12, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param nind number of the individuals in a population
-#' @param from initial index of the population
-#' @param ratio ratio of males in a population
-#' @param gen generation ID of the population
+#' @param pop the base population
+#' @param pop.gen the generation number of population
+#' @param ps if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females
+#' @param reprod.way the reproduction way
+#' @param sex.rate the number of progeny per dam
+#' @param prog the number of progeny per dam
 #'
-#' @return population information
+#' @return the vector containing the individual number per generation
 #' @export
 #'
 #' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-#' str(basepop)
-getpop <- function(nind, from=1, ratio=0.5, gen = 1) {
-  pop <- data.frame(
-    gen   = rep(gen, nind),
-    index = seq(from = from, length.out = nind),
-    fam   = seq(from = from, length.out = nind),
-    infam = seq(from = from, length.out = nind),
-    sir   = rep(0, nind),
-    dam   = rep(0, nind),
-    sex   = rep(1:2, c(floor(ratio*nind), (nind - floor(ratio*nind))))
-  )
-  return(pop)
+#' pop <- generate.pop(pop.ind = 100)
+IndPerGen <- function(pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "randmate", sex.rate = 0.5, prog = 2) {
+  
+  if (!(all(ps <= 1) | all(ps > 1))) {
+    stop("Please input a correct ps!")
+  }
+  
+  count.ind <- rep(nrow(pop), pop.gen)
+  if (reprod.way == "clone" || reprod.way == "dh" || reprod.way == "selfpol" || reprod.way == "randmate" || reprod.way == "randexself") {
+    if (pop.gen > 1) {
+      ped.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      nDam <- ifelse(all(ps <= 1), round(length(ped.dam) * ps[2]), ps[2])
+      if (reprod.way == "clone" || reprod.way == "dh" || reprod.way == "selfpol") {
+        nDam <- ifelse(all(ps <= 1), round(nrow(pop) * ps[2]), ps[2])
+        sex.rate <- 0
+      }
+      count.ind[2] <- nDam * prog
+      if (pop.gen > 2) {
+        for(i in 3:pop.gen) {
+          nDam <- ifelse(all(ps <= 1), round(round(count.ind[i-1] * (1-sex.rate)) * ps[2]), ps[2])
+          count.ind[i] <- nDam * prog
+        }
+      }
+    }
+    
+  } else if (reprod.way == "2waycro") {
+    ped.dam <- pop$index[pop$sex == 2]
+    nDam <- ifelse(all(ps <= 1), round(length(ped.dam) * ps[2]), ps[2])
+    count.ind <- c(nrow(pop), nDam * prog)
+    
+  } else if (reprod.way == "3waycro") {
+    sex1 <- pop$sex
+    sex2 <- c(1, sex1[-length(sex1)])
+    sex.op <- which(sex1 != sex2)
+    if (length(sex.op) != 2) {
+      stop("Something wrong in the format of three-way cross data!")
+    }
+    ped.dam <- pop$index[pop$sex == 2]
+    nDam <- ifelse(all(ps <= 1), round(length(ped.dam) * ps[2]), ps[2])
+    count.ind <- c(nrow(pop), nDam * prog)
+    nDam <- ifelse(all(ps <= 1), round(round(count.ind[2] * sex.rate) * ps[2]), ps[2])
+    count.ind <- c(count.ind, nDam * prog)
+    
+  } else if (reprod.way == "4waycro") {
+    sex1 <- pop$sex
+    sex2 <- c(1, sex1[-length(sex1)])
+    sex.op <- which(sex1 != sex2)
+    if (length(sex.op) != 3) {
+      stop("Something wrong in the format of four-way cross data!")
+    }
+    ped.dam1 <- pop[sex.op[1]:(sex.op[2]-1), 1]
+    ped.dam2 <- pop[sex.op[3]:nrow(pop), 1]
+    nDam1 <- ifelse(all(ps <= 1), round(length(ped.dam1) * ps[2]), ps[2])
+    nDam2 <- ifelse(all(ps <= 1), round(length(ped.dam2) * ps[2]), ps[2])
+    count.ind <- c(nrow(pop), (nDam1 + nDam2) * prog)
+    nDam <- ifelse(all(ps <= 1), round(round(count.ind[2] * sex.rate) * ps[2]), ps[2])
+    count.ind <- c(count.ind, nDam * prog)
+    
+  } else if (reprod.way == "backcro") {
+    if (pop.gen > 1) {
+      ped.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
+      nDam <- ifelse(all(ps <= 1), round(length(ped.dam) * ps[2]), ps[2])
+      count.ind[2] <- nDam * prog
+      if (pop.gen > 2) {
+        for(i in 3:pop.gen) {
+          nDam <- ifelse(all(ps <= 1), round(round(count.ind[i-1] * (1-sex.rate)) * ps[2]), ps[2])
+          count.ind[i] <- nDam * prog
+        }
+      }
+    }
+    
+  } else if (reprod.way == "userped") {
+    count.ind <- 0
+    
+  } else {
+    stop("'reprod.way' should be 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro' or 'userped'!")
+  }
+  
+  return(count.ind)
 }
 
 #' Get output index of phenotype and pedigree
@@ -658,53 +1358,4 @@ getindex <- function(count.ind, out.gen) {
       out.index <- c(out.index, op:ed)
   }
   return(out.index)
-}
-
-#' Get selected sires and dams
-#'
-#' Build date: Nov 14, 2018
-#' Last update: Apr 30, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param ind.ordered individual ID after sorting
-#' @param pop population information
-#' @param num.sir number of sires
-#' @param num.dam number of dams
-#'
-#' @return sire ID and dam ID after selection
-#' @export
-#'
-#' @examples
-#' basepop <- getpop(nind = 100, from = 1, ratio = 0.5)
-#' ind.ordered <- sample.int(100)
-#' 
-#' ind.stay <- getsd(ind.ordered = ind.ordered, pop = basepop, 
-#'                   num.sir = 10, num.dam = 40)
-#' str(ind.stay)
-getsd <- function(ind.ordered, pop, num.sir, num.dam) {
-  ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
-  ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
-  sir.ordered <- intersect(ind.ordered, ind.sir)
-  dam.ordered <- intersect(ind.ordered, ind.dam)
-  if (length(sir.ordered) == 0 | num.sir == 0) {
-    sir.stay <- NULL
-  } else {
-    if (num.sir <= length(ind.sir)) {
-      sir.stay <- sir.ordered[1:num.sir]
-    } else {
-      sir.stay <- c(sir.ordered, sample(sir.ordered, num.sir-length(ind.sir), replace = TRUE))
-    }
-  }
-  if (length(dam.ordered) == 0 | num.dam == 0) {
-    dam.stay <- NULL
-  } else {
-    if (num.dam <= length(ind.dam)) {
-      dam.stay <- dam.ordered[1:num.dam]
-    } else {
-      dam.stay <- c(dam.ordered, sample(dam.ordered, num.dam-length(ind.dam), replace = TRUE))
-    }
-  }
-  ind.stay <- list(sir = sir.stay, dam = dam.stay)
-  return(ind.stay)
 }

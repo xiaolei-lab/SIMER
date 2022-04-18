@@ -4,40 +4,10 @@
 \alias{selects}
 \title{Select individuals by combination of selection method and criterion}
 \usage{
-selects(
-  pop,
-  decr = TRUE,
-  sel.multi = "index",
-  index.wt = c(0.5, 0.5),
-  index.tdm = 1,
-  goal.perc = 0.1,
-  pass.perc = 0.9,
-  sel.sing = "comb",
-  pop.total = NULL,
-  pop.pheno = NULL,
-  verbose = TRUE
-)
+selects(SP = NULL, verbose = TRUE)
 }
 \arguments{
-\item{pop}{population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, sex, and phenotype}
-
-\item{decr}{whether to sorting with decreasing}
-
-\item{sel.multi}{selection method of multiple traits with options: "tdm", "indcul" and "index"}
-
-\item{index.wt}{economic weights of selection index method, its length should equals to the number of traits}
-
-\item{index.tdm}{index represents which trait is being selected}
-
-\item{goal.perc}{percentage of goal more than the mean of scores of individuals}
-
-\item{pass.perc}{percentage of expected excellent individuals}
-
-\item{sel.sing}{selection methods of single trait with the options: "ind", "fam", "infam", and "comb"}
-
-\item{pop.total}{total population information}
-
-\item{pop.pheno}{list of all phenotype information}
+\item{SP}{a list of all simulation parameters}
 
 \item{verbose}{whether to print detail}
 }
@@ -46,106 +16,18 @@ individual indice sorted by scores
 }
 \description{
 Build date: Sep 8, 2018
-Last update: Oct 13, 2019
+Last update: Apr 4, 2022
 }
 \examples{
-pop <- getpop(nind = 100, from = 1, ratio = 0.1)
-pop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-
-effs <-
-    cal.effs(pop.geno = pop.geno,
-             cal.model = "A",
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-             shape.tr1 = c(1, 1, 1, 1, 1, 1),
-             scale.tr1 = c(1, 1, 1, 1, 1, 1),
-             multrait = FALSE,
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0, 
-             verbose = TRUE)
-
-pop.pheno <-
-    phenotype(effs = effs,
-              FR = NULL, 
-              pop = pop,
-              pop.geno = pop.geno,
-              pos.map = NULL,
-              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5), 
-              sel.crit = "pheno", 
-              pop.total = pop, 
-              sel.on = TRUE, 
-              inner.env = NULL, 
-              verbose = TRUE)
-pop <- pop.pheno$pop
-pop.pheno$pop <- NULL 
-
-ind.ordered1 <-
-    selects(pop = pop,
-            decr = TRUE,
-            sel.multi = "index",
-            index.wt = c(0.5, 0.5),
-            index.tdm = 1,
-            goal.perc = 0.1,
-            pass.perc = 0.9,
-            sel.sing = "comb",
-            pop.total = pop,
-            pop.pheno = pop.pheno, 
-            verbose = TRUE)
-
-pop <- getpop(nind = 100, from = 1, ratio = 0.1)
-effs <-
-    cal.effs(pop.geno = pop.geno,
-             cal.model = "A",
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-             shape.tr1 = c(1, 1, 1, 1, 1, 1),
-             scale.tr1 = c(1, 1, 1, 1, 1, 1),
-             multrait = TRUE,
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0, 
-             verbose = TRUE)
-             
-pop.pheno <-
-    phenotype(effs = effs,
-              FR = NULL, 
-              pop = pop,
-              pop.geno = pop.geno,
-              pos.map = NULL,
-              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5), 
-              sel.crit = "pheno", 
-              pop.total = pop, 
-              sel.on = TRUE, 
-              inner.env = NULL, 
-              verbose = TRUE)
-pop <- pop.pheno$pop
-pop.pheno$pop <- NULL
-
-ind.ordered2 <-
-    selects(pop = pop,
-            decr = TRUE,
-            sel.multi = "index",
-            index.wt = c(0.5, 0.5),
-            index.tdm = 1,
-            goal.perc = 0.1,
-            pass.perc = 0.9,
-            sel.sing = "comb",
-            pop.total = pop,
-            pop.pheno = pop.pheno, 
-            verbose = TRUE)
-str(ind.ordered1)
-str(ind.ordered2)
+SP <- param.annot(qtn.num = 10)
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.sel(SP = SP, sel.single = "comb")
+SP <- annotation(SP)
+SP <- genotype(SP)
+SP <- phenotype(SP)
+SP <- selects(SP)
+str(SP$sel$pop.sel$gen1)
 }
 \author{
 Dong Yin

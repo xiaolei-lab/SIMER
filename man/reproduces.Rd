@@ -4,64 +4,34 @@
 \alias{reproduces}
 \title{Do reproduction by different mate design}
 \usage{
-reproduces(
-  pop1 = NULL,
-  pop2 = NULL,
-  pop1.geno.id = NULL,
-  pop2.geno.id = NULL,
-  pop1.geno = NULL,
-  pop2.geno = NULL,
-  incols = 2,
-  ind.stay = NULL,
-  mtd.reprod = "randmate",
-  num.prog = 2,
-  ratio = 0.5
-)
+reproduces(SP, ncpus = 0, verbose = TRUE)
 }
 \arguments{
-\item{pop1}{population information of population1}
+\item{SP}{a list of all simulation parameters}
 
-\item{pop2}{population information of population2}
+\item{ncpus}{the number of threads}
 
-\item{pop1.geno.id}{genotype id of population1}
-
-\item{pop2.geno.id}{genotype id of population2}
-
-\item{pop1.geno}{genotype matrix of population1}
-
-\item{pop2.geno}{genotype matrix of population2}
-
-\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
-
-\item{ind.stay}{selected individuals regarded as parents}
-
-\item{mtd.reprod}{different reproduction methods with the options: "clone", "dh", "selfpol", "singcro", "randmate", and "randexself"}
-
-\item{num.prog}{litter size of dams}
-
-\item{ratio}{ratio of the males in all individuals}
+\item{verbose}{whether to print detail}
 }
 \value{
 population information and genotype matrix of current population
 }
 \description{
 Build date: Nov 14, 2018
-Last update: Aug 1, 2019
+Last update: Apr 12, 2022
 }
 \examples{
-basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-basepop.geno <- genotype(num.marker = 48353, num.ind = 100, verbose = TRUE)
-pop.list <- reproduces(pop1 = basepop,
-                       pop1.geno.id = basepop$index,  
-                       pop1.geno = basepop.geno,
-                       ind.stay = list(sir=1:10, dam=11:90),
-                       mtd.reprod = "randmate",
-                       num.prog = 2,
-                       ratio = 0.5)
-pop <- pop.list$pop
-geno <- pop.list$geno
-str(pop)
-str(geno)
+SP <- param.annot(qtn.num = 10)
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.sel(SP = SP, sel.single = "comb")
+SP <- param.reprod(SP = SP, reprod.way = "randmate")
+SP <- annotation(SP)
+SP <- genotype(SP)
+SP <- phenotype(SP)
+SP <- selects(SP)
+SP <- reproduces(SP)
+str(SP)
 }
 \author{
 Dong Yin

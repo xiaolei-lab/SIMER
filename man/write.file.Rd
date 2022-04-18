@@ -4,17 +4,7 @@
 \alias{write.file}
 \title{Write files of simer}
 \usage{
-write.file(
-  pop,
-  geno,
-  map,
-  out.geno.index,
-  out.pheno.index,
-  out = "simer",
-  outpath,
-  out.format,
-  verbose
-)
+write.file(SP)
 }
 \arguments{
 \item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
@@ -43,56 +33,13 @@ Build date: Jan 7, 2019
 Last update: Oct 16, 2019
 }
 \examples{
-\donttest{
-data(simdata)
-nmrk <- nrow(input.map)
-pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
-basepop <- getpop(nind = 100, from = 1, ratio = 0.1)
-basepop.geno <- rawgeno
-basepop.geno <- as.big.matrix(basepop.geno)
-effs <-
-    cal.effs(pop.geno = basepop.geno,
-             cal.model = "A",
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-             shape.tr1 = c(1, 1, 1, 1, 1, 1),
-             scale.tr1 = c(1, 1, 1, 1, 1, 1),
-             multrait = FALSE,
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0, 
-             verbose = TRUE)
-str(basepop)
-pop.pheno <-
-    phenotype(effs = effs,
-              pop = basepop,
-              pop.geno = basepop.geno,
-              pos.map = NULL,
-              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),  
-              sel.crit = "pheno", 
-              pop.total = basepop, 
-              sel.on = TRUE, 
-              inner.env = NULL, 
-              verbose = TRUE)
-basepop <- pop.pheno$pop
-pop.pheno$pop <- NULL           
-idx <- basepop$index
-# convert (0, 1) to (0, 1, 2)
-basepop.geno <- geno.cvt1(basepop.geno)
-basepop.geno <- as.big.matrix(basepop.geno)
-write.file(pop = basepop, geno = basepop.geno, map = pos.map, 
-    out.geno.index = idx, out.pheno.index = idx, 
-    outpath = tempdir(), out.format = "numeric", verbose = TRUE)
-file.remove(file.path(tempdir(), "simer.geno.id"))
-file.remove(file.path(tempdir(), "simer.map"))
-file.remove(file.path(tempdir(), "simer.ped"))
-file.remove(file.path(tempdir(), "simer.phe"))
-}
+# DO NOT RUN IT
+# outpath <- tempdir()
+# SP <- param.simer(out = "simer")
+# SP <- simer(SP)
+# SP$global$outpath <- outpath
+# write.file(SP)
+# unlink(outpath, recursive = TRUE)
 }
 \author{
 Dong Yin

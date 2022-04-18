@@ -9,6 +9,18 @@ GenoFilter <- function(pBigMat, keepInds = NULL, filterGeno = NULL, filterHWE = 
     .Call('_simer_GenoFilter', PACKAGE = 'simer', pBigMat, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose)
 }
 
+Mat2BigMat <- function(pBigMat, mat, colIdx = NULL, op = 1L, threads = 0L) {
+    invisible(.Call('_simer_Mat2BigMat', PACKAGE = 'simer', pBigMat, mat, colIdx, op, threads))
+}
+
+BigMat2BigMat <- function(pBigMat, pBigmat, colIdx = NULL, op = 1L, threads = 0L) {
+    invisible(.Call('_simer_BigMat2BigMat', PACKAGE = 'simer', pBigMat, pBigmat, colIdx, op, threads))
+}
+
+GenoMixer <- function(pBigMat, pBigmat, sirIdx, damIdx, nBlock = 100L, op = 1L, threads = 0L) {
+    invisible(.Call('_simer_GenoMixer', PACKAGE = 'simer', pBigMat, pBigmat, sirIdx, damIdx, nBlock, op, threads))
+}
+
 hasNA <- function(pBigMat, threads = 0L) {
     .Call('_simer_hasNA', PACKAGE = 'simer', pBigMat, threads)
 }

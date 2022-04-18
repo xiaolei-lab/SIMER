@@ -2,170 +2,58 @@
 % Please edit documentation in R/simer.Phenotype.r
 \name{phenotype}
 \alias{phenotype}
-\title{Generate phenotype and other values according to selection criterion}
+\title{Generate genotype and editing genotype}
 \usage{
-phenotype(
-  effs = NULL,
-  FR = NULL,
-  cv = NULL,
-  pop = NULL,
-  pop.geno = NULL,
-  pos.map = NULL,
-  var.pheno = NULL,
-  h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-  gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
-  h2.trn = c(0.3, 0.5),
-  sel.crit = "pheno",
-  pop.total = NULL,
-  sel.on = TRUE,
-  inner.env = NULL,
-  verbose = TRUE
-)
+phenotype(SP = NULL, verbose = TRUE)
 }
 \arguments{
-\item{effs}{a list of selected markers and their effects}
-
-\item{FR}{list of fixed effects, random effects, and their combination}
-
-\item{cv}{list of population Coefficient of Variation or family Coefficient of Variation}
-
-\item{pop}{population information of generation, family ID, within-family ID, individual ID, paternal ID, maternal ID, and sex}
-
-\item{pop.geno}{genotype matrix of the population, an individual has two columns}
-
-\item{pos.map}{marker information of the population}
-
-\item{var.pheno}{the phenotype variance, only used in single-trait simulation}
-
-\item{h2.tr1}{heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively}
-
-\item{gnt.cov}{genetic covaiance matrix among all traits}
-
-\item{h2.trn}{heritability among all traits}
-
-\item{sel.crit}{selection criteria with the options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", and "pheno"}
-
-\item{pop.total}{total population information}
-
-\item{sel.on}{whether to add selection}
-
-\item{inner.env}{R environment of parameter "effs"}
+\item{SP}{a list of all simulation parameters}
 
 \item{verbose}{whether to print detail}
 }
 \value{
-phenotype of population
+a genotype matrix with block and map information
 }
 \description{
-Build date: Jul 14, 2019
-Last update: Nov 5, 2019
+Build date: Nov 14, 2018
+Last update: Feb 23, 2022
 }
 \examples{
-pop <- getpop(100, 1, 0.5)
-pop.geno <- genotype(num.marker = 49336, num.ind = 100, verbose = TRUE)
-a <- simer.sample(paste0("a", 1:3), 100)
-b <- simer.sample(paste0("b", 1:50), 100)
-pop$a <- a # load your fixed  effects
-pop$b <- b # load your random effects
-pop.env <- environment()
-
-# combination of fixed effects
-cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
-                tr2 = c("mu", "diet", "season")) # trait 2
-            
-fix <- list( 
-         mu = list(level = "mu", eff = 20),  				      
-        gen = FALSE,         
-        sex = list(level = c("1", "2"), eff = c(50, 30)), 
-       diet = list(level = c("d1", "d2", "d3"), eff = c(10, 20, 30)),
-     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
-          a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
-          
-# combination and variance ratio of random effects
-tr1 <- list(rn = c("PE"), ratio = 0.1)
-tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
-cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
-      
-rand <- list(       
-         PE = list(level = paste0("p", 1:50), eff = rnorm(50)), 
-     litter = list(level = paste0("l", 1:50), eff = rnorm(50)),    
-          b = list(level = paste0("b", 1:50), eff = rnorm(50)))      
-  
-FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-
-effs <-
-    cal.effs(pop.geno = pop.geno,
-             cal.model = "A",
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-             shape.tr1 = c(1, 1, 1, 1, 1, 1),
-             scale.tr1 = c(1, 1, 1, 1, 1, 1),
-             multrait = FALSE,
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0, 
-             verbose = TRUE)
-
-pop.pheno <-
-    phenotype(effs = effs,
-              FR = FR, 
-              cv = list(fam = 0.5), 
-              pop = pop,
-              pop.geno = pop.geno,
-              pos.map = NULL,
-              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),  
-              sel.crit = "pheno", 
-              pop.total = pop, 
-              sel.on = TRUE, 
-              inner.env = pop.env, 
-              verbose = TRUE)
-str(pop)              
-pop <- pop.pheno$pop
-str(pop)
-pop.pheno$pop <- NULL           
-str(pop.pheno)
-
-effs <-
-    cal.effs(pop.geno = pop.geno,
-             cal.model = "A",
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             prob.tr1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-             shape.tr1 = c(1, 1, 1, 1, 1, 1),
-             scale.tr1 = c(1, 1, 1, 1, 1, 1),
-             multrait = TRUE,
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0, 
-             verbose = TRUE)
-
-pop.pheno <-
-    phenotype(effs = effs,
-              FR = FR, 
-              cv = list(fam = c(0.3, 0.7)), 
-              pop = pop,
-              pop.geno = pop.geno,
-              pos.map = NULL,
-              h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5), 
-              sel.crit = "pheno", 
-              pop.total = pop, 
-              sel.on = FALSE, 
-              inner.env = pop.env, 
-              verbose = TRUE)
-str(pop)              
-pop <- pop.pheno$pop
-str(pop)
-pop.pheno$pop <- NULL  
-str(pop.pheno)
+pop.env <- list(
+  sex = list(
+    level = c("1", "2"),
+    eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+  ), 
+  diet = list(
+    level = c("d1", "d2", "d3"),
+    eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+  ),
+  location = list(
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1, tr2 = 0.1)
+  )
+)
+SP <- param.annot(qtn.num = diag(c(10, 10)), qtn.model = "A + D + A:D")
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.pheno(
+  SP = SP, 
+  pop.ind = 100,
+  pop.rep = 2,
+  pop.rep.bal = TRUE,
+  pop.env = pop.env,
+  phe.var = list(tr1 = 100, tr2 = 100),
+  phe.model = list(
+    tr1 = "T1 = A + D + A:D + sex + diet + location + A:sex + E",
+    tr2 = "T2 = A + D + A:D + sex + diet + location + A:sex + E"
+  )
+)
+SP <- annotation(SP)
+SP <- genotype(SP)
+SP <- phenotype(SP)
+head(SP$pheno$pop$gen1)
+}
+\references{
+Kao C and Zeng Z (2002) <https://www.genetics.org/content/160/3/1243.long>
 }
 \author{
 Dong Yin

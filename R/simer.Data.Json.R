@@ -6,6 +6,7 @@
 #' @author Dong Yin
 #'
 #' @param jsonFile the path of json file
+#' @param ncpus the number of threads
 #' @param verbose whether to print detail.
 #'
 #' @return report list
@@ -14,7 +15,7 @@
 #' jsonFile <- system.file("extdata", "demo1.json", package = "simer")
 #' # JsonQC() needs set work directory at data directory 
 #' # aa <- JsonQC(jsonFile = jsonFile)
-JsonQC <- function(jsonFile, verbose=TRUE) {
+JsonQC <- function(jsonFile, ncpus = 0, verbose=TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
   outpath <- getwd()
@@ -69,7 +70,7 @@ JsonQC <- function(jsonFile, verbose=TRUE) {
              filePhe = filePhe, planPhe = planPhe, pheCols = NULL, pheSep = '\t', missing=c(NA, 'NA', 'Na', '.', '-', 'NAN', 'nan', 'na', 'N/A', 'n/a', '<NA>', '', '-9', 9999),
              filePed = filePed, standardID = standardID, fileSir = fileSir, fileDam = fileDam, exclThres = exclThres, assignThres = assignThres, pedSep = '\t', 
              SNP.impute = "Major",
-             outpath = outpath, out = out, maxLine = 10000, priority = "speed", ncpus = NULL, verbose = verbose)
+             outpath = outpath, out = out, maxLine = 10000, priority = "speed", ncpus = ncpus, verbose = verbose)
   
 }
 

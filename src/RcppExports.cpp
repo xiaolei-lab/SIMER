@@ -38,6 +38,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Mat2BigMat
+void Mat2BigMat(const SEXP pBigMat, IntegerMatrix mat, Nullable<IntegerVector> colIdx, int op, int threads);
+RcppExport SEXP _simer_Mat2BigMat(SEXP pBigMatSEXP, SEXP matSEXP, SEXP colIdxSEXP, SEXP opSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type colIdx(colIdxSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Mat2BigMat(pBigMat, mat, colIdx, op, threads);
+    return R_NilValue;
+END_RCPP
+}
+// BigMat2BigMat
+void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> colIdx, int op, int threads);
+RcppExport SEXP _simer_BigMat2BigMat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP colIdxSEXP, SEXP opSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type colIdx(colIdxSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    BigMat2BigMat(pBigMat, pBigmat, colIdx, op, threads);
+    return R_NilValue;
+END_RCPP
+}
+// GenoMixer
+void GenoMixer(const SEXP pBigMat, const SEXP pBigmat, IntegerVector sirIdx, IntegerVector damIdx, int nBlock, int op, int threads);
+RcppExport SEXP _simer_GenoMixer(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP sirIdxSEXP, SEXP damIdxSEXP, SEXP nBlockSEXP, SEXP opSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type sirIdx(sirIdxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type damIdx(damIdxSEXP);
+    Rcpp::traits::input_parameter< int >::type nBlock(nBlockSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    GenoMixer(pBigMat, pBigmat, sirIdx, damIdx, nBlock, op, threads);
+    return R_NilValue;
+END_RCPP
+}
 // hasNA
 bool hasNA(SEXP pBigMat, const int threads);
 RcppExport SEXP _simer_hasNA(SEXP pBigMatSEXP, SEXP threadsSEXP) {
@@ -89,6 +133,9 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_simer_SNPHWE2", (DL_FUNC) &_simer_SNPHWE2, 4},
     {"_simer_GenoFilter", (DL_FUNC) &_simer_GenoFilter, 8},
+    {"_simer_Mat2BigMat", (DL_FUNC) &_simer_Mat2BigMat, 5},
+    {"_simer_BigMat2BigMat", (DL_FUNC) &_simer_BigMat2BigMat, 5},
+    {"_simer_GenoMixer", (DL_FUNC) &_simer_GenoMixer, 7},
     {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 2},
     {"_simer_hasNABed", (DL_FUNC) &_simer_hasNABed, 5},
     {"_simer_PedigreeCorrector", (DL_FUNC) &_simer_PedigreeCorrector, 10},

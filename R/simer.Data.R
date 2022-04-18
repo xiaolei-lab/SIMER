@@ -58,13 +58,12 @@ simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, geno
                        filePed = NULL, standardID = FALSE, fileSir=NULL, fileDam=NULL, exclThres=0.01, assignThres=0.005, pedSep='\t', 
                        filePhe = NULL, planPhe = NULL, pheCols = NULL, pheSep = '\t', missing = c(NA, 'NA', '-9', 9999),
                        SNP.impute = "Major",
-                       outpath = getwd(), out = 'simer', maxLine = 10000, priority = "speed", ncpus = NULL, verbose = TRUE) {
+                       outpath = getwd(), out = 'simer', maxLine = 10000, priority = "speed", ncpus = 0, verbose = TRUE) {
   
   logging.initialize("Simer.Data", outpath)
   logging.log(" Call MVP for Preparing data...\n\n", verbose = verbose)
   
   if (!is.null(out)) {  out <- file.path(outpath, out) }
-  if (is.null(ncpus)) { ncpus <- 0 }
   
   if (!is.null(filePlinkPed)) {
     system(paste0("plink --file ", filePlinkPed, " --make-bed --out ", filePlinkPed))

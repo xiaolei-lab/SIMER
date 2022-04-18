@@ -4,10 +4,10 @@
 \alias{generate.map}
 \title{Generate Marker information}
 \usage{
-generate.map(num.marker = NULL, num.chr = 18, len.chr = 1.5e+08)
+generate.map(pop.marker = NULL, num.chr = 18, len.chr = 1.5e+08)
 }
 \arguments{
-\item{num.marker}{the number of markers}
+\item{pop.marker}{the number of markers}
 
 \item{num.chr}{the number of chromosomes}
 
@@ -21,8 +21,8 @@ Build date: Nov 9, 2020
 Last update: Nov 9, 2020
 }
 \examples{
-input.map <- generate.map(num.marker = 50671)
-str(input.map)
+pop.map <- generate.map(pop.marker = 1e4)
+str(pop.map)
 }
 \author{
 Dong Yin
