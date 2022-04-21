@@ -51,9 +51,9 @@
 #' @return NULL
 #'
 #' @examples
-#' out <- tempfile("outfile")
+#' options(simer.OutputLog2File = FALSE)
 #' filePhe <- system.file("extdata", "phenotype.txt", package = "simer")
-#' filePhe <- simer.Data.Pheno(filePhe = filePhe, out = out, verbose = TRUE)
+#' filePhe <- simer.Data.Pheno(filePhe = filePhe, out = tempfile("outfile"))
 simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, genoType = 'char', filterGeno=NULL, filterHWE=NULL, filterMind=NULL, filterMAF=NULL,
                        filePed = NULL, standardID = FALSE, fileSir=NULL, fileDam=NULL, exclThres=0.01, assignThres=0.005, pedSep='\t', 
                        filePhe = NULL, planPhe = NULL, pheCols = NULL, pheSep = '\t', missing = c(NA, 'NA', '-9', 9999),
@@ -61,7 +61,6 @@ simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, geno
                        outpath = getwd(), out = 'simer', maxLine = 10000, priority = "speed", ncpus = 0, verbose = TRUE) {
   
   logging.initialize("Simer.Data", outpath)
-  logging.log(" Call MVP for Preparing data...\n\n", verbose = verbose)
   
   if (!is.null(out)) {  out <- file.path(outpath, out) }
   
@@ -88,7 +87,7 @@ simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, geno
   genoFileName <- NULL
   if (!is.null(fileMVP)) {
     logging.log("*************** Genotype Data Quality Control ***************\n", verbose = verbose)
-    genoFileName <- 
+    genoFileName <-
       simer.Data.Geno(
         fileMVP = fileMVP,
         filePed = filePed,
@@ -108,7 +107,7 @@ simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, geno
     pedFileName <- 
       simer.Data.Ped(
         filePed = filePed, 
-        fileMVP = genoFileName,
+        fileMVP = NULL,
         out = out, 
         standardID = standardID, 
         fileSir = fileSir, 
@@ -137,7 +136,6 @@ simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, geno
    
 }
 
-
 #' simer.Data.MVP2MVP: Change the path of MVP files
 #' Author: Dong Yin
 #' Build date: May 26, 2021
@@ -158,11 +156,8 @@ simer.Data <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, geno
 #' <out>.geno.map
 #' 
 #' @examples
-#' # simer.Data.Ped needs genotype data
-#' out <- tempfile("outfile")
 #' mvpPath <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-#' 
-#' # simer.Data.MVP2MVP(mvpPath)
+#' simer.Data.MVP2MVP(mvpPath, out = tempfile("outfile"))
 simer.Data.MVP2MVP <- function(fileMVP, genoType='char', out='simer', verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
   
@@ -189,7 +184,6 @@ simer.Data.MVP2MVP <- function(fileMVP, genoType='char', out='simer', verbose=TR
   return(invisible(dim(bigmat)))
 }
 
-
 #' simer.Data.Impute: Impute the missing value
 #' Author: Dong Yin
 #' Build date: May 26, 2021
@@ -206,8 +200,9 @@ simer.Data.MVP2MVP <- function(fileMVP, genoType='char', out='simer', verbose=TR
 #' @export
 #'
 #' @examples
-#' fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-#' fileMVPimp <- simer.Data.Impute(fileMVP = fileMVP)
+#' # need beagle
+#' # fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
+#' # fileMVPimp <- simer.Data.Impute(fileMVP = fileMVP)
 simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLine = 1e4, ncpus = 0, verbose = TRUE) {
   
   if (sum(is.null(fileMVP), is.null(fileBed)) != 1) {
@@ -260,7 +255,6 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
   return(out)
 }
 
-
 #' simer.Data.Geno: Data quality control of genotype data
 #' Author: Dong Yin
 #' Build date: June 3, 2021
@@ -286,13 +280,11 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
 #' <out>.geno.ind
 #' 
 #' @examples
-#' # simer.Data.Ped needs genotype data
-#' out <- tempfile("outfile")
 #' fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 #' filePed <- system.file("extdata", "pedigree.txt", package = "simer")
-#' # simer.Data.Geno(fileMVP=fileMVP, filePed=filePed, genoType='char', out=out, 
-#'   # filterGeno=0.1, filterHWE=0.001, filterMind=0.1, filterMAF=0.05,
-#'   # ncpus=0, verbose=TRUE)
+#' simer.Data.Geno(fileMVP=fileMVP, filePed=filePed, genoType='char', 
+#'   out=tempfile("outfile"), 
+#'   filterGeno=0.1, filterHWE=0.001, filterMind=0.1, filterMAF=0.05)
 simer.Data.Geno <- function(fileMVP, filePed=NULL, out='simer', genoType='char',
                             filterGeno=NULL, filterHWE=NULL, filterMind=NULL, filterMAF=NULL,
                             ncpus=0, verbose=TRUE) {
@@ -347,7 +339,6 @@ simer.Data.Geno <- function(fileMVP, filePed=NULL, out='simer', genoType='char',
   return(out)
 }
 
-
 #' simer.Data.Ped: To check pedigree file
 #' Author: LiLin Yin and Dong Yin
 #' Build date: May 6, 2021
@@ -389,7 +380,7 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
   # read data
   # if (!is.vector(filePed)) { filePed <- c(filePed) }
   if (length(filePed) == 0) { filePed <- NULL }
-
+  
   # pedigree files
   if (is.data.frame(filePed)) {
     pedigree <- filePed
@@ -579,7 +570,6 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
   return(paste0(out, ".qc.txt"))
 }
 
-
 #' simer.Data.Pheno: Data quality control of phenotype data
 #' Author: Haohao Zhang and Dong Yin
 #' Build date: June 13, 2021
@@ -602,9 +592,8 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
 #' <out>.qc.txt
 #' 
 #' @examples
-#' out <- tempfile("outfile")
 #' filePhe <- system.file("extdata", "phenotype.txt", package = "simer")
-#' simer.Data.Pheno(filePhe = filePhe, out = out, verbose = TRUE)
+#' simer.Data.Pheno(filePhe = filePhe, out = tempfile("outfile"))
 simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheCols=NULL, header=TRUE, sep='\t', missing=c(NA, 'NA', 'Na', '.', '-', 'NAN', 'nan', 'na', 'N/A', 'n/a', '<NA>', '', '-9', 9999), verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
   logging.log(" Start Checking Phenotype Data.\n", verbose = verbose)
@@ -797,15 +786,12 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
   return(pheFileName)
 }
 
-
 #' To find appropriate fixed effects, covariates, and random effects
 #' Author: Dong Yin
 #' Build date: July 17, 2021
-#' Last update: July 17, 2021
+#' Last update: Apr 21, 2022
 #' 
-#' @param planPhe breeding plans about phenotype
-#' @param fileMVP Genotype in MVP format
-#' @param filePed the pedigree files, it can be a vector
+#' @param SP a list of all simulation parameters
 #' @param header the header of file
 #' @param sep the separator of file
 #' @param ncpus the number of threads
@@ -817,24 +803,17 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
 #' @examples
 #' jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
-#' 
-#' # prepare genotype data
-#' genoPath <- jsonList$genotype
-#' genoFiles <- list.files(genoPath)
-#' fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-#' fileMVP <- file.path(genoPath, fileMVP)
-#' fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-#' 
-#' # prepare pedigree data
-#' filePed <- jsonList$pedigree
-#' 
-#' # prepare phenotype data
-#' planPhe <- jsonList$analysis_plan
-#' 
-#' # reset planPhe by optimized model
-#' # planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed)
-simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
+#' # jsonList <- simer.Data.Env(jsonList = jsonList)
+simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
+  
+  genoPath <- jsonList$genotype
+  genoFiles <- list.files(genoPath)
+  fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
+  fileMVP <- file.path(genoPath, fileMVP)
+  fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
+  filePed <- jsonList$pedigree
+  planPhe <- jsonList$analysis_plan
   
   for (i in 1:length(planPhe)) {
     logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
@@ -844,6 +823,7 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
     randomRatio <- planPhe[[i]]$random_ratio
     planPhe[[i]]$random_ratio <- NULL
     nTrait <- length(planPhe[[i]]$job_traits)
+    jsonListN <- jsonList
     if (multrait) {
       planPheN <- lapply(1:nTrait, function(j) { return(planPhe[[i]]) })
       for (j in 1:nTrait) {
@@ -875,6 +855,7 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
                         paste(unlist(c(covariates, fixedEffects)), collapse = "+"), 
                         sep = "+"), data = finalPhe)
       # choose a model by BIC in a stepwise algorithm
+      file <- NULL
       if (verbose) {
         try(file <- get("logging.file", envir = package.env), silent = TRUE)
         sink(file = file, append = TRUE, split = TRUE)
@@ -889,8 +870,9 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
       # reset covariates, fixed effects
       planPheN[[j]]$job_traits[[1]]$covariates <- covariates
       planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
+      jsonListN$analysis_plan <- list(planPheN[[j]])
       # select random effect which ratio less than threshold
-      gebv <- simer.Data.cHIBLUP(planPhe = planPheN[j], fileMVP, filePed, ncpus = ncpus, verbose = verbose)
+      gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, ncpus = ncpus, verbose = verbose)
       vc <- gebv[[1]]$varList[[1]]
       randomEffectRatio <- vc[1:length(randomEffects)] / sum(vc)
       randomEffects <- randomEffects[randomEffectRatio > randomRatio]
@@ -907,195 +889,19 @@ simer.Data.Env <- function(planPhe, fileMVP = NULL, filePed = NULL, header = TRU
     }
   }
   
+  jsonList$analysis_plan <- planPhe
   t2 <- as.numeric(Sys.time())
   logging.log(" Model optimization is Done within", format_time(t2 - t1), "\n", verbose = verbose)
-  return(planPhe)
+  return(jsonList)
 }
-
-
-#' simer.Data.rHIBLUP: The function of calling HIBLUP software of R version
-#' Author: Dong Yin
-#' Build date: June 28, 2021
-#' Last update: Aug 25, 2021
-#'
-#' @param planPhe breeding plans about phenotype
-#' @param fileMVP Genotype in MVP format
-#' @param filePed the pedigree files, it can be a vector
-#' @param mode 'A' or 'AD', Additive effect model or Additive and Dominance mode
-#' @param vc.method default is 'AI', the method of calucating variance components in HIBLUP
-#' @param verbose whether to print detail.
-#' 
-#' @export
-#' 
-#' @return a list of gebv
-#' 
-#' @examples
-#' jsonFile <- system.file("extdata", "demo2.json", package = "simer")
-#' jsonList <- rjson::fromJSON(file = jsonFile)
-#' 
-#' # prepare genotype data
-#' genoPath <- jsonList$genotype
-#' genoFiles <- list.files(genoPath)
-#' fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-#' fileMVP <- file.path(genoPath, fileMVP)
-#' fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-#' 
-#' # prepare pedigree data
-#' filePed <- jsonList$pedigree
-#' 
-#' # prepare phenotype data
-#' planPhe <- jsonList$analysis_plan
-#' 
-#' # call HIBLUP
-#' # gebvs <- simer.Data.rHIBLUP(planPhe = planPhe, fileMVP, filePed)
-simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc.method = "AI", verbose=TRUE) {
-  t1 <- as.numeric(Sys.time())
-  
-  geno <- geno.id <- map <- pheno <- ped <- NULL
-  if (length(fileMVP) > 0) {
-    genoFile <- paste0(fileMVP, ".geno.desc")
-    genoidFile <- paste0(fileMVP, ".geno.ind")
-    fileMap <- paste0(fileMVP, ".geno.map")
-    geno <- attach.big.matrix(genoFile)
-    geno.id <- read.table(genoidFile, header = FALSE)
-    if (file.exists(fileMap)) { map <- read.table(fileMap, header = TRUE) }
-  }
-  if (length(filePed) > 0) {
-    pedigree <- read.table(filePed, header = TRUE)
-  }
-  
-  gebvs <- NULL
-  for (i in 1:length(planPhe)) {
-    logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
-    filePhe <- planPhe[[i]]$sample_info
-    pheno <- read.table(filePhe, header = TRUE)
-    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(x$trait))
-    covariates <- unique(c(unlist(sapply(planPhe[[i]]$job_traits, function(x) {
-      return(unlist(c(x$covariates)))
-    }))))
-    fixedEffects <- unique(c(unlist(sapply(planPhe[[i]]$job_traits, function(x) {
-      return(unlist(c(x$fixed_effects)))
-    }))))
-    randomEffects <- unique(c(unlist(sapply(planPhe[[i]]$job_traits, function(x) {
-      return(unlist(c(x$random_effects)))
-    }))))
-    covariates <- covariates[covariates %in% names(pheno)]
-    fixedEffects <- fixedEffects[fixedEffects %in% names(pheno)]
-    randomEffects <- randomEffects[randomEffects %in% names(pheno)]
-    # get useful phenotype data
-    finalPhe <- pheno[, c(names(pheno)[1], traits, covariates, fixedEffects, randomEffects)]
-    # remove all NAs
-    finalPhe <- na.omit(finalPhe)
-    lapply(covariates, function(col) {  mode(finalPhe[, col]) <<- "numeric" })
-    lapply(fixedEffects, function(col) {  mode(finalPhe[, col]) <<- "character" })
-    # remove column of one level or full levels
-    finalPhe <- checkEnv(finalPhe, c(covariates, fixedEffects, randomEffects))
-    # show data information
-    logging.log(" Data Summary:\n", verbose = verbose)
-    simer.print(summary(finalPhe), verbose = verbose)
-    
-    CV <- R <- bivar.CV <- bivar.R <- bivar.pos <- NULL
-    if (planPhe[[i]]$multi_trait) {
-      bivar.pos <- match(traits, names(finalPhe))
-    }
-    # design matrix of covariates and fixed effects
-    bivar.CV <- lapply(planPhe[[i]]$job_traits, function(x) {
-      x$covariates <- x$covariates[x$covariates %in% names(finalPhe)]
-      x$fixed_effects <- x$fixed_effects[x$fixed_effects %in% names(finalPhe)]
-      envFormula <- formula(paste0("~", 
-                            paste(unlist(c(x$covariates, x$fixed_effects)), 
-                            collapse = '+')))
-      CV <- model.matrix(envFormula, data = finalPhe)
-      return(CV)
-    })
-    if (!planPhe[[i]]$multi_trait) {
-      CV <- bivar.CV[[1]]
-      bivar.CV <- NULL
-    }
-    # design matrix of random effects
-    bivar.R <- lapply(planPhe[[i]]$job_traits, function(x) {
-      x$random_effects <- x$random_effects[x$random_effects %in% names(finalPhe)]
-      if (length(x$random_effects) == 0) { return(NULL) }
-      R <- finalPhe[, x$random_effects, drop = FALSE]
-      return(R)
-    })
-    if (!planPhe[[i]]$multi_trait) {
-      R <- bivar.R[[1]]
-      bivar.R <- NULL
-    }
-    # call HIBLUP
-    eval(parse(text = "{
-    if (!(\"hiblup\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblup)))
-    # if (!(\"hiblupsrc\" %in% .packages())) suppressWarnings(suppressMessages(library(hiblupsrc)))
-    gebv <- hiblup(pheno = finalPhe, bivar.pos = bivar.pos, geno = geno, map = map, 
-                   geno.id = geno.id, file.output = FALSE, pedigree = pedigree, mode = mode, nAIiter=100,
-                   CV = CV, R = R, bivar.CV = bivar.CV, bivar.R = bivar.R, snp.solution = FALSE, vc.method = vc.method)
-    }"))
-
-    vc <- gebv$vc
-    gebv <- NULL
-    nTrait <- length(traits)
-    if (!planPhe[[i]]$multi_trait) {
-      traits <- traits[1]
-    }
-    
-    varList <- NULL
-    for (j in 1:length(traits)) {
-      if (!planPhe[[i]]$multi_trait) {
-        varList[[j]] <- c(vc)
-      } else {
-        varList[[j]] <- vc[grep(pattern = paste(paste0("^Vgtr", j), paste0("^Vetr", j), sep = '|'), names(vc))]
-      }
-    }
-    names(varList) <- traits
-    gebv$varList <- varList
-    logging.log(" The variance components are: (R, G, E)\n", verbose = verbose)
-    simer.print(gebv$varList, verbose = verbose)
-
-    # prepare genetic covariance matrix
-    if (planPhe[[i]]$multi_trait) {
-      nRandom <- sapply(planPhe[[i]]$job_traits, function(x) {
-        return(length(x$random_effects))
-      })
-      covA <- matrix(0, nTrait, nTrait)
-      corA <- matrix(0, nTrait, nTrait)
-      for (j in 1:nTrait) {
-        for (k in j:nTrait) {
-          if (j == k) {
-            covA[j, k] <- vc[paste0("Vgtr", j, "_R", nRandom[j]+1)]
-            corA[j, k] <- 1
-          } else {
-            covA[j, k] <- covA[k, j] <- vc[paste0("CoVgtr", j, "tr", k, "_R1")]
-            corA[j, k] <- corA[k, j] <- vc[paste0("CoVgtr", j, "tr", k, "_R1")] / sqrt(vc[paste0("Vgtr", j, "_R", nRandom[j]+1)] * vc[paste0("Vgtr", k, "_R", nRandom[k]+1)])
-          }
-        }
-      }
-      dimnames(covA) <- dimnames(corA) <- list(paste0(" ", traits), paste0(" ", traits))
-      gebv$covA <- covA
-      gebv$corA <- corA
-      logging.log(" The genetic covariance are:\n", verbose = verbose)
-      simer.print(gebv$covA, verbose = verbose)
-      logging.log(" The genetic correlation are:\n", verbose = verbose)
-      simer.print(gebv$corA, verbose = verbose)
-    }
-    
-    gebvs[[i]] <- gebv
-  }
-  
-  t2 <- as.numeric(Sys.time())
-  logging.log(" Genetic assessment for ", basename(filePhe), "is Done within", format_time(t2 - t1), "\n", verbose = verbose)
-  return(gebvs)
-}
-
 
 #' simer.Data.cHIBLUP: The function of calling HIBLUP software of C version
 #' Author: Dong Yin
 #' Build date: June 28, 2021
-#' Last update: Aug 25, 2021
+#' Last update: Apr 21, 2022
 #'
-#' @param planPhe breeding plans about phenotype
-#' @param fileMVP Genotype in MVP format
-#' @param filePed the pedigree files, it can be a vector
+#' @param SP a list of all simulation parameters
+#' @param jsonList the list of json parameters
 #' @param mode 'A' or 'AD', Additive effect model or Additive and Dominance mode
 #' @param vc.method default is 'AI', the method of calucating variance components in HIBLUP
 #' @param ncpus the number of threads
@@ -1108,24 +914,19 @@ simer.Data.rHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
 #' @examples
 #' jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
-#' 
-#' # prepare genotype data
-#' genoPath <- jsonList$genotype
-#' genoFiles <- list.files(genoPath)
-#' fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-#' fileMVP <- file.path(genoPath, fileMVP)
-#' fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-#' 
-#' # prepare pedigree data
-#' filePed <- jsonList$pedigree
-#' 
-#' # prepare phenotype data
-#' planPhe <- jsonList$analysis_plan
-#' 
-#' # call HIBLUP
-#' # gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed)
-simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc.method = "AI", ncpus = 10, verbose=TRUE) {
+#' # gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
+simer.Data.cHIBLUP <- function(SP = NULL, jsonList = NULL, mode='A', vc.method = "AI", ncpus = 10, verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
+  
+  if (!is.null(jsonList)) {
+    genoPath <- jsonList$genotype
+    genoFiles <- list.files(genoPath)
+    fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
+    fileMVP <- file.path(genoPath, fileMVP)
+    fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
+    filePed <- jsonList$pedigree
+    planPhe <- jsonList$analysis_plan
+  }
   
   # convert bigmemory to PLINK
   if (!is.null(fileMVP)) {
@@ -1142,7 +943,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       verbose = TRUE
     )
   }
-
+  
   gebvs <- NULL
   for (i in 1:length(planPhe)) {
     logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
@@ -1171,7 +972,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     finalPhe <- checkEnv(finalPhe, c(covariates, fixedEffects, randomEffects))
     # show data information
     logging.log(" Data Summary:\n", verbose = verbose)
-    simer.print(summary(finalPhe), verbose = verbose)
+    logging.print(summary(finalPhe), verbose = verbose)
     
     covariatesCmd <- lapply(planPhe[[i]]$job_traits, function(x) {
         x$covariates <- x$covariates[x$covariates %in% names(finalPhe)]
@@ -1222,7 +1023,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       )
     
     system(completeCmd)
-
+    
     gebv <- NULL
 
     varFile <- paste0(out, ".vars")
@@ -1237,7 +1038,7 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
     names(varList) <- traits
     gebv$varList <- varList
     logging.log(" The variance components are: (R, G, E)\n", verbose = verbose)
-    simer.print(gebv$varList, verbose = verbose)
+    logging.print(gebv$varList, verbose = verbose)
 
     if (planPhe[[i]]$multi_trait) {
       covarFile <- paste0(out, ".covars")
@@ -1258,9 +1059,9 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
       gebv$covA <- covA
       gebv$corA <- corA
       logging.log(" The genetic covariance are:\n", verbose = verbose)
-      simer.print(gebv$covA, verbose = verbose)
+      logging.print(gebv$covA, verbose = verbose)
       logging.log(" The genetic correlation are:\n", verbose = verbose)
-      simer.print(gebv$corA, verbose = verbose)
+      logging.print(gebv$corA, verbose = verbose)
     }
     
     gebvs[[i]] <- gebv
@@ -1271,16 +1072,12 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
   return(gebvs)
 }
 
-
 #' simer.SELIND: The function of General Selection Index
 #' Author: Dong Yin
 #' Build date: Aug 26, 2021
-#' Last update: Aug 26, 2021
+#' Last update: Apr 21, 2022
 #'
-#' @param BVIndex breeding value economic weight
-#' @param planPhe breeding plans about phenotype
-#' @param fileMVP Genotype in MVP format
-#' @param filePed the pedigree files, it can be a vector
+#' @param jsonList the list of json parameters
 #' @param ncpus the number of threads
 #' @param verbose whether to print detail.
 #'
@@ -1291,38 +1088,28 @@ simer.Data.cHIBLUP <- function(planPhe, fileMVP=NULL, filePed=NULL, mode='A', vc
 #' @examples
 #' jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
-#' 
-#' # prepare breeing value economic weight
-#' BVIndex <- jsonList$breeding_value_index
-#' 
-#' # prepare genotype data
-#' genoPath <- jsonList$genotype
-#' genoFiles <- list.files(genoPath)
-#' fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-#' fileMVP <- file.path(genoPath, fileMVP)
-#' fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-#' 
-#' # prepare pedigree data
-#' filePed <- jsonList$pedigree
-#' 
-#' # prepare phenotype data
-#' planPhe <- jsonList$analysis_plan
-#' 
-#' # reset planPhe by optimized model
-#' # planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed)
-#' 
-#' # construct selection index
-#' # selIndex <- simer.Data.SELIND(BVIndex, planPhe, fileMVP, filePed)
-simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, ncpus = 10, verbose=TRUE) {
+#' # jsonList <- simer.Data.SELIND(jsonList = jsonList)
+simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
-
+  
+  BVIndex <- jsonList$breeding_value_index
+  genoPath <- jsonList$genotype
+  genoFiles <- list.files(genoPath)
+  fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
+  fileMVP <- file.path(genoPath, fileMVP)
+  fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
+  filePed <- jsonList$pedigree
+  planPhe <- jsonList$analysis_plan
+  
+  jsonList <- simer.Data.Env(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
+  
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
   str1 <- gsub("^\\s+|\\s+$", "", str1)
   strIsNA <- is.na(suppressWarnings(as.numeric(str1)))
   BVWeight <- as.numeric(str1[!strIsNA])
   names(BVWeight) <- str1[strIsNA]
-
-  gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed, ncpus = ncpus)
+  
+  gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
   
   covPList <- NULL
   covAList <- NULL
@@ -1376,7 +1163,48 @@ simer.Data.SELIND <- function(BVIndex, planPhe, fileMVP=NULL, filePed=NULL, ncpu
                 selIndex, "\n",
                 "*********************************************************\n", verbose = verbose)
 
+  jsonList$selection_index <- selIndex
+  jsonList$breeding_value_index <- NULL
   t2 <- as.numeric(Sys.time())
   logging.log(" Selection Index Construction is Done within", format_time(t2 - t1), "\n", verbose = verbose)
-  return(selIndex)
+  return(jsonList)
+}
+
+#' Check the levels of environmental factors
+#'
+#' Build date: Sep 10, 2021
+#' Last update: Sep 10, 2021
+#'
+#' @author Dong Yin
+#'
+#' @param data data needing check
+#' @param envName the environmental factor name in the data
+#' 
+#' @return data without environmental factors of wrong level
+#' @export
+#'
+#' @examples
+#' data <- data.frame(a = rep(1, 3), b = 1:3, c = c(1, 1, 5))
+#' envName <- c("a", "b", "c")
+#' # data <- checkEnv(data = data, envName = envName)
+checkEnv <- function(data, envName) {
+  if (is.numeric(envName)) {
+    envName <- names(data)[envName]
+  }
+  
+  # remove column of one level or full levels
+  drop <- c()
+  for (i in 1:ncol(data)) {
+    if (names(data)[i] %in% envName) {
+      numUni <- length(unique(data[[i]]))
+      if (numUni == 1 || numUni == length(data[[i]])) {
+        drop <- c(drop, i)
+      }
+    }
+  }
+  if (length(drop) > 0) {
+    warning(paste(names(data)[drop], collapse=', '), ' has been remove because of its one or full levels!')
+    data <- data[, -drop, drop = FALSE]
+  }
+  return(data)
 }

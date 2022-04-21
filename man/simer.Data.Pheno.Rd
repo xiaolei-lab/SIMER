@@ -50,7 +50,6 @@ Build date: June 13, 2021
 Last update: July 8, 2021
 }
 \examples{
-out <- tempfile("outfile")
 filePhe <- system.file("extdata", "phenotype.txt", package = "simer")
-simer.Data.Pheno(filePhe = filePhe, out = out, verbose = TRUE)
+simer.Data.Pheno(filePhe = filePhe, out = tempfile("outfile"))
 }

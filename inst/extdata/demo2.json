@@ -1,12 +1,12 @@
 {
-    "genotype": ["/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/01bigmemory"],
-    "pedigree": ["/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/trueped.txt"],
+    "genotype": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/01bigmemory"],
+    "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/pedigree.txt"],
     "selection_index": [],
     "breeding_value_index": "0.2 * BF1 + 0.8 * BF2",
     "analysis_plan":[
         {
             "job_name": "EBV Model Demo",
-            "sample_info": "/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/phenotype.txt",
+            "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/phenotype.txt",
             "repeated_records": false,
             "multi_trait": true,
             "random_ratio": 0.05,

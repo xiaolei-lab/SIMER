@@ -5,12 +5,10 @@
 \title{To find appropriate fixed effects, covariates, and random effects
 Author: Dong Yin
 Build date: July 17, 2021
-Last update: July 17, 2021}
+Last update: Apr 21, 2022}
 \usage{
 simer.Data.Env(
-  planPhe,
-  fileMVP = NULL,
-  filePed = NULL,
+  jsonList = NULL,
   header = TRUE,
   sep = "\\t",
   ncpus = 10,
@@ -18,12 +16,6 @@ simer.Data.Env(
 )
 }
 \arguments{
-\item{planPhe}{breeding plans about phenotype}
-
-\item{fileMVP}{Genotype in MVP format}
-
-\item{filePed}{the pedigree files, it can be a vector}
-
 \item{header}{the header of file}
 
 \item{sep}{the separator of file}
@@ -31,6 +23,8 @@ simer.Data.Env(
 \item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
+
+\item{SP}{a list of all simulation parameters}
 }
 \value{
 the best effects for EBV model
@@ -39,25 +33,10 @@ the best effects for EBV model
 To find appropriate fixed effects, covariates, and random effects
 Author: Dong Yin
 Build date: July 17, 2021
-Last update: July 17, 2021
+Last update: Apr 21, 2022
 }
 \examples{
 jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
-
-# prepare genotype data
-genoPath <- jsonList$genotype
-genoFiles <- list.files(genoPath)
-fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-fileMVP <- file.path(genoPath, fileMVP)
-fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-
-# prepare pedigree data
-filePed <- jsonList$pedigree
-
-# prepare phenotype data
-planPhe <- jsonList$analysis_plan
-
-# reset planPhe by optimized model
-# planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed)
+# jsonList <- simer.Data.Env(jsonList = jsonList)
 }

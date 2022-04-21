@@ -39,6 +39,7 @@ Build date: May 26, 2021
 Last update: Sep 18, 2021
 }
 \examples{
-fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-fileMVPimp <- simer.Data.Impute(fileMVP = fileMVP)
+# need beagle
+# fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
+# fileMVPimp <- simer.Data.Impute(fileMVP = fileMVP)
 }

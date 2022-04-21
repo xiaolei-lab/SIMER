@@ -1,6 +1,6 @@
 {
-    "genotype": ["/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/01bigmemory"],
-    "pedigree": ["/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/pedigree.txt"],
+    "genotype": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/01bigmemory"],
+    "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/pedigree.txt"],
     "selection_index": "100 - 3 * 校正100kg日增重 + 3 * 结测背膘厚",
     "quality_control_plan": {
         "genotype_quality_control":{
@@ -19,7 +19,7 @@
         "phenotype_quality_control":[
             {
                 "job_name": "Data Quality Control Demo",
-                "sample_info": "/data2/yindong/R/x86_64-pc-linux-gnu-library/4.0/BIM/extdata/phenotype.txt",
+                "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/phenotype.txt",
                 "repeated_records": false,
                 "multi_trait": true,
                 "job_traits": [

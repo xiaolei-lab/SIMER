@@ -18,6 +18,7 @@
 #'
 #' @author Dong Yin
 #'
+#' @param SP a list of all simulation parameters
 #' @param simls a list with all simer result information
 #' @param FR list of fixed effects, random effects, and their combination
 #' @param index.wt economic weights of selection index method, its length should equals to the number of traits
@@ -29,109 +30,48 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # get map file, map is neccessary
-#' data(simdata)
+#' pop.env <- list(
+#'   F1 = list(
+#'     level = c("1", "2"),
+#'     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+#'   ), 
+#'   F2 = list(
+#'     level = c("d1", "d2", "d3"),
+#'     eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+#'   ),
+#'   R1 = list(
+#'     level = c("l1", "l2", "l3"),
+#'     ratio = list(tr1 = 0.1, tr2 = 0.1)
+#'   )
+#' )
+#' SP <- param.simer(
+#'   qtn.num = diag(10, 2),
+#'   pop.env = pop.env,
+#'   phe.model = list(
+#'     tr1 = "T1 = A + F1 + F2 + R1 + E",
+#'     tr2 = "T2 = A + F1 + F2 + R1 + E"
+#'   )
+#' )
 #' 
-#' # combination of fixed effects
-#' cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
-#'                 tr2 = c("mu", "diet", "season")) # trait 2
-#'       
-#' fix <- list( 
-#'          mu = list(level = "mu", eff = 20),  				      
-#'         gen = FALSE,         
-#'         sex = list(level = c("1", "2"), eff = c(50, 30)), 
-#'        diet = list(level = c("d1", "d2", "d3"), eff = c(10, 20, 30)),
-#'      season = list(level = c("s1", "s2", "s3", "s4"), eff = c(10, 20, 30, 20)), 
-#'           a = list(level = c("a1", "a2", "a3"), eff = c(10, 20, 30))) 
-#'           
-#' # combination and ralation of random effects
-#' tr1 <- list(rn = c("PE"), ratio = 0.1)
-#' tr2 <- list(rn = c("litter", "b"), ratio = c(0.1, 0.1))          
-#' cmb.rand <- list(tr1 = tr1, tr2 = tr2)   
-#'       
-#' rand <- list(       
-#'          PE = list(level = paste0("p", 1:50), eff = rnorm(50)), 
-#'      litter = list(level = paste0("l", 1:50), eff = rnorm(50)),    
-#'           b = list(level = paste0("b", 1:50), eff = rnorm(50)))      
-#'   
-#' FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
-#' selPath <- system.file("extdata", "01breeding_plan", package = "simer")
+#' SP <- simer(SP, outpath = "/home/yindong/Desktop")
 #' 
-#' # run simer
-#' simer.list <-
-#'      simer(num.gen = 6,
-#'            replication = 1,
-#'            verbose = TRUE, 
-#'            mrk.dense = TRUE,
-#'            incols = 2, 
-#'            outcols = 2, 
-#'            out = "simer", 
-#'            outpath = NULL,
-#'            selPath = NULL, 
-#'            out.format = "numeric",
-#'            seed.sim = runif(1, 0, 100),
-#'            out.geno.gen = 1:6,
-#'            out.pheno.gen = 1:6,
-#'            rawgeno1 = rawgeno,
-#'            rawgeno2 = NULL,
-#'            rawgeno3 = NULL,
-#'            rawgeno4 = NULL,
-#'            num.ind = NULL,
-#'            prob = c(0.5, 0.5),
-#'            input.map = input.map,
-#'            len.block = 5e7,
-#'            range.hot = 4:6,
-#'            range.cold = 1:5,
-#'            rate.mut = 1e-8,
-#'            cal.model = "A",
-#'            FR = FR, 
-#'            h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-#'            num.qtn.tr1 = 18,
-#'            sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
-#'            dist.qtn.tr1 = rep("normal", 6),
-#'            prob.tr1 = rep(0.5, 6),
-#'            shape.tr1 = rep(1, 6),
-#'            scale.tr1 = rep(1, 6),
-#'            multrait = FALSE,
-#'            num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-#'            sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-#'            gnt.cov = matrix(c(1, 2, 2, 16), 2, 2),
-#'            h2.trn = c(0.3, 0.5), 
-#'            qtn.spot = rep(0.1, 10),
-#'            maf = 0,
-#'            sel.crit = "pheno",
-#'            sel.on = FALSE, 
-#'            mtd.reprod = "randmate",
-#'            userped = userped,
-#'            num.prog = 2,
-#'            ratio = 0.5,
-#'            prog.tri = 2,
-#'            prog.doub = 2,
-#'            prog.back = rep(2, 5),
-#'            ps = rep(0.8, 2),
-#'            decr = TRUE,
-#'            sel.multi = "index",
-#'            index.wt = c(0.5, 0.5),
-#'            index.tdm = 1,
-#'            goal.perc = 0.1,
-#'            pass.perc = 0.9, 
-#'            sel.sing = "comb") 
+#' selPath <- system.file("extdata", "04breeding_plan", package = "simer")
 #' 
 #' # follow code can be run only if you have installd hiblup package
 #' # goal.plan <- complan(simls = simer.list, FR = FR, index.wt = c(0.5, 0.5), 
 #' #                      decr = TRUE, selPath = selPath, verbose = TRUE)
 #' # str(goal.plan)
-#' }
-complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selPath=NULL, verbose=TRUE) {
+complan <- function(SP = NULL, simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selPath=NULL, verbose=TRUE) {
+  
   if (!dir.exists(selPath)) stop("Please input a right selection path!")
   
-  var.pheno <- simls$trait$info.tr$Vg[1] / simls$trait$info.tr$h2[1]
-  pop <- simls$pop
-  pop.last <- pop[pop$gen == pop$gen[length(pop$gen)], ]
-  f1 <- grep(pattern = "TBV|TGV|pheno|ebv|u1", x = names(pop), value = FALSE)
-  score.last <- colMeans(subset(pop.last, select = f1))
-  if (nrow(pop) != length(simls$genoid)) stop("All individuals should have genotype!")
+  verbose <- SP$global$verbose
+  phe.var <- SP$pheno$phe.var
+  pop <- do.call(rbind, SP$pheno$pop)
+  pop.last <- SP$pheno$pop[[length(SP$pheno$pop)]]
+  phe.name <- grep(pattern = "TBV", x = names(pop.last), value = TRUE)
+  phe.name <- substr(phe.name, 1, nchar(phe.name) - 4)
+  score.last <- colMeans(subset(pop.last, select = phe.name))
   
   filenames <- dir(path = selPath)
   for (filename in filenames) {
@@ -153,7 +93,7 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     fileImage <- file(description=filename, open="r")
     
     logging.log(" Read breeding plan ", filenames[i], "...", sep = "", verbose = verbose)
-    #Initialization for iteration within file
+    # Initialization for iteration within file
     inFile=TRUE
     while (inFile) {
       tt <- readLines(fileImage, n=1)
@@ -249,15 +189,17 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
     if (length(idx$eff_fixed) != 0) {
       ntr <- length(idx$eff_fixed)
       trn <- paste0("tr", 1:ntr)
-      for (i in 1:ntr)
-        fac_fixed[[i]] <- pop[, idx$eff_fixed[[i]]]
+      for (i in 1:ntr) {
+        fac_fixed[[i]] <- pop[, idx$eff_fixed[[i]], drop = FALSE]
+      }
       names(fac_fixed) <- trn
     }
     if (length(idx$eff_random) != 0) {
       ntr <- length(idx$eff_random)
       trn <- paste0("tr", 1:ntr)
-      for (i in 1:ntr)
-        fac_random[[i]] <- pop[, idx$eff_random[[i]]]
+      for (i in 1:ntr) {
+        fac_random[[i]] <- pop[, idx$eff_random[[i]], drop = FALSE]
+      }
       names(fac_random) <- trn
     }
     ls_fr <- list(fac_fixed = fac_fixed, fac_random = fac_random)
@@ -442,9 +384,9 @@ complan <- function(simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selP
   plan.goal <- list(plan_name = plan.names[idx.goal], plan_cont = idx4hi[[idx.goal]], plan_gains = score.curr)
   
   logging.log(" Individuals should be genotyping are:\n", verbose = verbose)
-  simer.print(plan.goal$plan_cont$idx_geno, verbose = verbose)
+  logging.print(plan.goal$plan_cont$idx_geno, verbose = verbose)
   logging.log(" Individuals should be phenotyping are:\n", verbose = verbose)
-  simer.print(plan.goal$plan_cont$idx_pheno, verbose = verbose)
+  logging.print(plan.goal$plan_cont$idx_pheno, verbose = verbose)
 
   if (length(plan.goal$plan_cont$eff_fixed) > 0) {
     logging.log(" Fixed effects should be in the model are:\n", verbose = verbose)
@@ -519,7 +461,7 @@ num2num <- function(nums) {
 #'     within_family_index = rep("all", 3), 
 #'     sex = rep("1", 3), 
 #'     stringsAsFactors = FALSE
-#'     )
+#' )
 #' pop <- getpop(nind = 100, from = 1, ratio = 0.5)
 #' pop$gen <- rep(1:5, each = 20)
 #' out.idx <- sel.idx(scheme = scheme, pop = pop)

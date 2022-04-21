@@ -58,8 +58,6 @@ param.annot <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.map)) {
       SP.map[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -117,8 +115,6 @@ param.annot <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.map)) {
       SP.map[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -158,8 +154,6 @@ param.geno <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.geno)) {
       SP.geno[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -214,8 +208,6 @@ param.pheno <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.pheno)) {
       SP.pheno[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -282,8 +274,6 @@ param.pheno <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.pheno)) {
       SP.pheno[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -327,8 +317,6 @@ param.sel <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.sel)) {
       SP.sel[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -377,8 +365,6 @@ param.reprod <- function(SP = NULL, ...) {
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.reprod)) {
       SP.reprod[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
@@ -413,25 +399,30 @@ param.global <- function(SP = NULL, ...) {
     outcols = 1, 
     out = "simer", 
     outpath = NULL,
-    selPath = NULL,
     out.format = "numeric",
+    pop.gen = 2,
     out.geno.gen = 1:2,
     out.pheno.gen = 1:2,
     ncpus = 0,
     verbose = TRUE
   )
   
+  if (!is.null(SP.tmp$pop.gen)) {
+    SP.global$pop.gen <- SP.tmp$pop.gen
+    SP.global$out.geno.gen <- 1:SP.tmp$pop.gen
+    SP.global$out.pheno.gen <- 1:SP.tmp$pop.gen
+  }
+  
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.global)) {
       SP.global[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
     }
   }
   
   SP$global <- SP.global
   return(SP)
 }
+
 #' Generate parameters for simer
 #' 
 #' Build date: Apr 17, 2022
@@ -450,33 +441,13 @@ param.global <- function(SP = NULL, ...) {
 #' str(SP)
 param.simer <- function(SP = NULL, ...) {
   
-  SP.tmp <- list(...)
-  
-  SP <- param.global()
-  SP <- param.annot(SP = SP)
-  SP <- param.geno(SP = SP)
-  SP <- param.pheno(SP = SP)
-  SP <- param.sel(SP = SP)
-  SP <- param.pheno(SP = SP)
-  SP <- param.reprod(SP = SP)
-  
-  for (x in names(SP.tmp)) {
-    if (x %in% names(SP$global)) {
-      SP$global[[x]] <- SP.tmp[[x]]
-    } else if (x %in% names(SP$map)) {
-      SP$map[[x]] <- SP.tmp[[x]]
-    } else if (x %in% names(SP$geno)) {
-      SP$geno[[x]] <- SP.tmp[[x]]
-    } else if (x %in% names(SP$pheno)) {
-      SP$pheno[[x]] <- SP.tmp[[x]]
-    } else if (x %in% names(SP$sel)) {
-      SP$sel[[x]] <- SP.tmp[[x]]
-    } else if (x %in% names(SP$reprod)) {
-      SP$reprod[[x]] <- SP.tmp[[x]]
-    } else {
-      warning(paste(x, "is invalid!"))
-    }
-  }
+  SP <- param.global(SP = SP, ... = ...)
+  SP <- param.annot(SP = SP, ... = ...)
+  SP <- param.geno(SP = SP, ... = ...)
+  SP <- param.pheno(SP = SP, ... = ...)
+  SP <- param.sel(SP = SP, ... = ...)
+  SP <- param.pheno(SP = SP, ... = ...)
+  SP <- param.reprod(SP = SP, ... = ...)
   
   return(SP)
 }

@@ -5,25 +5,12 @@
 \title{simer.SELIND: The function of General Selection Index
 Author: Dong Yin
 Build date: Aug 26, 2021
-Last update: Aug 26, 2021}
+Last update: Apr 21, 2022}
 \usage{
-simer.Data.SELIND(
-  BVIndex,
-  planPhe,
-  fileMVP = NULL,
-  filePed = NULL,
-  ncpus = 10,
-  verbose = TRUE
-)
+simer.Data.SELIND(jsonList = NULL, ncpus = 10, verbose = TRUE)
 }
 \arguments{
-\item{BVIndex}{breeding value economic weight}
-
-\item{planPhe}{breeding plans about phenotype}
-
-\item{fileMVP}{Genotype in MVP format}
-
-\item{filePed}{the pedigree files, it can be a vector}
+\item{jsonList}{the list of json parameters}
 
 \item{ncpus}{the number of threads}
 
@@ -36,33 +23,12 @@ phenotype economic weight
 simer.SELIND: The function of General Selection Index
 Author: Dong Yin
 Build date: Aug 26, 2021
-Last update: Aug 26, 2021
+Last update: Apr 21, 2022
 }
 \examples{
 jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
-
-# prepare breeing value economic weight
-BVIndex <- jsonList$breeding_value_index
-
-# prepare genotype data
-genoPath <- jsonList$genotype
-genoFiles <- list.files(genoPath)
-fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-fileMVP <- file.path(genoPath, fileMVP)
-fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-
-# prepare pedigree data
-filePed <- jsonList$pedigree
-
-# prepare phenotype data
-planPhe <- jsonList$analysis_plan
-
-# reset planPhe by optimized model
-# planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed)
-
-# construct selection index
-# selIndex <- simer.Data.SELIND(BVIndex, planPhe, fileMVP, filePed)
+# jsonList <- simer.Data.SELIND(jsonList = jsonList)
 }
 \references{
 Y. S. Chen, Z. L. Sheng (1988) The Theory of General Selection Index. Genetic Report, 15(3): P185-P190

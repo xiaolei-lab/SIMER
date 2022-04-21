@@ -20,15 +20,15 @@ Last update: Feb 23, 2022
 }
 \examples{
 pop.env <- list(
-  sex = list(
+  F1 = list(
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
   ), 
-  diet = list(
+  F2 = list(
     level = c("d1", "d2", "d3"),
     eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
   ),
-  location = list(
+  R1 = list(
     level = c("l1", "l2", "l3"),
     ratio = list(tr1 = 0.1, tr2 = 0.1)
   )
@@ -43,8 +43,8 @@ SP <- param.pheno(
   pop.env = pop.env,
   phe.var = list(tr1 = 100, tr2 = 100),
   phe.model = list(
-    tr1 = "T1 = A + D + A:D + sex + diet + location + A:sex + E",
-    tr2 = "T2 = A + D + A:D + sex + diet + location + A:sex + E"
+    tr1 = "T1 = A + D + A:D + F1 + F2 + R1 + A:F1 + E",
+    tr2 = "T2 = A + D + A:D + F1 + F2 + R1 + A:F1 + E"
   )
 )
 SP <- annotation(SP)

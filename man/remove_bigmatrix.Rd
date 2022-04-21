@@ -30,7 +30,6 @@ mat <- filebacked.big.matrix(
      backingpath = ".",
      backingfile = 'simer.geno.bin',
      descriptorfile = 'simer.geno.desc')
-options(bigmemory.typecast.warning=FALSE)
 
 remove_bigmatrix(x = "simer")
 }

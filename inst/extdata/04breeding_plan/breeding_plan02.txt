@@ -1,0 +1,17 @@
+# start genotyping
+generation	family_index	within_family_index	sex
+1	all	all	2
+2	all	all	2
+
+# start phenotyping
+generation	family_index	within_family_index	sex
+1	all	all	2
+2	all	all	2
+
+# fixed effect
+F1	F2
+F1	F2
+
+# random effect
+R1
+R1

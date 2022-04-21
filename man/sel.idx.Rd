@@ -25,7 +25,7 @@ scheme <- data.frame(
     within_family_index = rep("all", 3), 
     sex = rep("1", 3), 
     stringsAsFactors = FALSE
-    )
+)
 pop <- getpop(nind = 100, from = 1, ratio = 0.5)
 pop$gen <- rep(1:5, each = 20)
 out.idx <- sel.idx(scheme = scheme, pop = pop)

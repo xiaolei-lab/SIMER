@@ -33,13 +33,12 @@ Build date: Jan 7, 2019
 Last update: Oct 16, 2019
 }
 \examples{
-# DO NOT RUN IT
-# outpath <- tempdir()
-# SP <- param.simer(out = "simer")
-# SP <- simer(SP)
-# SP$global$outpath <- outpath
-# write.file(SP)
-# unlink(outpath, recursive = TRUE)
+outpath <- tempdir()
+SP <- param.simer(out = "simer")
+SP <- simer(SP)
+SP$global$outpath <- outpath
+write.file(SP)
+unlink(file.path(outpath, "180_Simer_Data_numeric"), recursive = TRUE)
 }
 \author{
 Dong Yin

@@ -32,9 +32,6 @@ Build date: May 26, 2021
 Last update: May 26, 2021
 }
 \examples{
-# simer.Data.Ped needs genotype data
-out <- tempfile("outfile")
 mvpPath <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-
-# simer.Data.MVP2MVP(mvpPath)
+simer.Data.MVP2MVP(mvpPath, out = tempfile("outfile"))
 }

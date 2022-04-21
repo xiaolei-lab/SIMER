@@ -18,7 +18,7 @@
 JsonQC <- function(jsonFile, ncpus = 0, verbose=TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
-  outpath <- getwd()
+  outpath <- dirname("simer")
   out <- NULL
   
   # check genotype parameters
@@ -95,36 +95,11 @@ JsonQC <- function(jsonFile, ncpus = 0, verbose=TRUE) {
 JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
-  outpath <- getwd()
-  out <- NULL
-  logging.initialize("Simer.Data", outpath)
-  
-  # check genotype parameters
-  genoPath <- jsonList$genotype
-  fileMVP <- NULL
-  if (length(genoPath) != 0) {
-    genoFiles <- list.files(genoPath)
-    fileMVP <- fileBed <- fileNum <- NULL
-    fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-    fileMVP <- file.path(genoPath, fileMVP)
-    if (length(fileMVP) > 0) {
-      fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-    } else {
-      fileMVP <- NULL
-    }
-  }
-  
-  # check pedigree parameters
-  filePed <- jsonList$pedigree
-
-  # check phenotype parameters
-  filePhe <- sapply(jsonList$analysis_plan, function(x) return(x$sample_info))
-  planPhe <- jsonList$analysis_plan
+  logging.initialize("Simer.Data", dirname("simer"))
   
   ## step 2. find the best effects for EBV model
   if (buildModel) {
-    planPhe <- simer.Data.Env(planPhe = planPhe, fileMVP, filePed, ncpus = ncpus, verbose = verbose)
-    jsonList$analysis_plan <- planPhe
+    jsonList <- simer.Data.Env(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
   }
   
   newJsonFile <- paste0(substr(jsonFile, 1, nchar(jsonFile)-5), ".model.json")
@@ -133,10 +108,7 @@ JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, ncpus = 10
 
   ## step 3. construct selection index
   if (buildIndex) {
-    BVIndex <- jsonList$breeding_value_index
-    selIndex <- simer.Data.SELIND(BVIndex, planPhe, fileMVP, filePed, ncpus = ncpus, verbose = verbose)
-    jsonList$selection_index <- selIndex
-    jsonList$breeding_value_index <- NULL
+    jsonList <- simer.Data.SELIND(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
   }
   
   newJson <- rjson::toJSON(jsonList)

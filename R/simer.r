@@ -40,6 +40,7 @@ simer <- function(SP) {
 # TODO: inbreeding change in every generations
 # TODO: breeding literature from ZhenST
 # TODO: remove one column genotype
+# TODO: data convert of simer
   
   # unfold global parameters
   replication <- SP$global$replication
@@ -48,10 +49,6 @@ simer <- function(SP) {
   outcols <- SP$global$outcols
   out <- SP$global$out
   outpath <- SP$global$outpath
-  selPath <- SP$global$selPath
-  out.format <- SP$global$out.format
-  out.geno.gen <- SP$global$out.geno.gen
-  out.pheno.gen <- SP$global$out.pheno.gen
   ncpus <- SP$global$ncpus
   verbose <- SP$global$verbose
   SP$geno$incols <- incols

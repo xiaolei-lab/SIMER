@@ -411,15 +411,14 @@ mkl_env <- function(exprs, threads = 1) {
 #'      backingpath = ".",
 #'      backingfile = 'simer.geno.bin',
 #'      descriptorfile = 'simer.geno.desc')
-#' options(bigmemory.typecast.warning=FALSE)
 #'
 #' remove_bigmatrix(x = "simer")
 remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin") {
   name <- basename(x)
   path <- dirname(x)
   
-  descfile <- paste0(name, desc_suffix)
-  binfile  <- paste0(name, bin_suffix)
+  descfile <- paste0(x, desc_suffix)
+  binfile  <- paste0(x, bin_suffix)
   
   remove_var <- function(binfile, envir) {
     for (v in ls(envir = envir)) {
@@ -467,13 +466,12 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' @export
 #'
 #' @examples
-#' # DO NOT RUN IT
-#' # outpath <- tempdir()
-#' # SP <- param.simer(out = "simer")
-#' # SP <- simer(SP)
-#' # SP$global$outpath <- outpath
-#' # write.file(SP)
-#' # unlink(outpath, recursive = TRUE)
+#' outpath <- tempdir()
+#' SP <- param.simer(out = "simer")
+#' SP <- simer(SP)
+#' SP$global$outpath <- outpath
+#' write.file(SP)
+#' unlink(file.path(outpath, "180_Simer_Data_numeric"), recursive = TRUE)
 write.file <- function(SP) {
   
   # unfold global parameters
@@ -538,62 +536,18 @@ write.file <- function(SP) {
     if (!is.null(SP$map$pop.map.GxG)) {
       write.table(SP$map$pop.map.GxG, file = file.path(directory.rep, paste0(out, ".GxG.geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
     }
-    write.table(pheno.total[, c(1, 5, 6)], file = file.path(directory.rep, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-    write.table(pheno.total, file = file.path(directory.rep, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
       
   } else if (out.format == "plink") {
     MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.total[, 1, drop = FALSE], out = file.path(directory.rep, "mvp.plink"), verbose = verbose)
+    remove_bigmatrix(file.path(directory.rep, out))
+    geno.total <- 0
   }
+  write.table(pheno.total[, c(1, 5, 6)], file = file.path(directory.rep, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+  write.table(pheno.total, file = file.path(directory.rep, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
   
   logging.log(" All files have been saved successfully!\n", verbose = verbose)
   
   rm(geno.total); rm(pheno.total); gc()
-}
-
-#' Print things into file
-#'
-#' Build date: Feb 7, 2020
-#' Last update: Feb 7, 2020
-#' by using base::print
-#'
-#' @author Dong Yin
-#'
-#' @param x a matrix or a list
-#' @param file output file name
-#' @param append ogical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file
-#' @param verbose whether to print details
-#'
-#' @return print in the screen
-#' @export
-#'
-#' @examples
-#' x <- list(a = "a", b = "b")
-#' simer.print(x)
-simer.print <- function(x, file = NULL, append = TRUE, verbose = TRUE) {
-  if (verbose) {
-    if (is.numeric(x) & is.vector(x)) {
-      if (length(x) <= 10) {
-          cat("", x, "\n")
-      } else {
-          cat("", x[1:10], "...(more IDs in the logging file)\n")
-      }
-    } else {
-      print(x)
-    }
-    
-    if (is.null(file)) {
-      try(file <- get("logging.file", envir = package.env), silent = TRUE)
-    }
-    if (!is.null(file)) {
-      sink(file = file, append = append)
-      if (is.numeric(x) & is.vector(x)) {
-        cat("", x, "\n")
-      } else {
-        print(x)
-      }
-      sink()
-    }
-  }
 }
 
 #' Show file content
@@ -627,43 +581,4 @@ simer.show.file <- function(filename = NULL, verbose = TRUE) {
   }
   close.connection(fileImage)
   return(invisible())
-}
-
-#' Check the levels of environmental factors
-#'
-#' Build date: Sep 10, 2021
-#' Last update: Sep 10, 2021
-#'
-#' @author Dong Yin
-#'
-#' @param data data needing check
-#' @param envName the environmental factor name in the data
-#' 
-#' @return data without environmental factors of wrong level
-#' @export
-#'
-#' @examples
-#' data <- data.frame(a = rep(1, 3), b = 1:3, c = c(1, 1, 5))
-#' envName <- c("a", "b", "c")
-#' data <- checkEnv(data = data, envName = envName)
-checkEnv <- function(data, envName) {
-  if (is.numeric(envName)) {
-    envName <- names(data)[envName]
-  }
-  
-  # remove column of one level or full levels
-  drop <- c()
-  for (i in 1:ncol(data)) {
-    if (names(data)[i] %in% envName) {
-      numUni <- length(unique(data[[i]]))
-      if (numUni == 1 || numUni == length(data[[i]])) {
-        drop <- c(drop, i)
-      }
-    }
-  }
-  if (length(drop) > 0) {
-    warning(paste(names(data)[drop], collapse=', '), ' has been remove because of its one or full levels!')
-    data <- data[, -drop, drop = FALSE]
-  }
-  return(data)
 }

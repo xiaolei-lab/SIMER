@@ -54,11 +54,9 @@ Build date: June 3, 2021
 Last update: Aug 22, 2021
 }
 \examples{
-# simer.Data.Ped needs genotype data
-out <- tempfile("outfile")
 fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 filePed <- system.file("extdata", "pedigree.txt", package = "simer")
-# simer.Data.Geno(fileMVP=fileMVP, filePed=filePed, genoType='char', out=out, 
-  # filterGeno=0.1, filterHWE=0.001, filterMind=0.1, filterMAF=0.05,
-  # ncpus=0, verbose=TRUE)
+simer.Data.Geno(fileMVP=fileMVP, filePed=filePed, genoType='char', 
+  out=tempfile("outfile"), 
+  filterGeno=0.1, filterHWE=0.001, filterMind=0.1, filterMAF=0.05)
 }

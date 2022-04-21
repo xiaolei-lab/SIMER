@@ -94,9 +94,9 @@ Build date: May 26, 2021
 Last update: Aug 23, 2021
 }
 \examples{
-out <- tempfile("outfile")
+options(simer.OutputLog2File = FALSE)
 filePhe <- system.file("extdata", "phenotype.txt", package = "simer")
-filePhe <- simer.Data.Pheno(filePhe = filePhe, out = out, verbose = TRUE)
+filePhe <- simer.Data.Pheno(filePhe = filePhe, out = tempfile("outfile"))
 }
 \author{
 Dong Yin

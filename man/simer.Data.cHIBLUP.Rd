@@ -5,12 +5,11 @@
 \title{simer.Data.cHIBLUP: The function of calling HIBLUP software of C version
 Author: Dong Yin
 Build date: June 28, 2021
-Last update: Aug 25, 2021}
+Last update: Apr 21, 2022}
 \usage{
 simer.Data.cHIBLUP(
-  planPhe,
-  fileMVP = NULL,
-  filePed = NULL,
+  SP = NULL,
+  jsonList = NULL,
   mode = "A",
   vc.method = "AI",
   ncpus = 10,
@@ -18,11 +17,9 @@ simer.Data.cHIBLUP(
 )
 }
 \arguments{
-\item{planPhe}{breeding plans about phenotype}
+\item{SP}{a list of all simulation parameters}
 
-\item{fileMVP}{Genotype in MVP format}
-
-\item{filePed}{the pedigree files, it can be a vector}
+\item{jsonList}{the list of json parameters}
 
 \item{mode}{'A' or 'AD', Additive effect model or Additive and Dominance mode}
 
@@ -39,25 +36,10 @@ a list of gebv
 simer.Data.cHIBLUP: The function of calling HIBLUP software of C version
 Author: Dong Yin
 Build date: June 28, 2021
-Last update: Aug 25, 2021
+Last update: Apr 21, 2022
 }
 \examples{
 jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
-
-# prepare genotype data
-genoPath <- jsonList$genotype
-genoFiles <- list.files(genoPath)
-fileMVP <- grep(pattern = "geno.desc", genoFiles, value = TRUE)
-fileMVP <- file.path(genoPath, fileMVP)
-fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
-
-# prepare pedigree data
-filePed <- jsonList$pedigree
-
-# prepare phenotype data
-planPhe <- jsonList$analysis_plan
-
-# call HIBLUP
-# gebvs <- simer.Data.cHIBLUP(planPhe = planPhe, fileMVP, filePed)
+# gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
 }

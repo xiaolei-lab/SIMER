@@ -12,16 +12,15 @@
 
 
 logging.initialize <- function(module, outpath) {
-    file <- NULL
-    if (options("simer.OutputLog2File") == TRUE) {
+  file <- NULL
+  if (options("simer.OutputLog2File") == TRUE) {
     now <- Sys.time()
     file <- paste(module, format(now, "%Y%m%d_%H%M%S"), "log", sep = ".")
     file <- file.path(outpath, file)
-    }
-    
-    assign("logging.file", file, envir = package.env)
+  }
+  
+  assign("logging.file", file, envir = package.env)
 }
-
 
 #' Print or write log
 #'
@@ -38,15 +37,61 @@ logging.initialize <- function(module, outpath) {
 #' @examples
 #' logging.log('simer')
 logging.log <- function(..., file = NULL, sep = " ", fill = FALSE, labels = NULL, verbose = TRUE) {
-    if (verbose) {
-        cat(..., sep = sep, fill = fill, labels = labels)
+  if (verbose) {
+    cat(..., sep = sep, fill = fill, labels = labels)
+  }
+  
+  if (is.null(file)) {
+    try(file <- get("logging.file", envir = package.env), silent = TRUE)
+  }
+  
+  if (!is.null(file)) {
+    cat(..., file = file, sep = sep, fill = fill, labels = labels, append = TRUE)
+  }
+}
+
+#' Print things into file
+#'
+#' Build date: Feb 7, 2020
+#' Last update: Feb 7, 2020
+#' by using base::print
+#'
+#' @author Dong Yin
+#'
+#' @param x a matrix or a list
+#' @param file output file name
+#' @param append ogical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file
+#' @param verbose whether to print details
+#'
+#' @return print in the screen
+#' @export
+#'
+#' @examples
+#' x <- list(a = "a", b = "b")
+#' simer.print(x)
+logging.print <- function(x, file = NULL, append = TRUE, verbose = TRUE) {
+  if (verbose) {
+    if (is.numeric(x) & is.vector(x)) {
+      if (length(x) <= 10) {
+        cat("", x, "\n")
+      } else {
+        cat("", x[1:10], "...(more IDs in the logging file)\n")
+      }
+    } else {
+      print(x)
     }
     
     if (is.null(file)) {
-        try(file <- get("logging.file", envir = package.env), silent = TRUE)
+      try(file <- get("logging.file", envir = package.env), silent = TRUE)
     }
-    
     if (!is.null(file)) {
-        cat(..., file = file, sep = sep, fill = fill, labels = labels, append = TRUE)
+      sink(file = file, append = append)
+      if (is.numeric(x) & is.vector(x)) {
+        cat("", x, "\n")
+      } else {
+        print(x)
+      }
+      sink()
     }
+  }
 }
