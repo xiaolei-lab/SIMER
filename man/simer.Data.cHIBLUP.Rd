@@ -41,5 +41,6 @@ Last update: Apr 21, 2022
 \examples{
 jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
+# gebvs <- simer.Data.cHIBLUP(SP = SP)
 # gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
 }

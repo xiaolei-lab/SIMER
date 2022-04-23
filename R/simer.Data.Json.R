@@ -19,7 +19,7 @@ JsonQC <- function(jsonFile, ncpus = 0, verbose=TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
   outpath <- dirname("simer")
-  out <- NULL
+  out <- "simer.qc"
   
   # check genotype parameters
   genoPath <- jsonList$genotype
@@ -105,7 +105,7 @@ JsonModel <- function(jsonFile, buildModel = TRUE, buildIndex = TRUE, ncpus = 10
   newJsonFile <- paste0(substr(jsonFile, 1, nchar(jsonFile)-5), ".model.json")
   newJson <- rjson::toJSON(jsonList)
   cat(newJson, file = newJsonFile)
-
+  
   ## step 3. construct selection index
   if (buildIndex) {
     jsonList <- simer.Data.SELIND(jsonList = jsonList, ncpus = ncpus, verbose = verbose)

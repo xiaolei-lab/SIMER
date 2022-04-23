@@ -448,19 +448,11 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' Write files of simer
 #'
 #' Build date: Jan 7, 2019
-#' Last update: Oct 16, 2019
+#' Last update: Apr 21, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye
-#' @param geno genotype matrix of population
-#' @param map map information of markers
-#' @param out.geno.index indice of individuals outputting genotype
-#' @param out.pheno.index indice of individuals outputting phenotype
-#' @param out prefix of output file name
-#' @param outpath path of output files
-#' @param out.format format of output, "numeric" or "plink"
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters
 #'
 #' @return None
 #' @export
@@ -491,6 +483,13 @@ write.file <- function(SP) {
     return(ncol(SP$geno$pop.geno[[i]]) / incols)
   })[out.geno.gen]
   pop.ind <- sum(pop.inds)
+  
+  if (max(out.geno.gen) > SP$reprod$pop.gen) {
+    stop("'out.geno.gen' should be not more than 'pop.gen'!")
+  }
+  if (max(out.pheno.gen) > SP$reprod$pop.gen) {
+    stop("'out.pheno.gen' should be not more than 'pop.gen'!")
+  }
   
   if (out.format == "numeric") {
     outpath = paste0(outpath, .Platform$file.sep, pop.ind, "_Simer_Data_numeric")
@@ -523,9 +522,15 @@ write.file <- function(SP) {
   pop.inds <- Reduce("+", pop.inds, accumulate = TRUE)
   pop.inds <- c(0, pop.inds[-length(pop.inds)]) + 1
   for (i in 1:length(out.geno.gen)) {
-    BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i])
+    if (incols == 1) {
+      BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i])
+    } else {
+      Mat2BigMat(geno.total@address, geno.cvt1(SP$geno$pop.geno[[out.geno.gen[i]]][]), op = pop.inds[i])
+    }
   }
   
+  SP$global$useAllGeno <- TRUE
+  SP <- phenotype(SP)
   pheno.total <- do.call(rbind, lapply(out.pheno.gen, function(i) {
     return(SP$pheno$pop[[i]])
   }))
@@ -538,7 +543,10 @@ write.file <- function(SP) {
     }
       
   } else if (out.format == "plink") {
-    MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.total[, 1, drop = FALSE], out = file.path(directory.rep, "mvp.plink"), verbose = verbose)
+    if (length(out.geno.gen) != length(out.pheno.gen) || any(out.geno.gen != out.pheno.gen)) {
+      stop("'out.geno.gen should be same as 'out.pheno.gen when using 'plink' format!")
+    }
+    MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.total[, 1, drop = FALSE], out = file.path(directory.rep, out), verbose = verbose)
     remove_bigmatrix(file.path(directory.rep, out))
     geno.total <- 0
   }
@@ -564,7 +572,7 @@ write.file <- function(SP) {
 #' @export
 #'
 #' @examples
-#' selPath <- system.file("extdata", "01breeding_plan", package = "simer")
+#' selPath <- system.file("extdata", "04breeding_plan", package = "simer")
 #' filename <- file.path(selPath, "breeding_plan01.txt")
 #' simer.show.file(filename = filename, verbose = TRUE)
 simer.show.file <- function(filename = NULL, verbose = TRUE) {

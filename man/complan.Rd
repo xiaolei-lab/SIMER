@@ -4,26 +4,10 @@
 \alias{complan}
 \title{Read and compare breeding plans}
 \usage{
-complan(
-  SP = NULL,
-  simls = NULL,
-  FR = NULL,
-  index.wt = c(0.5, 0.5),
-  decr = TRUE,
-  selPath = NULL,
-  verbose = TRUE
-)
+complan(SP = NULL, selPath = NULL, verbose = TRUE)
 }
 \arguments{
 \item{SP}{a list of all simulation parameters}
-
-\item{simls}{a list with all simer result information}
-
-\item{FR}{list of fixed effects, random effects, and their combination}
-
-\item{index.wt}{economic weights of selection index method, its length should equals to the number of traits}
-
-\item{decr}{whether to sorting with decreasing}
 
 \item{selPath}{the path of breeding_plan}
 
@@ -38,20 +22,22 @@ Last update: Jul 31, 2019
 }
 \examples{
 pop.env <- list(
-  F1 = list(
+  F1 = list( # fixed effect 1
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
   ), 
-  F2 = list(
+  F2 = list( # fixed effect 2
     level = c("d1", "d2", "d3"),
     eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
   ),
-  R1 = list(
+  R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
     ratio = list(tr1 = 0.1, tr2 = 0.1)
   )
 )
 SP <- param.simer(
+  out.format = "plink",
+  outpath = tempdir(),
   qtn.num = diag(10, 2),
   pop.env = pop.env,
   phe.model = list(
@@ -60,14 +46,11 @@ SP <- param.simer(
   )
 )
 
-SP <- simer(SP, outpath = "/home/yindong/Desktop")
+SP <- simer(SP)
 
 selPath <- system.file("extdata", "04breeding_plan", package = "simer")
 
 # follow code can be run only if you have installd hiblup package
-# goal.plan <- complan(simls = simer.list, FR = FR, index.wt = c(0.5, 0.5), 
-#                      decr = TRUE, selPath = selPath, verbose = TRUE)
-# str(goal.plan)
 }
 \author{
 Dong Yin

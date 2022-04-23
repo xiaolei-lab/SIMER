@@ -317,7 +317,7 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
     }
     
     gmt.comb <- rep(rep(gmt.comb, each = 2), times = prog/2)
-    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, ncpus = 0)
+    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
     
     ped.sir <- rep(rep(ped.dam, each = 2), times = prog/2)
     ped.dam <- rep(rep(ped.dam, each = 2), times = prog/2)

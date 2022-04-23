@@ -7,30 +7,14 @@
 write.file(SP)
 }
 \arguments{
-\item{pop}{population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye}
-
-\item{geno}{genotype matrix of population}
-
-\item{map}{map information of markers}
-
-\item{out.geno.index}{indice of individuals outputting genotype}
-
-\item{out.pheno.index}{indice of individuals outputting phenotype}
-
-\item{out}{prefix of output file name}
-
-\item{outpath}{path of output files}
-
-\item{out.format}{format of output, "numeric" or "plink"}
-
-\item{verbose}{whether to print detail}
+\item{SP}{a list of all simulation parameters}
 }
 \value{
 None
 }
 \description{
 Build date: Jan 7, 2019
-Last update: Oct 16, 2019
+Last update: Apr 21, 2022
 }
 \examples{
 outpath <- tempdir()

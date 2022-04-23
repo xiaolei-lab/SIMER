@@ -1,1 +1,1 @@
-simdata: rawgeno input.map userped
+simdata: pop.geno pop.map

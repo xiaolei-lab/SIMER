@@ -25,7 +25,7 @@ by using base::print
 }
 \examples{
 x <- list(a = "a", b = "b")
-simer.print(x)
+logging.print(x)
 }
 \author{
 Dong Yin

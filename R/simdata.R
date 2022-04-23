@@ -15,25 +15,25 @@
 
 #' Raw genotype matrix from outside in simdata
 #'
-#' @name rawgeno
+#' @name pop.geno
 #'
 #' @docType data
 #'
 #' @usage data(simdata)
 #'
-#' @format big.matrix
+#' @format matrix
 #'
 #' @keywords datasets
 #'
 #' @examples
 #' data(simdata)
-#' dim(rawgeno)
-#' head(rawgeno)
-"rawgeno"
+#' dim(pop.geno)
+#' head(pop.geno)
+"pop.geno"
 
 #' Map file from outside in simdata
 #'
-#' @name input.map
+#' @name pop.map
 #'
 #' @docType data
 #'
@@ -45,24 +45,6 @@
 #'
 #' @examples
 #' data(simdata)
-#' dim(input.map)
-#' head(input.map)
-"input.map"
-
-#' User-specific pedigree in simdata
-#'
-#' @name userped
-#'
-#' @docType data
-#'
-#' @usage data(simdata)
-#'
-#' @format list
-#'
-#' @keywords datasets
-#'
-#' @examples
-#' data(simdata)
-#' dim(userped)
-#' head(userped)
-"userped"
+#' dim(pop.map)
+#' head(pop.map)
+"pop.map"

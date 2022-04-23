@@ -19,7 +19,7 @@ Build date: Feb 11, 2020
 Last update: Feb 11, 2020
 }
 \examples{
-selPath <- system.file("extdata", "01breeding_plan", package = "simer")
+selPath <- system.file("extdata", "04breeding_plan", package = "simer")
 filename <- file.path(selPath, "breeding_plan01.txt")
 simer.show.file(filename = filename, verbose = TRUE)
 }

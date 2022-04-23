@@ -791,7 +791,7 @@ simer.Data.Pheno <- function(filePhe, filePed=NULL, out=NULL, planPhe=NULL, pheC
 #' Build date: July 17, 2021
 #' Last update: Apr 21, 2022
 #' 
-#' @param SP a list of all simulation parameters
+#' @param jsonList the list of json parameters
 #' @param header the header of file
 #' @param sep the separator of file
 #' @param ncpus the number of threads
@@ -864,6 +864,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
       if (verbose) {
         sink()
       }
+      
       envName <- names(slmPhe$model)[-1]
       covariates <- covariates[covariates %in% envName]
       fixedEffects <- fixedEffects[fixedEffects %in% envName]
@@ -914,9 +915,39 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
 #' @examples
 #' jsonFile <- system.file("extdata", "demo2.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
+#' # gebvs <- simer.Data.cHIBLUP(SP = SP)
 #' # gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
 simer.Data.cHIBLUP <- function(SP = NULL, jsonList = NULL, mode='A', vc.method = "AI", ncpus = 10, verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
+  
+  if (!is.null(SP)) {
+    replication <- SP$global$replication
+    out <- SP$global$out
+    outpath <- SP$global$outpath
+    out.format <- SP$global$out.format
+    incols <- SP$geno$incols
+    pop.inds <- sapply(1:SP$reprod$pop.gen, function(i) {
+      return(ncol(SP$geno$pop.geno[[i]]) / incols)
+    })
+    pop.ind <- sum(pop.inds)
+    outpath = paste0(outpath, .Platform$file.sep, pop.ind, "_Simer_Data_plink")
+    directory.rep <- paste0(outpath, .Platform$file.sep, "replication", replication)
+    fileMVP <- file.path(directory.rep, out)
+    filePed <- paste0(fileMVP, ".ped")
+    nTrait <- length(SP$pheno$model)
+    job_traits <- lapply(1:nTrait, function(i) {
+      
+    })
+    planPhe <- list(list(
+      job_name = "EBV Model Demo",
+      sample_info = paste0(fileMVP, ".phe"),
+      repeated_records = ifelse(SP$pheno$pop.rep == 1, FALSE, TRUE),
+      multi_trait = ifelse(nTrait == 1, FALSE, TRUE),
+      random_ratio = 0.05,
+      
+    ))
+    planPhe <- jsonList$analysis_plan
+  }
   
   if (!is.null(jsonList)) {
     genoPath <- jsonList$genotype
@@ -940,7 +971,7 @@ simer.Data.cHIBLUP <- function(SP = NULL, jsonList = NULL, mode='A', vc.method =
       map = map, 
       pheno = pheno[, c(1, match(traits[1], names(pheno)))],
       out = fileMVP,
-      verbose = TRUE
+      verbose = verbose
     )
   }
   
@@ -1100,8 +1131,6 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose=TRUE) {
   fileMVP <- substr(fileMVP, 1, nchar(fileMVP)-10)
   filePed <- jsonList$pedigree
   planPhe <- jsonList$analysis_plan
-  
-  jsonList <- simer.Data.Env(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
   
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
   str1 <- gsub("^\\s+|\\s+$", "", str1)

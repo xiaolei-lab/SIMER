@@ -16,6 +16,8 @@ simer.Data.Env(
 )
 }
 \arguments{
+\item{jsonList}{the list of json parameters}
+
 \item{header}{the header of file}
 
 \item{sep}{the separator of file}
@@ -23,8 +25,6 @@ simer.Data.Env(
 \item{ncpus}{the number of threads}
 
 \item{verbose}{whether to print detail.}
-
-\item{SP}{a list of all simulation parameters}
 }
 \value{
 the best effects for EBV model

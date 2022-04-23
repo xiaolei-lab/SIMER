@@ -1,7 +1,7 @@
 {
     "genotype": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/01bigmemory"],
     "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/pedigree.txt"],
-    "selection_index": "100 - 3 * 校正100kg日增重 + 3 * 结测背膘厚",
+    "selection_index": "100 - 3 * T1 + 3 * T2",
     "quality_control_plan": {
         "genotype_quality_control":{
             "filter_geno": 0.1,
@@ -24,38 +24,28 @@
                 "multi_trait": true,
                 "job_traits": [
                     {
-                        "traits": "BF1",
-                        "definition": "BF1",
+                        "traits": "T1",
+                        "definition": "T1",
                         "range": []
                     },
                     {
-                        "traits": "BF2",
-                        "definition": "BF2",
+                        "traits": "T2",
+                        "definition": "T2",
                         "range": []
                     },
                     {
-                        "environments": "sex",
-                        "definition": "sex",
+                        "environments": "F1",
+                        "definition": "F1",
                         "range": []
                     },
                     {
-                        "environments": "diet",
-                        "definition": "diet",
+                        "environments": "F2",
+                        "definition": "F2",
                         "range": []
                     },
                     {
-                        "environments": "season",
-                        "definition": "season",
-                        "range": []
-                    },
-                    {
-                        "environments": "PE",
-                        "definition": "PE",
-                        "range": []
-                    },
-                    {
-                        "environments": "litter",
-                        "definition": "litter",
+                        "environments": "R1",
+                        "definition": "R1",
                         "range": []
                     }
                 ]

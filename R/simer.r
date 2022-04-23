@@ -45,13 +45,10 @@ simer <- function(SP) {
   # unfold global parameters
   replication <- SP$global$replication
   seed.sim <- SP$global$seed.sim
-  incols <- SP$global$incols
-  outcols <- SP$global$outcols
   out <- SP$global$out
   outpath <- SP$global$outpath
   ncpus <- SP$global$ncpus
   verbose <- SP$global$verbose
-  SP$geno$incols <- incols
   
   # initialize logging
   if (!is.null(outpath)) {
@@ -69,7 +66,6 @@ simer <- function(SP) {
   op <- Sys.time()
   logging.log(" SIMER BEGIN AT", as.character(op), "\n", verbose = verbose)
   set.seed(seed.sim)
-  if (incols == 1) outcols <- 1
   
   ################### DATA SIMULATION ###################
   SP <- annotation(SP = SP, verbose = verbose)

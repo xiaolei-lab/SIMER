@@ -14,9 +14,12 @@
 logging.initialize <- function(module, outpath) {
   file <- NULL
   if (options("simer.OutputLog2File") == TRUE) {
-    now <- Sys.time()
-    file <- paste(module, format(now, "%Y%m%d_%H%M%S"), "log", sep = ".")
-    file <- file.path(outpath, file)
+    try(file <- get("logging.file", envir = package.env), silent = TRUE)
+    if (is.null(file)) {
+      now <- Sys.time()
+      file <- paste(module, format(now, "%Y%m%d_%H%M%S"), "log", sep = ".")
+      file <- file.path(outpath, file)
+    }
   }
   
   assign("logging.file", file, envir = package.env)
@@ -68,7 +71,7 @@ logging.log <- function(..., file = NULL, sep = " ", fill = FALSE, labels = NULL
 #'
 #' @examples
 #' x <- list(a = "a", b = "b")
-#' simer.print(x)
+#' logging.print(x)
 logging.print <- function(x, file = NULL, append = TRUE, verbose = TRUE) {
   if (verbose) {
     if (is.numeric(x) & is.vector(x)) {

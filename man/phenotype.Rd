@@ -20,15 +20,15 @@ Last update: Feb 23, 2022
 }
 \examples{
 pop.env <- list(
-  F1 = list(
+  F1 = list( # fixed effect 1
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
   ), 
-  F2 = list(
+  F2 = list( # fixed effect 2
     level = c("d1", "d2", "d3"),
     eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
   ),
-  R1 = list(
+  R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
     ratio = list(tr1 = 0.1, tr2 = 0.1)
   )

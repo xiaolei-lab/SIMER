@@ -27,15 +27,15 @@
 #'
 #' @examples
 #' pop.env <- list(
-#'   F1 = list(
+#'   F1 = list( # fixed effect 1
 #'     level = c("1", "2"),
 #'     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
 #'   ), 
-#'   F2 = list(
+#'   F2 = list( # fixed effect 2
 #'     level = c("d1", "d2", "d3"),
 #'     eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
 #'   ),
-#'   R1 = list(
+#'   R1 = list( # random effect 1
 #'     level = c("l1", "l2", "l3"),
 #'     ratio = list(tr1 = 0.1, tr2 = 0.1)
 #'   )
@@ -63,6 +63,10 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
 # Start phenotype
   
   # unfold phenotype parameters
+  useAllGeno <- SP$global$useAllGeno
+  if (is.null(useAllGeno)) {
+    useAllGeno <- FALSE
+  }
   pop <- SP$pheno$pop
   pop.ind <- SP$pheno$pop.ind
   if (is.null(pop) & !is.null(pop.ind)) {
@@ -73,13 +77,19 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
     pop <- SP$pheno$pop
     SP$pheno$pop <- list(pop)
   } else {
-    pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    if (useAllGeno) {
+      pop <- do.call(rbind, lapply(SP$pheno$pop, function(p) {
+        return(p[, 1:7])
+      }))
+    } else {
+      pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
+    }
   }
   pop.rep <- SP$pheno$pop.rep
   pop.rep.bal <- SP$pheno$pop.rep.bal
   pop.map <- SP$map$pop.map
   pop.map.GxG <- SP$map$pop.map.GxG
-  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  pop.geno <- SP$geno$pop.geno
   incols <- SP$geno$incols
   pop.env <- SP$pheno$pop.env
   phe.model <- SP$pheno$phe.model
@@ -100,12 +110,6 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   }
   
   pop.ind <- nrow(pop)
-  if (!is.null(pop.geno)) {
-    if (pop.ind != incols * ncol(pop.geno)) {
-      stop("The individual number should be same in both 'pop' and 'pop.geno'!")
-    }
-    pop.marker <- nrow(pop.geno)
-  }
   
   # add environmental factor
   if (!is.null(pop.env)) {
@@ -153,7 +157,16 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         qtn.pos.add[[i]] <- which(!is.na(qtn.eff))
         pop.snp.add[[i]] <- pop.map[qtn.pos.add[[i]], 1]
         qtn.eff <- qtn.eff[qtn.pos.add[[i]]]
-        pop.qtn.add[[i]] <- pop.geno[qtn.pos.add[[i]], ]
+        if (useAllGeno) {
+          pop.qtn.add[[i]] <- do.call(cbind, lapply(1:length(pop.geno), function(k) {
+            return(pop.geno[[k]][qtn.pos.add[[i]], ])
+          }))
+        } else {
+          pop.qtn.add[[i]] <- pop.geno[[length(pop.geno)]][qtn.pos.add[[i]], ]
+        }
+        if (pop.ind != ncol(pop.qtn.add[[i]]) / incols) {
+          stop("The individual number should be same in both 'pop' and 'pop.qtn.add'!")
+        }
         if (ncol(pop.qtn.add[[i]]) == 2 * pop.ind) {
           pop.qtn.add[[i]] <- geno.cvt1(pop.qtn.add[[i]])
         }
@@ -177,9 +190,18 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
           stop("No dominant effect in map!")
         }
         qtn.pos.dom[[i]] <- which(!is.na(qtn.eff))
-        qtn.eff <- qtn.eff[qtn.pos.dom[[i]]]
-        pop.qtn.dom[[i]] <- pop.geno[qtn.pos.dom[[i]], ]
         pop.snp.dom[[i]] <- pop.map[qtn.pos.dom[[i]], 1]
+        qtn.eff <- qtn.eff[qtn.pos.dom[[i]]]
+        if (useAllGeno) {
+          pop.qtn.dom[[i]] <- do.call(cbind, lapply(1:length(pop.geno), function(k) {
+            return(pop.geno[[k]][qtn.pos.dom[[i]], ])
+          }))
+        } else {
+          pop.qtn.dom[[i]] <- pop.geno[[length(pop.geno)]][qtn.pos.dom[[i]], ]
+        }
+        if (pop.ind != ncol(pop.qtn.dom[[i]]) / incols) {
+          stop("The individual number should be same in both 'pop' and 'pop.qtn.dom'!")
+        }
         if (ncol(pop.qtn.dom[[i]]) == 2 * pop.ind) {
           pop.qtn.dom[[i]] <- geno.cvt1(pop.qtn.dom[[i]])
         }
@@ -405,8 +427,16 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   pop <- do.call(rbind, rep(list(pop), pop.rep))
   pop <- cbind(pop, phe, TBV, TGV, phe.eff)
   
-  SP$pheno$pop[[length(SP$pheno$pop)]] <- pop
-  names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  if (useAllGeno) {
+    cat("ok1\n")
+    for (i in 1:length(SP$pheno$pop)) {
+      SP$pheno$pop[[i]] <- subset(pop, gen == i)
+    }
+  } else {
+    SP$pheno$pop[[length(SP$pheno$pop)]] <- pop
+    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+  }
+  
   return(SP)
 }
 

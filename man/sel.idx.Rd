@@ -26,7 +26,7 @@ scheme <- data.frame(
     sex = rep("1", 3), 
     stringsAsFactors = FALSE
 )
-pop <- getpop(nind = 100, from = 1, ratio = 0.5)
+pop <- generate.pop(pop.ind = 100)
 pop$gen <- rep(1:5, each = 20)
 out.idx <- sel.idx(scheme = scheme, pop = pop)
 }

@@ -395,14 +395,13 @@ param.global <- function(SP = NULL, ...) {
   SP.global <- list(
     replication = 1,
     seed.sim = runif(1, 0, 100),
-    incols = 1, 
-    outcols = 1, 
     out = "simer", 
     outpath = NULL,
     out.format = "numeric",
     pop.gen = 2,
     out.geno.gen = 1:2,
     out.pheno.gen = 1:2,
+    useAllGeno = FALSE,
     ncpus = 0,
     verbose = TRUE
   )

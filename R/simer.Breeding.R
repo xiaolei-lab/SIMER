@@ -19,10 +19,6 @@
 #' @author Dong Yin
 #'
 #' @param SP a list of all simulation parameters
-#' @param simls a list with all simer result information
-#' @param FR list of fixed effects, random effects, and their combination
-#' @param index.wt economic weights of selection index method, its length should equals to the number of traits
-#' @param decr whether to sorting with decreasing
 #' @param selPath the path of breeding_plan
 #' @param verbose whether to print details
 #'
@@ -31,20 +27,22 @@
 #'
 #' @examples
 #' pop.env <- list(
-#'   F1 = list(
+#'   F1 = list( # fixed effect 1
 #'     level = c("1", "2"),
 #'     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
 #'   ), 
-#'   F2 = list(
+#'   F2 = list( # fixed effect 2
 #'     level = c("d1", "d2", "d3"),
 #'     eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
 #'   ),
-#'   R1 = list(
+#'   R1 = list( # random effect 1
 #'     level = c("l1", "l2", "l3"),
 #'     ratio = list(tr1 = 0.1, tr2 = 0.1)
 #'   )
 #' )
 #' SP <- param.simer(
+#'   out.format = "plink",
+#'   outpath = tempdir(),
 #'   qtn.num = diag(10, 2),
 #'   pop.env = pop.env,
 #'   phe.model = list(
@@ -53,15 +51,12 @@
 #'   )
 #' )
 #' 
-#' SP <- simer(SP, outpath = "/home/yindong/Desktop")
+#' SP <- simer(SP)
 #' 
 #' selPath <- system.file("extdata", "04breeding_plan", package = "simer")
 #' 
 #' # follow code can be run only if you have installd hiblup package
-#' # goal.plan <- complan(simls = simer.list, FR = FR, index.wt = c(0.5, 0.5), 
-#' #                      decr = TRUE, selPath = selPath, verbose = TRUE)
-#' # str(goal.plan)
-complan <- function(SP = NULL, simls=NULL, FR=NULL, index.wt=c(0.5, 0.5), decr = TRUE, selPath=NULL, verbose=TRUE) {
+complan <- function(SP = NULL, selPath=NULL, verbose=TRUE) {
   
   if (!dir.exists(selPath)) stop("Please input a right selection path!")
   
@@ -462,7 +457,7 @@ num2num <- function(nums) {
 #'     sex = rep("1", 3), 
 #'     stringsAsFactors = FALSE
 #' )
-#' pop <- getpop(nind = 100, from = 1, ratio = 0.5)
+#' pop <- generate.pop(pop.ind = 100)
 #' pop$gen <- rep(1:5, each = 20)
 #' out.idx <- sel.idx(scheme = scheme, pop = pop)
 sel.idx <- function(scheme, pop) {
