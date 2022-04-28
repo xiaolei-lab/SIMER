@@ -2,27 +2,50 @@
 % Please edit documentation in R/simer.Genotype.r
 \name{annotation}
 \alias{annotation}
-\title{Get map with annotation}
+\title{Annotation simulation}
 \usage{
 annotation(SP, verbose = TRUE)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{verbose}{whether to print detail}
+\item{verbose}{whether to print detail.}
 }
 \value{
-a map of marker information
+the function returns a list containing
+\describe{
+\item{$map$pop.map}{the map data with annotation information.}
+\item{$map$qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
+\item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
+\item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
+\item{$map$qtn.sd}{the standard deviations for normal distribution.}
+\item{$map$qtn.prob}{the probability of success for geometric distribution.}
+\item{$map$qtn.shape}{the shape parameter for gamma distribution.}
+\item{$map$qtn.scale}{the scale parameter for gamma distribution.}
+\item{$map$qtn.shape1}{the shape1 parameter for beta distribution.}
+\item{$map$qtn.shape2}{the shape2 parameter for beta distribution.}
+\item{$map$qtn.ncp}{the ncp parameter for beta distribution.}
+\item{$map$qtn.spot}{the QTN distribution probability in each block.}
+\item{$map$len.block}{the block length.}
+\item{$map$maf}{the maf threshold, markers less than this threshold will be exclude.}
+\item{$map$recom.spot}{whether to generate recombination events.}
+\item{$map$range.hot}{the recombination times range in the hot spot.}
+\item{$map$range.cold}{the recombination times range in the cold spot.}
+}
 }
 \description{
+Generating a map with annotation information
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Mar 2, 2022
+Last update: Apr 28, 2022
 }
 \examples{
-SP <- param.annot(qtn.num = 10,
-                  qtn.model = "A + D + A:D")
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+
+# Run annotation simulation
 SP <- annotation(SP)
-head(SP$map$pop.map.GxG)
 }
 \author{
 Dong Yin

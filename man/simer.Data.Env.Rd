@@ -35,7 +35,7 @@ the function returns a list containing
 }
 }
 \description{
-To find appropriate fixed effects, covariates, and random effects
+To find appropriate fixed effects, covariates, and random effects.
 }
 \details{
 Build date: July 17, 2021

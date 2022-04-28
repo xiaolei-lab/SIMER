@@ -43,7 +43,7 @@ the function returns files
 }
 }
 \description{
-Data quality control for phenotype data
+Data quality control for phenotype data.
 }
 \details{
 Build date: June 13, 2021

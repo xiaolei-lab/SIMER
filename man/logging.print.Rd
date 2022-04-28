@@ -2,26 +2,28 @@
 % Please edit documentation in R/simer.Logging.R
 \name{logging.print}
 \alias{logging.print}
-\title{Print things into file}
+\title{Logging printer}
 \usage{
 logging.print(x, file = NULL, append = TRUE, verbose = TRUE)
 }
 \arguments{
-\item{x}{a matrix or a list}
+\item{x}{a matrix or a list.}
 
-\item{file}{output file name}
+\item{file}{the filename of output file.}
 
-\item{append}{ogical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file}
+\item{append}{logical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file.}
 
-\item{verbose}{whether to print details}
+\item{verbose}{whether to print details.}
 }
 \value{
-print in the screen
+print in the screen.
 }
 \description{
+Print R object information into file.
+}
+\details{
 Build date: Feb 7, 2020
-Last update: Feb 7, 2020
-by using base::print
+Last update: Apr 28, 2022
 }
 \examples{
 x <- list(a = "a", b = "b")

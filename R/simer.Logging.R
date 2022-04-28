@@ -25,16 +25,24 @@ logging.initialize <- function(module, outpath) {
   assign("logging.file", file, envir = package.env)
 }
 
-#' Print or write log
+#' Logging
+#' 
+#' Print or write log.
+#' 
+#' Build date: Jul 11, 2020
+#' Last update: Apr 28, 2022
 #'
-#' @param ... R objects
-#' @param file A connection, or a character string naming the file to print to. If "" (the default), cat prints to the standard output connection, the console unless redirected by sink. If it is "|cmd", the output is piped to the command given by ‘cmd’, by opening a pipe connection.
+#' @author Dong Yin
+#'
+#' @param ... R objects.
+#' @param file a connection or a character string naming the file to print to. If "" (the default), cat prints to the standard output connection, the console unless redirected by sink. If it is "|cmd", the output is piped to the command given by ‘cmd’, by opening a pipe connection.
 #' @param sep a character vector of strings to append after each element.
 #' @param fill a logical or (positive) numeric controlling how the output is broken into successive lines.
-#' @param labels character vector of labels for the lines printed. Ignored if fill is FALSE.
-#' @param verbose whether to print detail
+#' @param labels a character vector of labels for the lines printed. Ignored if fill is FALSE.
+#' @param verbose whether to print detail.
 #'
-#' @return print information
+#' @return print information.
+#' 
 #' @export
 #'
 #' @examples
@@ -53,20 +61,21 @@ logging.log <- function(..., file = NULL, sep = " ", fill = FALSE, labels = NULL
   }
 }
 
-#' Print things into file
+#' Logging printer
+#' 
+#' Print R object information into file.
 #'
 #' Build date: Feb 7, 2020
-#' Last update: Feb 7, 2020
-#' by using base::print
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param x a matrix or a list
-#' @param file output file name
-#' @param append ogical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file
-#' @param verbose whether to print details
+#' @param x a matrix or a list.
+#' @param file the filename of output file.
+#' @param append logical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file.
+#' @param verbose whether to print details.
 #'
-#' @return print in the screen
+#' @return print in the screen.
 #' @export
 #'
 #' @examples

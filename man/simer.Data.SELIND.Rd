@@ -25,7 +25,7 @@ the function returns a list containing
 }
 }
 \description{
-The function of General Selection Index
+The function of General Selection Index.
 }
 \details{
 Build date: Aug 26, 2021

@@ -2,7 +2,7 @@
 % Please edit documentation in R/simer.Genotype.r
 \name{cal.eff}
 \alias{cal.eff}
-\title{Calculate for genetic effects vector of selected markers}
+\title{QTN genetic effects}
 \usage{
 cal.eff(
   qtn.num = 10,
@@ -17,33 +17,36 @@ cal.eff(
 )
 }
 \arguments{
-\item{qtn.num}{number of QTN}
+\item{qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
 
-\item{qtn.dist}{distribution of QTN's effects with options: "normal", "geometry", "gamma", and "beta"}
+\item{qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
 
-\item{qtn.sd}{standard deviation of different effects}
+\item{qtn.sd}{the standard deviations for normal distribution.}
 
-\item{qtn.prob}{unit effect of geometric distribution}
+\item{qtn.prob}{the probability of success for geometric distribution.}
 
-\item{qtn.shape}{shape of gamma distribution}
+\item{qtn.shape}{the shape parameter for gamma distribution.}
 
-\item{qtn.scale}{scale of gamma distribution}
+\item{qtn.scale}{the scale parameter for gamma distribution.}
 
-\item{qtn.shape1}{non-negative parameters of the Beta distribution}
+\item{qtn.shape1}{the shape1 parameter for beta distribution.}
 
-\item{qtn.shape2}{non-negative parameters of the Beta distribution}
+\item{qtn.shape2}{the shape2 parameter for beta distribution.}
 
-\item{qtn.ncp}{non-centrality parameter}
+\item{qtn.ncp}{the ncp parameter for beta distribution.}
 }
 \value{
-genetic effects vector of selected markers
+a vector of genetic effect.
 }
 \description{
+Calculate for genetic effects vector of selected markers.
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Mar 16, 2022
+Last update: Apr 28, 2022
 }
 \examples{
-eff <- cal.eff(qtn.num = 10, qtn.dist = "norm")
+eff <- cal.eff(qtn.num = 10)
 str(eff)
 }
 \author{

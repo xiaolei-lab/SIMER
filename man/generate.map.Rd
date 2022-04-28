@@ -2,23 +2,26 @@
 % Please edit documentation in R/simer.Genotype.r
 \name{generate.map}
 \alias{generate.map}
-\title{Generate Marker information}
+\title{Marker information}
 \usage{
 generate.map(pop.marker = NULL, num.chr = 18, len.chr = 1.5e+08)
 }
 \arguments{
-\item{pop.marker}{the number of markers}
+\item{pop.marker}{the number of markers.}
 
-\item{num.chr}{the number of chromosomes}
+\item{num.chr}{the number of chromosomes.}
 
-\item{len.chr}{the length of chromosomes}
+\item{len.chr}{the length of chromosomes.}
 }
 \value{
-marker information
+a data frame with marker information.
 }
 \description{
-Build date: Nov 9, 2020
-Last update: Nov 9, 2020
+Generate map data with marker information.
+}
+\details{
+Build date: Mar 19, 2022
+Last update: Apr 28, 2022
 }
 \examples{
 pop.map <- generate.map(pop.marker = 1e4)

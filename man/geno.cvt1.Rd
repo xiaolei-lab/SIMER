@@ -2,19 +2,22 @@
 % Please edit documentation in R/simer.Genotype.r
 \name{geno.cvt1}
 \alias{geno.cvt1}
-\title{Convert genotype matrix from (0, 1) to (0, 1, 2)}
+\title{Genotype code convertor 1}
 \usage{
 geno.cvt1(pop.geno)
 }
 \arguments{
-\item{pop.geno}{genotype matrix of (0, 1)}
+\item{pop.geno}{genotype matrix of (0, 1).}
 }
 \value{
-genotype matrix of (0, 1, 2)
+genotype matrix of (0, 1, 2).
 }
 \description{
+Convert genotype matrix from (0, 1) to (0, 1, 2).
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Jul 30, 2019
+Last update: Apr 28, 2022
 }
 \examples{
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 2)

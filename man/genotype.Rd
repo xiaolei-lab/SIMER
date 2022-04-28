@@ -2,28 +2,41 @@
 % Please edit documentation in R/simer.Genotype.r
 \name{genotype}
 \alias{genotype}
-\title{Generate genotype and editing genotype}
+\title{Genotype simulation}
 \usage{
 genotype(SP = NULL, ncpus = 0, verbose = TRUE)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{ncpus}{the number of threads}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
-\item{verbose}{whether to print detail}
+\item{verbose}{whether to print detail.}
 }
 \value{
-a genotype matrix with block and map information
+the function returns a list containing
+\describe{
+\item{$geno$pop.geno}{the genotype data.}
+\item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+\item{$geno$pop.marker}{the number of markers.}
+\item{$geno$pop.ind}{the number of individuals in the base population.}
+\item{$geno$prob}{the genotype code probability.}
+\item{$geno$rate.mut}{the mutation rate of the genotype data.}
+}
 }
 \description{
+Generating and editing genotype data.
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Feb 20, 2022
+Last update: Apr 28, 2022
 }
 \examples{
+# Generate genotype simulation parameters
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
+
+# Run genotype simulation
 SP <- genotype(SP)
-SP$geno$pop.geno$gen1[1:5, 1:5]
 }
 \author{
 Dong Yin

@@ -53,7 +53,7 @@ the function returns files
 }
 }
 \description{
-Data quality control for pedigree data
+Data quality control for pedigree data.
 }
 \details{
 Build date: May 6, 2021

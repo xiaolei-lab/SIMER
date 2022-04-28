@@ -2,23 +2,26 @@
 % Please edit documentation in R/simer.Genotype.r
 \name{GxG.network}
 \alias{GxG.network}
-\title{Generate genetic interaction effect combination}
+\title{Genetic interaction network}
 \usage{
 GxG.network(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D")
 }
 \arguments{
-\item{pop.map}{the marker information data.}
+\item{pop.map}{the map data with annotation information.}
 
-\item{qtn.pos}{the index of QTNs in the map.}
+\item{qtn.pos}{the index of QTNs in the map data.}
 
-\item{qtn.model}{the genetic effect model of QTN.}
+\item{qtn.model}{the genetic model of QTN such as 'A:D'.}
 }
 \value{
-a dataframe of genetic interaction effect
+a data frame of genetic interaction effect.
 }
 \description{
+Generate genetic interaction effect combination network.
+}
+\details{
 Build date: Mar 19, 2022
-Last update: Mar 19, 2022
+Last update: Apr 28, 2022
 }
 \examples{
 pop.map <- generate.map(pop.marker = 1e4)

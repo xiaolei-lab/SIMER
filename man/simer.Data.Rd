@@ -27,7 +27,7 @@ the function returns a list containing
 }
 }
 \description{
-Make data quality control for genotype, phenotype, and pedigree
+Make data quality control for genotype, phenotype, and pedigree.
 }
 \details{
 Build date: May 26, 2021

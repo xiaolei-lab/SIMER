@@ -41,7 +41,7 @@ the function returns a list containing
 }
 }
 \description{
-Make data quality control by JSON file
+Make data quality control by JSON file.
 }
 \details{
 Build date: Oct 19, 2020

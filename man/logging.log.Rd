@@ -2,7 +2,7 @@
 % Please edit documentation in R/simer.Logging.R
 \name{logging.log}
 \alias{logging.log}
-\title{Print or write log}
+\title{Logging}
 \usage{
 logging.log(
   ...,
@@ -14,24 +14,31 @@ logging.log(
 )
 }
 \arguments{
-\item{...}{R objects}
+\item{...}{R objects.}
 
-\item{file}{A connection, or a character string naming the file to print to. If "" (the default), cat prints to the standard output connection, the console unless redirected by sink. If it is "|cmd", the output is piped to the command given by ‘cmd’, by opening a pipe connection.}
+\item{file}{a connection or a character string naming the file to print to. If "" (the default), cat prints to the standard output connection, the console unless redirected by sink. If it is "|cmd", the output is piped to the command given by ‘cmd’, by opening a pipe connection.}
 
 \item{sep}{a character vector of strings to append after each element.}
 
 \item{fill}{a logical or (positive) numeric controlling how the output is broken into successive lines.}
 
-\item{labels}{character vector of labels for the lines printed. Ignored if fill is FALSE.}
+\item{labels}{a character vector of labels for the lines printed. Ignored if fill is FALSE.}
 
-\item{verbose}{whether to print detail}
+\item{verbose}{whether to print detail.}
 }
 \value{
-print information
+print information.
 }
 \description{
-Print or write log
+Print or write log.
+}
+\details{
+Build date: Jul 11, 2020
+Last update: Apr 28, 2022
 }
 \examples{
 logging.log('simer')
+}
+\author{
+Dong Yin
 }

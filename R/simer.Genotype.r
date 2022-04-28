@@ -11,29 +11,43 @@
 # limitations under the License.
 
 
-#' Generate genotype and editing genotype
+#' Genotype simulation
 #'
+#' Generating and editing genotype data.
+#' 
 #' Build date: Nov 14, 2018
-#' Last update: Feb 20, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #'
-#' @return a genotype matrix with block and map information
+#' @return 
+#' the function returns a list containing
+#' \describe{
+#' \item{$geno$pop.geno}{the genotype data.}
+#' \item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+#' \item{$geno$pop.marker}{the number of markers.}
+#' \item{$geno$pop.ind}{the number of individuals in the base population.}
+#' \item{$geno$prob}{the genotype code probability.}
+#' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
+#' 
+#' # Run genotype simulation
 #' SP <- genotype(SP)
-#' SP$geno$pop.geno$gen1[1:5, 1:5]
 genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 
-# Start genotype
+### Start genotype simulation
   
-  # unfold genotype parameters
+  # genotype parameters
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
   pop.map <- SP$map$pop.map
   incols <- SP$geno$incols
@@ -134,27 +148,53 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Get map with annotation
+#' Annotation simulation
+#'
+#' Generating a map with annotation information
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Mar 2, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param verbose whether to print detail.
 #' 
-#' @return a map of marker information
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$map$pop.map}{the map data with annotation information.}
+#' \item{$map$qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
+#' \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
+#' \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
+#' \item{$map$qtn.sd}{the standard deviations for normal distribution.}
+#' \item{$map$qtn.prob}{the probability of success for geometric distribution.}
+#' \item{$map$qtn.shape}{the shape parameter for gamma distribution.}
+#' \item{$map$qtn.scale}{the scale parameter for gamma distribution.}
+#' \item{$map$qtn.shape1}{the shape1 parameter for beta distribution.}
+#' \item{$map$qtn.shape2}{the shape2 parameter for beta distribution.}
+#' \item{$map$qtn.ncp}{the ncp parameter for beta distribution.}
+#' \item{$map$qtn.spot}{the QTN distribution probability in each block.}
+#' \item{$map$len.block}{the block length.}
+#' \item{$map$maf}{the maf threshold, markers less than this threshold will be exclude.}
+#' \item{$map$recom.spot}{whether to generate recombination events.}
+#' \item{$map$range.hot}{the recombination times range in the hot spot.}
+#' \item{$map$range.cold}{the recombination times range in the cold spot.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
-#' SP <- param.annot(qtn.num = 10,
-#'                   qtn.model = "A + D + A:D")
+#' # Generate annotation simulation parameters
+#' SP <- param.annot(qtn.num = 10)
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
-#' head(SP$map$pop.map.GxG)
 annotation <- function(SP, verbose = TRUE) {
+
+### Start annotation simulation
   
-  # unfold map parameters
+  # annotation parameters
   pop.map <- SP$map$pop.map
   pop.geno <- SP$geno$pop.geno
   qtn.num <- SP$map$qtn.num
@@ -247,7 +287,7 @@ annotation <- function(SP, verbose = TRUE) {
     pop.map$MAF <- MAF
   }
   
-  # select some markers as QTNs
+  # select markers as QTNs
   nTrait <- 1
   if (is.matrix(qtn.num)) {
     nTrait <- nrow(qtn.num)
@@ -323,33 +363,36 @@ annotation <- function(SP, verbose = TRUE) {
   return(SP)
 }
 
-#' Calculate for genetic effects vector of selected markers
-#'
+#' QTN genetic effects
+#' 
+#' Calculate for genetic effects vector of selected markers.
+#' 
 #' Build date: Nov 14, 2018
-#' Last update: Mar 16, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param qtn.num number of QTN
-#' @param qtn.dist distribution of QTN's effects with options: "normal", "geometry", "gamma", and "beta"
-#' @param qtn.sd standard deviation of different effects
-#' @param qtn.prob unit effect of geometric distribution
-#' @param qtn.shape shape of gamma distribution
-#' @param qtn.scale scale of gamma distribution
-#' @param qtn.shape1 non-negative parameters of the Beta distribution
-#' @param qtn.shape2 non-negative parameters of the Beta distribution
-#' @param qtn.ncp non-centrality parameter
-#'
-#' @return genetic effects vector of selected markers
+#' @param qtn.num integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.
+#' @param qtn.dist the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.
+#' @param qtn.sd the standard deviations for normal distribution.
+#' @param qtn.prob the probability of success for geometric distribution.
+#' @param qtn.shape the shape parameter for gamma distribution.
+#' @param qtn.scale the scale parameter for gamma distribution.
+#' @param qtn.shape1 the shape1 parameter for beta distribution.
+#' @param qtn.shape2 the shape2 parameter for beta distribution.
+#' @param qtn.ncp the ncp parameter for beta distribution.
+#' 
+#' @return a vector of genetic effect.
+#' 
 #' @export
 #'
 #' @examples
-#' eff <- cal.eff(qtn.num = 10, qtn.dist = "norm")
+#' eff <- cal.eff(qtn.num = 10)
 #' str(eff)
 cal.eff <- function(qtn.num = 10, qtn.dist = "normal", qtn.sd = 1, qtn.prob = 0.5, qtn.shape = 1, qtn.scale = 1, qtn.shape1 = 1, qtn.shape2 = 1, qtn.ncp = 0) {
 
   if (sum(qtn.num) == 0) return(0)
-  # Judge which kind of distribution of QTN
+  
   qtn.eff <- NULL
   for (nq in 1:length(qtn.num)) {
     if (qtn.dist[nq] == "norm") {
@@ -368,18 +411,21 @@ cal.eff <- function(qtn.num = 10, qtn.dist = "normal", qtn.sd = 1, qtn.prob = 0.
   return(qtn.eff)
 }
 
-#' Generate genetic interaction effect combination
+#' Genetic interaction network
 #'
+#' Generate genetic interaction effect combination network.
+#' 
 #' Build date: Mar 19, 2022
-#' Last update: Mar 19, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #' 
-#' @param pop.map the marker information data.
-#' @param qtn.pos the index of QTNs in the map.
-#' @param qtn.model the genetic effect model of QTN.
+#' @param pop.map the map data with annotation information.
+#' @param qtn.pos the index of QTNs in the map data.
+#' @param qtn.model the genetic model of QTN such as 'A:D'.
 #'
-#' @return a dataframe of genetic interaction effect
+#' @return a data frame of genetic interaction effect.
+#' 
 #' @export
 #'
 #' @examples
@@ -422,18 +468,20 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
   return(comb_int)
 }
 
-#' Generate Marker information
+#' Marker information
 #' 
-#' Build date: Nov 9, 2020
-#' Last update: Nov 9, 2020
+#' Generate map data with marker information.
+#' 
+#' Build date: Mar 19, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
+#' 
+#' @param pop.marker the number of markers.
+#' @param num.chr the number of chromosomes.
+#' @param len.chr the length of chromosomes.
 #'
-#' @param pop.marker the number of markers
-#' @param num.chr the number of chromosomes
-#' @param len.chr the length of chromosomes
-#'
-#' @return marker information
+#' @return a data frame with marker information.
 #' @export
 #'
 #' @examples
@@ -441,10 +489,10 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
 #' str(pop.map)
 generate.map <- function(pop.marker = NULL, num.chr = 18, len.chr = 1.5e8) {
   
-  if(is.null(pop.marker))
+  if(is.null(pop.marker)) {
     stop("Please specify the number of markers!")
-
-  # Number of markers in every chromosome
+  }
+  
   num.every <- rep(pop.marker %/% num.chr, num.chr)
   num.every[num.chr] <- num.every[num.chr] + pop.marker %% num.chr
   
@@ -463,21 +511,22 @@ generate.map <- function(pop.marker = NULL, num.chr = 18, len.chr = 1.5e8) {
     ff <- ALT == REF
   }
   
-  # set map
   map <- data.frame(SNP, Chrom, BP, ALT, REF)
   return(map)
 }
 
-#' Convert genotype matrix from (0, 1) to (0, 1, 2)
+#' Genotype code convertor 1
+#' 
+#' Convert genotype matrix from (0, 1) to (0, 1, 2).
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Jul 30, 2019
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
+#' 
+#' @param pop.geno genotype matrix of (0, 1).
 #'
-#' @param pop.geno genotype matrix of (0, 1)
-#'
-#' @return genotype matrix of (0, 1, 2)
+#' @return genotype matrix of (0, 1, 2).
 #' @export
 #'
 #' @examples
@@ -496,16 +545,18 @@ geno.cvt1 <- function(pop.geno) {
   return(geno)
 }
 
-#' Convert genotype matrix from (0, 1, 2) to (0, 1)
+#' Genotype code convertor 2
+#' 
+#' Convert genotype matrix from (0, 1, 2) to (0, 1).
 #'
 #' Build date: Jul 11, 2020
-#' Last update: Jul 11, 2020
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop.geno genotype matrix of (0, 1, 2)
+#' @param pop.geno genotype matrix of (0, 1, 2).
 #' 
-#' @return genotype matrix of (0, 1)
+#' @return genotype matrix of (0, 1).
 #' @export
 #'
 #' @examples

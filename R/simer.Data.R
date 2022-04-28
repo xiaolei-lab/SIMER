@@ -13,7 +13,7 @@
 
 #' Data handling
 #' 
-#' Make data quality control for genotype, phenotype, and pedigree
+#' Make data quality control for genotype, phenotype, and pedigree.
 #' 
 #' Build date: May 26, 2021
 #' Last update: Apr 28, 2022
@@ -98,7 +98,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
   planPhe <- jsonList$quality_control_plan$phenotype_quality_control
   pheCols <- NULL
   pheSep <- "\t"
-  missing <- c(NA, "NA", "-9", 9999)
+  missing = c(NA, 'NA', 'Na', '.', '-', 'NAN', 'nan', 'na', 'N/A', 'n/a', '<NA>', '', '-9', 9999)
   
   logging.initialize("Simer.Data", outpath)
   
@@ -167,7 +167,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
 
 #' Genotype data conversion
 #' 
-#' Convert genotype data from MVP format to MVP format
+#' Convert genotype data from MVP format to MVP format.
 #' 
 #' Build date: May 26, 2021
 #' Last update: Apr 28, 2022
@@ -196,7 +196,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
 #' 
 #' # Convert genotype data from MVP to MVP
 #' simer.Data.MVP2MVP(fileMVP, out = tempfile("outfile"))
-simer.Data.MVP2MVP <- function(fileMVP, genoType='char', out='simer', verbose=TRUE) {
+simer.Data.MVP2MVP <- function(fileMVP, genoType = 'char', out = 'simer', verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   if (fileMVP != out) { remove_bigmatrix(out) }
@@ -224,7 +224,7 @@ simer.Data.MVP2MVP <- function(fileMVP, genoType='char', out='simer', verbose=TR
 
 #' Genotype data imputation
 #' 
-#' Impute the missing value within genotype data
+#' Impute the missing value within genotype data.
 #' 
 #' Build date: May 26, 2021
 #' Last update: Apr 28, 2022
@@ -310,7 +310,7 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
 
 #' Genotype data quality control
 #' 
-#' Data quality control for genotype data in MVP format and PLINK format
+#' Data quality control for genotype data in MVP format and PLINK format.
 #' 
 #' Build date: May 26, 2021
 #' Last update: Apr 28, 2022
@@ -349,9 +349,9 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
 #' # DO NOT RUN
 #' # It needs 'plink' software
 #' # simer.Data.Geno(fileBed=fileBed)
-simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, filePed=NULL, filePhe = NULL, out='simer.qc', genoType='char',
-                            filter = NULL, filterGeno=NULL, filterHWE=NULL, filterMind=NULL, filterMAF=NULL,
-                            ncpus=0, verbose=TRUE) {
+simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, filePed = NULL, filePhe = NULL, out = 'simer.qc', genoType = 'char',
+                            filter = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL,
+                            ncpus = 0, verbose = TRUE) {
   
   t1 <- as.numeric(Sys.time())
   logging.log(" Start Checking Genotype Data.\n", verbose = verbose)
@@ -435,7 +435,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 
 #' Pedigree data quality control
 #' 
-#' Data quality control for pedigree data
+#' Data quality control for pedigree data.
 #' 
 #' Build date: May 6, 2021
 #' Last update: Apr 28, 2022
@@ -471,8 +471,8 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' 
 #' # Run pedigree correction
 #' simer.Data.Ped(filePed = filePed, out = tempfile("outfile"))
-simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fileSir=NULL, fileDam=NULL, 
-                           exclThres=0.01, assignThres=0.005, header=TRUE, sep='\t', ncpus=0, verbose=TRUE) {
+simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FALSE, fileSir = NULL, fileDam = NULL, 
+                           exclThres = 0.01, assignThres = 0.005, header = TRUE, sep = '\t', ncpus = 0, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   logging.log(" Start Checking Pedigree Data.\n", verbose = verbose)
   
@@ -599,7 +599,7 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
       pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
     }
     
-    #print("Making needed files")
+    # print("Making needed files")
     pedx1 <- pedx[pedx[, 2] == "0" & pedx[, 3] == "0", ]
     pedx2 <- pedx[!(pedx[, 2] == "0" & pedx[, 3] == "0"), ]
     go = TRUE
@@ -668,7 +668,7 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
 
 #' Phenotype data quality control
 #' 
-#' Data quality control for phenotype data
+#' Data quality control for phenotype data.
 #' 
 #' Build date: June 13, 2021
 #' Last update: Apr 28, 2022
@@ -699,7 +699,7 @@ simer.Data.Ped <- function(filePed, fileMVP=NULL, out=NULL, standardID=FALSE, fi
 #' 
 #' # Run phenotype correction
 #' simer.Data.Pheno(filePhe = filePhe, out = tempfile("outfile"))
-simer.Data.Pheno <- function(filePhe = NULL, filePed=NULL, out=NULL, planPhe=NULL, pheCols=NULL, header=TRUE, sep='\t', missing=c(NA, 'NA', 'Na', '.', '-', 'NAN', 'nan', 'na', 'N/A', 'n/a', '<NA>', '', '-9', 9999), verbose=TRUE) {
+simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe = NULL, pheCols = NULL, header = TRUE, sep = '\t', missing = c(NA, 'NA', 'Na', '.', '-', 'NAN', 'nan', 'na', 'N/A', 'n/a', '<NA>', '', '-9', 9999), verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   logging.log(" Start Checking Phenotype Data.\n", verbose = verbose)
   
@@ -779,7 +779,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed=NULL, out=NULL, planPhe=NUL
         pheList <- cbind(pheno, newPheList)
       }
       
-      # data filter & select & arrange
+      # filter & select & arrange
       if (length(planPhe$filter) > 0) {
         filterRow <- with(pheList, eval(parse(text = planPhe$filter[1])))
         filterRow[is.na(filterRow)] <- FALSE
@@ -847,9 +847,9 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed=NULL, out=NULL, planPhe=NUL
       
     }
     
-    # remove spaces of elements
+    # remove spaces in the phenotype data
     finalPhe <- data.frame(lapply(pheList, function(x){ gsub("\\s+", "", x) }))
-    # remove column ofs full of NAs
+    # remove column with full of NAs
     drop <- c()
     for (i in 2:ncol(finalPhe)) {
       finalPhe[finalPhe[, i] %in% missing, i] <- NA
@@ -868,7 +868,6 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed=NULL, out=NULL, planPhe=NUL
       colnames(finalPhe)[traits] <- paste0('t', traits - 1)
     }
     
-    # Output
     if (is.null(out)) {
       out <- unlist(strsplit(filePhe, split = '.', fixed = TRUE))[1]
     }
@@ -893,7 +892,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed=NULL, out=NULL, planPhe=NUL
 
 #' Environmental factor selection
 #' 
-#' To find appropriate fixed effects, covariates, and random effects
+#' To find appropriate fixed effects, covariates, and random effects.
 #' 
 #' Build date: July 17, 2021
 #' Last update: Apr 28, 2022
@@ -1015,7 +1014,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
 
 #' Genetic evaluation
 #' 
-#' The function of calling HIBLUP software of C version
+#' The function of calling HIBLUP software of C version.
 #' 
 #' Build date: June 28, 2021
 #' Last update: Apr 28, 2022
@@ -1199,7 +1198,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
 
 #' Selection index construction
 #' 
-#' The function of General Selection Index
+#' The function of General Selection Index.
 #' 
 #' Build date: Aug 26, 2021
 #' Last update: Apr 28, 2022
@@ -1233,7 +1232,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
 #' # DO NOT RUN
 #' # It needs 'hiblup' software
 #' # jsonList <- simer.Data.SELIND(jsonList = jsonList)
-simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose=TRUE) {
+simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   BVIndex <- jsonList$breeding_value_index
@@ -1316,7 +1315,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose=TRUE) {
 
 #' Data quality control
 #'
-#' Make data quality control by JSON file
+#' Make data quality control by JSON file.
 #' 
 #' Build date: Oct 19, 2020
 #' Last update: Apr 28, 2022
@@ -1360,7 +1359,7 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
     jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
   }
   
-  ## step 2. find the best effects for EBV model
+  ## step 2. find the best environmental factors for EBV model
   if (buildModel) {
     jsonList <- simer.Data.Env(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
   }
@@ -1382,7 +1381,7 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
 
 #' Environmental factor checking
 #'
-#' Check the levels of environmental factors
+#' Check the levels of environmental factors.
 #' 
 #' Build date: Sep 10, 2021
 #' Last update: Apr 28, 2022
@@ -1392,7 +1391,7 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
 #' @param data data needing check.
 #' @param envName the environmental factor name within the data.
 #' 
-#' @return data without environmental factors of wrong level
+#' @return data without environmental factors of wrong level.
 #' @export
 #'
 #' @examples

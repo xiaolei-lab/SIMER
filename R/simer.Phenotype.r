@@ -11,21 +11,46 @@
 # limitations under the License.
 
 
-#' Generate genotype and editing genotype
+#' Phenotype simulation
+#' 
+#' Generate single-trait or multiple-trait phenotype by mixed model.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Feb 23, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param verbose whether to print detail.
 #'
-#' @return a genotype matrix with block and map information
+#' @return 
+#' the function returns a list containing
+#' \describe{
+#' \item{$pheno$pop}{the population information containing environmental factors and other effects.}
+#' \item{$pheno$pop.ind}{the number of individuals in the base population.}
+#' \item{$pheno$pop.rep}{the repeated times of repeated records}
+#' \item{$pheno$pop.rep.bal}{whether repeated records are balanced.}
+#' \item{$pheno$pop.env}{a list of environmental factors setting.}
+#' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "A + D".}
+#' \item{$pheno$phe.h2A}{a list of additive heritability.}
+#' \item{$pheno$phe.h2D}{a list of dominant heritability.}
+#' \item{$pheno$phe.h2GxG}{a list of GxG interaction heritability.}
+#' \item{$pheno$phe.h2GxE}{a list of GxE interaction heritability.}
+#' \item{$pheno$phe.h2PE}{a list of permanent environmental heritability.}
+#' \item{$pheno$phe.var}{a list of phenotype variance.}
+#' \item{$pheno$phe.corA}{the additive genetic correlation matrix.}
+#' \item{$pheno$phe.corD}{the dominant genetic correlation matrix.}
+#' \item{$pheno$phe.corGxG}{the GxG genetic correlation matrix.}
+#' \item{$pheno$phe.corPE}{the permanent environmental correlation matrix.}
+#' \item{$pheno$phe.corE}{the residual correlation matrix.}
+#' }
+#' 
 #' @export
+#' 
 #' @references Kao C and Zeng Z (2002) <https://www.genetics.org/content/160/3/1243.long>
 #'
 #' @examples
+#' # Prepare environmental factor list
 #' pop.env <- list(
 #'   F1 = list( # fixed effect 1
 #'     level = c("1", "2"),
@@ -40,13 +65,17 @@
 #'     ratio = list(tr1 = 0.1, tr2 = 0.1)
 #'   )
 #' )
+#' 
+#' # Generate genotype simulation parameters
 #' SP <- param.annot(qtn.num = diag(c(10, 10)), qtn.model = "A + D + A:D")
+#' # Generate annotation simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(
 #'   SP = SP, 
 #'   pop.ind = 100,
-#'   pop.rep = 2,
-#'   pop.rep.bal = TRUE,
+#'   pop.rep = 2, # 2 repeated record
+#'   pop.rep.bal = TRUE, # balanced repeated record
 #'   pop.env = pop.env,
 #'   phe.var = list(tr1 = 100, tr2 = 100),
 #'   phe.model = list(
@@ -54,15 +83,18 @@
 #'     tr2 = "T2 = A + D + A:D + F1 + F2 + R1 + A:F1 + E"
 #'   )
 #' )
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
-#' head(SP$pheno$pop$gen1)
 phenotype <- function(SP = NULL, verbose = TRUE) {
 
-# Start phenotype
+### Start phenotype simlulation
   
-  # unfold phenotype parameters
+  # phenotype parameters
   useAllGeno <- SP$global$useAllGeno
   if (is.null(useAllGeno)) {
     useAllGeno <- FALSE
@@ -332,7 +364,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   # effect combination
   phe.eff <- do.call(cbind, phe.eff)
   phe.eff <- as.data.frame(phe.eff)
-  # refresh phenotype variance
+  # update phenotype variance
   names(phe.var) <- paste0("tr", 1:nTrait)
   SP$pheno$phe.var <- phe.var
   
@@ -439,19 +471,21 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   return(SP)
 }
 
-#' Generate population according to number of individuals
+#' Population generator
+#' 
+#' Generate population according to number of individuals.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Mar 23, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop.ind number of the individuals in a population
-#' @param from initial index of the population
-#' @param ratio ratio of males in a population
-#' @param gen generation ID of the population
+#' @param pop.ind the number of the individuals in a population.
+#' @param from initial index of the population.
+#' @param ratio sex ratio of males in a population.
+#' @param gen generation ID of the population.
 #'
-#' @return population information
+#' @return a data frame of population information.
 #' @export
 #'
 #' @examples
@@ -472,19 +506,21 @@ generate.pop <- function(pop.ind = 100, from = 1, ratio = 0.5, gen = 1) {
   return(pop)
 }
 
-#' To bulid correlation of variables
+#' Correlation building
+#' 
+#' To bulid correlation of variables.
 #'
 #' Build date: Oct 10, 2019
-#' Last update: Oct 10, 2019
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin and R
 #'
-#' @param df data.frame without correlation
-#' @param mu means of the variables 
-#' @param Sigma covariance matrix of variables
+#' @param df a data.frame needing building correlation.
+#' @param mu means of the variables.
+#' @param Sigma covariance matrix of variables.
 #' @param tol tolerance (relative to largest variance) for numerical lack of positive-definiteness in Sigma.
 #'
-#' @return data.frame with correlaion
+#' @return a data.frame with expected correlation
 #' @export
 #' @references B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98
 #'

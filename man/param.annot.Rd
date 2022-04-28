@@ -2,21 +2,43 @@
 % Please edit documentation in R/simer.Parameter.r
 \name{param.annot}
 \alias{param.annot}
-\title{Generate parameters for annotation data simulation}
+\title{Annotation parameters generator}
 \usage{
 param.annot(SP = NULL, ...)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{...}{one or more parameter(s) for map simulation}
+\item{...}{one or more parameter(s) for map simulation.}
 }
 \value{
-a list of map simulation parameters
+the function returns a list containing
+\describe{
+\item{$map$pop.map}{the map data with annotation information.}
+\item{$map$qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
+\item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
+\item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
+\item{$map$qtn.sd}{the standard deviations for normal distribution.}
+\item{$map$qtn.prob}{the probability of success for geometric distribution.}
+\item{$map$qtn.shape}{the shape parameter for gamma distribution.}
+\item{$map$qtn.scale}{the scale parameter for gamma distribution.}
+\item{$map$qtn.shape1}{the shape1 parameter for beta distribution.}
+\item{$map$qtn.shape2}{the shape2 parameter for beta distribution.}
+\item{$map$qtn.ncp}{the ncp parameter for beta distribution.}
+\item{$map$qtn.spot}{the QTN distribution probability in each block.}
+\item{$map$len.block}{the block length.}
+\item{$map$maf}{the maf threshold, markers less than this threshold will be exclude.}
+\item{$map$recom.spot}{whether to generate recombination events.}
+\item{$map$range.hot}{the recombination times range in the hot spot.}
+\item{$map$range.cold}{the recombination times range in the cold spot.}
+}
 }
 \description{
+Generate parameters for annotation data simulation.
+}
+\details{
 Build date: Feb 24, 2022
-Last update: Mar 23, 2022
+Last update: Apr 28, 2022
 }
 \examples{
 SP <- param.annot(qtn.num = 10)

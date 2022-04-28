@@ -2,21 +2,32 @@
 % Please edit documentation in R/simer.Parameter.r
 \name{param.geno}
 \alias{param.geno}
-\title{Generate parameters for genotype data simulation}
+\title{Genotype parameters generator}
 \usage{
 param.geno(SP = NULL, ...)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{...}{one or more parameter(s) for genotype simulation}
+\item{...}{one or more parameter(s) for genotype simulation.}
 }
 \value{
-a list of genotype simulation parameters
+the function returns a list containing
+\describe{
+\item{$geno$pop.geno}{the genotype data.}
+\item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+\item{$geno$pop.marker}{the number of markers.}
+\item{$geno$pop.ind}{the number of individuals in the base population.}
+\item{$geno$prob}{the genotype code probability.}
+\item{$geno$rate.mut}{the mutation rate of the genotype data.}
+}
 }
 \description{
+Generate parameters for genotype data simulation.
+}
+\details{
 Build date: Feb 21, 2022
-Last update: Feb 21, 2022
+Last update: Apr 28, 2022
 }
 \examples{
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)

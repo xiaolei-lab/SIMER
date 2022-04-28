@@ -2,25 +2,28 @@
 % Please edit documentation in R/simer.Phenotype.r
 \name{build.cov}
 \alias{build.cov}
-\title{To bulid correlation of variables}
+\title{Correlation building}
 \usage{
 build.cov(df = NULL, mu = rep(0, nrow(Sigma)), Sigma = diag(2), tol = 1e-06)
 }
 \arguments{
-\item{df}{data.frame without correlation}
+\item{df}{a data.frame needing building correlation.}
 
-\item{mu}{means of the variables}
+\item{mu}{means of the variables.}
 
-\item{Sigma}{covariance matrix of variables}
+\item{Sigma}{covariance matrix of variables.}
 
 \item{tol}{tolerance (relative to largest variance) for numerical lack of positive-definiteness in Sigma.}
 }
 \value{
-data.frame with correlaion
+a data.frame with expected correlation
 }
 \description{
+To bulid correlation of variables.
+}
+\details{
 Build date: Oct 10, 2019
-Last update: Oct 10, 2019
+Last update: Apr 28, 2022
 }
 \examples{
 df <- data.frame(tr1 = rnorm(100), tr2 = rnorm(100))

@@ -2,25 +2,28 @@
 % Please edit documentation in R/simer.Phenotype.r
 \name{generate.pop}
 \alias{generate.pop}
-\title{Generate population according to number of individuals}
+\title{Population generator}
 \usage{
 generate.pop(pop.ind = 100, from = 1, ratio = 0.5, gen = 1)
 }
 \arguments{
-\item{pop.ind}{number of the individuals in a population}
+\item{pop.ind}{the number of the individuals in a population.}
 
-\item{from}{initial index of the population}
+\item{from}{initial index of the population.}
 
-\item{ratio}{ratio of males in a population}
+\item{ratio}{sex ratio of males in a population.}
 
-\item{gen}{generation ID of the population}
+\item{gen}{generation ID of the population.}
 }
 \value{
-population information
+a data frame of population information.
 }
 \description{
+Generate population according to number of individuals.
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Mar 23, 2022
+Last update: Apr 28, 2022
 }
 \examples{
 pop <- generate.pop(pop.ind = 100)

@@ -59,7 +59,7 @@ the function returns files
 }
 }
 \description{
-Data quality control for genotype data in MVP format and PLINK format
+Data quality control for genotype data in MVP format and PLINK format.
 }
 \details{
 Build date: May 26, 2021

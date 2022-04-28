@@ -11,17 +11,40 @@
 # limitations under the License.
 
 
-#' Generate parameters for annotation data simulation
+#' Annotation parameters generator
+#' 
+#' Generate parameters for annotation data simulation.
 #' 
 #' Build date: Feb 24, 2022
-#' Last update: Mar 23, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ... one or more parameter(s) for map simulation
+#' @param SP a list of all simulation parameters.
+#' @param ... one or more parameter(s) for map simulation.
 #'
-#' @return a list of map simulation parameters 
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$map$pop.map}{the map data with annotation information.}
+#' \item{$map$qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
+#' \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
+#' \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
+#' \item{$map$qtn.sd}{the standard deviations for normal distribution.}
+#' \item{$map$qtn.prob}{the probability of success for geometric distribution.}
+#' \item{$map$qtn.shape}{the shape parameter for gamma distribution.}
+#' \item{$map$qtn.scale}{the scale parameter for gamma distribution.}
+#' \item{$map$qtn.shape1}{the shape1 parameter for beta distribution.}
+#' \item{$map$qtn.shape2}{the shape2 parameter for beta distribution.}
+#' \item{$map$qtn.ncp}{the ncp parameter for beta distribution.}
+#' \item{$map$qtn.spot}{the QTN distribution probability in each block.}
+#' \item{$map$len.block}{the block length.}
+#' \item{$map$maf}{the maf threshold, markers less than this threshold will be exclude.}
+#' \item{$map$recom.spot}{whether to generate recombination events.}
+#' \item{$map$range.hot}{the recombination times range in the hot spot.}
+#' \item{$map$range.cold}{the recombination times range in the cold spot.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
@@ -122,17 +145,29 @@ param.annot <- function(SP = NULL, ...) {
   return(SP)
 }
 
-#' Generate parameters for genotype data simulation
+#' Genotype parameters generator
+#' 
+#' Generate parameters for genotype data simulation.
 #' 
 #' Build date: Feb 21, 2022
-#' Last update: Feb 21, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ... one or more parameter(s) for genotype simulation
+#' @param SP a list of all simulation parameters.
+#' @param ... one or more parameter(s) for genotype simulation.
 #'
-#' @return a list of genotype simulation parameters 
+#' @return 
+#' the function returns a list containing
+#' \describe{
+#' \item{$geno$pop.geno}{the genotype data.}
+#' \item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+#' \item{$geno$pop.marker}{the number of markers.}
+#' \item{$geno$pop.ind}{the number of individuals in the base population.}
+#' \item{$geno$prob}{the genotype code probability.}
+#' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
@@ -161,17 +196,40 @@ param.geno <- function(SP = NULL, ...) {
   return(SP)
 }
 
-#' Generate parameters for phenotype data simulation
+#' Phenotype parameters generator
+#' 
+#' Generate parameters for phenotype data simulation.
 #' 
 #' Build date: Feb 21, 2022
-#' Last update: Mar 23, 2022
+#' Last update: Apr 28, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ... one or more parameter(s) for phenotype simulation
+#' @param SP a list of all simulation parameters.
+#' @param ... one or more parameter(s) for phenotype simulation.
 #'
-#' @return a list of phenotype simulation parameters 
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$pheno$pop}{the population information containing environmental factors and other effects.}
+#' \item{$pheno$pop.ind}{the number of individuals in the base population.}
+#' \item{$pheno$pop.rep}{the repeated times of repeated records}
+#' \item{$pheno$pop.rep.bal}{whether repeated records are balanced.}
+#' \item{$pheno$pop.env}{a list of environmental factors setting.}
+#' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "A + D".}
+#' \item{$pheno$phe.h2A}{a list of additive heritability.}
+#' \item{$pheno$phe.h2D}{a list of dominant heritability.}
+#' \item{$pheno$phe.h2GxG}{a list of GxG interaction heritability.}
+#' \item{$pheno$phe.h2GxE}{a list of GxE interaction heritability.}
+#' \item{$pheno$phe.h2PE}{a list of permanent environmental heritability.}
+#' \item{$pheno$phe.var}{a list of phenotype variance.}
+#' \item{$pheno$phe.corA}{the additive genetic correlation matrix.}
+#' \item{$pheno$phe.corD}{the dominant genetic correlation matrix.}
+#' \item{$pheno$phe.corGxG}{the GxG genetic correlation matrix.}
+#' \item{$pheno$phe.corPE}{the permanent environmental correlation matrix.}
+#' \item{$pheno$phe.corE}{the residual correlation matrix.}
+#' }
+#' 
 #' @export
 #'
 #' @examples

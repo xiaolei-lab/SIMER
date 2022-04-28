@@ -12,10 +12,10 @@ checkEnv(data, envName)
 \item{envName}{the environmental factor name within the data.}
 }
 \value{
-data without environmental factors of wrong level
+data without environmental factors of wrong level.
 }
 \description{
-Check the levels of environmental factors
+Check the levels of environmental factors.
 }
 \details{
 Build date: Sep 10, 2021

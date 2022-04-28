@@ -33,7 +33,7 @@ the function returns a list containing
 }
 }
 \description{
-The function of calling HIBLUP software of C version
+The function of calling HIBLUP software of C version.
 }
 \details{
 Build date: June 28, 2021

@@ -36,7 +36,7 @@ the function returns files
 }
 }
 \description{
-Impute the missing value within genotype data
+Impute the missing value within genotype data.
 }
 \details{
 Build date: May 26, 2021

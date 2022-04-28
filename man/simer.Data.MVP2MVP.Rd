@@ -25,7 +25,7 @@ the function returns files
 }
 }
 \description{
-Convert genotype data from MVP format to MVP format
+Convert genotype data from MVP format to MVP format.
 }
 \details{
 Build date: May 26, 2021
