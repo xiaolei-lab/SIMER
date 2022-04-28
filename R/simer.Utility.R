@@ -531,6 +531,7 @@ write.file <- function(SP) {
   
   SP$global$useAllGeno <- TRUE
   SP <- phenotype(SP)
+  pheno.geno <- NULL
   pheno.total <- do.call(rbind, lapply(out.pheno.gen, function(i) {
     return(SP$pheno$pop[[i]])
   }))
@@ -541,12 +542,12 @@ write.file <- function(SP) {
     if (!is.null(SP$map$pop.map.GxG)) {
       write.table(SP$map$pop.map.GxG, file = file.path(directory.rep, paste0(out, ".GxG.geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
     }
-      
+  
   } else if (out.format == "plink") {
-    if (length(out.geno.gen) != length(out.pheno.gen) || any(out.geno.gen != out.pheno.gen)) {
-      stop("'out.geno.gen should be same as 'out.pheno.gen when using 'plink' format!")
-    }
-    MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.total[, 1, drop = FALSE], out = file.path(directory.rep, out), verbose = verbose)
+    pheno.geno <- do.call(rbind, lapply(out.geno.gen, function(i) {
+      return(SP$pheno$pop[[i]])
+    }))
+    MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno[, 1, drop = FALSE], out = file.path(directory.rep, out), verbose = verbose)
     remove_bigmatrix(file.path(directory.rep, out))
     geno.total <- 0
   }
@@ -555,38 +556,5 @@ write.file <- function(SP) {
   
   logging.log(" All files have been saved successfully!\n", verbose = verbose)
   
-  rm(geno.total); rm(pheno.total); gc()
-}
-
-#' Show file content
-#'
-#' Build date: Feb 11, 2020
-#' Last update: Feb 11, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param filename filename of a file
-#' @param verbose whether to print details
-#'
-#' @return none
-#' @export
-#'
-#' @examples
-#' selPath <- system.file("extdata", "04breeding_plan", package = "simer")
-#' filename <- file.path(selPath, "breeding_plan01.txt")
-#' simer.show.file(filename = filename, verbose = TRUE)
-simer.show.file <- function(filename = NULL, verbose = TRUE) {
-  if (is.null(filename)) stop("Please input a filename!")
-  fileImage <- file(description=filename, open="r")
-  inFile <- TRUE
-  while (inFile) {
-    tt <- readLines(fileImage, n=1)
-    if (length(tt) == 0) {
-      inFile = FALSE
-      next
-    }
-    logging.log(tt, "\n", verbose = verbose)
-  }
-  close.connection(fileImage)
-  return(invisible())
+  rm(geno.total); rm(pheno.total); rm(pheno.geno); gc()
 }

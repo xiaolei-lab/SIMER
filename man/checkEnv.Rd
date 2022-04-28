@@ -2,25 +2,30 @@
 % Please edit documentation in R/simer.Data.R
 \name{checkEnv}
 \alias{checkEnv}
-\title{Check the levels of environmental factors}
+\title{Environmental factor checking}
 \usage{
 checkEnv(data, envName)
 }
 \arguments{
-\item{data}{data needing check}
+\item{data}{data needing check.}
 
-\item{envName}{the environmental factor name in the data}
+\item{envName}{the environmental factor name within the data.}
 }
 \value{
 data without environmental factors of wrong level
 }
 \description{
+Check the levels of environmental factors
+}
+\details{
 Build date: Sep 10, 2021
-Last update: Sep 10, 2021
+Last update: Apr 28, 2022
 }
 \examples{
 data <- data.frame(a = rep(1, 3), b = 1:3, c = c(1, 1, 5))
 envName <- c("a", "b", "c")
+
+# It contains warnings
 # data <- checkEnv(data = data, envName = envName)
 }
 \author{

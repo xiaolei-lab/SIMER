@@ -2,16 +2,17 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.Geno}
 \alias{simer.Data.Geno}
-\title{simer.Data.Geno: Data quality control of genotype data
-Author: Dong Yin
-Build date: June 3, 2021
-Last update: Aug 22, 2021}
+\title{Genotype data quality control}
 \usage{
 simer.Data.Geno(
-  fileMVP,
+  fileMVP = NULL,
+  fileBed = NULL,
+  filePlinkPed = NULL,
   filePed = NULL,
-  out = "simer",
+  filePhe = NULL,
+  out = "simer.qc",
   genoType = "char",
+  filter = NULL,
   filterGeno = NULL,
   filterHWE = NULL,
   filterMind = NULL,
@@ -21,42 +22,57 @@ simer.Data.Geno(
 )
 }
 \arguments{
-\item{fileMVP}{the prefix of MVP file}
+\item{fileMVP}{genotype in MVP format.}
 
-\item{filePed}{the name of pedigree file}
+\item{fileBed}{genotype in PLINK binary format.}
 
-\item{out}{the name of output file}
+\item{filePlinkPed}{genotype in PLINK numeric format.}
+
+\item{filePed}{the filename of pedigree data.}
+
+\item{filePhe}{the filename of phenotype data, it can be a vector.}
+
+\item{out}{the prefix of output files.}
 
 \item{genoType}{type parameter in bigmemory, genotype data. The default is char, it is highly recommended *NOT* to modify this parameter.}
 
-\item{filterGeno}{threshold of sample miss rate}
+\item{filter}{filter of genotyped individual.}
 
-\item{filterHWE}{threshold of Hardy-Weinberg Test}
+\item{filterGeno}{threshold of sample miss rate.}
 
-\item{filterMind}{threshold of variant miss rate}
+\item{filterHWE}{threshold of Hardy-Weinberg Test.}
 
-\item{filterMAF}{threshold of Minor Allele Frequency}
+\item{filterMind}{threshold of variant miss rate.}
 
-\item{ncpus}{The number of threads used, if NULL, (logical core number - 1) is automatically used}
+\item{filterMAF}{threshold of Minor Allele Frequency.}
+
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-Output file:
-<out>.geno.desc
-<out>.geno.bin
-<out>.geno.ind
+the function returns files
+\describe{
+\item{<out>.bed}{the .bed file of PLINK binary format.}
+\item{<out>.bim}{the .bim file of PLINK binary format.}
+\item{<out>.fam}{the .fam file of PLINK binary format.}
+}
 }
 \description{
-simer.Data.Geno: Data quality control of genotype data
-Author: Dong Yin
-Build date: June 3, 2021
-Last update: Aug 22, 2021
+Data quality control for genotype data in MVP format and PLINK format
+}
+\details{
+Build date: May 26, 2021
+Last update: Apr 28, 2022
 }
 \examples{
-fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-filePed <- system.file("extdata", "pedigree.txt", package = "simer")
-simer.Data.Geno(fileMVP=fileMVP, filePed=filePed, genoType='char', 
-  out=tempfile("outfile"), 
-  filterGeno=0.1, filterHWE=0.001, filterMind=0.1, filterMAF=0.05)
+# Get the prefix of genotype data
+fileBed <- system.file("extdata", "02plinkb", "demo", package = "simer")
+
+# DO NOT RUN
+# It needs 'plink' software
+# simer.Data.Geno(fileBed=fileBed)
+}
+\author{
+Dong Yin
 }

@@ -647,7 +647,6 @@ void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVecto
   }
 }
 
-
 template<typename T>
 void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx, IntegerVector damIdx, int nBlock=100, int op=1, int threads=0) {
   omp_setup(threads);
@@ -659,6 +658,7 @@ void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx,
   damIdx = damIdx - 1;
   
   size_t op_row, ed_row, i, j, k, m, n, judpar, kidIdx;
+  std::random_device rd;
   m = pmat->nrow(); 
   n = damIdx.length();
   op = op - 1;
@@ -702,8 +702,8 @@ void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx,
     ed_row = accum_block[k];
     op_row = ed_row - nInblock[k];
     for (j = 0; j < n; j++) {
-      judpar = rand() % 2;
-      kidIdx = judpar == 0 ? sirIdx[j] : damIdx[j];
+      judpar = rd();
+      kidIdx = judpar % 2 == 0 ? sirIdx[j] : damIdx[j];
       for (i = op_row; i < ed_row; i++) {
         bigmat[op + j][i] = mat[i][kidIdx];
       }

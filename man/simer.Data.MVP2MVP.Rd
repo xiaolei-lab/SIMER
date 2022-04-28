@@ -2,36 +2,42 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.MVP2MVP}
 \alias{simer.Data.MVP2MVP}
-\title{simer.Data.MVP2MVP: Change the path of MVP files
-Author: Dong Yin
-Build date: May 26, 2021
-Last update: May 26, 2021}
+\title{Genotype data conversion}
 \usage{
 simer.Data.MVP2MVP(fileMVP, genoType = "char", out = "simer", verbose = TRUE)
 }
 \arguments{
-\item{fileMVP}{the prefix of MVP file}
+\item{fileMVP}{the prefix of MVP file.}
 
-\item{genoType}{type parameter in bigmemory, genotype data. The default is char, it is highly recommended *NOT* to modify this parameter.}
+\item{genoType}{type parameter in bigmemory data. The default is 'char', it is highly recommended *NOT* to modify this parameter.}
 
-\item{out}{the name of output file}
+\item{out}{the prefix of output files.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-Output file:
-<out>.geno.desc
-<out>.geno.bin
-<out>.geno.ind
-<out>.geno.map
+the function returns files
+\describe{
+\item{<out>.geno.desc}{the description file of genotype data.}
+\item{<out>.geno.bin}{the binary file of genotype data.}
+\item{<out>.geno.ind}{the genotyped individual file.}
+\item{<out>.geno.map}{the marker information data file.}
+}
 }
 \description{
-simer.Data.MVP2MVP: Change the path of MVP files
-Author: Dong Yin
+Convert genotype data from MVP format to MVP format
+}
+\details{
 Build date: May 26, 2021
-Last update: May 26, 2021
+Last update: Apr 28, 2022
 }
 \examples{
-mvpPath <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-simer.Data.MVP2MVP(mvpPath, out = tempfile("outfile"))
+# Get the prefix of genotype data
+fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
+
+# Convert genotype data from MVP to MVP
+simer.Data.MVP2MVP(fileMVP, out = tempfile("outfile"))
+}
+\author{
+Dong Yin
 }

@@ -2,13 +2,10 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.Pheno}
 \alias{simer.Data.Pheno}
-\title{simer.Data.Pheno: Data quality control of phenotype data
-Author: Haohao Zhang and Dong Yin
-Build date: June 13, 2021
-Last update: July 8, 2021}
+\title{Phenotype data quality control}
 \usage{
 simer.Data.Pheno(
-  filePhe,
+  filePhe = NULL,
   filePed = NULL,
   out = NULL,
   planPhe = NULL,
@@ -21,35 +18,44 @@ simer.Data.Pheno(
 )
 }
 \arguments{
-\item{filePhe}{the phenotype files, it can be a vector}
+\item{filePhe}{the phenotype files, it can be a vector.}
 
-\item{filePed}{the pedigree files, it can be a vector}
+\item{filePed}{the pedigree files, it can be a vector.}
 
-\item{out}{the name prefix of output file}
+\item{out}{the prefix of output file.}
 
-\item{planPhe}{breeding plans about phenotype}
+\item{planPhe}{the plans for phenotype quality control.}
 
-\item{pheCols}{the column needing extracting}
+\item{pheCols}{the column needing extracting.}
 
-\item{header}{the header of file}
+\item{header}{the header of file.}
 
-\item{sep}{the separator of file}
+\item{sep}{the separator of file.}
 
-\item{missing}{the missing value}
+\item{missing}{the missing value.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-Output file:
-<out>.qc.txt
+the function returns files
+\describe{
+\item{<out>.phe}{the phenotype file after correction.}
+}
 }
 \description{
-simer.Data.Pheno: Data quality control of phenotype data
-Author: Haohao Zhang and Dong Yin
+Data quality control for phenotype data
+}
+\details{
 Build date: June 13, 2021
-Last update: July 8, 2021
+Last update: Apr 28, 2022
 }
 \examples{
-filePhe <- system.file("extdata", "phenotype.txt", package = "simer")
+# Get the filename of phenotype data
+filePhe <- system.file("extdata", "05others", "phenotype.txt", package = "simer")
+
+# Run phenotype correction
 simer.Data.Pheno(filePhe = filePhe, out = tempfile("outfile"))
+}
+\author{
+Haohao Zhang and Dong Yin
 }

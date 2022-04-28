@@ -2,10 +2,7 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.Env}
 \alias{simer.Data.Env}
-\title{To find appropriate fixed effects, covariates, and random effects
-Author: Dong Yin
-Build date: July 17, 2021
-Last update: Apr 21, 2022}
+\title{Environmental factor selection}
 \usage{
 simer.Data.Env(
   jsonList = NULL,
@@ -16,27 +13,43 @@ simer.Data.Env(
 )
 }
 \arguments{
-\item{jsonList}{the list of json parameters}
+\item{jsonList}{the list of environmental factor selection parameters.}
 
-\item{header}{the header of file}
+\item{header}{the header of file.}
 
-\item{sep}{the separator of file}
+\item{sep}{the separator of file.}
 
-\item{ncpus}{the number of threads}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-the best effects for EBV model
+the function returns a list containing
+\describe{
+\item{$genotype}{the path of genotype data.}
+\item{$pedigree}{the filename of pedigree data.}
+\item{$selection_index}{the selection index for all traits.}
+\item{$breeding_value_index}{the breeding value index for all traits.}
+\item{$quality_control_plan}{a list of parameters for data quality control.}
+\item{$analysis_plan}{a list of parameters for genetic evaluation.}
+}
 }
 \description{
 To find appropriate fixed effects, covariates, and random effects
-Author: Dong Yin
+}
+\details{
 Build date: July 17, 2021
-Last update: Apr 21, 2022
+Last update: Apr 28, 2022
 }
 \examples{
-jsonFile <- system.file("extdata", "demo2.json", package = "simer")
+# Read JSON file
+jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
+
+# DO NOT RUN
+# It needs 'hiblup' solfware
 # jsonList <- simer.Data.Env(jsonList = jsonList)
+}
+\author{
+Dong Yin
 }

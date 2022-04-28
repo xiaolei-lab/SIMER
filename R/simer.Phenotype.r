@@ -428,7 +428,6 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   pop <- cbind(pop, phe, TBV, TGV, phe.eff)
   
   if (useAllGeno) {
-    cat("ok1\n")
     for (i in 1:length(SP$pheno$pop)) {
       SP$pheno$pop[[i]] <- subset(pop, gen == i)
     }

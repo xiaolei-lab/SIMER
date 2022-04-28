@@ -2,13 +2,9 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.cHIBLUP}
 \alias{simer.Data.cHIBLUP}
-\title{simer.Data.cHIBLUP: The function of calling HIBLUP software of C version
-Author: Dong Yin
-Build date: June 28, 2021
-Last update: Apr 21, 2022}
+\title{Genetic evaluation}
 \usage{
 simer.Data.cHIBLUP(
-  SP = NULL,
   jsonList = NULL,
   mode = "A",
   vc.method = "AI",
@@ -17,30 +13,41 @@ simer.Data.cHIBLUP(
 )
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{jsonList}{the list of genetic evaluation parameters.}
 
-\item{jsonList}{the list of json parameters}
+\item{mode}{'A' or 'AD', Additive effect model or Additive and Dominance model.}
 
-\item{mode}{'A' or 'AD', Additive effect model or Additive and Dominance mode}
+\item{vc.method}{default is 'AI', the method of calculating variance components in HIBLUP software.}
 
-\item{vc.method}{default is 'AI', the method of calucating variance components in HIBLUP}
-
-\item{ncpus}{the number of threads}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-a list of gebv
+the function returns a list containing
+\describe{
+\item{$randList}{a list of estimated random effects.}
+\item{$varList}{a list of variance components.}
+\item{$covA}{the genetic covariance matrix for all traits.}
+\item{$corA}{the genetic correlation matrix for all traits.}
+}
 }
 \description{
-simer.Data.cHIBLUP: The function of calling HIBLUP software of C version
-Author: Dong Yin
+The function of calling HIBLUP software of C version
+}
+\details{
 Build date: June 28, 2021
-Last update: Apr 21, 2022
+Last update: Apr 28, 2022
 }
 \examples{
-jsonFile <- system.file("extdata", "demo2.json", package = "simer")
+# Read JSON file
+jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
-# gebvs <- simer.Data.cHIBLUP(SP = SP)
+
+# DO NOT RUN
+# It needs 'hiblup' software
 # gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
+}
+\author{
+Dong Yin
 }

@@ -2,34 +2,47 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.SELIND}
 \alias{simer.Data.SELIND}
-\title{simer.SELIND: The function of General Selection Index
-Author: Dong Yin
-Build date: Aug 26, 2021
-Last update: Apr 21, 2022}
+\title{Selection index construction}
 \usage{
 simer.Data.SELIND(jsonList = NULL, ncpus = 10, verbose = TRUE)
 }
 \arguments{
-\item{jsonList}{the list of json parameters}
+\item{jsonList}{the list of selection index construction parameters.}
 
-\item{ncpus}{the number of threads}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-phenotype economic weight
+the function returns a list containing
+\describe{
+\item{$genotype}{the path of genotype data.}
+\item{$pedigree}{the filename of pedigree data.}
+\item{$selection_index}{the selection index for all traits.}
+\item{$breeding_value_index}{the breeding value index for all traits.}
+\item{$quality_control_plan}{a list of parameters for data quality control.}
+\item{$analysis_plan}{a list of parameters for genetic evaluation.}
+}
 }
 \description{
-simer.SELIND: The function of General Selection Index
-Author: Dong Yin
+The function of General Selection Index
+}
+\details{
 Build date: Aug 26, 2021
-Last update: Apr 21, 2022
+Last update: Apr 28, 2022
 }
 \examples{
-jsonFile <- system.file("extdata", "demo2.json", package = "simer")
+# Read JSON file
+jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
+
+# DO NOT RUN
+# It needs 'hiblup' software
 # jsonList <- simer.Data.SELIND(jsonList = jsonList)
 }
 \references{
 Y. S. Chen, Z. L. Sheng (1988) The Theory of General Selection Index. Genetic Report, 15(3): P185-P190
+}
+\author{
+Dong Yin
 }

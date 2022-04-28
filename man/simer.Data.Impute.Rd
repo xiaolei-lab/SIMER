@@ -2,10 +2,7 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.Impute}
 \alias{simer.Data.Impute}
-\title{simer.Data.Impute: Impute the missing value
-Author: Dong Yin
-Build date: May 26, 2021
-Last update: Sep 18, 2021}
+\title{Genotype data imputation}
 \usage{
 simer.Data.Impute(
   fileMVP = NULL,
@@ -17,29 +14,42 @@ simer.Data.Impute(
 )
 }
 \arguments{
-\item{fileMVP}{Genotype in MVP format}
+\item{fileMVP}{genotype in MVP format.}
 
-\item{fileBed}{Genotype in PLINK binary format}
+\item{fileBed}{genotype in PLINK binary format.}
 
-\item{out}{the name of output file}
+\item{out}{the name of output file.}
 
-\item{maxLine}{number of SNPs, only used for saving memory when calculate kinship matrix}
+\item{maxLine}{number of SNPs, only used for saving memory when calculate kinship matrix.}
 
-\item{ncpus}{The number of threads used, if NULL, (logical core number - 1) is automatically used}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-genotype data after imputing
+the function returns files
+\describe{
+\item{<out>.geno.desc}{the description file of genotype data.}
+\item{<out>.geno.bin}{the binary file of genotype data.}
+\item{<out>.geno.ind}{the genotyped individual file.}
+\item{<out>.geno.map}{the marker information data file.}
+}
 }
 \description{
-simer.Data.Impute: Impute the missing value
-Author: Dong Yin
+Impute the missing value within genotype data
+}
+\details{
 Build date: May 26, 2021
-Last update: Sep 18, 2021
+Last update: Apr 28, 2022
 }
 \examples{
-# need beagle
-# fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-# fileMVPimp <- simer.Data.Impute(fileMVP = fileMVP)
+# Get the prefix of genotype data
+fileMVP <- system.file("extdata", "02plinkb", "demo", package = "simer")
+
+# DO NOT RUN
+# It needs 'beagle' software
+# fileMVPimp <- simer.Data.Impute(fileBed = fileBed)
+}
+\author{
+Dong Yin
 }

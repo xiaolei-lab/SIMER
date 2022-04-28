@@ -2,10 +2,7 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.Ped}
 \alias{simer.Data.Ped}
-\title{simer.Data.Ped: To check pedigree file
-Author: LiLin Yin and Dong Yin
-Build date: May 6, 2021
-Last update: June 3, 2021}
+\title{Pedigree data quality control}
 \usage{
 simer.Data.Ped(
   filePed,
@@ -23,48 +20,52 @@ simer.Data.Ped(
 )
 }
 \arguments{
-\item{filePed}{the name of pedigree file need correcting}
+\item{filePed}{the filename of pedigree need correcting.}
 
-\item{fileMVP}{Genotype in MVP format}
+\item{fileMVP}{genotype in MVP format.}
 
-\item{out}{the name of output file}
+\item{out}{the prefix of output file.}
 
-\item{standardID}{whether kid id is 15-character standard}
+\item{standardID}{whether kid id is 15-character standard.}
 
-\item{fileSir}{the file name of candidate sires}
+\item{fileSir}{the filename of candidate sires.}
 
-\item{fileDam}{the file name of candidate dams}
+\item{fileDam}{the filename of candidate dams.}
 
-\item{exclThres}{if conflict ratio is more than exclThres, exclude this parent}
+\item{exclThres}{if conflict ratio is more than exclThres, exclude this parent.}
 
-\item{assignThres}{if conflict ratio is less than assignThres, assign this parent to the individual}
+\item{assignThres}{if conflict ratio is less than assignThres, assign this parent to the individual.}
 
-\item{header}{whether the file contains header}
+\item{header}{whether the file contains header.}
 
-\item{sep}{separator of the file}
+\item{sep}{separator of the file.}
 
-\item{ncpus}{The number of threads used, if NULL, (logical core number - 1) is automatically used}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
 \value{
-Output file:
-<out>.report.txt
-<out>.error.txt
-<out>.qc.txt
+the function returns files
+\describe{
+\item{<out>.report.ped}{the report file containing correction condition.}
+\item{<out>.error.ped}{the file containing pedigree error.}
+\item{<out>.ped}{the pedigree file after correction.}
+}
 }
 \description{
-simer.Data.Ped: To check pedigree file
-Author: LiLin Yin and Dong Yin
+Data quality control for pedigree data
+}
+\details{
 Build date: May 6, 2021
-Last update: June 3, 2021
+Last update: Apr 28, 2022
 }
 \examples{
-# simer.Data.Ped needs genotype data
-out <- tempfile("outfile")
-fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
-simer.Data.MVP2MVP(fileMVP, out = out)
+# Get the filename of pedigree data
+filePed <- system.file("extdata", "05others", "pedigree.txt", package = "simer")
 
-filePed <- system.file("extdata", "pedigree.txt", package = "simer")
-simer.Data.Ped(filePed = filePed, out = out, standardID = FALSE)
+# Run pedigree correction
+simer.Data.Ped(filePed = filePed, out = tempfile("outfile"))
+}
+\author{
+Lilin Yin and Dong Yin
 }

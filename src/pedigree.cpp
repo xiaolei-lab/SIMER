@@ -248,9 +248,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
           break;
         }
 
-      } // if find
-    } //for (int j = 0; j < (numCand*(numCand-1)/2);  j++)
-  } // for (int i = 0; i < n; i++) {
+      }
+    }
+  }
   
   DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
                                                 _["sir"] = sirID, 
