@@ -2,24 +2,38 @@
 % Please edit documentation in R/simer.r
 \name{simer}
 \alias{simer}
-\title{Main function of simer}
+\title{Simer}
 \usage{
 simer(SP)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 }
 \value{
-a list with simulated population
+the function returns a list containing
+\describe{
+\item{$global}{a list of global parameters.}
+\item{$map}{a list of marker information parameters.}
+\item{$geno}{a list of genotype simulation parameters.}
+\item{$pheno}{a list of phenotype simulation parameters.}
+\item{$sel}{a list of selection parameters.}
+\item{$reprod}{a list of reproduction parameters.}
+}
 }
 \description{
+Main function of Simer.
+}
+\details{
 Build date: Jan 7, 2019
-Last update: Apr 17, 2022
+Last update: Apr 29, 2022
 }
 \examples{
+# Generate all simulation parameters
 SP <- param.simer(out = "simer")
+
+# Run Simer
 SP <- simer(SP)
 }
 \author{
-Dong Yin, Lilin Yin, Haohao Zhang and Xiaolei Liu
+Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 }

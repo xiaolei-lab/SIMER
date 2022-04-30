@@ -382,17 +382,27 @@ param.sel <- function(SP = NULL, ...) {
   return(SP)
 }
 
-#' Generate parameters for reproduction
+#' Reproduction parameters generator
+#' 
+#' Generate parameters for reproduction.
 #' 
 #' Build date: Apr 6, 2022
-#' Last update: Apr 6, 2022
+#' Last update: Apr 29, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ... one or more parameter(s) for reproduction
+#' @param SP a list of all simulation parameters.
+#' @param ... one or more parameter(s) for reproduction.
 #'
-#' @return a list of selection parameters 
+#' @return 
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
@@ -430,17 +440,34 @@ param.reprod <- function(SP = NULL, ...) {
   return(SP)
 }
 
-#' Generate parameters for global options
+#' Global parameters generator
+#' 
+#' Generate parameters for global options.
 #' 
 #' Build date: Apr 16, 2022
-#' Last update: Apr 16, 2022
+#' Last update: Apr 29, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ... one or more parameter(s) for global options
+#' @param SP a list of all simulation parameters.
+#' @param ... one or more parameter(s) for global options.
 #'
-#' @return a list of global options
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$replication}{the replication times of simulation.}
+#' \item{seed.sim}{simulation random seed.}
+#' \item{$out}{the prefix of output files.}
+#' \item{$outpath}{the path of output files, Simer writes files only if outpath is not 'NULL'.}
+#' \item{$out.format}{'numeric' or 'plink', the data format of output files.}
+#' \item{$pop.gen}{the generations of simulated population.}
+#' \item{out.geno.gen}{the output generations of genotype data.}
+#' \item{$out.pheno.gen}{the output generations of phenotype data.}
+#' \item{$useAllGeno}{whether to use all genotype data to simulate phenotype.}
+#' \item{$ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
+#' \item{$verbose}{whether to print detail.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
@@ -480,17 +507,29 @@ param.global <- function(SP = NULL, ...) {
   return(SP)
 }
 
-#' Generate parameters for simer
+#' Parameter generator
+#' 
+#' Generate parameters for Simer.
 #' 
 #' Build date: Apr 17, 2022
-#' Last update: Apr 17, 2022
+#' Last update: Apr 29, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ... one or more parameter(s) for simer
+#' @param SP a list of all simulation parameters.
+#' @param ... one or more parameter(s) for simer.
 #'
-#' @return a list of simer parameters
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$global}{a list of global parameters.}
+#' \item{$map}{a list of marker information parameters.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' \item{$sel}{a list of selection parameters.}
+#' \item{$reprod}{a list of reproduction parameters.}
+#' }
+#' 
 #' @export
 #'
 #' @examples

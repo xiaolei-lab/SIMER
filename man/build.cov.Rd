@@ -7,7 +7,7 @@
 build.cov(df = NULL, mu = rep(0, nrow(Sigma)), Sigma = diag(2), tol = 1e-06)
 }
 \arguments{
-\item{df}{a data.frame needing building correlation.}
+\item{df}{a data frame needing building correlation.}
 
 \item{mu}{means of the variables.}
 
@@ -16,7 +16,7 @@ build.cov(df = NULL, mu = rep(0, nrow(Sigma)), Sigma = diag(2), tol = 1e-06)
 \item{tol}{tolerance (relative to largest variance) for numerical lack of positive-definiteness in Sigma.}
 }
 \value{
-a data.frame with expected correlation
+a data frame with expected correlation
 }
 \description{
 To bulid correlation of variables.

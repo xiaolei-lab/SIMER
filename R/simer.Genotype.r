@@ -48,7 +48,12 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 ### Start genotype simulation
   
   # genotype parameters
-  pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  if (is.matrix(SP$geno$pop.geno) | is.big.matrix(SP$geno$pop.geno)) {
+    pop.geno <- SP$geno$pop.geno
+    SP$geno$pop.geno <- list(1)
+  } else {
+    pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
+  }
   pop.map <- SP$map$pop.map
   incols <- SP$geno$incols
   pop.marker <- SP$geno$pop.marker

@@ -2,21 +2,32 @@
 % Please edit documentation in R/simer.Parameter.r
 \name{param.simer}
 \alias{param.simer}
-\title{Generate parameters for simer}
+\title{Parameter generator}
 \usage{
 param.simer(SP = NULL, ...)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{...}{one or more parameter(s) for simer}
+\item{...}{one or more parameter(s) for simer.}
 }
 \value{
-a list of simer parameters
+the function returns a list containing
+\describe{
+\item{$global}{a list of global parameters.}
+\item{$map}{a list of marker information parameters.}
+\item{$geno}{a list of genotype simulation parameters.}
+\item{$pheno}{a list of phenotype simulation parameters.}
+\item{$sel}{a list of selection parameters.}
+\item{$reprod}{a list of reproduction parameters.}
+}
 }
 \description{
+Generate parameters for Simer.
+}
+\details{
 Build date: Apr 17, 2022
-Last update: Apr 17, 2022
+Last update: Apr 29, 2022
 }
 \examples{
 SP <- param.simer(out = "simer")

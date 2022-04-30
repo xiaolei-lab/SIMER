@@ -11,35 +11,57 @@
 # limitations under the License.
 
 
-#' Do reproduction by different mate design
+#' Reproduction
+#' 
+#' Population reproduction by different mate design.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 12, 2022
+#' Last update: Apr 29, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #'
-#' @return population information and genotype matrix of current population
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
+#' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "randmate")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run reproduction
 #' SP <- reproduces(SP)
-#' str(SP)
 reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 
-# Start reproduction
+### Start reproduction
 
   reprod.way <- SP$reprod$reprod.way
   
@@ -80,30 +102,37 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Mating according to the indice of sires and dams
+#' Mate
+#' 
+#' Mating according to the indice of sires and dams.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop.geno genotype matrix of population
-#' @param index.sir indice of sires
-#' @param index.dam indice of dams
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param ncpus the number of threads
+#' @param pop.geno the genotype data.
+#' @param index.sir the indice of sires.
+#' @param index.dam the indice of dams.
+#' @param incols '1':one-column genotype represents an individual; '2': two-column genotype represents an individual.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #'
-#' @return genotype matrix after mating
+#' @return a genotype matrix after mating
 #' @export
 #'
 #' @examples
+#' # Generate the genotype data
 #' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 #' SP <- genotype(SP)
 #' pop.geno <- SP$geno$pop.geno$gen1
+#' 
+#' # The mating design
 #' index.sir <- rep(1:50, each = 2)
 #' index.dam <- rep(51:100, each = 2)
+#' 
+#' # Mate according to mating design
 #' geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
-#'                  index.dam = index.dam)
+#'                   index.dam = index.dam)
 #' geno.curr[1:5, 1:5]
 mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
   
@@ -127,49 +156,70 @@ mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
     BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
     
   } else {
-    # mix parent genotype to generate kid genotype
+    # mix parent genotype to generate progeny genotype
     GenoMixer(pop.geno.curr@address, pop.geno@address, index.sir, index.dam, threads = ncpus)
   }
   
   return(pop.geno.curr)
 }
 
-#' Clone process
+#' Clone
+#' 
+#' Produce individuals by clone.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 10, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #'
-#' @return population information and genotype matrix of population after clone process
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "clone")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run clone
 #' SP <- mate.clone(SP)
-#' str(SP)
 mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop.gen <- SP$reprod$pop.gen - 1
   count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
   logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
   if (pop.gen == 0) return(SP)
   
   for (i in 1:pop.gen) {
-    # unfold reproduction parameters
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -236,42 +286,63 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Doubled haploid process
+#' Doubled haploid
+#' 
+#' Produce individuals by doubled haploid.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 4, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
+#'
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
 #' 
-#' @return population information and genotype matrix of population after doubled haploid process
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP,prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "dh")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run doubled haploid
 #' SP <- mate.dh(SP)
-#' str(SP)
 mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 
-  # unfold reproduction parameters
+  # reproduction parameters
   pop.gen <- SP$reprod$pop.gen - 1
   count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
   logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
   if (pop.gen == 0) return(SP)
   
   for (i in 1:pop.gen) {
-    # unfold reproduction parameters
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -343,41 +414,62 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 }
 
 #' Self-pollination
+#' 
+#' Produce individuals by self-pollination.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 10, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
+#'
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
 #' 
-#' @return population information and genotype matrix of population after self-pollination process
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "selfpol")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run self-pollination
 #' SP <- mate.selfpol(SP)
-#' str(SP)
 mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 
-  # unfold reproduction parameters
+  # reproduction parameters
   pop.gen <- SP$reprod$pop.gen - 1
   count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
   logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
   if (pop.gen == 0) return(SP)
   
   for (i in 1:pop.gen) {
-    # unfold reproduction parameters
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -423,42 +515,63 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Random mating process
+#' Random mating
+#' 
+#' Produce individuals by random-mating.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 10, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
+#'
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
 #' 
-#' @return population information and genotype matrix of population after random mating process
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "randmate")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run random mating
 #' SP <- mate.randmate(SP)
-#' str(SP)
 mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop.gen <- SP$reprod$pop.gen - 1
   count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
   logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
   if (pop.gen == 0) return(SP)
   
   for (i in 1:pop.gen) {
-    # unfold reproduction parameters
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -512,42 +625,63 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Random mating excluding self-pollination process
+#' Random mating excluding self-pollination
+#'
+#' Produce individuals by random mating excluding self-pollination.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 10, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
+#'
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
 #' 
-#' @return population information and genotype matrix of population after random mating excluding self-pollination process
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "randexself")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run random mating excluding self-pollination
 #' SP <- mate.randexself(SP)
-#' str(SP)
 mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop.gen <- SP$reprod$pop.gen - 1
   count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
   logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
   if (pop.gen == 0) return(SP)
   
   for (i in 1:pop.gen) {
-    # unfold reproduction parameters
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -611,37 +745,59 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Two-way cross process
+#' Two-way cross
+#' 
+#' Produce individuals by two-way cross.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 10, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
+#'
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
 #' 
-#' @return population information and genotype matrix of population after two-way cross process
 #' @export
-#' 
+#'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "2waycro")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run two-way cross
 #' SP <- mate.2waycro(SP)
-#' str(SP)
 mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -693,39 +849,59 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' three-way cross process
+#' Three-way cross
+#'
+#' Produce individuals by three-way cross.
 #'
 #' Build date: Apr 11, 2022
-#' Last update: Apr 11, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #' 
-#' @return population information and genotype matrix of population after three-way cross process
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
+#' 
 #' @export
-#' 
+#'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "3waycro")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
-#' # three different breeds are cut by sex
-#' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1), c(30, 30, 40))
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run three-way cross
 #' SP <- mate.3waycro(SP)
-#' str(SP)
 mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -776,7 +952,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
-  ### genotype, phenotype and selection ###
+  ### genotype, phenotype, and selection ###
   SP <- genotype(SP)
   SP <- phenotype(SP)
   SP <- selects(SP)
@@ -829,39 +1005,59 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' four-way cross process
+#' Four-way cross process
+#'
+#' Produce individuals by four-way cross.
 #'
 #' Build date: Apr 11, 2022
-#' Last update: Apr 11, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #' 
-#' @return population information and genotype matrix of population after four-way cross process
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
+#' 
 #' @export
-#' 
+#'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "4waycro")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
-#' # four different breeds are cut by sex
-#' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run four-way cross
 #' SP <- mate.4waycro(SP)
-#' str(SP)
 mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -885,7 +1081,7 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
     stop("Something wrong in the format of four-way cross data!")
   }
   
-  ### the first two two-way cross ###
+  ### the first two two-way crosses ###
   ped.sir1 <- intersect(pop[1:(sex.op[1]-1), 1], pop.sel$sir)
   ped.dam1 <- intersect(pop[sex.op[1]:(sex.op[2]-1), 1], pop.sel$dam)
   ped.sir2 <- intersect(pop[sex.op[2]:(sex.op[3]-1), 1], pop.sel$sir)
@@ -927,7 +1123,7 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- 
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
-  ### genotype, phenotype and selection ###
+  ### genotype, phenotype, and selection ###
   SP <- genotype(SP)
   SP <- phenotype(SP)
   SP <- selects(SP)
@@ -974,41 +1170,62 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' Back cross process
+#' Back cross
+#' 
+#' Produce individuals by back cross.
 #'
 #' Build date: Apr 12, 2022
-#' Last update: Apr 12, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #' 
-#' @return population information and genotype matrix of population after back cross process
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
+#' 
 #' @export
-#' 
+#'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
-#' SP <- param.reprod(SP = SP, prog = 2)
+#' # Generate reproduction parameters
+#' SP <- param.reprod(SP = SP, reprod.way = "backcro")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
+#' # Run back cross
 #' SP <- mate.backcro(SP)
-#' str(SP)
 mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop.gen <- SP$reprod$pop.gen - 1
   count.ind <- nrow(SP$pheno$pop[[length(SP$pheno$pop)]])
   logging.log(" After generation", 1, ",", sum(count.ind[1:1]), "individuals are generated...\n", verbose = verbose)
   if (pop.gen == 0) return(SP)
   
-  # unfold reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
@@ -1022,7 +1239,7 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
   sex.rate <- SP$reprod$sex.rate
   prog <- SP$reprod$prog
   
-  # used in every generation
+  # it is used in every generation
   ped.sir.ori <- pop.sel$sir
   pop.geno.id.ori <- pop.geno.id
   pop.geno.ori <- pop.geno
@@ -1060,7 +1277,6 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
     
-    # unfold reproduction parameters
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- c(pop.geno.id.ori, pop[, 1])
     pop.geno <- big.matrix(
@@ -1076,40 +1292,64 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
-#' User-spicified cross process
+#' User-specified pedigree mating
+#'
+#' Produce individuals by user-specified pedigree mating.
 #'
 #' Build date: Apr 12, 2022
-#' Last update: Apr 12, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param ncpus the number of threads
-#' @param verbose whether to print detail
-#'
-#' @return population information and genotype matrix of population after User-spicified cross process
-#' @export
+#' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print detail.
 #' 
+#' @return
+#' the function returns a list containing
+#' \describe{
+#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
+#' \item{$reprod$prog}{the progeny number of an individual.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' }
+#' 
+#' @export
+#'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "comb")
+#' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "userped")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
+#' # Run user-specified pedigree mating
 #' SP <- mate.userped(SP)
-#' str(SP)
 mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
   
-  # unfold reproduction parameters
+  # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
   incols <- SP$geno$incols
   userped <- SP$reprod$userped
   
-  # Thanks to YinLL for sharing codes of pedigree sorting
+  # thanks to YinLL for sharing codes of pedigree sorting
   userped[is.na(userped)] <- "0"
   pedx <- as.matrix(userped)
   pedx0 <- c(setdiff(pedx[, 2],pedx[, 1]), setdiff(pedx[, 3],pedx[, 1]))
@@ -1176,19 +1416,21 @@ mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
   return(SP)
 }
 
+#' Family index and within-family index
+#' 
 #' Get indice of family and within-family
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param sir indice of sires
-#' @param dam indice of dams
-#' @param fam.op initial index of family indice
-#' @param mode mode to get indice with "pat", "mat" and "pm"
-#'
-#' @return a matrix with family indice and within-family indice
+#' @param sir the indice of sires.
+#' @param dam the indice of dams.
+#' @param fam.op the initial index of family indice.
+#' @param mode "pat": paternal mode; "mat": maternal mode; "pm": paternal and maternal mode.
+#' 
+#' @return a matrix with family indice and within-family indice.
 #' @export
 #'
 #' @examples
@@ -1229,25 +1471,28 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
   return(cbind(fam, infam))
 }
 
-#' Calculate the individual number per generation
+#' Individual number per generation
+#' 
+#' Calculate the individual number per generation.
 #'
 #' Build date: Apr 12, 2022
-#' Last update: Apr 12, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param pop the base population
-#' @param pop.gen the generation number of population
-#' @param ps if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females
-#' @param reprod.way the reproduction way
-#' @param sex.rate the number of progeny per dam
-#' @param prog the number of progeny per dam
+#' @param pop the population information containing environmental factors and other effects.
+#' @param pop.gen the generations of simulated population.
+#' @param ps if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.
+#' @param reprod.way reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.
+#' @param sex.rate the sex ratio of simulated population.
+#' @param prog the progeny number of an individual.
 #'
-#' @return the vector containing the individual number per generation
+#' @return the vector containing the individual number per generation.
 #' @export
 #'
 #' @examples
 #' pop <- generate.pop(pop.ind = 100)
+#' count.ind <- IndPerGen(pop)
 IndPerGen <- function(pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "randmate", sex.rate = 0.5, prog = 2) {
   
   if (!(all(ps <= 1) | all(ps > 1))) {
@@ -1326,36 +1571,4 @@ IndPerGen <- function(pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "randmate
   }
   
   return(count.ind)
-}
-
-#' Get output index of phenotype and pedigree
-#'
-#' Build date: Nov 14, 2018
-#' Last update: Aug 1, 2019
-#'
-#' @author Dong Yin
-#'
-#' @param count.ind a vector with population size of every generations
-#' @param out.gen a vector with generations needing outputting
-#'
-#' @return individuals indice need outputting
-#' @export
-#' 
-#' @examples
-#' count.ind <- c(100, 200, 400, 800)
-#' out.gen <- 2:4
-#' idx <- getindex(count.ind = count.ind, out.gen = out.gen)
-#' str(idx)
-getindex <- function(count.ind, out.gen) {
-  out.index <- NULL
-  for (i in 1:length(out.gen)) {
-      if (out.gen[i] == 1) {
-        op <- 1
-      } else {
-        op <- sum(count.ind[1:(out.gen[i]-1)]) + 1
-      }
-      ed <- op + count.ind[out.gen[i]] - 1
-      out.index <- c(out.index, op:ed)
-  }
-  return(out.index)
 }

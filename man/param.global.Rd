@@ -2,21 +2,37 @@
 % Please edit documentation in R/simer.Parameter.r
 \name{param.global}
 \alias{param.global}
-\title{Generate parameters for global options}
+\title{Global parameters generator}
 \usage{
 param.global(SP = NULL, ...)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{...}{one or more parameter(s) for global options}
+\item{...}{one or more parameter(s) for global options.}
 }
 \value{
-a list of global options
+the function returns a list containing
+\describe{
+\item{$replication}{the replication times of simulation.}
+\item{seed.sim}{simulation random seed.}
+\item{$out}{the prefix of output files.}
+\item{$outpath}{the path of output files, Simer writes files only if outpath is not 'NULL'.}
+\item{$out.format}{'numeric' or 'plink', the data format of output files.}
+\item{$pop.gen}{the generations of simulated population.}
+\item{out.geno.gen}{the output generations of genotype data.}
+\item{$out.pheno.gen}{the output generations of phenotype data.}
+\item{$useAllGeno}{whether to use all genotype data to simulate phenotype.}
+\item{$ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
+\item{$verbose}{whether to print detail.}
+}
 }
 \description{
+Generate parameters for global options.
+}
+\details{
 Build date: Apr 16, 2022
-Last update: Apr 16, 2022
+Last update: Apr 29, 2022
 }
 \examples{
 SP <- param.global(out = "simer")

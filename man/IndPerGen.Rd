@@ -2,7 +2,7 @@
 % Please edit documentation in R/simer.Reproduces.r
 \name{IndPerGen}
 \alias{IndPerGen}
-\title{Calculate the individual number per generation}
+\title{Individual number per generation}
 \usage{
 IndPerGen(
   pop,
@@ -14,27 +14,31 @@ IndPerGen(
 )
 }
 \arguments{
-\item{pop}{the base population}
+\item{pop}{the population information containing environmental factors and other effects.}
 
-\item{pop.gen}{the generation number of population}
+\item{pop.gen}{the generations of simulated population.}
 
-\item{ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females}
+\item{ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
 
-\item{reprod.way}{the reproduction way}
+\item{reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
 
-\item{sex.rate}{the number of progeny per dam}
+\item{sex.rate}{the sex ratio of simulated population.}
 
-\item{prog}{the number of progeny per dam}
+\item{prog}{the progeny number of an individual.}
 }
 \value{
-the vector containing the individual number per generation
+the vector containing the individual number per generation.
 }
 \description{
+Calculate the individual number per generation.
+}
+\details{
 Build date: Apr 12, 2022
-Last update: Apr 12, 2022
+Last update: Apr 30, 2022
 }
 \examples{
 pop <- generate.pop(pop.ind = 100)
+count.ind <- IndPerGen(pop)
 }
 \author{
 Dong Yin

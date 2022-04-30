@@ -2,25 +2,28 @@
 % Please edit documentation in R/simer.Reproduces.r
 \name{getfam}
 \alias{getfam}
-\title{Get indice of family and within-family}
+\title{Family index and within-family index}
 \usage{
 getfam(sir, dam, fam.op, mode = c("pat", "mat", "pm"))
 }
 \arguments{
-\item{sir}{indice of sires}
+\item{sir}{the indice of sires.}
 
-\item{dam}{indice of dams}
+\item{dam}{the indice of dams.}
 
-\item{fam.op}{initial index of family indice}
+\item{fam.op}{the initial index of family indice.}
 
-\item{mode}{mode to get indice with "pat", "mat" and "pm"}
+\item{mode}{"pat": paternal mode; "mat": maternal mode; "pm": paternal and maternal mode.}
 }
 \value{
-a matrix with family indice and within-family indice
+a matrix with family indice and within-family indice.
 }
 \description{
+Get indice of family and within-family
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Aug 1, 2019
+Last update: Apr 30, 2022
 }
 \examples{
 s <- c(0, 0, 0, 0, 1, 3, 3, 1, 5, 7, 5, 7, 1, 3, 5, 7)

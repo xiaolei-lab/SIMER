@@ -11,38 +11,51 @@
 # limitations under the License.
 
 
-#' Main function of simer
+#' Simer
+#' 
+#' Main function of Simer.
 #'
 #' Build date: Jan 7, 2019
-#' Last update: Apr 17, 2022
+#' Last update: Apr 29, 2022
 #'
-#' @author Dong Yin, Lilin Yin, Haohao Zhang and Xiaolei Liu
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 #'
-#' @param SP a list of all simulation parameters
+#' @param SP a list of all simulation parameters.
 #' 
-#' @return a list with simulated population
+#' @return 
+#' the function returns a list containing
+#' \describe{
+#' \item{$global}{a list of global parameters.}
+#' \item{$map}{a list of marker information parameters.}
+#' \item{$geno}{a list of genotype simulation parameters.}
+#' \item{$pheno}{a list of phenotype simulation parameters.}
+#' \item{$sel}{a list of selection parameters.}
+#' \item{$reprod}{a list of reproduction parameters.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
+#' # Generate all simulation parameters
 #' SP <- param.simer(out = "simer")
+#' 
+#' # Run Simer
 #' SP <- simer(SP)
 simer <- function(SP) {
 
-# Start simer
+### Start simer
 
-# TODO: How to generate inbreeding sirs and uninbreeding dams
+# TODO: how to generate inbreeding sirs and uninbreeding dams
 # TODO: optcontri.sel  
 # TODO: add superior limit of homo
-# TODO: add summary() to population information
 # TODO: add inbreeding coefficient
-# TODO: update index selection
-# TODO: add true block distribution  
+# TODO: add true block distribution
 # TODO: inbreeding change in every generations
 # TODO: breeding literature from ZhenST
 # TODO: remove one column genotype
-# TODO: data convert of simer
+# TODO: data converter of simer
   
-  # unfold global parameters
+  # global parameters
   replication <- SP$global$replication
   seed.sim <- SP$global$seed.sim
   out <- SP$global$out
@@ -75,11 +88,11 @@ simer <- function(SP) {
   SP <- reproduces(SP = SP, ncpus = ncpus, verbose = verbose)
   
   ################### DATA WRITING ###################
-  write.file(SP)
+  SP <- write.file(SP)
   
   print_accomplished(width = 70, verbose = verbose)
-  # Return the last directory
   ed <- Sys.time()
   logging.log(" SIMER DONE WITHIN TOTAL RUN TIME:", format_time(as.numeric(ed)-as.numeric(op)), "\n", verbose = verbose)
+  
   return(SP)
 }

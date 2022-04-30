@@ -422,7 +422,7 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
   
   remove_var <- function(binfile, envir) {
     for (v in ls(envir = envir)) {
-      if (class(get(v, envir = envir)) == "big.matrix") {
+      if (any(class(get(v, envir = envir)) == "big.matrix")) {
         desc <- describe(get(v, envir = envir))@description
         if (desc$filename == binfile) {
           rm(list = v, envir = envir)
@@ -557,4 +557,6 @@ write.file <- function(SP) {
   logging.log(" All files have been saved successfully!\n", verbose = verbose)
   
   rm(geno.total); rm(pheno.total); rm(pheno.geno); gc()
+  
+  return(SP)
 }

@@ -342,7 +342,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
       }
       
     }
-    # repeat model
+    # repeated record model
     if (pop.rep > 1) {
       phe.PE <- rnorm(pop.ind)
       scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2PE[[i]] / var(phe.PE)))
@@ -420,7 +420,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
     }
   }
   
-  # if it is a repeated trait
+  # if it is a repeated record trait
   if (pop.rep > 1) {
     phe.eff <- do.call(rbind, rep(list(phe.eff), pop.rep))
     phe.PE <- phe.eff[, grep(pattern = "_PE_", x = names(phe.eff)), drop = FALSE]
@@ -473,7 +473,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
 
 #' Population generator
 #' 
-#' Generate population according to number of individuals.
+#' Generate population according to the number of individuals.
 #'
 #' Build date: Nov 14, 2018
 #' Last update: Apr 28, 2022
@@ -515,12 +515,12 @@ generate.pop <- function(pop.ind = 100, from = 1, ratio = 0.5, gen = 1) {
 #'
 #' @author Dong Yin and R
 #'
-#' @param df a data.frame needing building correlation.
+#' @param df a data frame needing building correlation.
 #' @param mu means of the variables.
 #' @param Sigma covariance matrix of variables.
 #' @param tol tolerance (relative to largest variance) for numerical lack of positive-definiteness in Sigma.
 #'
-#' @return a data.frame with expected correlation
+#' @return a data frame with expected correlation
 #' @export
 #' @references B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98
 #'

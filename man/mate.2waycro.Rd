@@ -2,36 +2,57 @@
 % Please edit documentation in R/simer.Reproduces.r
 \name{mate.2waycro}
 \alias{mate.2waycro}
-\title{Two-way cross process}
+\title{Two-way cross}
 \usage{
 mate.2waycro(SP, ncpus = 0, verbose = TRUE)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{ncpus}{the number of threads}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
-\item{verbose}{whether to print detail}
+\item{verbose}{whether to print detail.}
 }
 \value{
-population information and genotype matrix of population after two-way cross process
+the function returns a list containing
+\describe{
+\item{$reprod$pop.gen}{the generations of simulated population.}
+\item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+\item{$reprod$sex.rate}{the sex ratio of simulated population.}
+\item{$reprod$prog}{the progeny number of an individual.}
+\item{$geno}{a list of genotype simulation parameters.}
+\item{$pheno}{a list of phenotype simulation parameters.}
+}
 }
 \description{
+Produce individuals by two-way cross.
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Apr 10, 2022
+Last update: Apr 30, 2022
 }
 \examples{
+# Generate annotation simulation parameters
 SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
-SP <- param.reprod(SP = SP, prog = 2)
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "2waycro")
+
+# Run annotation simulation
 SP <- annotation(SP)
+# Run genotype simulation
 SP <- genotype(SP)
+# Run phenotype simulation
 SP <- phenotype(SP)
+# Run selection
 SP <- selects(SP)
+# Run two-way cross
 SP <- mate.2waycro(SP)
-str(SP)
 }
 \author{
 Dong Yin

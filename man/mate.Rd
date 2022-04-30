@@ -2,36 +2,44 @@
 % Please edit documentation in R/simer.Reproduces.r
 \name{mate}
 \alias{mate}
-\title{Mating according to the indice of sires and dams}
+\title{Mate}
 \usage{
 mate(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0)
 }
 \arguments{
-\item{pop.geno}{genotype matrix of population}
+\item{pop.geno}{the genotype data.}
 
-\item{index.sir}{indice of sires}
+\item{index.sir}{the indice of sires.}
 
-\item{index.dam}{indice of dams}
+\item{index.dam}{the indice of dams.}
 
-\item{incols}{the column number of an individual in the input genotype matrix, it can be 1 or 2}
+\item{incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
 
-\item{ncpus}{the number of threads}
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 }
 \value{
-genotype matrix after mating
+a genotype matrix after mating
 }
 \description{
+Mating according to the indice of sires and dams.
+}
+\details{
 Build date: Nov 14, 2018
-Last update: Aug 1, 2019
+Last update: Apr 30, 2022
 }
 \examples{
+# Generate the genotype data
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 SP <- genotype(SP)
 pop.geno <- SP$geno$pop.geno$gen1
+
+# The mating design
 index.sir <- rep(1:50, each = 2)
 index.dam <- rep(51:100, each = 2)
+
+# Mate according to mating design
 geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
-                 index.dam = index.dam)
+                  index.dam = index.dam)
 geno.curr[1:5, 1:5]
 }
 \author{

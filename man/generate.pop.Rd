@@ -19,7 +19,7 @@ generate.pop(pop.ind = 100, from = 1, ratio = 0.5, gen = 1)
 a data frame of population information.
 }
 \description{
-Generate population according to number of individuals.
+Generate population according to the number of individuals.
 }
 \details{
 Build date: Nov 14, 2018

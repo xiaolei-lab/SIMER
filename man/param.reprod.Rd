@@ -2,21 +2,30 @@
 % Please edit documentation in R/simer.Parameter.r
 \name{param.reprod}
 \alias{param.reprod}
-\title{Generate parameters for reproduction}
+\title{Reproduction parameters generator}
 \usage{
 param.reprod(SP = NULL, ...)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{...}{one or more parameter(s) for reproduction}
+\item{...}{one or more parameter(s) for reproduction.}
 }
 \value{
-a list of selection parameters
+the function returns a list containing
+\describe{
+\item{$reprod$pop.gen}{the generations of simulated population.}
+\item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+\item{$reprod$sex.rate}{the sex ratio of simulated population.}
+\item{$reprod$prog}{the progeny number of an individual.}
+}
 }
 \description{
+Generate parameters for reproduction.
+}
+\details{
 Build date: Apr 6, 2022
-Last update: Apr 6, 2022
+Last update: Apr 29, 2022
 }
 \examples{
 SP <- param.reprod(reprod.way = "randmate")
