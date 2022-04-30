@@ -11,34 +11,58 @@
 # limitations under the License.
 
 
-#' Select individuals by combination of selection method and criterion
+#' Selection
+#' 
+#' Select individuals by combination of selection method and criterion.
 #'
 #' Build date: Sep 8, 2018
-#' Last update: Apr 4, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
-#' @param verbose whether to print detail
+#' @param SP a list of all simulation parameters.
+#' @param verbose whether to print detail.
 #' 
-#' @return individual indice sorted by scores
+#' @return 
+#' the function returns a list containing
+#' \describe{
+#' \item{$sel$pop.sel}{the selected males and females.}
+#' \item{$sel$ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
+#' \item{$sel$decr}{whether the sort order is decreasing.}
+#' \item{$sel$sel.crit}{the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.}
+#' \item{$sel$sel.single}{the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.}
+#' \item{$sel$sel.multi}{the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.}
+#' \item{$sel$index.wt}{the weight of each trait for multiple-trait selection.}
+#' \item{$sel$index.tdm}{the index of tandem selection for multiple-trait selection.}
+#' \item{$sel$goal.perc}{the percentage of goal more than the mean of scores of individuals.}
+#' \item{$sel$pass.perc}{percentage of expected excellent individuals.}
+#' }
+#' 
 #' @export
 #'
 #' @examples
+#' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = 10)
+#' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+#' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
 #' SP <- param.sel(SP = SP, sel.single = "comb")
+#' 
+#' # Run annotation simulation
 #' SP <- annotation(SP)
+#' # Run genotype simulation
 #' SP <- genotype(SP)
+#' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
 #' SP <- selects(SP)
-#' str(SP$sel$pop.sel$gen1)
 selects <- function(SP = NULL, verbose = TRUE) {
 
-# Start selection
+### Start selection
   
-  # unfold selection parameters
+  # selection parameters
   pop.sel <- SP$sel$pop.sel
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.total <- do.call(rbind, SP$pheno$pop)
@@ -71,7 +95,6 @@ selects <- function(SP = NULL, verbose = TRUE) {
   ### single trait selection ###
 	if (length(phe.pos) == 1) {
 	  num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
-	  # calculate r by A matrix
 	  if (sel.single == "comb") {
 	    # calculate A matrix
 	    A.cal <- function(s, d) {
@@ -252,80 +275,4 @@ selects <- function(SP = NULL, verbose = TRUE) {
   SP$sel$pop.sel[[ifelse(is.null(SP$sel$pop.sel), 1, length(SP$sel$pop.sel) + 1)]] <- pop.sel
   names(SP$sel$pop.sel)[length(SP$sel$pop.sel)] <- paste0("gen", length(SP$sel$pop.sel))
 	return(SP)
-}
-
-#' Get core population ID and genotype
-#'
-#' Build date: May 2, 2020
-#' Last update: May 2, 2020
-#'
-#' @author Dong Yin
-#'
-#' @param pop.sel ID of the sires and the dams passing selection
-#' @param core.stay ID the core sires and dams
-#' @param refresh refresh ratio of core population of sires and dams, only used in ps > 1
-#' @param keep.max.gen if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females
-#' @param incols the column number of an individual in the input genotype matrix, it can be 1 or 2
-#' @param pop.total total population information
-#' @param pop.geno.curr genotype matrix of current population
-#' @param pop.geno.core genotype matrix of core population
-#'
-#' @return core population list
-#' @export
-#'
-#' @examples
-#' # no example for now
-sel.core <- function(pop.sel = NULL, core.stay = NULL, refresh = rep(0.6, 2), keep.max.gen = rep(3, 2), incols = 2, pop.total, pop.geno.curr, pop.geno.core) {
-  if (any(refresh < 0.5)) 
-    stop("Refresh ratio of the core population should be not less than 0.5!")
-  if (length(refresh) != 2)
-    stop("refresh should be set only for sires and dams!")
-  if (length(keep.max.gen) != 2)
-    stop("keep.max.gen should be set only for sires and dams!")
-  refresh[keep.max.gen == 1] <- 1
-  
-  gen <- pop.total$gen[nrow(pop.total)]
-  index.curr <- pop.total[pop.total$gen == gen, ]$index
-  gen.core.sir <- pop.total[core.stay$sir, ]$gen
-  gen.core.dam <- pop.total[core.stay$dam, ]$gen
-  f.gen.sir <- gen.core.sir <= gen - keep.max.gen[1]
-  f.gen.dam <- gen.core.dam <= gen - keep.max.gen[2]
-  sf.gen.sir <- sum(f.gen.sir)
-  sf.gen.dam <- sum(f.gen.dam)
-  
-  num.refresh.sir <- round(length(core.stay$sir) * refresh[1])
-  num.refresh.dam <- round(length(core.stay$dam) * refresh[2])
-  if (num.refresh.sir < sf.gen.sir) 
-    stop("Refresh sires should be not less than old sires!")
-  if (num.refresh.dam < sf.gen.dam) 
-    stop("Refresh dams should be not less than old dams!")
-  
-  if (num.refresh.sir > sf.gen.sir) {
-    id.add.sir <- sample(which(!f.gen.sir), size = num.refresh.sir-sf.gen.sir)
-    f.gen.sir[id.add.sir] <- TRUE
-  }
-  if (num.refresh.dam > sf.gen.dam) {
-    id.add.dam <- sample(which(!f.gen.dam), size = num.refresh.dam-sf.gen.dam)
-    f.gen.dam[id.add.dam] <- TRUE
-  }
-  
-  sir.stay <- pop.sel$sir[1:num.refresh.sir]
-  dam.stay <- pop.sel$dam[1:num.refresh.dam]
-  if (incols == 2) {
-    gmt.dam.curr <- match(c(sir.stay, dam.stay), index.curr)
-    gmt.dam.core <- which(c(f.gen.sir, f.gen.dam))
-    
-    gmt.comb.curr <- getgmt(gmt.dam.curr, incols = incols)
-    gmt.comb.core <- getgmt(gmt.dam.core, incols = incols)
-
-    pop.geno.core[, gmt.comb.core] <- pop.geno.curr[, gmt.comb.curr]
-  } else {
-    gmt.comb <- match(c(sir.stay, dam.stay), index.curr)
-    pop.geno.core[, c(f.gen.sir, f.gen.dam)] <- pop.geno.curr[, gmt.comb]
-  }
-  core.stay$sir[f.gen.sir] <- sir.stay
-  core.stay$dam[f.gen.dam] <- dam.stay
-  
-  core.list <- list(core.stay = core.stay, core.geno = pop.geno.core)
-  return(core.list)
 }

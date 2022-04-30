@@ -2,32 +2,55 @@
 % Please edit documentation in R/simer.Selects.r
 \name{selects}
 \alias{selects}
-\title{Select individuals by combination of selection method and criterion}
+\title{Selection}
 \usage{
 selects(SP = NULL, verbose = TRUE)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{verbose}{whether to print detail}
+\item{verbose}{whether to print detail.}
 }
 \value{
-individual indice sorted by scores
+the function returns a list containing
+\describe{
+\item{$sel$pop.sel}{the selected males and females.}
+\item{$sel$ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
+\item{$sel$decr}{whether the sort order is decreasing.}
+\item{$sel$sel.crit}{the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.}
+\item{$sel$sel.single}{the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.}
+\item{$sel$sel.multi}{the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.}
+\item{$sel$index.wt}{the weight of each trait for multiple-trait selection.}
+\item{$sel$index.tdm}{the index of tandem selection for multiple-trait selection.}
+\item{$sel$goal.perc}{the percentage of goal more than the mean of scores of individuals.}
+\item{$sel$pass.perc}{percentage of expected excellent individuals.}
+}
 }
 \description{
+Select individuals by combination of selection method and criterion.
+}
+\details{
 Build date: Sep 8, 2018
-Last update: Apr 4, 2022
+Last update: Apr 30, 2022
 }
 \examples{
+# Generate annotation simulation parameters
 SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
+
+# Run annotation simulation
 SP <- annotation(SP)
+# Run genotype simulation
 SP <- genotype(SP)
+# Run phenotype simulation
 SP <- phenotype(SP)
+# Run selection
 SP <- selects(SP)
-str(SP$sel$pop.sel$gen1)
 }
 \author{
 Dong Yin

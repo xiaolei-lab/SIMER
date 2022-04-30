@@ -2,19 +2,22 @@
 % Please edit documentation in R/simer.Utility.R
 \name{write.file}
 \alias{write.file}
-\title{Write files of simer}
+\title{File writing}
 \usage{
 write.file(SP)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 }
 \value{
-None
+none.
 }
 \description{
+Write files of Simer.
+}
+\details{
 Build date: Jan 7, 2019
-Last update: Apr 21, 2022
+Last update: Apr 30, 2022
 }
 \examples{
 outpath <- tempdir()

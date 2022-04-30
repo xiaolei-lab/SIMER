@@ -2,17 +2,21 @@
 % Please edit documentation in R/simer.Utility.R
 \name{format_time}
 \alias{format_time}
-\title{format time}
+\title{Time formating}
 \usage{
 format_time(x)
 }
 \arguments{
-\item{x}{seconds}
+\item{x}{the total seconds.}
 }
 \description{
-format time
+Format the time.
+}
+\details{
+Build date: Oct 22, 2018
+Last update: Apr 30, 2022
 }
 \author{
-Lilin Yin
+Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 }
 \keyword{internal}

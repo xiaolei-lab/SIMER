@@ -11,22 +11,25 @@
 # limitations under the License.
 
 
-#' Print simer Banner
+#' Simer version
+#' 
+#' Print simer version.
 #'
 #' Build date: Aug 30, 2017
-#' Last update: Oct 21, 2019
+#' Last update: Apr 30, 2022
 #' 
 #' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 #' 
-#' @param width the width of the message
+#' @param width the width of the message.
 #' @param verbose whether to print detail.
 #' 
 #' @return version number.
+#' 
 #' @export
 #'
 #' @examples
 #' simer.Version()
-simer.Version <- function(width=60, verbose=TRUE) {
+simer.Version <- function(width = 60, verbose = TRUE) {
   welcome <- "Welcome to SIMER"
   title   <- "Data Simulation for Life Science and Breeding"
   authors <- c("Designed and Maintained by Dong Yin, Xuanning Zhang, Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
@@ -42,18 +45,26 @@ simer.Version <- function(width=60, verbose=TRUE) {
   return(invisible(version))
 }
 
-#' Print progress bar
-#'
-#' @param i the current loop number
-#' @param n max loop number
-#' @param type type1 for "for" function
-#' @param symbol the symbol for the rate of progress
-#' @param tmp.file the opened file of "fifo" function
-#' @param symbol.head the head for the bar
-#' @param symbol.tail the tail for the bar
-#' @param fixed.points whether use the setted points which will be printed
-#' @param points the setted points which will be printed
-#' @param symbol.len the total length of progress bar
+#' Progress bar
+#' 
+#' Print progress bar.
+#' 
+#' Build date: Aug 30, 2017
+#' Last update: Apr 30, 2022
+#' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param i the current loop number.
+#' @param n the max loop number.
+#' @param type type1 for "for" function.
+#' @param symbol the symbol for the rate of progress.
+#' @param tmp.file the opened file of "fifo" function.
+#' @param symbol.head the head for the bar.
+#' @param symbol.tail the tail for the bar.
+#' @param fixed.points whether use the setted points which will be printed.
+#' @param points the setted points which will be printed.
+#' @param symbol.len the total length of progress bar.
+#' @param verbose whether to print detail.
 #'
 #' @keywords internal
 print_bar <- function(i,
@@ -172,29 +183,46 @@ print_bar <- function(i,
   )
 }
 
+#' Accomplishment
+#' 
+#' Print accomplishment information.
+#' 
+#' Build date: Aug 30, 2017
+#' Last update: Apr 30, 2022
+#' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param width the width of the message.
+#' @param verbose whether to print detail.
+#'
+#' @keywords internal
 print_accomplished <- function(width = 60, verbose = TRUE) {
   logging.log(make_line("SIMER ACCOMPLISHED", width = width, linechar = '='), "\n", verbose = verbose)
 }
 
-#' Print R Package information, include title, short_title, logo, version, authors, contact
+#' Simer information
+#' 
+#' Print R Package information, include title, short_title, logo, version, authors, contact.
 #'
 #' Build date: Oct 22, 2018
-#' Last update: Oct 21, 2019
+#' Last update: Apr 30, 2022
 #' 
-#' @keywords internal
 #' @author Dong Yin and Haohao Zhang
 #' 
-#' @param welcome welcome text, for example: "Welcom to <Packagename>"
-#' @param title long text to introduct package
-#' @param short_title short label, top-left of logo
-#' @param logo logo
-#' @param version short label, bottom-right of logo
-#' @param authors 
-#' @param contact email or website
-#' @param line 1, 2, or char
-#' @param width banner width
+#' @param welcome welcome text, for example: "Welcom to <Packagename>".
+#' @param title long text to introduct package.
+#' @param short_title short label, top-left of logo.
+#' @param logo logo.
+#' @param version short label, bottom-right of logo.
+#' @param authors authors of software.
+#' @param contact email or website.
+#' @param line 1, 2, or char.
+#' @param width banner width.
+#' @param verbose whether to print detail.
 #'
 #' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' welcome <- "Welcome to SIMER"
@@ -211,7 +239,7 @@ print_accomplished <- function(width = 60, verbose = TRUE) {
 #'              "|____/___|_|  |_|_____|_| \\_\\")
 #' print_info(welcome = welcome, title = title, logo = logo_s, authors = authors, 
 #'            contact = contact, linechar = '=', width = 70)
-print_info <- function(welcome=NULL, title=NULL, short_title=NULL, logo=NULL, version=NULL, authors=NULL, contact=NULL, linechar = '=', width=NULL, verbose=TRUE) {
+print_info <- function(welcome = NULL, title = NULL, short_title = NULL, logo = NULL, version = NULL, authors = NULL, contact = NULL, linechar = '=', width = NULL, verbose = TRUE) {
   msg <- c()
   # width
   if (is.null(width)) { width <- getOption('width') }
@@ -270,13 +298,22 @@ print_info <- function(welcome=NULL, title=NULL, short_title=NULL, logo=NULL, ve
   return(version)
 }
 
-#' make line
+#' Line making
+#' 
+#' Add a line to the screen.
 #' 
 #' Build date: Dec 12, 2018
-#' Last update: Dec 12, 2018
+#' Last update: Apr 30, 2022
 #' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param string a string.
+#' @param width the width of the message.
+#' @param linechar char in every line.
+#' @param align the position of string.
+#' @param margin the margin information, default 2.
+#'
 #' @keywords internal
-#' @author Haohao Zhang
 make_line <- function(string, width, linechar = " ", align = "center", margin = 1) {
   string <- paste0(paste0(rep(" ", margin), collapse = ""),
                    string,
@@ -302,14 +339,21 @@ make_line <- function(string, width, linechar = " ", align = "center", margin = 
   return(string)
 }
 
-#' wrap text to multiple line, align left, right or center.
+#' Accomplishment
+#' 
+#' Print accomplishment information.
 #' 
 #' Build date: Oct 22, 2018
-#' Last update: Dec 12, 2018
-#' by using base::strwarp.
+#' Last update: Apr 30, 2022
 #' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param string a string.
+#' @param width the width of the message.
+#' @param align the position of string.
+#' @param linechar char in every line.
+#'
 #' @keywords internal
-#' @author Haohao Zhang
 rule_wrap <- function(string, width, align = "center", linechar = " ") {
   # define
   msg <- c()
@@ -323,18 +367,21 @@ rule_wrap <- function(string, width, align = "center", linechar = " ") {
   return(msg)
 }
 
-#' Paste label to a line
+#' Pasting label
+#' 
+#' Paste label to a line.
 #' 
 #' Build date: Oct 22, 2018
-#' Last update: Oct 22, 2018
+#' Last update: Apr 30, 2022
 #' 
-#' @param line long text
-#' @param label short label
-#' @param side "right" or "left"
-#' @param margin default 2
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param line long text.
+#' @param label short label.
+#' @param side "right" or "left".
+#' @param margin the margin information, default 2.
 #' 
 #' @keywords internal
-#' @author Haohao Zhang
 paste_label <- function(line, label, side = "right", margin = 2) {
   if (side == "right") {
     end   <- nchar(line) - margin
@@ -347,13 +394,20 @@ paste_label <- function(line, label, side = "right", margin = 2) {
   return(line)
 }
 
-#' format time
+#' Time formating
 #' 
-#' @param x seconds
+#' Format the time.
+#' 
+#' Build date: Oct 22, 2018
+#' Last update: Apr 30, 2022
+#' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param x the total seconds.
 #' 
 #' @keywords internal
+#' 
 #' @export
-#' @author Lilin Yin
 format_time <- function(x) {
   h <- x %/% 3600
   m <- (x %% 3600) %/% 60
@@ -365,6 +419,19 @@ format_time <- function(x) {
   return(paste0(num, char, collapse = ""))
 }
 
+
+#' Installation checking
+#' 
+#' Check if the software is installed.
+#' 
+#' Build date: Oct 22, 2018
+#' Last update: Apr 30, 2022
+#' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param package the package name.
+#' 
+#' @keywords internal
 load_if_installed <- function(package) {
   if (!identical(system.file(package = package), "")) {
     do.call('library', list(package))
@@ -374,6 +441,20 @@ load_if_installed <- function(package) {
   }
 }
 
+
+#' MKL environment
+#' 
+#' Run code in the MKL environment.
+#' 
+#' Build date: Oct 22, 2018
+#' Last update: Apr 30, 2022
+#' 
+#' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
+#' 
+#' @param exprs the expression.
+#' @param threads the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' 
+#' @keywords internal
 mkl_env <- function(exprs, threads = 1) {
   if (load_if_installed("RevoUtilsMath")) {
     math.cores <- eval(parse(text = "getMKLthreads()"))
@@ -386,16 +467,18 @@ mkl_env <- function(exprs, threads = 1) {
   return(result)
 }
 
-#' Remove big.matrix safely
+#' Big.matrix removing
+#' 
+#' Remove big.matrix safely.
 #'
 #' Build date: Aug 8, 2019
-#' Last update: Feb 14, 2019
+#' Last update: Apr 30, 2022
 #'
 #' @author Haohao Zhang and Dong Yin
 #'
-#' @param x filename of big.matrix
-#' @param desc_suffix suffix of description file of big.matrix
-#' @param bin_suffix suffix of binary file of big.matrix
+#' @param x the filename of big.matrix.
+#' @param desc_suffix the suffix of description file of big.matrix.
+#' @param bin_suffix the suffix of binary file of big.matrix.
 #'
 #' @return TRUE or FALSE
 #'
@@ -413,7 +496,7 @@ mkl_env <- function(exprs, threads = 1) {
 #'      descriptorfile = 'simer.geno.desc')
 #'
 #' remove_bigmatrix(x = "simer")
-remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin") {
+remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.bin") {
   name <- basename(x)
   path <- dirname(x)
   
@@ -432,7 +515,7 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
     }
   }
   
-  # Delete objects that occupy binfile in the global environment
+  # delete objects that occupy binfile in the global environment
   remove_var(binfile, as.environment(-1L))
   remove_var(binfile, globalenv())
   gc()
@@ -445,16 +528,19 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
   }
 }
 
-#' Write files of simer
+#' File writing
+#' 
+#' Write files of Simer.
 #'
 #' Build date: Jan 7, 2019
-#' Last update: Apr 21, 2022
+#' Last update: Apr 30, 2022
 #'
 #' @author Dong Yin
 #'
-#' @param SP a list of all simulation parameters
+#' @param SP a list of all simulation parameters.
 #'
-#' @return None
+#' @return none.
+#' 
 #' @export
 #'
 #' @examples
@@ -466,7 +552,7 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
 #' unlink(file.path(outpath, "180_Simer_Data_numeric"), recursive = TRUE)
 write.file <- function(SP) {
   
-  # unfold global parameters
+  # global parameters
   replication <- SP$global$replication
   out <- SP$global$out
   outpath <- SP$global$outpath
@@ -476,7 +562,7 @@ write.file <- function(SP) {
   verbose <- SP$global$verbose
   incols <- SP$geno$incols
   
-  if (is.null(outpath)) return(invisible())
+  if (is.null(outpath)) return(SP)
   
   pop.marker <- nrow(SP$geno$pop.geno[[1]])
   pop.inds <- sapply(out.geno.gen, function(i) {

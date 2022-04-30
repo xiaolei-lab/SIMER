@@ -394,7 +394,7 @@ annotation <- function(SP, verbose = TRUE) {
 #' @examples
 #' eff <- cal.eff(qtn.num = 10)
 #' str(eff)
-cal.eff <- function(qtn.num = 10, qtn.dist = "normal", qtn.sd = 1, qtn.prob = 0.5, qtn.shape = 1, qtn.scale = 1, qtn.shape1 = 1, qtn.shape2 = 1, qtn.ncp = 0) {
+cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.sd = 1, qtn.prob = 0.5, qtn.shape = 1, qtn.scale = 1, qtn.shape1 = 1, qtn.shape2 = 1, qtn.ncp = 0) {
 
   if (sum(qtn.num) == 0) return(0)
   

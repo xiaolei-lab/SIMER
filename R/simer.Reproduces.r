@@ -893,6 +893,8 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # three different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1), c(30, 30, 40))
 #' # Run selection
 #' SP <- selects(SP)
 #' # Run three-way cross
@@ -1049,6 +1051,8 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # four different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
 #' # Run selection
 #' SP <- selects(SP)
 #' # Run four-way cross
@@ -1308,7 +1312,7 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @return
 #' the function returns a list containing
 #' \describe{
-#' \item{$reprod$pop.gen}{the generations of simulated population.}
+#' \item{$reprod$pop.sel}{the generations of simulated population.}
 #' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
 #' \item{$reprod$sex.rate}{the sex ratio of simulated population.}
 #' \item{$reprod$prog}{the progeny number of an individual.}

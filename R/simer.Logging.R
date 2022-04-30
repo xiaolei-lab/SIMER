@@ -11,6 +11,19 @@
 # limitations under the License.
 
 
+#' Logging initialization
+#' 
+#' Initialize the logging process.
+#' 
+#' Build date: Jul 11, 2020
+#' Last update: Apr 28, 2022
+#'
+#' @author Dong Yin
+#'
+#' @param module the module name.
+#' @param outpath the path of output files, Simer writes files only if outpath is not 'NULL'.
+#'
+#' @return none.
 logging.initialize <- function(module, outpath) {
   file <- NULL
   if (options("simer.OutputLog2File") == TRUE) {

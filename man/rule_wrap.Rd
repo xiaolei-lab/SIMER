@@ -2,16 +2,27 @@
 % Please edit documentation in R/simer.Utility.R
 \name{rule_wrap}
 \alias{rule_wrap}
-\title{wrap text to multiple line, align left, right or center.}
+\title{Accomplishment}
 \usage{
 rule_wrap(string, width, align = "center", linechar = " ")
 }
+\arguments{
+\item{string}{a string.}
+
+\item{width}{the width of the message.}
+
+\item{align}{the position of string.}
+
+\item{linechar}{char in every line.}
+}
 \description{
+Print accomplishment information.
+}
+\details{
 Build date: Oct 22, 2018
-Last update: Dec 12, 2018
-by using base::strwarp.
+Last update: Apr 30, 2022
 }
 \author{
-Haohao Zhang
+Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 }
 \keyword{internal}

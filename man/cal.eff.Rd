@@ -6,7 +6,7 @@
 \usage{
 cal.eff(
   qtn.num = 10,
-  qtn.dist = "normal",
+  qtn.dist = "norm",
   qtn.sd = 1,
   qtn.prob = 0.5,
   qtn.shape = 1,

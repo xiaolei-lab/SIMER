@@ -54,6 +54,8 @@ simer <- function(SP) {
 # TODO: breeding literature from ZhenST
 # TODO: remove one column genotype
 # TODO: data converter of simer
+# TODO: core population
+# TODO: pEBVs, gEBVs, and ssEBVs
   
   # global parameters
   replication <- SP$global$replication

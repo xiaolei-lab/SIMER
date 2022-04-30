@@ -3,7 +3,7 @@
 ## Data Simulation for Life Science and Breeding
 
 ### Authors:
-Designed and Maintained by [Dong Yin](https://github.com/Foredawnbio), [Xuanning Zhang](https://github.com/zxnyaonuli), [Lilin Yin](https://github.com/YinLiLin), [Haohao Zhang](https://github.com/hyacz), and [**Xiaolei Liu**](https://github.com/XiaoleiLiuBio).  
+Designed and Maintained by Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and **Xiaolei Liu**.  
 Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan, and Shuhong Zhao
 
 Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu@mail.hzau.edu.cn](mailto:xiaoleiliu@mail.hzau.edu.cn)

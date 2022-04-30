@@ -2,7 +2,7 @@
 % Please edit documentation in R/simer.Utility.R
 \name{print_info}
 \alias{print_info}
-\title{Print R Package information, include title, short_title, logo, version, authors, contact}
+\title{Simer information}
 \usage{
 print_info(
   welcome = NULL,
@@ -18,27 +18,32 @@ print_info(
 )
 }
 \arguments{
-\item{welcome}{welcome text, for example: "Welcom to <Packagename>"}
+\item{welcome}{welcome text, for example: "Welcom to <Packagename>".}
 
-\item{title}{long text to introduct package}
+\item{title}{long text to introduct package.}
 
-\item{short_title}{short label, top-left of logo}
+\item{short_title}{short label, top-left of logo.}
 
-\item{logo}{logo}
+\item{logo}{logo.}
 
-\item{version}{short label, bottom-right of logo}
+\item{version}{short label, bottom-right of logo.}
 
-\item{authors}{}
+\item{authors}{authors of software.}
 
-\item{contact}{email or website}
+\item{contact}{email or website.}
 
-\item{width}{banner width}
+\item{width}{banner width.}
 
-\item{line}{1, 2, or char}
+\item{verbose}{whether to print detail.}
+
+\item{line}{1, 2, or char.}
 }
 \description{
+Print R Package information, include title, short_title, logo, version, authors, contact.
+}
+\details{
 Build date: Oct 22, 2018
-Last update: Oct 21, 2019
+Last update: Apr 30, 2022
 }
 \examples{
 welcome <- "Welcome to SIMER"

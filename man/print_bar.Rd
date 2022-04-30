@@ -2,7 +2,7 @@
 % Please edit documentation in R/simer.Utility.R
 \name{print_bar}
 \alias{print_bar}
-\title{Print progress bar}
+\title{Progress bar}
 \usage{
 print_bar(
   i,
@@ -19,27 +19,36 @@ print_bar(
 )
 }
 \arguments{
-\item{i}{the current loop number}
+\item{i}{the current loop number.}
 
-\item{n}{max loop number}
+\item{n}{the max loop number.}
 
-\item{type}{type1 for "for" function}
+\item{type}{type1 for "for" function.}
 
-\item{symbol}{the symbol for the rate of progress}
+\item{symbol}{the symbol for the rate of progress.}
 
-\item{tmp.file}{the opened file of "fifo" function}
+\item{tmp.file}{the opened file of "fifo" function.}
 
-\item{symbol.head}{the head for the bar}
+\item{symbol.head}{the head for the bar.}
 
-\item{symbol.tail}{the tail for the bar}
+\item{symbol.tail}{the tail for the bar.}
 
-\item{fixed.points}{whether use the setted points which will be printed}
+\item{fixed.points}{whether use the setted points which will be printed.}
 
-\item{points}{the setted points which will be printed}
+\item{points}{the setted points which will be printed.}
 
-\item{symbol.len}{the total length of progress bar}
+\item{symbol.len}{the total length of progress bar.}
+
+\item{verbose}{whether to print detail.}
 }
 \description{
-Print progress bar
+Print progress bar.
+}
+\details{
+Build date: Aug 30, 2017
+Last update: Apr 30, 2022
+}
+\author{
+Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 }
 \keyword{internal}

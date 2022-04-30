@@ -2,23 +2,26 @@
 % Please edit documentation in R/simer.Utility.R
 \name{remove_bigmatrix}
 \alias{remove_bigmatrix}
-\title{Remove big.matrix safely}
+\title{Big.matrix removing}
 \usage{
 remove_bigmatrix(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.bin")
 }
 \arguments{
-\item{x}{filename of big.matrix}
+\item{x}{the filename of big.matrix.}
 
-\item{desc_suffix}{suffix of description file of big.matrix}
+\item{desc_suffix}{the suffix of description file of big.matrix.}
 
-\item{bin_suffix}{suffix of binary file of big.matrix}
+\item{bin_suffix}{the suffix of binary file of big.matrix.}
 }
 \value{
 TRUE or FALSE
 }
 \description{
+Remove big.matrix safely.
+}
+\details{
 Build date: Aug 8, 2019
-Last update: Feb 14, 2019
+Last update: Apr 30, 2022
 }
 \examples{
 library(bigmemory)

@@ -2,21 +2,36 @@
 % Please edit documentation in R/simer.Parameter.r
 \name{param.sel}
 \alias{param.sel}
-\title{Generate parameters for selection}
+\title{Selection parameters generator}
 \usage{
 param.sel(SP = NULL, ...)
 }
 \arguments{
-\item{SP}{a list of all simulation parameters}
+\item{SP}{a list of all simulation parameters.}
 
-\item{...}{one or more parameter(s) for selection}
+\item{...}{one or more parameter(s) for selection.}
 }
 \value{
-a list of selection parameters
+the function returns a list containing
+\describe{
+\item{$sel$pop.sel}{the selected males and females.}
+\item{$sel$ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
+\item{$sel$decr}{whether the sort order is decreasing.}
+\item{$sel$sel.crit}{the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.}
+\item{$sel$sel.single}{the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.}
+\item{$sel$sel.multi}{the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.}
+\item{$sel$index.wt}{the weight of each trait for multiple-trait selection.}
+\item{$sel$index.tdm}{the index of tandem selection for multiple-trait selection.}
+\item{$sel$goal.perc}{the percentage of goal more than the mean of scores of individuals.}
+\item{$sel$pass.perc}{percentage of expected excellent individuals.}
+}
 }
 \description{
+Generate parameters for selection.
+}
+\details{
 Build date: Apr 6, 2022
-Last update: Apr 6, 2022
+Last update: Apr 30, 2022
 }
 \examples{
 SP <- param.sel(sel.single = "comb")

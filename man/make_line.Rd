@@ -2,15 +2,29 @@
 % Please edit documentation in R/simer.Utility.R
 \name{make_line}
 \alias{make_line}
-\title{make line}
+\title{Line making}
 \usage{
 make_line(string, width, linechar = " ", align = "center", margin = 1)
 }
+\arguments{
+\item{string}{a string.}
+
+\item{width}{the width of the message.}
+
+\item{linechar}{char in every line.}
+
+\item{align}{the position of string.}
+
+\item{margin}{the margin information, default 2.}
+}
 \description{
+Add a line to the screen.
+}
+\details{
 Build date: Dec 12, 2018
-Last update: Dec 12, 2018
+Last update: Apr 30, 2022
 }
 \author{
-Haohao Zhang
+Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 }
 \keyword{internal}
