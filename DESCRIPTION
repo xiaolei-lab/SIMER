@@ -9,10 +9,8 @@ Authors@R: c( person("Dong", "Yin", role = "aut"),
               person("Zhenshuang", "Tang", role = "aut"),
               person("Jingya", "Xu", role = "aut"),
               person("Xinyun", "Li", role = "aut"),
-              person("Mengjin", "Zhu", role = "aut"),
               person("Xiaohui", "Yuan", role = "aut"),
               person("Shuhong", "Zhao", role = "aut"),
-              person("Brian", "Ripley", role = "ctb"),
               person("Xiaolei", "Liu", role = c("cre", "aut", "cph"), email = "xiaoleiliu@mail.hzau.edu.cn"))
 Description: Data simulator including genotype, phenotype, pedigree, 
     selection and reproduction in R. It simulates most of reproduction process
