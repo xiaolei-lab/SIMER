@@ -7,7 +7,7 @@
 **Design and Maintenance:** Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and **Xiaolei Liu**.  
 **Contributors:** Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xinyun Li, and Shuhong Zhao.
 
-Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu@mail.hzau.edu.cn](mailto:xiaoleiliu@mail.hzau.edu.cn)
+***If you have any bug reports or questions, please feed back :point_right:[here](https://github.com/xiaolei-lab/SIMER/issues/new):point_left:.***
 
 ### Contents
 <!-- TOC updateOnSave:false -->
@@ -90,13 +90,12 @@ Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu
 # Installation
 **[back to top](#contents)**  
 
-**WE STRONGLY RECOMMEND TO INSTALL SIMER ON Microsoft R Open(https://mran.microsoft.com/download/)**  
+**WE STRONGLY RECOMMEND TO INSTALL SIMER ON Microsoft R Open (https://mran.microsoft.com/download/)**  
 
 ## Installation
 
-``` r
-# the the development version from GitHub:
-# install.packages("devtools")
+* The latest version: 
+```R
 devtools::install_github("xiaolei-lab/SIMER")
 ```
 
