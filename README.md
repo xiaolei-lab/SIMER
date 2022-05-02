@@ -4,7 +4,7 @@
 ## Data Simulation for Life Science and Breeding
 
 ### Authors:
-**Design and Maintenance:** Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and **Xiaolei Liu**.
+**Design and Maintenance:** Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and **Xiaolei Liu**.  
 **Contributors:** Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xinyun Li, and Shuhong Zhao.
 
 Questions, suggestions, and bug reports are welcome and appreciated: [xiaoleiliu@mail.hzau.edu.cn](mailto:xiaoleiliu@mail.hzau.edu.cn)
