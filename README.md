@@ -1,6 +1,5 @@
 # SIMER 
-[![GitHub issues](https://img.shields.io/github/issues/xiaolei-lab/SIMER?color=green)](https://github.com/xiaolei-lab/SIMER/issues/new) [![](https://img.shields.io/badge/GitHub-1.0.1-blueviolet.svg)]() ![](http://cranlogs.r-pkg.org/badges/grand-total/SIMER?color=red) [![](https://cranlogs.r-pkg.org/badges/last-month/SIMER)](https://CRAN.R-project.org/package=SIMER) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2Fhibayes"/></a>
-[![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/xiaolei-lab/SIMER/issues/new) 
+[![GitHub issues](https://img.shields.io/github/issues/xiaolei-lab/SIMER?color=green)](https://github.com/xiaolei-lab/SIMER/issues/new) [![](https://img.shields.io/badge/GitHub-0.9.0.0-blueviolet.svg)]() <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2xiaolei-lab%2FSIMER"/></a>
 
 ## Data Simulation for Life Science and Breeding
 
