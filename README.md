@@ -99,7 +99,7 @@
 devtools::install_github("xiaolei-lab/SIMER")
 ```
 
-After installed successfully, **SIMER** can be loaded by typing
+After installed successfully, **```SIMER```** can be loaded by typing
 ```r
 > library(simer)
 ```
