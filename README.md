@@ -241,16 +241,22 @@ SP <- simer(SP)
 Replicated simulation can be done by ```For``` loop in ```R``` software.
 
 ```r
-# replication times
+# Replication times
 rep <- 2
 
-# Generate all simulation parameters
-SP <- param.simer(out = "simer")
+# Result list
+SPs <- list()
+length(SPs) <- rep
 
-# Run Simer
 for (i in 1:rep) {
+  # Generate all simulation parameters
+  SP <- param.simer(out = "simer")
+
+  # Run Simer
   SP <- simer(SP)
-}
+  
+  # Assign results
+  SPs[[i]] <- SP
 }
 ```
 
