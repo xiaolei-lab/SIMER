@@ -202,8 +202,8 @@ Typing ```?simer``` could get the details of all parameters.
 **[back to top](#contents)**  
 At least user should prepare two datasets: ***genotypic map*** and ***genotype data***.  
 
-***genotype data***, **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals)  
-**genotypic map**, SNP map information, the first column is **SNP name**, the second column is **Chromosome ID**, the third column is **physical position**, the fourth column is **REF**, and the fifth column is **ALT**.  
+***genotype data***, ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals)  
+***genotypic map***, SNP map information, the first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  
 
 ```r
 pop.geno <- read.table("genotype.txt")
@@ -212,9 +212,9 @@ pop.map <- read.table("map.txt" , head = TRUE)
 
 ## Optional
 **[back to top](#contents)**  
-Mating process can be designed by **user designed pedigree**. 
+Mating process can be designed by ***user designed pedigree***. 
 
-**pedigree**, pedigree information, the first column is **sample id**, the second column is **paternal id**, and the third column is **maternal id**. Note that the individuals in the **pedigree** do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0.
+***pedigree***, pedigree information, the first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Note that the individuals in the ***pedigree*** do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0.
 
 ```r
 userped <- read.table("userped.txt", header = TRUE)
