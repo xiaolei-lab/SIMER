@@ -181,7 +181,7 @@ Typing ```?simer``` could get the details of all parameters.
 
 ## Pedigree
 **[back to top](#contents)**  
-**```SIMER```** supports **user designed pedigree** to control mating process. **User designed pedigree** is useful only in ```userped``` reproduction. The first column is **sample id**, the second column is **paternal id**, and the third column is **maternal id**. Please make sure that **paternal id** and **maternal id** can match to the genotype data. 
+**```SIMER```** supports **user designed pedigree** to control mating process. **User designed pedigree** is useful only in ```userped``` reproduction. The first column is **sample id**, the second column is **paternal id**, and the third column is **maternal id**. Please make sure that **paternal id** and **maternal id** can match to **genotype data**. 
 
 > `userped.txt`
 
