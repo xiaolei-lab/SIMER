@@ -112,7 +112,7 @@ Typing ```?simer``` could get the details of all parameters.
 ## Genotype
 **[back to top](#contents)**  
 
-**Genotype data** should be **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals). If you have **genotype data** in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
+**Genotype data** should be **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals). Other **genotype data** such as **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap** can be converted to **Numeric** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
