@@ -90,7 +90,7 @@
 # Installation
 **[back to top](#contents)**  
 
-**WE STRONGLY RECOMMEND TO INSTALL SIMER ON Microsoft R Open (https://mran.microsoft.com/download/)**  
+**WE STRONGLY RECOMMEND TO INSTALL SIMER ON Microsoft R Open (https://mran.microsoft.com/download/)**.  
 
 ## Installation
 
@@ -112,23 +112,14 @@ Typing ```?simer``` could get the details of all parameters.
 ## Genotype
 **[back to top](#contents)**  
 
-Genotype data should be Numeric (m rows and (2 * n) columns, m is the number of SNPs, n is the number of individuals) format. If you have genotype data in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using "MVP.Data" function in the **rMVP**(https://github.com/xiaolei-lab/rMVP).
+**Genotype data** should be **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals). If you have **genotype data** in **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap**, please convert them using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
 <table>
 <tbody>
 <tr>
-<td align="center">1</td>
-<td align="center">1</td>
-<td align="center">0</td>
-<td align="center">1</td>
-<td align="center">0</td>
-<td align="center">…</td>
-<td align="center">0</td>
-</tr>
-<tr>
-<td align="center">1</td>
+<td align="center">2</td>
 <td align="center">1</td>
 <td align="center">0</td>
 <td align="center">1</td>
@@ -138,7 +129,7 @@ Genotype data should be Numeric (m rows and (2 * n) columns, m is the number of 
 </tr>
 <tr>
 <td align="center">1</td>
-<td align="center">1</td>
+<td align="center">2</td>
 <td align="center">0</td>
 <td align="center">1</td>
 <td align="center">0</td>
@@ -148,8 +139,17 @@ Genotype data should be Numeric (m rows and (2 * n) columns, m is the number of 
 <tr>
 <td align="center">1</td>
 <td align="center">1</td>
-<td align="center">0</td>
+<td align="center">2</td>
 <td align="center">1</td>
+<td align="center">0</td>
+<td align="center">…</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">2</td>
 <td align="center">1</td>
 <td align="center">…</td>
 <td align="center">0</td>
@@ -159,14 +159,14 @@ Genotype data should be Numeric (m rows and (2 * n) columns, m is the number of 
 <td align="center">0</td>
 <td align="center">0</td>
 <td align="center">0</td>
-<td align="center">0</td>
+<td align="center">2</td>
 <td align="center">…</td>
 <td align="center">0</td>
 </tr></tbody></table>
 
 ## Genotypic map
 **[back to top](#contents)**  
-Map file is necessary in **SIMER**. It will generate genotype matrix according to number of markers in input map file. 
+**Genotypic Map** is necessary in **```SIMER```**. It will be used to generate **annotation data**, **genotype data**, and **phenotype data**. 
 
 > `map.txt`
 
@@ -181,7 +181,7 @@ Map file is necessary in **SIMER**. It will generate genotype matrix according t
 
 ## Pedigree
 **[back to top](#contents)**  
-**SIMER** supports user designed pedigree to control mating process. User designed pedigree is useful only in "userped" reproduction. Pedigree should at least start with generation 2. The first column is sample id, the second column is paternal id, and the third column is maternal id. Please make sure that paternal id and maternal id can be found in the last generation. 
+**```SIMER```** supports **user designed pedigree** to control mating process. **User designed pedigree** is useful only in ```userped``` reproduction. The first column is **sample id**, the second column is **paternal id**, and the third column is **maternal id**. Please make sure that **paternal id** and **maternal id** can match to the genotype data. 
 
 > `userped.txt`
 
