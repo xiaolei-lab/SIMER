@@ -255,7 +255,7 @@ for (i in 1:rep) {
   # Run Simer
   SP <- simer(SP)
   
-  # Assign results
+  # Assign result
   SPs[[i]] <- SP
 }
 ```
