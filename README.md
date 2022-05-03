@@ -225,99 +225,32 @@ userped <- read.table("userped.txt", header = TRUE)
 # Quick Start
 **[back to top](#contents)** 
 
-After obtaining genotypic map data and genotype data, we can start our simulation.
-
-**num.gen**, number of generations in simulation  
-**replication**, replication index of simulation  
-**verbose**, whether to print detail  
-**mrk.dense**, whether markers are dense, it is TRUE when sequencing data  
-**out**, prefix of output file name  
-**outpath**, path of output files  
-**out.format**, format of output, "numeric" or "plink"  
-**seed.geno**, random seed of a simulation process  
-**seed.map**, random seed of map file  
-**out.geno.gen**, indice of generations of output genotype   
-**out.pheno.gen**, indice of generations of  output phenotype   
-**rawgeno1**, extrinsic genotype matrix1  
-**rawgeno2**, extrinsic genotype matrix2    
-**rawgeno3**, extrinsic genotype matrix3  
-**rawgeno4**, extrinsic genotype matrix4  
-**num.ind**, population size of base population  
-**prob**, weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1  
-**input.map**, map that should be input, the marker number should be consistent in both map file and genotype data  
-**len.block**, length of every blocks  
-**range.hot**, range of exchages in hot spot block  
-**range.cold**, range of exchages in cold spot block  
-**rate.mut**, mutation rate between 1e-8 and 1e-6  
-**cal.model**, phenotype model with "A", "AD", "ADI"  
-**FR**, list of fixed effects, random effects, and their combination   
-**h2.tr1**, heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**num.qtn.tr1**, integer or integer vector, the number of QTN in a single trait  
-**sd.tr1**, standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a  
-**dist.qtn.tr1**, distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**eff.unit.tr1**, unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**shape.tr1**, shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**scale.tr1**, scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
-**num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
-**eff.sd**, a matrix with the standard deviation of QTN effects  
-**gnt.cov**, genetic covariance matrix among all traits  
-**env.cov**, environment covariance matrix among all traits  
-**qtn.spot**, QTN probability in every blocks  
-**maf**, Minor Allele Frequency, markers selection range is from  maf to 0.5  
-**sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
-**sel.on**, whether to add selection  
-**mtd.reprod**, different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
-**userped**, user-designed pedigree to control mating process  
-**num.prog**, litter size of dams  
-**ratio**, ratio of males in all individuals  
-**prog.tri**, litter size of the first single cross process in trible cross process  
-**prog.doub**, litter size of the first two single cross process in double cross process  
-**prog.back**, a vector with litter size in every generation of back-cross  
-**ps**, fraction selected in selection  
-**decr**, whether to sort by decreasing  
-**sel.multi**, selection method of multiple traits with options: "tdm", "indcul" and "index"  
-**index.wt**, economic weights of selection index method, its length should equals to the number of traits  
-**index.tdm**, index represents which trait is being selected  
-**goal.perc**, percentage of goal more than mean of scores of individuals  
-**pass.perc**, percentage of expected excellent individuals  
-**sel.sing**, selection method of single trait with options: "ind", "fam", "infam" and "comb"  
+All simulation process can be devided into 2 steps: 1) generate simulation parameters; 2) run simulation process.
 
 ## Complete Simulation
 **[back to top](#contents)**
 
 ```r
-# simdata: rawgeno input.map userped
-data(simdata)
+# Generate all simulation parameters
+SP <- param.simer(out = "simer")
 
-simer.list <-
-    simer(num.gen = 5,
-          verbose = TRUE, 
-          outpath = NULL,
-          input.map = input.map,
-          rawgeno1 = rawgeno, # use your own genotype matrix
-          # num.ind = 100,
-          mtd.reprod = "randmate",
-          num.prog = 2,
-          ratio = 0.5)
+# Run Simer
+SP <- simer(SP)
 ```
 
-If you want to make replicated simulation
+Replicated simulation can be done by ```For``` loop in ```R``` software.
 
 ```r
+# replication times
 rep <- 2
+
+# Generate all simulation parameters
+SP <- param.simer(out = "simer")
+
+# Run Simer
 for (i in 1:rep) {
-  simer.list <-
-        simer(num.gen = 3,
-              replication = i, # set index of replication
-              verbose = TRUE, 
-              outpath = NULL,
-              input.map = input.map,
-              rawgeno1 = rawgeno, # use your own genotype matrix
-              # num.ind = 100,
-              mtd.reprod = "randmate",
-              num.prog = 2,
-              ratio = 0.5)
+  SP <- simer(SP)
+}
 }
 ```
 
