@@ -4,7 +4,7 @@
 ## Data Simulation for Life Science and Breeding
 
 ### Authors:
-**Design and Maintenance:** Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and **Xiaolei Liu**.  
+**Design and Maintenance:** Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and ***Xiaolei Liu***.  
 **Contributors:** Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xinyun Li, and Shuhong Zhao.
 
 ***If you have any bug reports or questions, please feed back :point_right:[here](https://github.com/xiaolei-lab/SIMER/issues/new):point_left:.***
@@ -112,7 +112,7 @@ Typing ```?simer``` could get the details of all parameters.
 ## Genotype
 **[back to top](#contents)**  
 
-**Genotype data** should be **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals). Other **genotype data** such as **PLINK Binary** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), **VCF** or **Hapmap** can be converted to **Numeric** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
+***Genotype data*** should be ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals). Other ***genotype data*** such as ***PLINK Binary*** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), ***VCF*** or ***Hapmap*** can be converted to ***Numeric*** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
@@ -166,7 +166,7 @@ Typing ```?simer``` could get the details of all parameters.
 
 ## Genotypic map
 **[back to top](#contents)**  
-**Genotypic Map** is necessary in **```SIMER```**. The first column is **SNP name**, the second column is **Chromosome ID**, the third column is **physical position**, the fourth column is **REF**, and the fifth column is **ALT**.  It will be used to generate **annotation data**, **genotype data**, and **phenotype data**. 
+***Genotypic Map*** is necessary in **```SIMER```**. The first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  It will be used to generate ***annotation data***, ***genotype data***, and ***phenotype data***. 
 
 > `map.txt`
 
@@ -181,7 +181,7 @@ Typing ```?simer``` could get the details of all parameters.
 
 ## Pedigree
 **[back to top](#contents)**  
-**```SIMER```** supports **user designed pedigree** to control mating process. **User designed pedigree** is useful only in ```userped``` reproduction. The first column is **sample id**, the second column is **paternal id**, and the third column is **maternal id**. Please make sure that **paternal id** and **maternal id** can match to **genotype data**. 
+**```SIMER```** supports ***user designed pedigree*** to control mating process. ***User designed pedigree*** is useful only in ```userped``` reproduction. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to ***genotype data***. 
 
 > `userped.txt`
 
@@ -200,9 +200,9 @@ Typing ```?simer``` could get the details of all parameters.
 
 ## Basic
 **[back to top](#contents)**  
-At least user should prepare two datasets: **genotypic map** and **genotype data**.  
+At least user should prepare two datasets: ***genotypic map*** and ***genotype data***.  
 
-**genotype data**, **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals)  
+***genotype data***, **Numeric** format (**m** rows and **n** columns, **m** is the number of SNPs, **n** is the number of individuals)  
 **genotypic map**, SNP map information, the first column is **SNP name**, the second column is **Chromosome ID**, the third column is **physical position**, the fourth column is **REF**, and the fifth column is **ALT**.  
 
 ```r
