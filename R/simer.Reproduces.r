@@ -1378,7 +1378,7 @@ mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
     idx <- (pedx2[, 2] %in% Cpedx) & (pedx2[, 3] %in% Cpedx)
     if (sum(idx) == 0) {
       logging.log(" Some individuals in pedigree are not in mating process!\n They are", verbose = verbose)
-      simer.print(pedx2[, 1], verbose = verbose)
+      logging.print(pedx2[, 1], verbose = verbose)
       pedx2 <- pedx2[-c(1:nrow(pedx2)), ]
       
     } else {

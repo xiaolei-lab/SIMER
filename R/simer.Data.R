@@ -1255,7 +1255,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
     if (is.null(pheno$gen)) {
       stop("Generation index is necessary!")
     }
-    pheno <- subset(pheno, gen == max(pheno$gen))
+    pheno <- pheno[pheno$gen == max(pheno$gen), ]
     pheName <- sapply(planPhe[[i]]$job_traits, function(x) {
       return(x$trait)
     })

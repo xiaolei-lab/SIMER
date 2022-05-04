@@ -134,10 +134,10 @@ NumericVector FilterMAF(arma::mat genoFreq, int threads=0) {
   IntegerVector freq1 = wrap(genoFreq.col(1));
   IntegerVector freq2 = wrap(genoFreq.col(2));
 
-  size_t i, j;
+  size_t i;
   NumericVector MAF(genoFreq.n_rows); MAF.fill(0);
   
-  #pragma omp parallel for schedule(dynamic) private(i, j)
+  #pragma omp parallel for schedule(dynamic) private(i)
   for (i = 0; i < genoFreq.n_rows; i++) {
     MAF[i] = (freq0[i] + freq1[i] * 0.5) / 
       (freq0[i]+ freq1[i] + freq2[i]);
@@ -149,7 +149,7 @@ NumericVector FilterMAF(arma::mat genoFreq, int threads=0) {
 
 double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
 {
-  if (obs_hom1 < 0 || obs_hom2 < 0 || obs_hets < 0) 
+  if ((obs_hom1 < 0) || (obs_hom2 < 0) || (obs_hets < 0)) 
   {
     Rcpp::stop("FATAL ERROR - SNP-HWE: Current genotype configuration (%d  %d %d ) includes a"
              " negative count", obs_hets, obs_hom1, obs_hom2);
@@ -427,7 +427,7 @@ List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> keepI
     n = keepCols.size();
   }
   
-  double fgeno, fhwe, fmaf, fmind;
+  double fgeno = 0, fhwe = 0, fmaf = 0, fmind = 0;
   if (filterGeno.isNotNull()) { fgeno = as<double>(filterGeno); }
   if (filterHWE.isNotNull() ) { fhwe  = as<double>(filterHWE ); }
   if (filterMAF.isNotNull() ) { fmaf  = as<double>(filterMAF); }
@@ -611,18 +611,18 @@ void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerV
     Rcpp::stop("'colIdx' is out of bound!");
   }
   
-  int mat[pmat->nrow()][pmat->ncol()];
+  IntegerMatrix mat(pmat->nrow(), pmat->ncol());
   #pragma omp parallel for schedule(dynamic) private(i, j)
   for (j = 0; j < pmat->ncol(); j++) {
     for (i = 0; i < m; i++) {
-      mat[i][j] = bigm[j][i];
+      mat(i, j) = bigm[j][i];
     }
   }
   
   #pragma omp parallel for schedule(dynamic) private(i, j)
   for (j = 0; j < n; j++) {
     for (i = 0; i < m; i++) {
-      bigmat[op + j][i] = mat[i][ci[j]];
+      bigmat[op + j][i] = mat(i, ci[j]);
     }
   }
   
@@ -669,7 +669,7 @@ void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx,
   if (op + n > pMat->ncol()) {
     Rcpp::stop("'pmat' cannot be intert to bigmat completely!");
   }
-  if (max(sirIdx) > pmat->ncol() | max(damIdx) > pmat->ncol()) {
+  if ((max(sirIdx) > pmat->ncol()) | (max(damIdx) > pmat->ncol())) {
     Rcpp::stop("'sirIdx' or 'damIdx' is out of bound!");
   }
   if (sirIdx.length() != damIdx.length()) {
@@ -689,11 +689,11 @@ void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx,
     accum_block[i] = accum_block[i - 1] + nInblock[i];
   }
   
-  int mat[pmat->nrow()][pmat->ncol()];
+  IntegerMatrix mat(pmat->nrow(), pmat->ncol());
   #pragma omp parallel for schedule(dynamic) private(i, j)
   for (j = 0; j < pmat->ncol(); j++) {
     for (i = 0; i < m; i++) {
-      mat[i][j] = bigm[j][i];
+      mat(i, j) = bigm[j][i];
     }
   }
   
@@ -705,7 +705,7 @@ void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx,
       judpar = rd();
       kidIdx = judpar % 2 == 0 ? sirIdx[j] : damIdx[j];
       for (i = op_row; i < ed_row; i++) {
-        bigmat[op + j][i] = mat[i][kidIdx];
+        bigmat[op + j][i] = mat(i, kidIdx);
       }
     }
   }

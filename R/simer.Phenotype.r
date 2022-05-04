@@ -461,7 +461,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   
   if (useAllGeno) {
     for (i in 1:length(SP$pheno$pop)) {
-      SP$pheno$pop[[i]] <- subset(pop, gen == i)
+      SP$pheno$pop[[i]] <- pop[pop$gen == i, ]
     }
   } else {
     SP$pheno$pop[[length(SP$pheno$pop)]] <- pop
