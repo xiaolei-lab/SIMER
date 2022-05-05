@@ -478,7 +478,7 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
       ind.dam <- pop$index[pop$sex == 2 | pop$sex == 0]
-      pop.sel <- list(sir = ind.sir , dam = ind.dam)
+      pop.sel <- list(sir = ind.sir, dam = ind.dam)
     }
     prog <- SP$reprod$prog
     
@@ -490,9 +490,9 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
     ped.sir <- rep(ped.dam, each = prog)
     ped.dam <- rep(ped.dam, each = prog)
     index.sir <- match(ped.dam, pop.geno.id)
-    index.dam <- index.sir
+    index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus=  ncpus)
     
     sex <- rep(0, length(index.dam))
     index <- seq(pop$index[length(pop$index)]+1, length.out = length(ped.dam))
