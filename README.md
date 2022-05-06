@@ -26,7 +26,7 @@
     - [Quick Start for Genotype Simulation](#quick-start-for-genotype-simulation)
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
-    - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
+    - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
     - [Set block information and recombination information](#set-block-information-and-recombination-information)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
@@ -294,42 +294,17 @@ SP <- phenotype(SP)
 
 ***Genotype data*** in **```SIMER```** will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of map. 
 
-## Gallery of genotype simulation input parameters
+## Gallery of genotype simulation parameters
 **[back to top](#contents)** 
 
-`genotype()`, main function of genotype simulation:  
-**rawgeno**, extrinsic genotype matrix  
-**geno**, genotype matrix need dealing with  
-**num.marker**, number of markers  
-**num.ind**, population size of base population  
-**prob**, weight of "0" and "1" in genotype matrix, the sum of elements in vector equal to 1  
-**blk.rg**, it represents the started and ended position blocks  
-**recom.spot**, whether to consider recombination in every blocks  
-**range.hot**, range of exchages in hot spot block  
-**range.cold**, range of exchages in cold spot block  
-**rate.mut**, mutation rate between 1e-8 and 1e-6  
-**verbose**, whether to print details  
+```genotype```, main function of ***Genotype Simulation***:  
+#' **SP$geno$pop.geno**, the genotype data.
+#' **SP$geno$incols**, '1':one-column genotype represents an individual; '2': two-column genotype represents an individual.
+#' **SP$geno$pop.marker**, the number of markers.
+#' **SP$geno$pop.ind**, the number of individuals in the base population.
+#' **SP$geno$prob**, the genotype code probability.
+#' **SP$geno$rate.mut**, the mutation rate of the genotype data.
 
- `check.map()`, add block id and combination information to genotypic map:   
-**input.map**, map that should be input, the marker number should be consistent in both map file and genotype data  
-**num.marker**, number of markers   
-**len.block**, length of every blocks  
-
-`cal.blk()`, get start position and end position of blocks:  
-**pos.map**, map with block information and recombination information  
-
-`input.geno()`, input sub-genotype matrix to total genotype matrix:  
-**bigmtr**, total genotype matrix  
-**mtr**, genotype matrix should be inputting  
-**ed**, index of the last column in each process  
-**mrk.dense**, whether markers are dense, it is TRUE when sequencing data 
-
-`simer()`, main function:  
-**rawgeno1**, extrinsic genotype matrix1  
-**rawgeno2**, extrinsic genotype matrix2    
-**rawgeno3**, extrinsic genotype matrix3  
-**rawgeno4**, extrinsic genotype matrix4 
- 
 ## Generate genotype matrix of base population
 **[back to top](#contents)** 
 
