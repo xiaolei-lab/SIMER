@@ -212,7 +212,7 @@ param.geno <- function(SP = NULL, ...) {
 #' \describe{
 #' \item{$pheno$pop}{the population information containing environmental factors and other effects.}
 #' \item{$pheno$pop.ind}{the number of individuals in the base population.}
-#' \item{$pheno$pop.rep}{the repeated times of repeated records}
+#' \item{$pheno$pop.rep}{the repeated times of repeated records.}
 #' \item{$pheno$pop.rep.bal}{whether repeated records are balanced.}
 #' \item{$pheno$pop.env}{a list of environmental factors setting.}
 #' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "A + D".}
