@@ -30,7 +30,7 @@
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)  
-    - [Gallery of phenotype simulation input parameters](#gallery-of-phenotype-simulation-input-parameters)  
+    - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)  
     - [Generate base population information](#generate-base-population-information)  
     - [Generate phenotype of single trait by A model](#generate-phenotype-of-single-trait-by-A-model)  
     - [Generate phenotype of single trait by AD model](#generate-phenotype-of-single-trait-by-AD-model)  
@@ -451,7 +451,7 @@ SP <- genotype(SP)
 **(4)** Linear Mixed Model  
 **(5)** Repeated Record Model  
 
-## Gallery of phenotype simulation input parameters
+## Gallery of phenotype simulation parameters
 **[back to top](#contents)**  
 
 ```phenotype```, main function of ***Phenotype Simulation***:  
