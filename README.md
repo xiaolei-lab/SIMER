@@ -298,12 +298,12 @@ SP <- phenotype(SP)
 **[back to top](#contents)** 
 
 ```genotype```, main function of ***Genotype Simulation***:  
-#' **SP$geno$pop.geno**, the genotype data.
-#' **SP$geno$incols**, '1':one-column genotype represents an individual; '2': two-column genotype represents an individual.
-#' **SP$geno$pop.marker**, the number of markers.
-#' **SP$geno$pop.ind**, the number of individuals in the base population.
-#' **SP$geno$prob**, the genotype code probability.
-#' **SP$geno$rate.mut**, the mutation rate of the genotype data.
+**SP$geno$pop.geno**, the genotype data.  
+**SP$geno$incols**, '1':one-column genotype represents an individual; '2': two-column genotype represents an individual.  
+**SP$geno$pop.marker**, the number of markers.  
+**SP$geno$pop.ind**, the number of individuals in the base population.  
+**SP$geno$prob**, the genotype code probability.  
+**SP$geno$rate.mut**, the mutation rate of the genotype data.  
 
 ## Generate genotype matrix of base population
 **[back to top](#contents)** 
