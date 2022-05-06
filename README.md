@@ -225,7 +225,7 @@ userped <- read.table("userped.txt", header = TRUE)
 # Quick Start
 **[back to top](#contents)** 
 
-All simulation process can be devided into 2 steps: ***1) generate simulation parameters***; ***2) run simulation process***. All simulation parameters and data are stored in ```SP``` (**S**imulation **P**arameter).
+All simulation process can be devided into 2 steps: ***1) generate simulation parameters***; ***2) run simulation process***.
 
 ## Quick Start for Complete Simulation
 **[back to top](#contents)**
