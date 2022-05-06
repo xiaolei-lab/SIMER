@@ -312,42 +312,42 @@ SP <- phenotype(SP)
 <td><b>pop.geno</b></td>
 <td>NULL</td>
 <td>big.matrix or matrix</td>
-<td>the genotype data. </td>
+<td>the genotype data.</td>
 </tr>
 <tr>
 <td><b>incols</b></td>
 <td>1</td>
 <td>1 or 2</td>
-<td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
+<td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.</td>
 </tr>
 <tr>
 <td><b>pop.marker</b></td>
 <td>1e4</td>
 <td>num</td>
-<td>the number of markers. </td>
+<td>the number of markers.</td>
 </tr>
 <tr>
 <td><b>pop.ind</b></td>
 <td>1e2</td>
 <td>num</td>
-<td>the number of individuals in the base population. </td>
+<td>the number of individuals in the base population.</td>
 </tr>
 <tr>
 <td><b>prob</b></td>
 <td>NULL</td>
 <td>num vector</td>
-<td>the genotype code probability. </td>
+<td>the genotype code probability.</td>
 </tr>
 <tr>
 <td><b>rate.mut</b></td>
 <td>1e-8</td>
 <td>num</td>
-<td>the mutation rate of the genotype data. </td>
+<td>the mutation rate of the genotype data.</td>
 </tr>
 </tbody>
 </table>
 
-```annotation```, main function of ***Genotype Simulation***:  
+```annotation```, main function of ***Annotation Simulation***:  
 
 <table text-algn="left">
 <thead>
@@ -363,19 +363,19 @@ SP <- phenotype(SP)
 <td><b>recom.spot</b></td>
 <td>FALSE</td>
 <td>TRUE or FALSE</td>
-<td>whether to generate recombination events. </td>
+<td>whether to generate recombination events.</td>
 </tr>
 <tr>
 <td><b>range.hot</b></td>
 <td>4:6</td>
 <td>num vector</td>
-<td>the recombination times range in the hot spot. </td>
+<td>the recombination times range in the hot spot.</td>
 </tr>
 <tr>
 <td><b>range.cold</b></td>
 <td>1:5</td>
 <td>num vector</td>
-<td>the recombination times range in the cold spot. </td>
+<td>the recombination times range in the cold spot.</td>
 </tr>
 </tbody>
 </table>
