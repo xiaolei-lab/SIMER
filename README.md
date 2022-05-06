@@ -363,7 +363,7 @@ SP <- param.geno(pop.geno = pop.geno)
 # Run genotype simulation
 SP <- genotype(SP)
 
-### 02 Create Genotype Data randomly ###
+### 02 Create Genotype Data Randomly ###
 # Generate genotype simulation parameters
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 
@@ -374,30 +374,36 @@ SP <- genotype(SP)
 ## Add chromosome crossovers and mutations to genotype matrix
 **[back to top](#contents)** 
 
-After getting block information and recombination information, you can add chromosome crossovers and mutations to genotype matrix.  
+With annotation data, chromosome crossovers and mutations can be added to genotype matrix.  
 
 ```r
-basepop.geno.em <-  # genotype matrix after cross and Mutation
-    genotype(geno = basepop1.geno,
-             blk.rg = blk.rg,
-             recom.spot = recom.spot,
-             range.hot = 4:6,  # 4~6 recombinations in hot spots
-             range.cold = 1:5, # 1~5 recombinations in cold spots
-             rate.mut = 1e-8, 
-             verbose = verbose)
+# Generate annotation simulation parameters
+# If recom.spot = TRUE, chromsome crossovers will be added to genotype matrix
+SP <- param.annot(recom.spot = TRUE)
+# Generate genotype simulation parameters
+# Base mutation rate is 1e8
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2, rate.mut = 1e8)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
 ```
 
-Note that recombination only exists in meiosis. Therefore, some reproduction methods such like "clone" do not have recombination process. You can set **recom.spot = NULL** to add only mutations to genotype matrix.  
+Note that recombination only exists in meiosis. Therefore, some reproduction methods such like ```clone``` do not have recombination process. You can set ```recom.spot = FALSE``` to add only mutations to genotype matrix.  
 
 ```r
-basepop.geno.em <-  # genotype matrix after crosses and mutations
-    genotype(geno = basepop1.geno,
-             blk.rg = blk.rg,
-             recom.spot = NULL, # only mutations on genotype matrix
-             range.hot = 4:6,
-             range.cold = 1:5,
-             rate.mut = 1e-8,   # mutation rate
-             verbose = verbose)
+# Generate annotation simulation parameters
+# If recom.spot = FALSE, chromsome crossovers will be added to genotype matrix
+SP <- param.annot(recom.spot = TRUE)
+# Generate genotype simulation parameters
+# Base mutation rate is 1e8
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2, rate.mut = 1e8)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
 ```             
 
 ---
