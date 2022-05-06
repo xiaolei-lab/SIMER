@@ -309,30 +309,21 @@ SP <- phenotype(SP)
 <table text-algn="left">
 <thead>
 <tr>
-<td><b><b>Paramater</b></b></td>
-<td><b>Description</b></td>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Description</b></i></td>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SP$geno$pop.geno</td>
-<td>the genotype data. </td>
+<td><b>SP$geno$pop.geno</b></td>
+<td><b>the genotype data. </b></td>
 </tr>
 <tr>
-<td>SP$geno$incols</td>
-<td>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
+<td><b>SP$geno$incols</b></td>
+<td><b>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </b></td>
 </tr>
 </tbody>
 </table>
-
-| SNP | Chrom | BP | REF | ALT |
-| :---: | :---: |:---: |:---: |:---: |
-|1_10673082  | 1 | 10673082 | T | C |
-|1_10723065  | 1 | 10723065 | A | G |
-|1_11407894  | 1 | 11407894 | A | G |
-|1_11426075  | 1 | 11426075 | T | C |
-|1_13996200  | 1 | 13996200 | T | C |
-|1_14638936  | 1 | 14638936 | T | C |
 
 ## Generate genotype matrix of base population
 **[back to top](#contents)** 
