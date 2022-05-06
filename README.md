@@ -407,7 +407,7 @@ SP <- genotype(SP)
 ## Add chromosome crossovers and mutations to genotype matrix
 **[back to top](#contents)** 
 
-With annotation data, chromosome crossovers and mutations can be added to genotype matrix.  
+With ***annotation data***, chromosome crossovers and mutations can be added to genotype matrix.  
 
 ```r
 # Generate annotation simulation parameters
