@@ -355,7 +355,7 @@ There are two different ways to generate genotype matrix of base population.
 ```r
 ### 01 Use Genotype Data from Outside ###
 # Create a genotype matrix
-pop.geno <- matrix(0, nrow = 1e4, ncol = 1w2)
+pop.geno <- matrix(0, nrow = 1e4, ncol = 1e2)
 
 # Generate genotype simulation parameters
 SP <- param.geno(pop.geno = pop.geno)
