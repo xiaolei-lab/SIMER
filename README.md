@@ -454,46 +454,57 @@ SP <- genotype(SP)
 ## Gallery of phenotype simulation input parameters
 **[back to top](#contents)**  
 
-`phenotype()`, main function of phenotype simulation:  
-**effs**, a list with number of overlap markers, selected markers, effects of markers  
-**FR**, a list of fixed effects, random effects, and their combination  
-**pop**, population information of generation, family index, within-family index, index, sire, dam, sex  
-**pop.geno**, genotype matrix of population, two columns represent a individual  
-**pos.map**, marker information of population  
-**h2.tr1**, heritability vector of a single trait, every element are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**gnt.cov**, genetic covariance matrix among all traits  
-**h2.trn**, heritability among all traits  
-**sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
-**pop.total**, total population infarmation  
-**sel.on**, whether to add selection
-**inner.env**, environment of main function of simer  
-**verbose**, whether to print details  
+```phenotype```, main function of ***Phenotype Simulation***:  
 
-`cal.effs()`, calculate for marker effects: 
-**pop.geno**, genotype matrix of population, two columns represent a individual  
-**cal.model**, phenotype model with "A", "AD", "ADI"  
-**num.qtn.tr1**, integer or integer vector, the number of QTN in a single trait  
-**sd.tr1**, standard deviation of different effects, the last 5 vector elements are corresponding to d, aXa, aXd, dXa, dXd respectively and the rest elements are corresponding to a 
-**dist.qtn.tr1**, distribution of QTN's effects with options: "normal", "geometry" and "gamma", vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**eff.unit.tr1**, unit effect of geometric distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**shape.tr1**, shape of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**scale.tr1**, scale of gamma distribution of a single trait, vector elements are corresponding to a, d, aXa, aXd, dXa, dXd respectively  
-**multrait**, whether applying pair traits with overlapping, TRUE represents applying, FALSE represents not  
-**num.qtn.trn**, QTN distribution matrix, diagnal elements are total QTN number of the trait, non-diagnal are QTN number of overlop qtn  
-**sd.trn**, a matrix with the standard deviation of the QTN effects  
-**qtn.spot**, QTN probability in every blocks  
-**maf**, Minor Allele Frequency, markers selection range is from  maf to 0.5  
-**verbose**, whether to print details  
 
-`getpop()`, generate population information:  
-**nind**, number of individuals in the population  
-**from**, initial index of the population  
-**ratio**, ratio of males in all individuals  
-
-`set.pheno()`, add phenotype to population information:  
-**pop**, population information of generation, family index, within-family index, index, sire, dam, sex  
-**pop.pheno**, phenotype information
-**sel.crit**, selection criteria with options: "TGV", "TBV", "pEBVs", "gEBVs", "ssEBVs", "pheno"  
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>pop</b></td>
+<td>NULL</td>
+<td>data.frame</td>
+<td>the population information containing environmental factors and other effects.</td>
+</tr>
+<tr>
+<td><b>pop.ind</b></td>
+<td>100</td>
+<td>num</td>
+<td>the number of individuals in the base population.</td>
+</tr>
+<tr>
+<td><b>pop.rep</b></td>
+<td>1</td>
+<td>num</td>
+<td>the repeated times of repeated records.</td>
+</tr>
+<tr>
+<td><b>pop.ind</b></td>
+<td>1e2</td>
+<td>num</td>
+<td>the number of individuals in the base population.</td>
+</tr>
+<tr>
+<td><b>prob</b></td>
+<td>NULL</td>
+<td>num vector</td>
+<td>the genotype code probability.</td>
+</tr>
+<tr>
+<td><b>rate.mut</b></td>
+<td>1e-8</td>
+<td>num</td>
+<td>the mutation rate of the genotype data.</td>
+</tr>
+</tbody>
+</table>
 
 ## Generate base population information
 **[back to top](#contents)** 
