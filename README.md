@@ -240,28 +240,6 @@ SP <- param.simer(out = "simer")
 SP <- simer(SP)
 ```
 
-Replicated simulation can be done by ```For``` loop in ```R``` software.
-
-```r
-# Replication times
-rep <- 2
-
-# Result list
-SPs <- list()
-length(SPs) <- rep
-
-for (i in 1:rep) {
-  # Generate all simulation parameters
-  SP <- param.simer(out = "simer")
-
-  # Run Simer
-  SP <- simer(SP)
-  
-  # Assign result
-  SPs[[i]] <- SP
-}
-```
-
 ## Quick Start for Annotation Simulation
 **[back to top](#contents)** 
 
