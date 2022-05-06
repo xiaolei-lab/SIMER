@@ -17,7 +17,7 @@ genotype(SP = NULL, ncpus = 0, verbose = TRUE)
 the function returns a list containing
 \describe{
 \item{$geno$pop.geno}{the genotype data.}
-\item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+\item{$geno$incols}{'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.}
 \item{$geno$pop.marker}{the number of markers.}
 \item{$geno$pop.ind}{the number of individuals in the base population.}
 \item{$geno$prob}{the genotype code probability.}
