@@ -390,7 +390,7 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 ```
 
-Note that recombination only exists in meiosis. Therefore, some reproduction methods such like ```clone``` do not have recombination process. You can set ```recom.spot = FALSE``` to add only mutations to genotype matrix.  
+Note that recombination only exists in meiosis. Therefore, some reproduction methods such as ```clone``` do not have recombination process. User can set ```recom.spot = FALSE``` to add only mutations to genotype matrix.  
 
 ```r
 # Generate annotation simulation parameters
