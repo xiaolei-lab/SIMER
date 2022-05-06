@@ -309,8 +309,8 @@ SP <- phenotype(SP)
 <table>
 <tbody>
 <tr>
-<td align="center">Paramater</td>
-<td align="left">Description</td>
+<td align="center">***Paramater***</td>
+<td align="left">***Description***</td>
 </tr>
 <tr>
 <td align="center">SP$geno$pop.geno</td>
