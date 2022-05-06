@@ -225,7 +225,7 @@ userped <- read.table("userped.txt", header = TRUE)
 # Quick Start
 **[back to top](#contents)** 
 
-All simulation process can be devided into 2 steps: ***1) generate simulation parameters***; ***2) run simulation process***.
+All simulation process can be devided into 2 steps: 👉***1) generate simulation parameters***;:point_left: 👉***2) run simulation process***:point_left:.
 
 ## Complete Simulation
 **[back to top](#contents)**
