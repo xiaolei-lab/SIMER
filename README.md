@@ -298,13 +298,6 @@ SP <- phenotype(SP)
 **[back to top](#contents)** 
 
 ```genotype```, main function of ***Genotype Simulation***:  
-**SP$geno$pop.geno**, the genotype data.  
-**SP$geno$incols**, '1':one-column genotype represents an individual; '2': two-column genotype represents an individual.  
-**SP$geno$pop.marker**, the number of markers.  
-**SP$geno$pop.ind**, the number of individuals in the base population.  
-**SP$geno$prob**, the genotype code probability.  
-**SP$geno$rate.mut**, the mutation rate of the genotype data.  
-
 
 <table text-algn="left">
 <thead>
@@ -316,11 +309,27 @@ SP <- phenotype(SP)
 <tbody>
 <tr>
 <td><b>SP$geno$pop.geno</b></td>
-<td><b>the genotype data. </b></td>
+<td>the genotype data. </td>
 </tr>
 <tr>
 <td><b>SP$geno$incols</b></td>
-<td><b>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </b></td>
+<td>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
+</tr>
+<tr>
+<td><b>SP$geno$pop.marker</b></td>
+<td>the number of markers. </td>
+</tr>
+<tr>
+<td><b>SP$geno$pop.ind</b></td>
+<td>the number of individuals in the base population. </td>
+</tr>
+<tr>
+<td><b>SP$geno$prob</b></td>
+<td>the genotype code probability. </td>
+</tr>
+<tr>
+<td><b>SP$geno$rate.mut</b></td>
+<td>the mutation rate of the genotype data. </td>
 </tr>
 </tbody>
 </table>
