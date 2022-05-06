@@ -22,9 +22,9 @@
     - [Optional](#optional)
 - [Quick Start](#quick-start)
     - [Complete Simulation](#complete-simulation)
+    - [Annotation Simulation](#annotation-simulation)
     - [Genotype Simulation](#genotype-simulation)
     - [Phenotype Simulation](#phenotype-simulation)
-    - [Marker Information Simulation](#marker-information-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
@@ -260,6 +260,17 @@ for (i in 1:rep) {
 }
 ```
 
+## Annotation Simulation
+**[back to top](#contents)** 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+
+# Run annotation simulation
+SP <- annotation(SP)
+```
+
 ## Genotype Simulation
 **[back to top](#contents)** 
 
@@ -290,15 +301,6 @@ pop = getpop(nind = ncol(geno))
 
 # generate phenotype
 pheno <- phenotype(effs = effs, pop = pop, pop.geno = geno, h2.tr1 = 0.8)
-
-```
-
-## Marker Information Simulation
-**[back to top](#contents)** 
-
-```r
-# generate marker information
-map <- generate.map(num.marker = 5e5, num.chr = 18, len.chr = 1.5e8)
 
 ```
 
