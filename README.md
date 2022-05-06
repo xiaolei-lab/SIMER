@@ -21,10 +21,10 @@
     - [Basic](#basic)
     - [Optional](#optional)
 - [Quick Start](#quick-start)
-    - [Complete Simulation](#complete-simulation)
-    - [Annotation Simulation](#annotation-simulation)
-    - [Genotype Simulation](#genotype-simulation)
-    - [Phenotype Simulation](#phenotype-simulation)
+    - [Quick Start for Complete Simulation](#quick-start-for-complete-simulation)
+    - [Quick Start for Annotation Simulation](#quick-start-for-annotation-simulation)
+    - [Quick Start for Genotype Simulation](#quick-start-for-genotype-simulation)
+    - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation input parameters](#gallery-of-genotype-simulation-input-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
@@ -227,10 +227,10 @@ userped <- read.table("userped.txt", header = TRUE)
 
 All simulation process can be devided into 2 steps: ***1) generate simulation parameters***; ***2) run simulation process***.
 
-## Complete Simulation
+## Quick Start for Complete Simulation
 **[back to top](#contents)**
 
-A quick start of **```SIMER```** is shown below:
+A quick start for ***Complete Simulation*** is shown below:
 
 ```r
 # Generate all simulation parameters
@@ -262,10 +262,10 @@ for (i in 1:rep) {
 }
 ```
 
-## Annotation Simulation
+## Quick Start for Annotation Simulation
 **[back to top](#contents)** 
 
-A quick start of ***Annotation Simulation*** is shown below:
+A quick start for ***Annotation Simulation*** is shown below:
 
 ```r
 # Generate annotation simulation parameters
@@ -275,10 +275,10 @@ SP <- param.annot(qtn.num = 10)
 SP <- annotation(SP)
 ```
 
-## Genotype Simulation
+## Quick Start for Genotype Simulation
 **[back to top](#contents)** 
 
-A quick start of ***Genotype Simulation*** is shown below:
+A quick start for ***Genotype Simulation*** is shown below:
 
 ```r
 # Generate genotype simulation parameters
@@ -288,10 +288,10 @@ SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 SP <- genotype(SP)
 ```
 
-## Phenotype Simulation
+## Quick Start for Phenotype Simulation
 **[back to top](#contents)** 
 
-A quick start of ***Phenotype Simulation*** is shown below:
+A quick start for ***Phenotype Simulation*** is shown below:
 
 ```r
 # Generate annotation simulation parameters
