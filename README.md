@@ -313,7 +313,7 @@ SP <- phenotype(SP)
 </tr>
 <tr>
 <td><b>incols</b></td>
-<td>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
+<td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
 </tr>
 <tr>
 <td><b>pop.marker</b></td>
