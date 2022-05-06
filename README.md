@@ -28,7 +28,7 @@
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
-    - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
+    - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)  
     - [Gallery of phenotype simulation input parameters](#gallery-of-phenotype-simulation-input-parameters)  
     - [Generate base population information](#generate-base-population-information)  
