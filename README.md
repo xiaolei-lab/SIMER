@@ -1,5 +1,5 @@
 # SIMER 
-[![GitHub issues](https://img.shields.io/github/issues/xiaolei-lab/SIMER?color=green)](https://github.com/xiaolei-lab/SIMER/issues/new) [![](https://img.shields.io/badge/GitHub-0.9.0.0-blueviolet.svg)]() <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxiaolei-lab%2FSIMER"/></a>
+[![GitHub issues](https://img.shields.io/github/issues/xiaolei-lab/SIMER?color=green)](https://github.com/xiaolei-lab/SIMER/issues/new) [![](https://img.shields.io/badge/GitHub-0.9.0.0-blueviolet.svg)](https://github.com/xiaolei-lab/SIMER) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxiaolei-lab%2FSIMER"/></a>
 
 ## Data Simulation for Life Science and Breeding
 
