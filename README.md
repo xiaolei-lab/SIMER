@@ -305,6 +305,17 @@ SP <- phenotype(SP)
 **SP$geno$prob**, the genotype code probability.  
 **SP$geno$rate.mut**, the mutation rate of the genotype data.  
 
+
+<table>
+<tbody>
+<tr>
+<td align="center">Paramater</td>
+<td align="left">Description</td>
+</tr>
+</tbody>
+</table>
+
+
 ## Generate genotype matrix of base population
 **[back to top](#contents)** 
 
