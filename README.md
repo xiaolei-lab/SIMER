@@ -308,14 +308,9 @@ SP <- phenotype(SP)
 
 <table text-algn="left">
 <thead>
-<style type="text/css">
-p {
-  font-weight: bold;
-}
-</style>
 <tr>
-<td>Paramater</td>
-<td>Description</td>
+<td><b>Paramater</b></td>
+<td><b>Description</b></td>
 </tr>
 </thead>
 <tbody>
