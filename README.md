@@ -28,7 +28,6 @@
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
-    - [Set block information and recombination information](#set-block-information-and-recombination-information)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutaions-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)  
     - [Gallery of phenotype simulation input parameters](#gallery-of-phenotype-simulation-input-parameters)  
@@ -354,28 +353,22 @@ SP <- phenotype(SP)
 There are two different ways to generate genotype matrix of base population.
 
 ```r
-# use genotype matrix from outside
-basepop1.geno <- genotype(rawgeno = rawgeno, verbose = verbose)
+### 01 Use Genotype Data from Outside ###
+# Create a genotype matrix
+pop.geno <- matrix(0, nrow = 1e4, ncol = 1w2)
 
-# use num.marker and num.ind to generate a new genotype matrix
-# use prob to control the proportion of "0" in genotype matrix
-nmrk <- nrow(input.map)
-basepop2.geno <- genotype(num.marker = nmrk, num.ind = 100, prob = c(0.5, 0.5), verbose = verbose)
-```
+# Generate genotype simulation parameters
+SP <- param.geno(pop.geno = pop.geno)
 
-## Set block information and recombination information
-**[back to top](#contents)** 
+# Run genotype simulation
+SP <- genotype(SP)
 
-Add block information and recombination information to map file. Calculate block ranges and recombination states of blocks.
+### 02 Create Genotype Data randomly ###
+# Generate genotype simulation parameters
+SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 
-```r
-nmrk <- nrow(basepop1.geno)
-nind <- ncol(basepop1.geno) / 2
-
-# set block information and recombination information
-pos.map <- check.map(input.map = input.map, num.marker = nmrk, len.block = 5e7)
-blk.rg <- cal.blk(pos.map)
-recom.spot <- as.numeric(pos.map[blk.rg[, 1], 7])
+# Run genotype simulation
+SP <- genotype(SP)
 ```
 
 ## Add chromosome crossovers and mutations to genotype matrix
