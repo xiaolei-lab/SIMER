@@ -291,7 +291,7 @@ SP <- phenotype(SP)
 # Genotype Simulation
 **[back to top](#contents)** 
 
-***Genotype data*** in **```SIMER```** will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of map. 
+***Genotype data*** in **```SIMER```** will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of ***Annotation data***. 
 
 ## Gallery of genotype simulation parameters
 **[back to top](#contents)** 
@@ -411,7 +411,7 @@ SP <- genotype(SP)
 # Phenotype Simulation
 **[back to top](#contents)**  
 
-Phenotype data in **SIMER** will be generated according to different phenotype models, QTN effect distributions and selection criteria. SIMER supports generating single traits or multiple traits. In the case of the single trait, you could set different models by **cal.model** as your need. But in the case of multiple traits, only the  "A" model can be used. In the single trait or multiple traits, you can set different QTN amounts, effect variances, effect distributions for QTNs and heritability for traits. You can also set gene jungles and gene deserts by **qtn.spot**. For a low-quality genotype matrix, you can make quality control by **maf**. Additionally, in the case of the single trait, multiple groups of  QTN effects are also under consideration. In multiple traits, you can set specific genetic correlations. 
+***Phenotype data*** in **```SIMER```** will be generated according to different phenotype models and QTN effect distributions. **```SIMER```** supports generating single traits or multiple traits. In the case of the single trait, you could set different models by ```cal.model``` as your need. But in the case of multiple traits, only the  "A" model can be used. In the single trait or multiple traits, you can set different QTN amounts, effect variances, effect distributions for QTNs and heritability for traits. You can also set gene jungles and gene deserts by ```qtn.spot````. For a low-quality genotype matrix, you can make quality control by ```maf```. Additionally, in the case of the single trait, multiple groups of  QTN effects are also under consideration. In multiple traits, you can set specific genetic correlations. 
 
 ## Gallery of phenotype simulation input parameters
 **[back to top](#contents)**  
