@@ -309,7 +309,7 @@ SP <- phenotype(SP)
 <table text-algn="left">
 <thead>
 <tr>
-<td><b>Paramater</b></td>
+<td><b><b>Paramater</b></b></td>
 <td><b>Description</b></td>
 </tr>
 </thead>
