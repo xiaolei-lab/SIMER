@@ -230,6 +230,8 @@ All simulation process can be devided into 2 steps: ***1) generate simulation pa
 ## Complete Simulation
 **[back to top](#contents)**
 
+A quick start of ```SIMER``` is shown below:
+
 ```r
 # Generate all simulation parameters
 SP <- param.simer(out = "simer")
@@ -263,6 +265,8 @@ for (i in 1:rep) {
 ## Annotation Simulation
 **[back to top](#contents)** 
 
+A quick start of ***Annotation Simulation*** is shown below:
+
 ```r
 # Generate annotation simulation parameters
 SP <- param.annot(qtn.num = 10)
@@ -274,34 +278,35 @@ SP <- annotation(SP)
 ## Genotype Simulation
 **[back to top](#contents)** 
 
-SIMER can simulate genotype matrix with random elements and receive real genotype data. 
+A quick start of ***Genotype Simulation*** is shown below:
 
 ```r
-# receive real genotype data
-geno <- genotype(rawgeno = your_genotype)
+# Generate genotype simulation parameters
+SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 
-# use num.marker and num.ind to generate a new genotype matrix
-geno <- genotype(num.marker = 1e5, num.ind = 1e3)
+# Run genotype simulation
+SP <- genotype(SP)
 ```
 
 ## Phenotype Simulation
 **[back to top](#contents)** 
 
-Phenotype simulation needs marker effects, population information, and genotype matrix. 
+A quick start of ***Phenotype Simulation*** is shown below:
 
 ```r
-# generate marker effects
-# 1 column of genotype represents an individual
-effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01, incols = 1)
-# 2 columns of genotype represent an individual
-# effs <- cal.effs(pop.geno = geno, num.qtn.tr1 = 500, sd.tr1 = 0.01, incols = 2)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
 
-# generate population information
-pop = getpop(nind = ncol(geno))
-
-# generate phenotype
-pheno <- phenotype(effs = effs, pop = pop, pop.geno = geno, h2.tr1 = 0.8)
-
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
 ---
