@@ -347,6 +347,39 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
+```annotation```, main function of ***Genotype Simulation***:  
+
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>recom.spot</b></td>
+<td>FALSE</td>
+<td>TRUE or FALSE</td>
+<td>whether to generate recombination events. </td>
+</tr>
+<tr>
+<td><b>range.hot</b></td>
+<td>4:6</td>
+<td>num vector</td>
+<td>the recombination times range in the hot spot. </td>
+</tr>
+<tr>
+<td><b>range.cold</b></td>
+<td>1:5</td>
+<td>num vector</td>
+<td>the recombination times range in the cold spot. </td>
+</tr>
+</tbody>
+</table>
+
 ## Generate genotype matrix of base population
 **[back to top](#contents)** 
 
