@@ -486,22 +486,28 @@ SP <- genotype(SP)
 <td>the repeated times of repeated records.</td>
 </tr>
 <tr>
-<td><b>pop.ind</b></td>
-<td>1e2</td>
-<td>num</td>
-<td>the number of individuals in the base population.</td>
+<td><b>pop.rep.bal</b></td>
+<td>TRUE</td>
+<td>TRUE or FALSE</td>
+<td>whether repeated records are balanced.</td>
 </tr>
 <tr>
-<td><b>prob</b></td>
+<td><b>pop.env</b></td>
 <td>NULL</td>
-<td>num vector</td>
-<td>the genotype code probability.</td>
+<td>list</td>
+<td>a list of environmental factors setting.</td>
 </tr>
 <tr>
-<td><b>rate.mut</b></td>
-<td>1e-8</td>
-<td>num</td>
-<td>the mutation rate of the genotype data.</td>
+<td><b>phe.model</b></td>
+<td>list(tr1 = "T1 = A + E")</td>
+<td>list</td>
+<td>a list of genetic model of phenotype such as "A + D".</td>
+</tr>
+<tr>
+<td><b>phe.h2A</b></td>
+<td>list(tr1 = 0.3)</td>
+<td>list</td>
+<td>a list of additive heritability.</td>
 </tr>
 </tbody>
 </table>
