@@ -308,27 +308,27 @@ SP <- phenotype(SP)
 </thead>
 <tbody>
 <tr>
-<td><b>SP$geno$pop.geno</b></td>
+<td><b>pop.geno</b></td>
 <td>the genotype data. </td>
 </tr>
 <tr>
-<td><b>SP$geno$incols</b></td>
+<td><b>incols</b></td>
 <td>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
 </tr>
 <tr>
-<td><b>SP$geno$pop.marker</b></td>
+<td><b>pop.marker</b></td>
 <td>the number of markers. </td>
 </tr>
 <tr>
-<td><b>SP$geno$pop.ind</b></td>
+<td><b>pop.ind</b></td>
 <td>the number of individuals in the base population. </td>
 </tr>
 <tr>
-<td><b>SP$geno$prob</b></td>
+<td><b>prob</b></td>
 <td>the genotype code probability. </td>
 </tr>
 <tr>
-<td><b>SP$geno$rate.mut</b></td>
+<td><b>rate.mut</b></td>
 <td>the mutation rate of the genotype data. </td>
 </tr>
 </tbody>
