@@ -444,7 +444,12 @@ SP <- genotype(SP)
 # Phenotype Simulation
 **[back to top](#contents)**  
 
-***Phenotype data*** in **```SIMER```** will be generated according to different phenotype models and QTN effect distributions. **```SIMER```** supports generating single traits or multiple traits. In the case of the single trait, you could set different models by ```cal.model``` as your need. But in the case of multiple traits, only the  "A" model can be used. In the single trait or multiple traits, you can set different QTN amounts, effect variances, effect distributions for QTNs and heritability for traits. You can also set gene jungles and gene deserts by ```qtn.spot```. For a low-quality genotype matrix, you can make quality control by ```maf```. Additionally, in the case of the single trait, multiple groups of  QTN effects are also under consideration. In multiple traits, you can set specific genetic correlations. 
+***Phenotype data*** in **```SIMER```** will be generated according to different models, including:
+**(1)** Single-Trait Model or Multiple-Trait Model
+**(2)** Genetic Effect Model
+**(3)** Effect Distribution Model
+**(4)** Linear Mixed Model
+**(5)** Repeated Record Model
 
 ## Gallery of phenotype simulation input parameters
 **[back to top](#contents)**  
