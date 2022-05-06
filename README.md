@@ -303,32 +303,46 @@ SP <- phenotype(SP)
 <thead>
 <tr>
 <td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
 <td><i><b>Description</b></i></td>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><b>pop.geno</b></td>
+<td>NULL</td>
+<td>big.matrix or matrix</td>
 <td>the genotype data. </td>
 </tr>
 <tr>
 <td><b>incols</b></td>
+<td>1</td>
+<td>1 or 2</td>
 <td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
 </tr>
 <tr>
 <td><b>pop.marker</b></td>
+<td>1e4</td>
+<td>num</td>
 <td>the number of markers. </td>
 </tr>
 <tr>
 <td><b>pop.ind</b></td>
+<td>1e2</td>
+<td>num</td>
 <td>the number of individuals in the base population. </td>
 </tr>
 <tr>
 <td><b>prob</b></td>
+<td>NULL</td>
+<td>num vector</td>
 <td>the genotype code probability. </td>
 </tr>
 <tr>
 <td><b>rate.mut</b></td>
+<td>1e-8</td>
+<td>num</td>
 <td>the mutation rate of the genotype data. </td>
 </tr>
 </tbody>
