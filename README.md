@@ -325,6 +325,14 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
+| SNP | Chrom | BP | REF | ALT |
+| :---: | :---: |:---: |:---: |:---: |
+|1_10673082  | 1 | 10673082 | T | C |
+|1_10723065  | 1 | 10723065 | A | G |
+|1_11407894  | 1 | 11407894 | A | G |
+|1_11426075  | 1 | 11426075 | T | C |
+|1_13996200  | 1 | 13996200 | T | C |
+|1_14638936  | 1 | 14638936 | T | C |
 
 ## Generate genotype matrix of base population
 **[back to top](#contents)** 
