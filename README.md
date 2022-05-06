@@ -306,21 +306,21 @@ SP <- phenotype(SP)
 **SP$geno$rate.mut**, the mutation rate of the genotype data.  
 
 
-<table>
+<table text-algn="left">
 <thead>
 <tr>
-<td align="left" bgcolor="1">Paramater</td>
-<td align="left" bgcolor="1">Description</td>
+<td bgcolor="#87CEEB">Paramater</td>
+<td bgcolor="#87CEEB">Description</td>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">SP$geno$pop.geno</td>
-<td align="left">the genotype data. </td>
+<td>SP$geno$pop.geno</td>
+<td>the genotype data. </td>
 </tr>
 <tr>
-<td align="left">SP$geno$incols</td>
-<td align="left">'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
+<td>SP$geno$incols</td>
+<td>'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
 </tr>
 </tbody>
 </table>
