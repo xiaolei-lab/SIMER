@@ -307,17 +307,19 @@ SP <- phenotype(SP)
 
 
 <table>
+<thead>
+<tr>
+<td align="left">Paramater</td>
+<td align="left">Description</td>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td align="center">***Paramater***</td>
-<td align="left">***Description***</td>
-</tr>
-<tr>
-<td align="center">SP$geno$pop.geno</td>
+<td align="left">SP$geno$pop.geno</td>
 <td align="left">the genotype data. </td>
 </tr>
 <tr>
-<td align="center">SP$geno$incols</td>
+<td align="left">SP$geno$incols</td>
 <td align="left">'1':one-column genotype represents an individual; '2': two-column genotype represents an individual. </td>
 </tr>
 </tbody>
