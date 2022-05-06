@@ -126,7 +126,6 @@ param.annot <- function(SP = NULL, ...) {
   }
   
   if (!SP.map$qtn.spot) {
-    SP.map$len.block <- NULL
     SP.map$maf <- NULL
   }
   
