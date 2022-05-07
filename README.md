@@ -784,7 +784,7 @@ In multiple-trait simulation, **```SIMER```** can build ***accurate Additive gen
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D") # Additive effect
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D") # Additive effect and Dominant effect
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -824,7 +824,7 @@ SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 SP <- param.pheno(
   SP = SP,
   pop.ind = 100,
-  phe.model = list(tr1 = "T1 = A + D + A:D + E"), # "T1" (Trait 1) consists of Additive effect, Dominant effect, and Residual effect
+  phe.model = list(tr1 = "T1 = A + D + A:D + E"), # "T1" (Trait 1) consists of Additive effect, Dominant effect, Additive-Dominant interaction effect, and Residual effect
   # phe.var = list(tr1 = 100),
   phe.h2A = list(tr1 = 0.3),
   phe.h2D = list(tr1 = 0.1),
@@ -844,7 +844,7 @@ In multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Gene
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -860,7 +860,7 @@ SP <- param.pheno(
   phe.h2D = list(tr1 = 0.1, tr2 = 0.1),
   phe.h2GxG = list(tr1 = list("A:D" = 0.1), tr2 = list("A:D" = 0.1)),
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
-  phe.corD = matrix(c(1, 0.5, 0.5, 1), 2, 2)  # Dominant genetic correlation
+  phe.corD = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Dominant genetic correlation
   phe.corGxG = list("A:D" = matrix(c(1, 0.5, 0.5, 1), 2, 2))  # Additive-Dominant interaction genetic correlation
 )
 
