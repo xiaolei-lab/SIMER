@@ -456,7 +456,6 @@ SP <- genotype(SP)
 
 ```phenotype```, main function of ***Phenotype Simulation***:  
 
-
 <table text-algn="left">
 <thead>
 <tr>
@@ -568,6 +567,105 @@ SP <- genotype(SP)
 <td>NULL</td>
 <td>matrix</td>
 <td>the residual correlation matrix.</td>
+</tr>
+</tbody>
+</table>
+
+```annotation```, main function of ***Annotation Simulation***:  
+
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>pop.map</b></td>
+<td>NULL</td>
+<td>data.frame</td>
+<td>the map data with annotation information.</td>
+</tr>
+<tr>
+<td><b>qtn.num</b></td>
+<td>10</td>
+<td>num, vector or matrix</td>
+<td>integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.</td>
+</tr>
+<tr>
+<td><b>qtn.model</b></td>
+<td>'A'</td>
+<td>character</td>
+<td>the genetic model of QTN such as 'A + D'.</td>
+</tr>
+<tr>
+<td><b>qtn.dist</b></td>
+<td>'norm'</td>
+<td>character</td>
+<td>the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.</td>
+</tr>
+<tr>
+<td><b>qtn.sd</b></td>
+<td>list(tr1 = 1)</td>
+<td>list</td>
+<td>the standard deviations for normal distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.prob</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the probability of success for geometric distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.shape</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the shape parameter for gamma distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.scale</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the scale parameter for gamma distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.shape1</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the shape1 parameter for beta distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.shape2</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the shape2 parameter for beta distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.ncp</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the ncp parameter for beta distribution.</td>
+</tr>
+<tr>
+<td><b>qtn.spot</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the QTN distribution probability in each block.</td>
+</tr>
+<tr>
+<td><b>len.block</b></td>
+<td>5e7</td>
+<td>num</td>
+<td>the block length.</td>
+</tr>
+<tr>
+<td><b>maf</b></td>
+<td>NULL</td>
+<td>num</td>
+<td>the maf threshold, markers less than this threshold will be exclude.</td>
 </tr>
 </tbody>
 </table>
