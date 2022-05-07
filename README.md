@@ -509,6 +509,66 @@ SP <- genotype(SP)
 <td>list</td>
 <td>a list of additive heritability.</td>
 </tr>
+<tr>
+<td><b>phe.h2D</b></td>
+<td>list(tr1 = 0.1)</td>
+<td>list</td>
+<td>a list of dominant heritability.</td>
+</tr>
+<tr>
+<td><b>phe.h2GxG</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>a list of GxG interaction heritability.</td>
+</tr>
+<tr>
+<td><b>phe.h2GxE</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>a list of GxE interaction heritability.</td>
+</tr>
+<tr>
+<td><b>phe.h2PE</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>a list of permanent environmental heritability.</td>
+</tr>
+<tr>
+<td><b>phe.var</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>a list of phenotype variance.</td>
+</tr>
+<tr>
+<td><b>phe.corA</b></td>
+<td>NULL</td>
+<td>matrix</td>
+<td>the additive genetic correlation matrix.</td>
+</tr>
+<tr>
+<td><b>phe.corD</b></td>
+<td>NULL</td>
+<td>matrix</td>
+<td>the dominant genetic correlation matrix.</td>
+</tr>
+<tr>
+<td><b>phe.corGxG</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>a list of the GxG genetic correlation matrix.</td>
+</tr>
+<tr>
+<td><b>phe.corPE</b></td>
+<td>NULL</td>
+<td>matrix</td>
+<td>the permanent environmental correlation matrix.</td>
+</tr>
+<tr>
+<td><b>phe.corE</b></td>
+<td>NULL</td>
+<td>matrix</td>
+<td>the residual correlation matrix.</td>
+</tr>
 </tbody>
 </table>
 
