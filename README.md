@@ -872,94 +872,60 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype of multiple traits
-**[back to top](#contents)**  
+## Generate phenotype by Repeated Record model
+**[back to top](#contents)** 
 
-In multiple traits, only "A" model is applied and **multrait** should be TRUE. If you want to generate multiple traits with specific genetic correlation please assign genetic covariance matrix **gnt.cov**. But when **sel.on** is TRUE, these traits will have random genetic correlation. Add phenotype of multiple  traits to base population2 are displayed as follows:
+In ***Repeated Record*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. User should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single trait simulation is displayed as follows: 
 
 ```r
-#######################
-### multiple traits ###
-# calculate for marker information
-effs <-
-    cal.effs(pop.geno = basepop2.geno,
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = rep(0.5, 6),
-             shape.tr1 = rep(1, 6),
-             scale.tr1 = rep(1, 6),
-             multrait = TRUE, # multiple traits
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10, qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
+)
 
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop2.pheno <-
-     phenotype(effs = effs,
-               pop = basepop2,
-               pop.geno = basepop2.geno,
-               pos.map = NULL,
-               h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
-               gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
-               h2.trn = c(0.3, 0.5),
-               sel.crit = "pheno",
-               pop.total = basepop2,
-               sel.on = TRUE, 
-               inner.env = NULL,
-               verbose = verbose)
-
-# get population with phenotype
-basepop2 <- pop2.pheno$pop
-pop2.pheno$pop <- NULL
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
-Note that real genetic covariance matrix may not be consistent with expected genetic covariance matrix **gnt.cov**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
+In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple trait simulation is displayed as follows: 
+
 
 ```r
-#######################
-### multiple traits ###
-# calculate for marker information
-effs <-
-    cal.effs(pop.geno = basepop2.geno,
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = rep(0.5, 6),
-             shape.tr1 = rep(1, 6),
-             scale.tr1 = rep(1, 6),
-             multrait = TRUE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(
+    tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
+    tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
 
-# generate phenotype
-# generate single trait or multiple traits according to effs
-inner.env <- environment()
-pop.pheno <-
-     phenotype(effs = effs,
-               pop = basepop2,
-               pop.geno = basepop2.geno,
-               pos.map = NULL,
-               h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
-               gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
-               h2.trn = c(0.3, 0.5),
-               sel.crit = "pheno",
-               pop.total = basepop2,
-               sel.on = FALSE, 
-               inner.env = inner.env,
-               verbose = verbose)
-
-# get population with phenotype
-basepop2 <- pop.pheno$pop
-pop.pheno$pop <- NULL
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
 ## Add fixed effects and random effects to phenotype
