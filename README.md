@@ -797,6 +797,7 @@ SP <- param.pheno(
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.h2D = list(tr1 = 0.1, tr2 = 0.1),
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
   phe.corD = matrix(c(1, 0.5, 0.5, 1), 2, 2)  # Dominant genetic correlation
 )
@@ -809,96 +810,66 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype of single trait by ADI model
-**[back to top](#contents)**
+## Generate phenotype by GxG model
+**[back to top](#contents)** 
 
-In "ADI" model, **SIMER** considers not only Additive effect(a) and Dominance effect(d) but also interactive effects including Additive by Additive effect(aXa), Additive by Dominance effect(aXd), Dominance by Additive effect(dXa) and Dominance by Dominance effect(dXd). Therefore, all six elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1**, and **scale.tr1** are useful for "ADI" model. Meanwhile, QTN amount should be an even in "ADI" model. Add phenotypes of single trait to base population1 are displayed as follows:
+In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. User should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction is displayed as follows: 
 
 ```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive by Dominance by Iteratiion model
-effs <-
-    cal.effs(pop.geno = basepop1.geno,
-             cal.model = "ADI", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = c(18),
-             sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
-             dist.qtn.tr1 = rep("normal", times = 6),
-             eff.unit.tr1 = rep(0.5, 6), # (a, d, aXa, aXd, dXa, dXd)
-             shape.tr1 = rep(1, times = 6),
-             scale.tr1 =rep(1, times = 6),
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10, qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(tr1 = "T1 = A + D + A:D + E"), # "T1" (Trait 1) consists of Additive effect, Dominant effect, and Residual effect
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3),
+  phe.h2D = list(tr1 = 0.1),
+  phe.h2GxG = list(tr1 = list("A:D" = 0.1))
+)
 
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop.pheno <-
-     phenotype(effs = effs,
-               pop = basepop1,
-               pop.geno = basepop1.geno,
-               pos.map = NULL,
-               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               h2.trn = c(0.3, 0.5),
-               sel.crit = "pheno",
-               pop.total = basepop1,
-               sel.on = TRUE,
-               inner.env = NULL,
-               verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
-Note that real variance components ratio may not be consistent with expected herirability **h2.tr1**. You can set **sel.on = FALSE** and pass a **inner.env** to get a more accurate one. In addition, markers effects will be corrected in this case.
+In multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction multiple trait simulation is displayed as follows: 
+
 
 ```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive by Dominance by Iteratiion model
-effs <-
-    cal.effs(pop.geno = basepop1.geno,
-             cal.model = "ADI", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = c(18),
-             sd.tr1 = c(2, 1, 0.5, 0.5, 0.5, 0.1),
-             dist.qtn.tr1 = rep("normal", times = 6),
-             eff.unit.tr1 = rep(0.5, 6), # (a, d, aXa, aXd, dXa, dXd)
-             shape.tr1 = rep(1, times = 6),
-             scale.tr1 =rep(1, times = 6),
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(
+    tr1 = "T1 = A + D + A:D + E", # "T1" (Trait 1) consists of Additive effect, Dominant effect, Additive-Dominant interaction effect, and Residual effect
+    tr2 = "T2 = A + D + A:D + E"  # "T2" (Trait 2) consists of Additive effect, Dominant effect, Additive-Dominant interaction effect, and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.h2D = list(tr1 = 0.1, tr2 = 0.1),
+  phe.h2GxG = list(tr1 = list("A:D" = 0.1), tr2 = list("A:D" = 0.1)),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
+  phe.corD = matrix(c(1, 0.5, 0.5, 1), 2, 2)  # Dominant genetic correlation
+  phe.corGxG = list("A:D" = matrix(c(1, 0.5, 0.5, 1), 2, 2))  # Additive-Dominant interaction genetic correlation
+)
 
-# generate phenotype
-# generate single trait or multiple traits according to effs
-inner.env <- environment()
-pop.pheno <-
-     phenotype(effs = effs,
-               pop = basepop1,
-               pop.geno = basepop1.geno,
-               pos.map = NULL,
-               h2.tr1 = c(0.3, 0.1, 0.05, 0.05, 0.05, 0.01),
-               gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-               h2.trn = c(0.3, 0.5),
-               sel.crit = "pheno",
-               pop.total = basepop1,
-               sel.on = FALSE,
-               inner.env = inner.env,
-               verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
 ## Generate phenotype of multiple traits
