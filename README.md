@@ -448,7 +448,7 @@ SP <- genotype(SP)
 **(1)** Single-Trait Model  
 **(2)** Multiple-Trait Model  
 **(3)** Repeated Record Model  
-**(4)** Genetic Effect Model (***A***dditive effect, ***D***ominant effect, and ***I***nteraction effect)  
+**(4)** Genetic Effect Model (***A***dditive effect, ***D***ominant effect, and ***G***enetic-***G***enetic interaction effect)  
 **(5)** Effect Distribution Model (QTN effect distribution: ****Norm***al distribution, ***Geom***etric distribution, ***Gamma*** distribution, and ***Beta*** distribution)  
 **(6)** Linear Mixed Model (***F***ixed effect, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, and ***G***enetic-***E***nvironmental effect)  
 
