@@ -671,64 +671,27 @@ SP <- genotype(SP)
 </tbody>
 </table>
 
-## Generate base population information
+## Generate phenotype by A model
 **[back to top](#contents)** 
 
-Generate base population information according to population size and sex ratio.  
+In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. User should prepare Additive QTN effect in the ***Annotation data*** for generating Additive individual effect. ***Phenotype Simulation*** of single trait is displayed as follows: 
 
 ```r
-# base population for single trait
-basepop1 <- getpop(nind = nind, from = 1, ratio = 0.1)
+# Generate annotation simulation parameters
+# qtn.model = "A": Additive effect
+SP <- param.annot(qtn.num = 10, qtn.model = "A")
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+# phe.model = list(tr1 = "T1 = A + E"): "T1" (Trait 1) consists of Additive effect and Residual effect
+SP <- param.pheno(SP = SP, pop.ind = 100, phe.model = list(tr1 = "T1 = A + E"))
 
-# base population for double traits
-basepop2 <- getpop(nind = 100, from = nind + 1, ratio = 0.1)
-```
-
-## Generate phenotype of single trait by A model
-**[back to top](#contents)** 
-
-In "A" model, **SIMER** considers only Additive effect(a). Therefore, only the first elements of **var.tr1**, **dist.qtn.tr1**, **eff.unit.tr1**, **shape.tr1** , and **scale.tr1** are useful for "A" model. Add phenotypes of single trait to base population1 are displayed as follows: 
-
-```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive model
-effs <-
-    cal.effs(pop.geno = basepop1.geno,
-             cal.model = "A",
-             num.qtn.tr1 = 18,
-             sd.tr1 = 2,
-             dist.qtn.tr1 = "normal",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1,
-             scale.tr1 = 1,
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
-
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop1.pheno <-
-    phenotype(effs = effs,
-              pop = basepop1,
-              pop.geno = basepop1.geno,
-              pos.map = NULL,
-              h2.tr1 = 0.8,
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),
-              sel.crit = "pheno",
-              pop.total = basepop1,
-              sel.on = TRUE,
-              inner.env = NULL,
-              verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop1.pheno$pop
-pop1.pheno$pop <- NULL
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
 ## Generate phenotype of single trait by AD model
