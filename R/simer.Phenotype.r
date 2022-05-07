@@ -31,7 +31,7 @@
 #' \item{$pheno$pop.rep}{the repeated times of repeated records.}
 #' \item{$pheno$pop.rep.bal}{whether repeated records are balanced.}
 #' \item{$pheno$pop.env}{a list of environmental factors setting.}
-#' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "A + D".}
+#' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "T1 = A + E".}
 #' \item{$pheno$phe.h2A}{a list of additive heritability.}
 #' \item{$pheno$phe.h2D}{a list of dominant heritability.}
 #' \item{$pheno$phe.h2GxG}{a list of GxG interaction heritability.}
