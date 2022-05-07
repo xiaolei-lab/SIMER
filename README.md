@@ -698,7 +698,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build accurate Additive genetic correlation between multiple traits.
+In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits.
 
 
 ```r
