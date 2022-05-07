@@ -500,7 +500,7 @@ SP <- genotype(SP)
 <td><b>phe.model</b></td>
 <td>list(tr1 = "T1 = A + E")</td>
 <td>list</td>
-<td>a list of genetic model of phenotype such as "A + D".</td>
+<td>a list of genetic model of phenotype such as "T1 = A + E".</td>
 </tr>
 <tr>
 <td><b>phe.h2A</b></td>
