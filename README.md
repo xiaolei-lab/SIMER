@@ -678,13 +678,46 @@ In ***A*** model, **```SIMER```** only considers ***A***dditive effect as geneti
 
 ```r
 # Generate annotation simulation parameters
-# qtn.model = "A": Additive effect
-SP <- param.annot(qtn.num = 10, qtn.model = "A")
+SP <- param.annot(qtn.num = 10, qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-# phe.model = list(tr1 = "T1 = A + E"): "T1" (Trait 1) consists of Additive effect and Residual effect
-SP <- param.pheno(SP = SP, pop.ind = 100, phe.model = list(tr1 = "T1 = A + E"))
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
+  phe.h2A = list(tr1 = 0.3),
+  # phe.var = list(tr1 = 100),
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+In multiple-trait simulation, **```SIMER```** can build accurate Additive genetic correlation between multiple traits.
+
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(
+    tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
+    tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
+  ),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
 
 # Run annotation simulation
 SP <- annotation(SP)
