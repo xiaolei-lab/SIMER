@@ -449,7 +449,7 @@ SP <- genotype(SP)
 **(2)** Multiple-Trait Model  
 **(3)** Repeated Record Model  
 **(4)** Genetic Effect Model (Additive effect, Dominant effect, and Interaction effect)  
-**(5)** Effect Distribution Model (QTN distribution: Normal distribution, Geometric distribution, Gamma distribution, and Beta distribution)  
+**(5)** Effect Distribution Model (QTN effect distribution: Normal distribution, Geometric distribution, Gamma distribution, and Beta distribution)  
 **(6)** Linear Mixed Model (Fixed effect, Environmental Random effect, Genetic Random effect, and Genetic-Environmental effect)  
 
 ## Gallery of phenotype simulation parameters
