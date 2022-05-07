@@ -445,11 +445,12 @@ SP <- genotype(SP)
 **[back to top](#contents)**  
 
 ***Phenotype data*** in **```SIMER```** will be generated according to different models, including:  
-**(1)** Single-Trait Model or Multiple-Trait Model  
-**(2)** Genetic Effect Model  
-**(3)** Effect Distribution Model  
-**(4)** Linear Mixed Model  
-**(5)** Repeated Record Model  
+**(1)** Single-Trait Model  
+**(2)** Multiple-Trait Model  
+**(3)** Repeated Record Model  
+**(4)** Genetic Effect Model (Additive effect, Dominant effect, and Interaction effect)  
+**(5)** Effect Distribution Model (QTN distribution: Normal distribution, Geometric distribution, Gamma distribution, and Beta distribution)  
+**(6)** Linear Mixed Model (Fixed effect, Environmental Random effect, Genetic Random effect, and Genetic-Environmental effect)  
 
 ## Gallery of phenotype simulation parameters
 **[back to top](#contents)**  
