@@ -686,8 +686,8 @@ SP <- param.pheno(
   SP = SP,
   pop.ind = 100,
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
-  phe.h2A = list(tr1 = 0.3),
   # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
 )
 
 # Run annotation simulation
@@ -714,8 +714,8 @@ SP <- param.pheno(
     tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
     tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
   ),
-  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
   # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
 )
 
