@@ -674,7 +674,7 @@ SP <- genotype(SP)
 ## Generate phenotype by A model
 **[back to top](#contents)** 
 
-In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. User should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***Phenotype Simulation*** of single trait is displayed as follows: 
+In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. User should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
