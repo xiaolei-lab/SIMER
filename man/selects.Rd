@@ -23,7 +23,7 @@ the function returns a list containing
 \item{$sel$index.wt}{the weight of each trait for multiple-trait selection.}
 \item{$sel$index.tdm}{the index of tandem selection for multiple-trait selection.}
 \item{$sel$goal.perc}{the percentage of goal more than the mean of scores of individuals.}
-\item{$sel$pass.perc}{percentage of expected excellent individuals.}
+\item{$sel$pass.perc}{the percentage of expected excellent individuals.}
 }
 }
 \description{
