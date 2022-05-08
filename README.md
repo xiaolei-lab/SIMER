@@ -1505,7 +1505,7 @@ SP <- phenotype(SP)
 ## Individual selection on single trait
 **[back to top](#contents)**  
 
-***Individual selection*** is a method of selecting according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with ***high heritability***.
+***Individual selection*** is a selecting method according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with ***high heritability***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1530,7 +1530,7 @@ SP <- selects(SP)
 ## Family selection on single trait
 **[back to top](#contents)** 
 
-***Family selection*** is a method of selecting by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.
+***Family selection*** is a selecting method by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1555,7 +1555,7 @@ SP <- selects(SP)
 ## Within family selection on single trait
 **[back to top](#contents)** 
 
-***Within-family*** selection is a method of selecting according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.
+***Within-family*** selection is a selecting method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1580,22 +1580,26 @@ SP <- selects(SP)
 ## Combined selection on single trait
 **[back to top](#contents)**  
 
-Combined selection is a method of selecting according to weighed combination of the deviation of individual phenotype and family mean value  and family mean value.
+***Combined selection*** is a selecting method according to ***weighed combination of the deviation of individual phenotype and family mean value***.
 
 ```r
-# output index.tdm and ordered individuals indice
-# single trait selection
-# combined selection
-ind.ordered <-
-    selects(pop = basepop1, # population with single trait
-            decr = TRUE, # sort individuals by descreasing
-            sel.sing = "comb",
-            pop.total = basepop1,
-            pop.pheno = pop1.pheno, 
-            verbose = verbose)
-index.tdm <- ind.ordered[1]
-ind.ordered <- ind.ordered[-1]
-ind.ordered
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
 ```
 
 ## Tandem selection on multiple traits
