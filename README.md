@@ -674,7 +674,7 @@ SP <- genotype(SP)
 ## Generate phenotype by A model
 **[back to top](#contents)** 
 
-In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single trait simulation is displayed as follows: 
+In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -698,7 +698,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple trait simulation is displayed as follows: 
+In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple-trait simulation is displayed as follows: 
 
 
 ```r
@@ -727,7 +727,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In single trait simulation, the trait can be controlled by ***multiple-group QTNs***. An example of single trait controlled by two-group QTNs is displayed as follows: 
+In single-trait simulation, the trait can be controlled by ***multiple-group QTNs***. An example of single-trait controlled by two-group QTNs is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -754,7 +754,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by AD model
 **[back to top](#contents)** 
 
-In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single trait simulation is displayed as follows: 
+In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -779,7 +779,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. ***A***dditive and ***D***ominant multiple trait simulation is displayed as follows: 
+In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows: 
 
 
 ```r
@@ -813,7 +813,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by GxG model
 **[back to top](#contents)** 
 
-In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction is displayed as follows: 
+In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -839,7 +839,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction multiple trait simulation is displayed as follows: 
+In multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows: 
 
 
 ```r
@@ -875,7 +875,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by Repeated Record model
 **[back to top](#contents)** 
 
-In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** single trait simulation is displayed as follows: 
+In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -901,7 +901,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** multiple trait simulation is displayed as follows: 
+In multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -935,7 +935,7 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Normal distribution
 **[back to top](#contents)** 
 
-***Norm***al distribution is the most common QTN effect distribution. Phenotype controlled by QTNs subject to ***Norm***al distribution in single trait simulation is displayed as follows: 
+***Norm***al distribution is the most common QTN effect distribution. Phenotype controlled by QTNs subject to ***Norm***al distribution in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -964,7 +964,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1000,7 +1000,7 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Geometric distribution
 **[back to top](#contents)** 
 
-***Geom***etric distribution is the probability of success for the first time obtained only after K trials among the N Bernoulli trials. ***Geom***etric distribution can be used as a QTN effect distribution. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single trait simulation is displayed as follows: 
+***Geom***etric distribution is the probability of success for the first time obtained only after K trials among the N Bernoulli trials. ***Geom***etric distribution can be used as a QTN effect distribution. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1029,7 +1029,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Geom***etric distribution in multiple trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Geom***etric distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1065,7 +1065,7 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Gamma distribution
 **[back to top](#contents)** 
 
-***Gamma*** distribution is the sum of N independent exponential random variables. Note that ***Exp***onential distribution is a special form of ***Gamma*** distribution when ```qtn.shape = 1``` and ```qtn.scale = 1```. Phenotype controlled by QTNs subject to ***Gamma*** distribution in single trait simulation is displayed as follows: 
+***Gamma*** distribution is the sum of N independent exponential random variables. Note that ***Exp***onential distribution is a special form of ***Gamma*** distribution when ```qtn.shape = 1``` and ```qtn.scale = 1```. Phenotype controlled by QTNs subject to ***Gamma*** distribution in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1095,7 +1095,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Gamma*** distribution in multiple trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Gamma*** distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1132,7 +1132,7 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Beta distribution
 **[back to top](#contents)** 
 
-***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to ***Beta*** distribution in single trait simulation is displayed as follows: 
+***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to ***Beta*** distribution in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1163,7 +1163,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Beta*** distribution in multiple trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Beta*** distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1201,7 +1201,7 @@ SP <- phenotype(SP)
 ## Generate phenotype with fixed effect and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports add ***F***ixed effects and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. The effect value of ***F***ixed effect is determined by ```eff``` and the variance ratio to phenotype variance (similar to heritability) of ***E***nvironmental ***R***andom is set by ```ratio```. Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in single trait simulation is displayed as follows: 
+**```SIMER```** supports add ***F***ixed effects and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. The effect value of ***F***ixed effect is determined by ```eff``` and the variance ratio to phenotype variance (similar to heritability) of ***E***nvironmental ***R***andom is set by ```ratio```. Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
 
 ```r
 # Prepare environmental factor list
@@ -1242,7 +1242,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in multiple trait simulation is displayed as follows: 
+Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Prepare environmental factor list
@@ -1273,6 +1273,98 @@ SP <- param.pheno(
   phe.model = list(
     tr1 = "T1 = A + F1 + F2 + R1 + E", # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, and Residual effect
     tr2 = "T2 = A + F1 + F2 + R1 + E"  # "T2" (Trait 1) consists of Additive effect, F1, F2, R1, and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+## Generate phenotype by GxE model
+**[back to top](#contents)** 
+
+In ***GxE*** model, **```SIMER```** adds ***G***enetic-***E***nvironmental interaction effect to phenotype. Users should prepare ***G***enetic ***QTN*** effect in the ***Annotation data*** and environmental factor by ```pop.env``` for generating ***G***enetic-***E***nvironmental ***I***ndividual effect. An example of ***G***enetic-***E***nvironmental interaction in single-trait simulation is displayed as follows: 
+
+```r
+# Prepare environmental factor list
+pop.env <- list(
+  F1 = list( # fixed effect 1
+    level = c("1", "2"),
+    eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+  ), 
+  F2 = list( # fixed effect 2
+    level = c("d1", "d2", "d3"),
+    eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+  ),
+  R1 = list( # random effect 1
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1, tr2 = 0.1)
+  )
+)
+
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10, qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  pop.env = pop.env,
+  phe.model = list(
+    tr1 = "T1 = A + F1 + F2 + R1 + A:F1 + E" # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+  ),
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3),
+  phe.h2GxE = list(tr1 = list("A:F1" = 0.1))
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+An example of ***G***enetic-***E***nvironmental interaction in multiple-trait simulation is displayed as follows: 
+
+```r
+# Prepare environmental factor list
+pop.env <- list(
+  F1 = list( # fixed effect 1
+    level = c("1", "2"),
+    eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+  ), 
+  F2 = list( # fixed effect 2
+    level = c("d1", "d2", "d3"),
+    eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+  ),
+  R1 = list( # random effect 1
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1, tr2 = 0.1)
+  )
+)
+
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  pop.env = pop.env,
+  phe.model = list(
+    tr1 = "T1 = A + F1 + F2 + R1 + A:F1 + E"), # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+    tr2 = "T1 = A + F1 + F2 + R1 + A:F1 + E"), # "T2" (Trait 2) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
