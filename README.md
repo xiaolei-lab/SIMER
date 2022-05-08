@@ -1382,12 +1382,12 @@ SP <- phenotype(SP)
 
 ---
 
-# Selection
+# Populatioin Simulation of Multiple-Generation with Genotype and Phenotype
 **[back to top](#contents)**  
 
 You can get ordered individuals indice according to phenotype in the populaton information. Fraction selected can be used to keep a certain amount of individuals. SIMER chooses automatically single trait selection or multiple traits selection according to number of columns of phenotype.
 
-## Gallery of selection input parameters
+## Gallery of population simulation parameters
 **[back to top](#contents)**  
 
 `selects()`, main function of selection:  
