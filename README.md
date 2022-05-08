@@ -41,7 +41,7 @@
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)  
     - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)  
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)  
-- [Populatioin Simulation of Multiple-Generation with Genotype and Phenotypen](#populatioin-simulation-of-multiple-generation-with-genotype-and-phenotype)
+- [Populatioin Simulation of Multiple-Generation with Genotype and Phenotype](#populatioin-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of selection input parameters](#gallery-of-selection-input-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
     - [Family selection on single trait](#family-selection-on-single-trait)
