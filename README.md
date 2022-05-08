@@ -1403,40 +1403,64 @@ SP <- phenotype(SP)
 </thead>
 <tbody>
 <tr>
-<td><b>pop.geno</b></td>
+<td><b>pop.sel</b></td>
 <td>NULL</td>
-<td>big.matrix or matrix</td>
-<td>the genotype data.</td>
+<td>list</td>
+<td>the selected males and females.</td>
 </tr>
 <tr>
-<td><b>incols</b></td>
-<td>1</td>
-<td>1 or 2</td>
-<td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.</td>
-</tr>
-<tr>
-<td><b>pop.marker</b></td>
-<td>1e4</td>
-<td>num</td>
-<td>the number of markers.</td>
-</tr>
-<tr>
-<td><b>pop.ind</b></td>
-<td>1e2</td>
-<td>num</td>
-<td>the number of individuals in the base population.</td>
-</tr>
-<tr>
-<td><b>prob</b></td>
-<td>NULL</td>
+<td><b>ps</b></td>
+<td>c(0.8, 0.8)</td>
 <td>num vector</td>
-<td>the genotype code probability.</td>
+<td>if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.</td>
 </tr>
 <tr>
-<td><b>rate.mut</b></td>
-<td>1e-8</td>
+<td><b>decr</b></td>
+<td>TRUE</td>
+<td>TRUE or FALSE</td>
+<td>whether the sort order is decreasing.</td>
+</tr>
+<tr>
+<td><b>sel.crit</b></td>
+<td>'pheno'</td>
+<td>character</td>
+<td>the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.</td>
+</tr>
+<tr>
+<td><b>sel.single</b></td>
+<td>'comb'</td>
+<td>character</td>
+<td>the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.</td>
+</tr>
+<tr>
+<td><b>sel.multi</b></td>
+<td>'index'</td>
+<td>character</td>
+<td>the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.</td>
+</tr>
+<tr>
+<td><b>index.wt</b></td>
+<td>c(0.5, 0.5)</td>
+<td>num vector</td>
+<td>the weight of each trait for multiple-trait selection.</td>
+</tr>
+<tr>
+<td><b>index.tdm</b></td>
+<td>1</td>
 <td>num</td>
-<td>the mutation rate of the genotype data.</td>
+<td>the index of tandem selection for multiple-trait selection.</td>
+</tr>
+<tr>
+<td><b>goal.perc</b></td>
+<td>0.1</td>
+<td>num</td>
+<td>the percentage of goal more than the mean of scores of individuals.</td>
+</tr>
+<tr>
+<td><b>pass.perc</b></td>
+<td>0.9</td>
+<td>num</td>
+<td>the percentage of expected excellent individuals.</td>
 </tr>
 </tbody>
 </table>
