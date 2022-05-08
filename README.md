@@ -1229,7 +1229,7 @@ SP <- param.pheno(
   SP = SP, 
   pop.ind = 100,
   pop.env = pop.env,
-  phe.model = list(tr1 = "T1 = A + E"),
+  phe.model = list(tr1 = "T1 = A + F1 + F2 + R1 + E"),
   # phe.var = list(tr1 = 100),
   phe.h2A = list(tr1 = 0.3)
 )
@@ -1271,8 +1271,8 @@ SP <- param.pheno(
   pop.ind = 100,
   pop.env = pop.env,
   phe.model = list(
-    tr1 = "T1 = A + E",
-    tr2 = "T2 = A + E"
+    tr1 = "T1 = A + F1 + F2 + R1 + E",
+    tr2 = "T2 = A + F1 + F2 + R1 + E"
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
@@ -1285,141 +1285,6 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-```
-
-## Different QTN effect distributions
-**[back to top](#contents)**  
-
-In different model, you can further set different QTN effect distributions of trait1 by **dist.qtn.tr1*|**. The most common distribution is "normal" distribution. You can set different variances in "normal" distribution by **dist.qtn.tr1**.
-
-```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive model
-effs <-
-    cal.effs(pop.geno = basepop1.geno,
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = 18,
-             sd.tr1 = 0.6, # standard deviation of normal distribution
-             dist.qtn.tr1 = "normal",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1,
-             scale.tr1 = 1,
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
-
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop.pheno <-
-    phenotype(effs = effs,
-              pop = basepop1,
-              pop.geno = basepop1.geno,
-              pos.map = NULL,
-              h2.tr1 = 0.8,
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),
-              sel.crit = "pheno",
-              pop.total = basepop1,
-              sel.on = TRUE,
-              inner.env = NULL,
-              verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
-```
-
-QTN effect distribution can be "geometry" distribution. You can set effect unit of "geometry" by **eff.unit.tr1**.
-
-```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive model
-effs <-
-    cal.effs(pop.geno = basepop1.geno,
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = 18,
-             sd.tr1 = 0.6, # a
-             dist.qtn.tr1 = "geometry",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1, # effect unit of geomtry distribution
-             scale.tr1 = 1,
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
-
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop.pheno <-
-    phenotype(effs = effs,
-              pop = basepop1,
-              pop.geno = basepop1.geno,
-              pos.map = NULL,
-              h2.tr1 = 0.8,
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),
-              sel.crit = "pheno",
-              pop.total = basepop1,
-              sel.on = TRUE,
-              inner.env = NULL,
-              verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
-```
-
-"Gamma" distribution is also a kind of QTN effect distribution. You can set shape and scale of "gamma" distribution by **shape.tr1** and **scale.tr1**. Note that default options of "gamma" distribution **shape.tr1 = 1** and **scale.tr1 = 1** exactly lead to exponential distribution.
-
-```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive model
-effs <-
-    cal.effs(pop.geno = basepop1.geno,
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = 18,
-             sd.tr1 = 0.6, # a
-             dist.qtn.tr1 = "gamma",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1, # shape of gamma distribution
-             scale.tr1 = 1, # scale of gamma distribution
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
-
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop.pheno <-
-    phenotype(effs = effs,
-              pop = basepop1,
-              pop.geno = basepop1.geno,
-              pos.map = NULL,
-              h2.tr1 = 0.8,
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),
-              sel.crit = "pheno",
-              pop.total = basepop1,
-              sel.on = TRUE,
-              inner.env = NULL,
-              verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
 ```
 
 ## Different selection criteria
