@@ -1671,26 +1671,34 @@ SP <- selects(SP)
 ## Index selection on multiple traits
 **[back to top](#contents)**  
 
-Index selection is a comprehensive selection that will consider several traits based on their respective heritabilities, phenotypic variances, economic weights, and corresponding genetic correlations and phenotypes. Then calculate the index value of each body, and eliminate or select it according to its level. You can set the weight of Index selection by **index.wt**.
+***Index selection*** is a comprehensive selection that will consider several traits based on their respective ***heritabilities***, ***phenotypic variances***, ***economic weights***, corresponding ***genetic correlations***, and ***phenotypes***. Then calculate the ***index value of each trait***, and eliminate or select it according to its level. Users can set the weight of each trait by ```index.wt```.
 
 ```r
-# output index.tdm and ordered individuals indice
-# multiple traits selection
-# index selection
-ind.ordered <-
-    selects(pop = basepop2, # population with multiple traits
-            decr = TRUE,
-            sel.multi = "index",
-            index.wt = c(0.5, 0.5), # trait1 and trait2
-            index.tdm = 1,
-            goal.perc = 0.1,
-            pass.perc = 0.9,
-            pop.total = basepop2,
-            pop.pheno = pop2.pheno, 
-            verbose = verbose)
-index.tdm <- ind.ordered[1]
-ind.ordered <- ind.ordered[-1]
-ind.ordered
+# Generate genotype simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+# Generate annotation simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP, 
+  pop.ind = 100,
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.model = list(
+    tr1 = "T1 = A + E",
+    tr2 = "T2 = A + E"
+  )
+)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.multi = "index")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
 ```
 
 ## Clone
