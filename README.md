@@ -1505,22 +1505,26 @@ SP <- phenotype(SP)
 ## Individual selection on single trait
 **[back to top](#contents)**  
 
-Individual selection is a method of selecting according to the phenotype of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with high heritability.
+***Individual selection*** is a method of selecting according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with ***high heritability***.
 
 ```r
-# output index.tdm and ordered individuals indice
-# single trait selection
-# individual selection
-ind.ordered <-
-    selects(pop = basepop1, # population with single trait
-            decr = TRUE, # sort individuals by descreasing
-            sel.sing = "ind",
-            pop.total = basepop1,
-            pop.pheno = pop1.pheno, 
-            verbose = verbose)
-index.tdm <- ind.ordered[1]
-ind.ordered <- ind.ordered[-1]
-ind.ordered
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "ind")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
 ```
 
 ## Family selection on single trait
