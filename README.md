@@ -604,8 +604,8 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>qtn.dist</b></td>
-<td>'norm'</td>
-<td>character</td>
+<td>list(tr1 = 'norm')</td>
+<td>list</td>
 <td>the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.</td>
 </tr>
 <tr>
