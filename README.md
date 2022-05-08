@@ -1201,7 +1201,7 @@ SP <- phenotype(SP)
 ## Generate phenotype with fixed effect and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports add ***F***ixed effects and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. The effect value of ***F***ixed effect is determined by ```eff``` and the variance ratio (similar to heritability) of ***E***nvironmental ***R***andom is set by ```ratio```. Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in single trait simulation is displayed as follows: 
+**```SIMER```** supports add ***F***ixed effects and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. The effect value of ***F***ixed effect is determined by ```eff``` and the variance ratio to phenotype variance (similar to heritability) of ***E***nvironmental ***R***andom is set by ```ratio```. Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in single trait simulation is displayed as follows: 
 
 ```r
 # Prepare environmental factor list
