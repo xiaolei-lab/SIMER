@@ -42,7 +42,7 @@
     - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)  
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)  
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
-    - [Gallery of selection input parameters](#gallery-of-selection-input-parameters)
+    - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
     - [Family selection on single trait](#family-selection-on-single-trait)
     - [Within family selection on single trait](#within-family-selection-on-single-trait)
@@ -1385,7 +1385,7 @@ SP <- phenotype(SP)
 # Population Simulation of Multiple-Generation with Genotype and Phenotype
 **[back to top](#contents)**  
 
-You can get ordered individuals indice according to phenotype in the populaton information. Fraction selected can be used to keep a certain amount of individuals. SIMER chooses automatically single trait selection or multiple traits selection according to number of columns of phenotype.
+**```SIMER```** imitates the reproductive process of organisms to generate ***Multiple-Generation*** population. The ***genotype data*** and ***phenotype data*** of the population are screened by ***single-trait selection*** or ***multiple-trait selection***, and then amplified by ***species-specific reproduction***.
 
 ## Gallery of population simulation parameters
 **[back to top](#contents)**  
