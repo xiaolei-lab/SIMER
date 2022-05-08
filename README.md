@@ -1000,7 +1000,7 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Geometric distribution
 **[back to top](#contents)** 
 
-***Geom***etric distribution can also be regarded as a QTN effect distribution. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single trait simulation is displayed as follows: 
+***Geom***etric distribution is the probability of success for the first time obtained only after K trials among the N Bernoulli trials. ***Geom***etric can be used as a distribution of QTN effect. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
