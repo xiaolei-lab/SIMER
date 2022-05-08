@@ -1221,7 +1221,7 @@ pop.env <- list(
 )
 
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = 10), qtn.model = "A")
+SP <- param.annot(qtn.num = 10, qtn.model = "A")
 # Generate annotation simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
