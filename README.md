@@ -1201,10 +1201,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Add fixed effects and random effects to phenotype
+## Generate phenotype with fixed effect and environmental random effect
 **[back to top](#contents)** 
 
-**SIMER** supports add fixed effects and random effects to phenotype. Users should prepare a list with fixed effects, random effects, and their combination first. In the list, the attribution name are fixed. "cmb.fix" contains different combinations of fixed factors in different traits. "fix" contains different fixed factors which have their levels and effects. "cmb.rand" contains different combinations of random factors. Unlike the fixed effect, the user needs to specify the proportion of the variance of the random effect variance by "ratio". Besides, users can also set related random effects for different traits by "cr". Users can use attribute names in population information, meaning that users can assign specific levels to different individuals. At the same time, if the attribute name is not in the population information, **SIMER** will add its level to the population information. 
+**```SIMER```** supports add fixed effects and random effects to phenotype. Users should prepare a list with fixed effects, random effects, and their combination first. In the list, the attribution name are fixed. "cmb.fix" contains different combinations of fixed factors in different traits. "fix" contains different fixed factors which have their levels and effects. "cmb.rand" contains different combinations of random factors. Unlike the fixed effect, the user needs to specify the proportion of the variance of the random effect variance by "ratio". Besides, users can also set related random effects for different traits by "cr". Users can use attribute names in population information, meaning that users can assign specific levels to different individuals. At the same time, if the attribute name is not in the population information, **SIMER** will add its level to the population information. 
 
 ```r
 # specific levels to different individuals
