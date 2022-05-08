@@ -31,7 +31,6 @@
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)  
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)  
-    - [Generate base population information](#generate-base-population-information)  
     - [Generate phenotype by A model](#generate-phenotype-by-A-model)  
     - [Generate phenotype by AD model](#generate-phenotype-by-AD-model)  
     - [Generate phenotype by GxG model](#generate-phenotype-by-GxG-model)  
