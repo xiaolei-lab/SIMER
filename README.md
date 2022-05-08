@@ -1638,26 +1638,34 @@ SP <- selects(SP)
 ## Independent culling selection on multiple traits
 **[back to top](#contents)**  
 
-After setting a minimum selection criterion for each target trait. Independent culling selection will eliminate this individual when the candidate's performance on any trait is lower than the corresponding criteria.
+After setting a ***minimum selection criterion for each target trait***. ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.
 
 ```r
-# output index.tdm and ordered individuals indice
-# multiple traits selection
-# Independent culling selection
-ind.ordered <-
-    selects(pop = basepop2, # population with multiple traits
-            decr = TRUE,
-            sel.multi = "indcul",
-            index.wt = c(0.5, 0.5),
-            index.tdm = 1,
-            goal.perc = 0.1,
-            pass.perc = 0.9,
-            pop.total = basepop2,
-            pop.pheno = pop2.pheno, 
-            verbose = verbose)
-index.tdm <- ind.ordered[1]
-ind.ordered <- ind.ordered[-1]
-ind.ordered
+# Generate genotype simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+# Generate annotation simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP, 
+  pop.ind = 100,
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.model = list(
+    tr1 = "T1 = A + E",
+    tr2 = "T2 = A + E"
+  )
+)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.multi = "indcul")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
 ```
 
 ## Index selection on multiple traits
