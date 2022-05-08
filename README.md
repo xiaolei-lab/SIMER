@@ -1605,7 +1605,7 @@ SP <- selects(SP)
 ## Tandem selection on multiple traits
 **[back to top](#contents)**  
 
-***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of selected trait is ```index.tdm``` and this parameter should ***not controlled by User***.
+***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of selected trait is ```index.tdm``` and this parameter should ***not controlled by Users***.
 
 ```r
 # Generate genotype simulation parameters
