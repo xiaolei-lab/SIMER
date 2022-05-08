@@ -1530,22 +1530,26 @@ SP <- selects(SP)
 ## Family selection on single trait
 **[back to top](#contents)** 
 
-Family selection is a method of selecting by family based on the average of the family. This selection method is used for traits with low heritability.
+***Family selection*** is a method of selecting by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.
 
 ```r
-# output index.tdm and ordered individuals indice
-# single trait selection
-# family selection
-ind.ordered <-
-    selects(pop = basepop1, # population with single trait
-            decr = TRUE, # sort individuals by descreasing
-            sel.sing = "fam",
-            pop.total = basepop1,
-            pop.pheno = pop1.pheno, 
-            verbose = verbose)
-index.tdm <- ind.ordered[1]
-ind.ordered <- ind.ordered[-1]
-ind.ordered
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "fam")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
 ```
 
 ## Within family selection on single trait
