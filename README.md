@@ -38,6 +38,7 @@
     - [Generate phenotype controlled by QTNs subject to Normal distribution](#generate-phenotype-controlled-by-QTNs-subject-to-normal-distribution)  
     - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)  
     - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)  
+    - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)  
     - [Add fixed effects and random effects to phenotype](#add-fixed-effects-and-random-effects-to-phenotype)
     - [Different QTN effect distributions](#different-QTN-effect-distributions)  
     - [Different selection criteria](#different-selection-criteria)  
@@ -1097,7 +1098,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Geom***etric distribution in multiple trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Gamma*** distribution in multiple trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1107,6 +1108,75 @@ SP <- param.annot(
   qtn.dist = list(tr1 = "gamma", tr2 = "gamma"),
   qtn.shape = list(tr1 = 1, tr2 = 1),
   qtn.scale = list(tr1 = 1, tr2 = 1)
+)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(
+    tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
+    tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+## Generate phenotype controlled by QTNs subject to Beta distribution
+**[back to top](#contents)** 
+
+***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to ***Beta*** distribution in single trait simulation is displayed as follows: 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(
+  qtn.num = 10,
+  qtn.model = "A",
+  qtn.dist = list(tr1 = "beta"),
+  qtn.shape1 = list(tr1 = 1),
+  qtn.shape2 = list(tr1 = 1),
+  qtn.ncp = list(tr1 = 0)
+)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+Phenotype controlled by QTNs subject to ***Beta*** distribution in multiple trait simulation is displayed as follows: 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(
+  qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
+  qtn.model = "A",
+  qtn.dist = list(tr1 = "beta", tr2 = "beta"),
+  qtn.shape1 = list(tr1 = 1, tr2 = 1),
+  qtn.shape2 = list(tr1 = 1, tr2 = 1),
+  qtn.ncp = list(tr1 = 0, tr2 = 0)
 )
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
