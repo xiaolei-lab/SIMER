@@ -971,7 +971,7 @@ Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple tr
 SP <- param.annot(
   qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
   qtn.model = "A",
-  qtn.dist = list(tr1 = "norm", tr2 = "normal"),
+  qtn.dist = list(tr1 = "norm", tr2 = "norm"),
   qtn.sd = list(tr1 = 1, tr2 = 1)
 )
 # Generate genotype simulation parameters
