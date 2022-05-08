@@ -1390,18 +1390,56 @@ SP <- phenotype(SP)
 ## Gallery of population simulation parameters
 **[back to top](#contents)**  
 
-`selects()`, main function of selection:  
-**pop**, population information of generation, family index, within-family index, index, sire, dam, sex, phenotpye  
-**decr**, whether to sort by descreasing  
-**sel.multi**, selection method of multiple traits with options: "tdm", "indcul" and "index"  
-**index.wt**, economic weights of selection index method, its length should equals to the number of traits  
-**index.tdm**, index represents which trait is being selected  
-**goal.perc**, percentage of goal more than mean of scores of individuals  
-**pass.perc**, percentage of expected excellent individuals  
-**sel.sing**, selection method of single trait with options: "ind", "fam", "infam" and "comb"  
-**pop.total**, total population infarmation  
-**pop.pheno**, list of all phenotype information  
-**verbose**, whether to print detail  
+```selects```, main function of ***Selection***:  
+
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>pop.geno</b></td>
+<td>NULL</td>
+<td>big.matrix or matrix</td>
+<td>the genotype data.</td>
+</tr>
+<tr>
+<td><b>incols</b></td>
+<td>1</td>
+<td>1 or 2</td>
+<td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.</td>
+</tr>
+<tr>
+<td><b>pop.marker</b></td>
+<td>1e4</td>
+<td>num</td>
+<td>the number of markers.</td>
+</tr>
+<tr>
+<td><b>pop.ind</b></td>
+<td>1e2</td>
+<td>num</td>
+<td>the number of individuals in the base population.</td>
+</tr>
+<tr>
+<td><b>prob</b></td>
+<td>NULL</td>
+<td>num vector</td>
+<td>the genotype code probability.</td>
+</tr>
+<tr>
+<td><b>rate.mut</b></td>
+<td>1e-8</td>
+<td>num</td>
+<td>the mutation rate of the genotype data.</td>
+</tr>
+</tbody>
+</table>
 
 `simer()`, main function:  
 **ps**, fraction selected in selection  
