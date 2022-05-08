@@ -1623,7 +1623,7 @@ SP <- param.pheno(
   )
 )
 # Generate selection parameters
-SP <- param.sel(SP = SP, sel.multi = "tandem")
+SP <- param.sel(SP = SP, sel.multi = "tdm")
 
 # Run annotation simulation
 SP <- annotation(SP)
