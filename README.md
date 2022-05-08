@@ -1638,7 +1638,7 @@ SP <- selects(SP)
 ## Independent culling selection on multiple traits
 **[back to top](#contents)**  
 
-After setting a ***minimum selection criterion for each target trait***. ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.
+After setting a ***minimum selection criterion*** for each target trait. ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.
 
 ```r
 # Generate genotype simulation parameters
