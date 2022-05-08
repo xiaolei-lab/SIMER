@@ -50,8 +50,6 @@
     - [Tandem selection on multiple traits](#tandem-selection-on-multiple-traits)
     - [Independent culling selection on multiple traits](#independent-culling-selection-on-multiple-traits)
     - [Index selection on multiple traits](#index-selection-on-multiple-traits)
-- [Reproduction](#reproduction) 
-    - [Gallery of reproduction input parameters](#gallery-of-reproduction-input-parameters)
     - [Clone](#clone)
     - [Double haploid](#double-haploid)
     - [Self pollination](#self-pollination)
@@ -1662,25 +1660,6 @@ index.tdm <- ind.ordered[1]
 ind.ordered <- ind.ordered[-1]
 ind.ordered
 ```
-
----
-
-# Reproduction
-**[back to top](#contents)**  
-
-Different kind of reproduction methods need different preparation. Reproduction methods in **mtd.reprod** can be devided into single-breeds and multi-breeds methods. In every reproduction methods, you can set litter size **num.prog** and sex ratio **ratio** in freedom.
-
-## Gallery of reproduction input parameters
-**[back to top](#contents)** 
-
-`simer()`, main function:  
-**mtd.reprod**, different reproduction methods with options: "clone", "dh", "selfpol", "singcro", "tricro", "doubcro", "backcro","randmate", "randexself" and "userped"  
-**userped**, user-designed pedigree to control mating process  
-**num.prog**, litter size of dams  
-**ratio**, ratio of males in all individuals  
-**prog.tri**, litter size of the first single cross process in trible cross process  
-**prog.doub**, litter size of the first two single cross process in double cross process  
-**prog.back**, a vector with litter size in every generation of back-cross  
 
 ## Clone
 **[back to top](#contents)** 
