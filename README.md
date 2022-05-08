@@ -40,6 +40,7 @@
     - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)  
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)  
     - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)  
+    - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)  
 - [Selection](#selection)
     - [Gallery of selection input parameters](#gallery-of-selection-input-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
