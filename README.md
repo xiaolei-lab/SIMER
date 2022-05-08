@@ -1364,8 +1364,8 @@ SP <- param.pheno(
   pop.ind = 100,
   pop.env = pop.env,
   phe.model = list(
-    tr1 = "T1 = A + F1 + F2 + R1 + A:F1 + E"), # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
-    tr2 = "T1 = A + F1 + F2 + R1 + A:F1 + E")  # "T2" (Trait 2) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+    tr1 = "T1 = A + F1 + F2 + R1 + A:F1 + E", # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+    tr2 = "T1 = A + F1 + F2 + R1 + A:F1 + E"  # "T2" (Trait 2) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
