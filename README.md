@@ -39,10 +39,7 @@
     - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)  
     - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)  
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)  
-    - [Add fixed effects and random effects to phenotype](#add-fixed-effects-and-random-effects-to-phenotype)
-    - [Different QTN effect distributions](#different-QTN-effect-distributions)  
-    - [Different selection criteria](#different-selection-criteria)  
-    - [Multiple groups QTN effects](#multiple-groups-QTN-effects)  
+    - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)  
 - [Selection](#selection)
     - [Gallery of selection input parameters](#gallery-of-selection-input-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
@@ -202,7 +199,7 @@ Typing ```?simer``` could get the details of all parameters.
 
 ## Basic
 **[back to top](#contents)**  
-At least user should prepare two datasets: ***genotypic map*** and ***genotype data***.  
+At least users should prepare two datasets: ***genotypic map*** and ***genotype data***.  
 
 ***genotype data***, ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals)  
 ***genotypic map***, SNP map information, the first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  
@@ -426,7 +423,7 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 ```
 
-Note that recombination only exists in meiosis. Therefore, some reproduction methods such as ```clone``` do not have recombination process. User can set ```recom.spot = FALSE``` to add only mutations to genotype matrix.  
+Note that recombination only exists in meiosis. Therefore, some reproduction methods such as ```clone``` do not have recombination process. Users can set ```recom.spot = FALSE``` to add only mutations to genotype matrix.  
 
 ```r
 # Generate annotation simulation parameters
@@ -677,7 +674,7 @@ SP <- genotype(SP)
 ## Generate phenotype by A model
 **[back to top](#contents)** 
 
-In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. User should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single trait simulation is displayed as follows: 
+In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -757,7 +754,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by AD model
 **[back to top](#contents)** 
 
-In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. User should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single trait simulation is displayed as follows: 
+In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -816,7 +813,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by GxG model
 **[back to top](#contents)** 
 
-In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. User should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction is displayed as follows: 
+In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1204,180 +1201,90 @@ SP <- phenotype(SP)
 ## Generate phenotype with fixed effect and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports add fixed effects and random effects to phenotype. Users should prepare a list with fixed effects, random effects, and their combination first. In the list, the attribution name are fixed. "cmb.fix" contains different combinations of fixed factors in different traits. "fix" contains different fixed factors which have their levels and effects. "cmb.rand" contains different combinations of random factors. Unlike the fixed effect, the user needs to specify the proportion of the variance of the random effect variance by "ratio". Besides, users can also set related random effects for different traits by "cr". Users can use attribute names in population information, meaning that users can assign specific levels to different individuals. At the same time, if the attribute name is not in the population information, **SIMER** will add its level to the population information. 
+**```SIMER```** supports add fixed effects and random effects to phenotype. Users should prepare a list of environmental factors setting. In the list, the attribution name are fixed. "cmb.fix" contains different combinations of fixed factors in different traits. "fix" contains different fixed factors which have their levels and effects. "cmb.rand" contains different combinations of random factors. Unlike the fixed effect, the user needs to specify the proportion of the variance of the random effect variance by "ratio". Besides, users can also set related random effects for different traits by "cr". Users can use attribute names in population information, meaning that users can assign specific levels to different individuals. At the same time, if the attribute name is not in the population information, **SIMER** will add its level to the population information. Phenotype with fixed effect and environmental random effect in single trait simulation is displayed as follows: 
 
 ```r
-# specific levels to different individuals
-a <- sample(c("a1", "a2", "a3"), nind, replace = TRUE)
-b <- sample(c("b1", "b2", "b3"), nind, replace = TRUE)
-basepop1$a <- a # load your fixed  effects
-basepop1$b <- b # load your random effects
+# Prepare environmental factor list
+pop.env <- list(
+  F1 = list( # fixed effect 1
+    level = c("1", "2"),
+    eff = list(tr1 = c(50, 30))
+  ), 
+  F2 = list( # fixed effect 2
+    level = c("d1", "d2", "d3"),
+    eff = list(tr1 = c(10, 20, 30))
+  ),
+  R1 = list( # random effect 1
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1)
+  )
+)
 
-# combination of fixed effects
-cmb.fix <- list(tr1 = c("mu", "gen", "sex", "a"), # trait 1
-                tr2 = c("mu", "diet", "season"))  # trait 2		
+# Generate genotype simulation parameters
+SP <- param.annot(qtn.num = 10), qtn.model = "A")
+# Generate annotation simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP, 
+  pop.ind = 100,
+  pop.env = pop.env,
+  phe.model = list(tr1 = "T1 = A + E"),
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
+)
 
-# available fixed effects
-fix <- list(
-         mu = list(level = "mu", eff = 2),
-        gen = list(level = "1", eff = 1), # inherent fixed effect in simer
-        sex = list(level = c("1", "2"), eff = c(5, 3)), # inherent fixed effect in simer
-       diet = list(level = c("d1", "d2", "d3"), eff = c(1, 2, 3)),
-     season = list(level = c("s1", "s2", "s3", "s4"), eff = c(1, 2, 3, 2)), 
-          a = list(level = c("a1", "a2", "a3"), eff = c(1, 2, 3)))
-
-# combination and ralation of random effects
-# rn, random effect name
-# ratio, phenotype variance proportion of the random effects
-# cr, corelation of the random effects
-tr1 <- list(rn = c("sir", "dam", "b"), ratio = c(0.03, 0.05, 0.03))
-tr2 <- list(rn = c("PE", "litter"), ratio = c(0.01, 0.03),
-            cr = matrix(c(1, 0.5, 0.5, 1), 2, 2))
-cmb.rand <- list(tr1 = tr1, tr2 = tr2)
-
-# available random effects
-rand <- list(
-        sir = list(mean = 0, sd = 1), # sir and dam are inherent random effect in simer
-        dam = list(mean = 0, sd = 1), # control mean and sd only
-         PE = list(level = c("p1", "p2", "p3"), eff = c(1, 2, 3)),
-     litter = list(level = c("l1", "l2"), eff = c(1, 2)), 
-          b = list(level = c("b1", "b2", "b3"), eff = c(1, 2, 3)))
-
-FR <- list(cmb.fix = cmb.fix, fix = fix, cmb.rand = cmb.rand, rand = rand)
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
-After preparation above, you can get phenotype with fixed effects and random effects but without additive effects by setting **pop.geno = NULL**. 
+Phenotype with fixed effect and environmental random effect in multiple trait simulation is displayed as follows: 
 
 ```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive model
-effs <-
-    cal.effs(pop.geno = NULL, # set pop.geno = NULL
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = 18,
-             sd.tr1 = 0.6, # standard deviation of normal distribution
-             dist.qtn.tr1 = "normal",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1,
-             scale.tr1 = 1,
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
+# Prepare environmental factor list
+pop.env <- list(
+  F1 = list( # fixed effect 1
+    level = c("1", "2"),
+    eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+  ), 
+  F2 = list( # fixed effect 2
+    level = c("d1", "d2", "d3"),
+    eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+  ),
+  R1 = list( # random effect 1
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1, tr2 = 0.1)
+  )
+)
 
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop.pheno <-
-    phenotype(effs = effs,
-              FR = FR, # input fixed effects and random effects
-              pop = basepop1,
-              pop.geno = NULL, # set pop.geno = NULL
-              pos.map = NULL,
-              h2.tr1 = 0.8,
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),
-              sel.crit = "pheno",
-              pop.total = basepop1,
-              sel.on = TRUE,
-              inner.env = NULL,
-              verbose = verbose)
+# Generate genotype simulation parameters
+SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2)), qtn.model = "A")
+# Generate annotation simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP, 
+  pop.ind = 100,
+  pop.env = pop.env,
+  phe.model = list(
+    tr1 = "T1 = A + E",
+    tr2 = "T2 = A + E"
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
 
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
-```
-
-If inputting **pop.geno** a genotype matrix, you will get phenotype with fixed effects, random effects, and genetic effects. 
-
-```r
-####################
-### single trait ###
-# calculate for marker information
-# Additive model
-effs <-
-    cal.effs(pop.geno = basepop1.geno, # input genotype matrix
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = 18,
-             sd.tr1 = 0.6, # standard deviation of normal distribution
-             dist.qtn.tr1 = "normal",
-             eff.unit.tr1 = 0.5,
-             shape.tr1 = 1,
-             scale.tr1 = 1,
-             multrait = FALSE, # single trait
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = diag(c(1, 0.5)),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
-
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop.pheno <-
-    phenotype(effs = effs,
-              FR = FR, # input fixed effects and random effects
-              pop = basepop1,
-              pop.geno = basepop1.geno, # input genotype matrix
-              pos.map = NULL,
-              h2.tr1 = 0.8,
-              gnt.cov = matrix(c(1, 2, 2, 15), 2, 2),
-              h2.trn = c(0.3, 0.5),
-              sel.crit = "pheno",
-              pop.total = basepop1,
-              sel.on = TRUE,
-              inner.env = NULL,
-              verbose = verbose)
-
-# get population with phenotype
-basepop1 <- pop.pheno$pop
-pop.pheno$pop <- NULL
-```
-
-Users can also add fixed effects and random effects to different traits respectively by multiple traits mode. 
-
-```r
-#######################
-### multiple traits ###
-# calculate for marker information
-effs <-
-    cal.effs(pop.geno = basepop2.geno,
-             cal.model = "A", # it can be"A", "AD" or "ADI"
-             num.qtn.tr1 = c(2, 6, 10),
-             sd.tr1 = c(0.4, 0.2, 0.02, 0.02, 0.02, 0.02, 0.02, 0.001),
-             dist.qtn.tr1 = rep("normal", 6),
-             eff.unit.tr1 = rep(0.5, 6),
-             shape.tr1 = rep(1, 6),
-             scale.tr1 = rep(1, 6),
-             multrait = TRUE, # multiple traits
-             num.qtn.trn = matrix(c(18, 10, 10, 20), 2, 2),
-             sd.trn = matrix(c(1, 0, 0, 2), 2, 2),
-             qtn.spot = rep(0.1, 10),
-             maf = 0,
-             verbose = verbose)
-
-# generate phenotype
-# generate single trait or multiple traits according to effs
-pop2.pheno <-
-     phenotype(effs = effs,
-               FR = FR, 
-               pop = basepop2,
-               pop.geno = basepop2.geno,
-               pos.map = NULL,
-               h2.tr1 = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.05),
-               gnt.cov = matrix(c(14, 10, 10, 15), 2, 2),
-               h2.trn = c(0.3, 0.5),
-               sel.crit = "pheno",
-               pop.total = basepop2,
-               sel.on = TRUE, 
-               inner.env = NULL,
-               verbose = verbose)
-
-# get population with phenotype
-basepop2 <- pop2.pheno$pop
-pop2.pheno$pop <- NULL
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
 ```
 
 ## Different QTN effect distributions
