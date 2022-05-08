@@ -16,7 +16,7 @@ the function returns a list containing
 \describe{
 \item{$reprod$pop.gen}{the generations of simulated population.}
 \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
-\item{$reprod$sex.rate}{the sex ratio of simulated population.}
+\item{$reprod$sex.rate}{the male rate in the population.}
 \item{$reprod$prog}{the progeny number of an individual.}
 }
 }
