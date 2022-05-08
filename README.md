@@ -859,8 +859,8 @@ SP <- param.pheno(
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
   phe.h2D = list(tr1 = 0.1, tr2 = 0.1),
   phe.h2GxG = list(tr1 = list("A:D" = 0.1), tr2 = list("A:D" = 0.1)),
-  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
-  phe.corD = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Dominant genetic correlation
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2),                 # Additive genetic correlation
+  phe.corD = matrix(c(1, 0.5, 0.5, 1), 2, 2),                 # Dominant genetic correlation
   phe.corGxG = list("A:D" = matrix(c(1, 0.5, 0.5, 1), 2, 2))  # Additive-Dominant interaction genetic correlation
 )
 
@@ -875,7 +875,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by Repeated Record model
 **[back to top](#contents)** 
 
-In ***Repeated Record*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. User should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single trait simulation is displayed as follows: 
+In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep`` and ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** single trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -886,6 +886,8 @@ SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 SP <- param.pheno(
   SP = SP,
   pop.ind = 100,
+  pop.rep = 2,                          # The number of repeated records is 2
+  pop.rep.bal = TRUE,                   # Repeated records are balanced
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
   # phe.var = list(tr1 = 100),
   phe.h2A = list(tr1 = 0.3)
@@ -899,8 +901,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple trait simulation is displayed as follows: 
-
+In multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** multiple trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -911,13 +912,16 @@ SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 SP <- param.pheno(
   SP = SP,
   pop.ind = 100,
+  pop.rep = 2,          # The number of repeated records is 2
+  pop.rep.bal = TRUE,   # Repeated records are balanced
   phe.model = list(
     tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
     tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
-  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
+  phe.corPE = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Permanent Environmental correlation
 )
 
 # Run annotation simulation
