@@ -1465,8 +1465,44 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
-`simer()`, main function:  
-**ps**, fraction selected in selection  
+```reproduces```, main function of ***Reproduction***:  
+
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>pop.gen</b></td>
+<td>2</td>
+<td>num</td>
+<td>the generations of simulated population.</td>
+</tr>
+<tr>
+<td><b>reprod.way</b></td>
+<td>'randmate'</td>
+<td>character</td>
+<td>reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.</td>
+</tr>
+<tr>
+<td><b>sex.rate</b></td>
+<td>0.5</td>
+<td>num</td>
+<td>the male rate in the population.</td>
+</tr>
+<tr>
+<td><b>prog</b></td>
+<td>2</td>
+<td>num</td>
+<td>the progeny number of an individual.</td>
+</tr>
+</tbody>
+</table>
 
 ## Individual selection on single trait
 **[back to top](#contents)**  
