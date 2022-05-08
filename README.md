@@ -932,6 +932,71 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
+## Generate phenotype controlled by QTNs subject to Normal distribution
+**[back to top](#contents)** 
+
+***Norm***al distribution is the most common QTN effect distribution. Phenotype controlled by QTNs subject to ***Norm***al distribution in single trait simulation is displayed as follows: 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(
+  qtn.num = 10,
+  qtn.model = "A",
+  qtn.dist = list(tr1 = "norm"),
+  qtn.sd = list(tr1 = 1)
+)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple trait simulation is displayed as follows: 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(
+  qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
+  qtn.model = "A",
+  qtn.dist = list(tr1 = "norm", tr2 = "normal"),
+  qtn.sd = list(tr1 = 1, tr2 = 1)
+)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(
+    tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
+    tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
 ## Add fixed effects and random effects to phenotype
 **[back to top](#contents)** 
 
