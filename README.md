@@ -1973,19 +1973,26 @@ SP <- reproduces(SP)
 ## User designed pedigree mating for plant and animal
 **[back to top](#contents)**  
 
-User-designed-pedigree mating needs a specific user designed pedigree to control mating process. Pedigree should at least start with generation 2. Please make sure that paternal id and maternal id can be found in the last generation. Note that the individuals in the pedigree data file do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+***User designed pedigree mating*** needs a specific ***user designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.
 
 ```r
-# user-designed-pedigree mating
-simer.list <-
-    simer(num.gen = 5,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          rawgeno1 = rawgeno, # use your own genotype matrix
-          # num.ind = 100,
-          mtd.reprod = "userped",
-          userped = userped) # input your own pedigree
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "userped")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ---
