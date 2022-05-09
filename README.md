@@ -245,8 +245,13 @@ SP <- simer(SP)
 A quick start for ***Annotation Simulation*** is shown below:
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(pop.map = pop.map, qtn.num = 10)
 
 # Run annotation simulation
 SP <- annotation(SP)
