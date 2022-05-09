@@ -29,18 +29,18 @@
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
     - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
-- [Phenotype Simulation](#phenotype-simulation)  
-    - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)  
-    - [Generate phenotype by A model](#generate-phenotype-by-A-model)  
-    - [Generate phenotype by AD model](#generate-phenotype-by-AD-model)  
-    - [Generate phenotype by GxG model](#generate-phenotype-by-GxG-model)  
-    - [Generate phenotype by Repeated Record model](#generate-phenotype-by-repeated-record-model)  
-    - [Generate phenotype controlled by QTNs subject to Normal distribution](#generate-phenotype-controlled-by-QTNs-subject-to-normal-distribution)  
-    - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)  
-    - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)  
-    - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)  
-    - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)  
-    - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)  
+- [Phenotype Simulation](#phenotype-simulation)
+    - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
+    - [Generate phenotype by A model](#generate-phenotype-by-A-model)
+    - [Generate phenotype by AD model](#generate-phenotype-by-AD-model)
+    - [Generate phenotype by GxG model](#generate-phenotype-by-GxG-model)
+    - [Generate phenotype by Repeated Record model](#generate-phenotype-by-repeated-record-model)
+    - [Generate phenotype controlled by QTNs subject to Normal distribution](#generate-phenotype-controlled-by-QTNs-subject-to-normal-distribution)
+    - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)
+    - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)
+    - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
+    - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)
+    - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
@@ -60,6 +60,7 @@
     - [Four way cross for animal](#four-way-cross-for-animal)
     - [Back cross for animal](#back-cross-for-animal)
     - [User designed pedigree mating for plant and animal](#user-designed-pedigree-mating-for-plant-and-animal)
+    - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
 - [Comparison on Breeding Plans](#comparison-on-breeding-plans) 
     - [Gallery of comparison input parameters](#gallery-of-comparison-input-parameters)
     - [Breeding plan preparation](#breeding-plan-preparation)
@@ -1993,6 +1994,19 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Run reproduction
 SP <- reproduces(SP)
+```
+
+## AN EASY WAY TO GENERATE A POPULATION
+**[back to top](#contents)**  
+
+The above methods are to generate population step by step, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population by a ***MORE CONVENIENT*** way. 
+
+```r
+# Generate all simulation parameters
+SP <- param.simer(qtn.num = 10, pop.marker = 1e4, pop.ind = 1e2, sel.single = "comb", reprod.way = "randmate")
+
+# Run Simer
+SP <- simer(SP)
 ```
 
 ---
