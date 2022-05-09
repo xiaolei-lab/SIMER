@@ -1880,7 +1880,7 @@ SP <- reproduces(SP)
 ## Three way cross for animal
 **[back to top](#contents)** 
 
-***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the first ***two-way cross***, the ***third breed*** is termimal ***sire***.
+***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is termimal ***sire***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1911,24 +1911,32 @@ SP <- reproduces(SP)
 ## Four way cross for animal
 **[back to top](#contents)**  
 
-Four-way cross method needs four genotype matrice of different four breeds. You can input your own genotype matrix by parameters **rawgeno1**, **rawgeno2**, **rawgeno3**, and **rawgeno4**. If any of these four is NULL, **SIMER** will generates a random one. In four-way cross method, you can set litter size of the first two two-way cross by **prog.doub**.
+***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***,
 
 ```r
-# four way cross
-simer.list <-
-    simer(num.gen = 5,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          rawgeno1 = rawgeno, # use your own genotype matrix
-          rawgeno2 = NULL,
-          rawgeno3 = NULL,
-          rawgeno4 = NULL,
-          # num.ind = 100,
-          mtd.reprod = "doubcro",
-          num.prog = 2,
-          prog.doub = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "2waycro")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Three different breeds are cut by sex
+SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Back cross for animal
