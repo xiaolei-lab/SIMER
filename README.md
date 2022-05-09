@@ -1704,20 +1704,30 @@ SP <- selects(SP)
 ## Clone for plant
 **[back to top](#contents)** 
 
-Asexual reproduction does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. Sex of offspring will be "0" in clone. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+Asexual reproduction does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone````. 
 
 ```r
-# clone
-simer.list <-
-    simer(num.gen = 3,
-          verbose = verbose, 
-          outpath = outpath, 
-          input.map = input.map,
-          # rawgeno1 = rawgeno, # use your own genotype matrix
-          num.ind = 50,
-          mtd.reprod = "clone",
-          num.prog = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "clone")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Double haploid for plant
