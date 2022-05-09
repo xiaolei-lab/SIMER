@@ -1846,7 +1846,7 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Two way cross for animal
+## Two-way cross for animal
 **[back to top](#contents)**  
 
 ***Two-way cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam***.
@@ -1877,7 +1877,7 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Three way cross for animal
+## Three-way cross for animal
 **[back to top](#contents)** 
 
 ***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is termimal ***sire***.
@@ -1908,10 +1908,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Four way cross for animal
+## Four-way cross for animal
 **[back to top](#contents)**  
 
-***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***,
+***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1942,22 +1942,32 @@ SP <- reproduces(SP)
 ## Back cross for animal
 **[back to top](#contents)**  
 
-Back-cross method needs two different breeds. You can input your own genotype matrix by parameters **rawgeno1** and **rawgeno2**. If any of these two is NULL, **SIMER** will generates a random one. Back-cross is similar to two-way cross but with some differences: 1. Back-cross is multi-generation mating; 2. The first base population is fixed in every generations. In back-cross method, you can set litter size of two-way cross in every generation by a vector **prog.back**.
+***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the ***first two-way cross***.
 
 ```r
-# Back-cross
-simer.list <-
-    simer(num.gen = 5,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          rawgeno1 = rawgeno, # use your own genotype matrix
-          rawgeno2 = NULL,
-          # num.ind = 100,
-          mtd.reprod = "backcro",
-          num.prog = 2,
-          prog.back = rep(2, 5),
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "backcro")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Two different breeds are cut by sex
+SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## User designed pedigree mating for plant and animal
