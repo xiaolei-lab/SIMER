@@ -44,9 +44,10 @@ Last update: Apr 28, 2022
 jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
 
-# DO NOT RUN
+\dontrun{
 # It needs 'hiblup' software
-# gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
+gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
+}
 }
 \author{
 Dong Yin

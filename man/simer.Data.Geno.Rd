@@ -69,9 +69,10 @@ Last update: Apr 28, 2022
 # Get the prefix of genotype data
 fileBed <- system.file("extdata", "02plinkb", "demo", package = "simer")
 
-# DO NOT RUN
+\dontrun{
 # It needs 'plink' software
-# simer.Data.Geno(fileBed=fileBed)
+simer.Data.Geno(fileBed=fileBed)
+}
 }
 \author{
 Dong Yin

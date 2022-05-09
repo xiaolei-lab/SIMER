@@ -22,11 +22,9 @@ Build date: Sep 10, 2021
 Last update: Apr 28, 2022
 }
 \examples{
-data <- data.frame(a = rep(1, 3), b = 1:3, c = c(1, 1, 5))
+data <- data.frame(a = c(1, 1, 2), b = c(2, 2, 3), c = c(3, 3, 4))
 envName <- c("a", "b", "c")
-
-# It contains warnings
-# data <- checkEnv(data = data, envName = envName)
+data <- checkEnv(data = data, envName = envName)
 }
 \author{
 Dong Yin

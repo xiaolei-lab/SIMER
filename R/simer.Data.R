@@ -43,9 +43,10 @@
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'plink' and 'hiblup' software
-#' # jsonList <- simer.Data(jsonList = jsonList)
+#' jsonList <- simer.Data(jsonList = jsonList)
+#' }
 simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = TRUE) {
   
   # global parameters
@@ -253,9 +254,10 @@ simer.Data.MVP2MVP <- function(fileMVP, genoType = 'char', out = 'simer', verbos
 #' # Get the prefix of genotype data
 #' fileMVP <- system.file("extdata", "02plinkb", "demo", package = "simer")
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'beagle' software
-#' # fileMVPimp <- simer.Data.Impute(fileBed = fileBed)
+#' fileMVPimp <- simer.Data.Impute(fileBed = fileBed)
+#' }
 simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLine = 1e4, ncpus = 0, verbose = TRUE) {
   
   if (sum(is.null(fileMVP), is.null(fileBed)) != 1) {
@@ -346,9 +348,10 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
 #' # Get the prefix of genotype data
 #' fileBed <- system.file("extdata", "02plinkb", "demo", package = "simer")
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'plink' software
-#' # simer.Data.Geno(fileBed=fileBed)
+#' simer.Data.Geno(fileBed=fileBed)
+#' }
 simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, filePed = NULL, filePhe = NULL, out = 'simer.qc', genoType = 'char',
                             filter = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL,
                             ncpus = 0, verbose = TRUE) {
@@ -923,9 +926,10 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'hiblup' solfware
-#' # jsonList <- simer.Data.Env(jsonList = jsonList)
+#' jsonList <- simer.Data.Env(jsonList = jsonList)
+#' }
 simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
@@ -1043,9 +1047,10 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'hiblup' software
-#' # gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
+#' gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
+#' }
 simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
@@ -1230,9 +1235,10 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 #' jsonList <- rjson::fromJSON(file = jsonFile)
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'hiblup' software
-#' # jsonList <- simer.Data.SELIND(jsonList = jsonList)
+#' jsonList <- simer.Data.SELIND(jsonList = jsonList)
+#' }
 simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
@@ -1348,9 +1354,10 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
 #' # Get JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 #' 
-#' # DO NOT RUN
+#' \dontrun{
 #' # It needs 'plink' and 'hiblup' software
-#' # jsonList <- simer.Data.Json(jsonFile = jsonFile)
+#' jsonList <- simer.Data.Json(jsonFile = jsonFile)
+#' }
 simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
@@ -1397,11 +1404,9 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
 #' @export
 #'
 #' @examples
-#' data <- data.frame(a = rep(1, 3), b = 1:3, c = c(1, 1, 5))
+#' data <- data.frame(a = c(1, 1, 2), b = c(2, 2, 3), c = c(3, 3, 4))
 #' envName <- c("a", "b", "c")
-#' 
-#' # It contains warnings
-#' # data <- checkEnv(data = data, envName = envName)
+#' data <- checkEnv(data = data, envName = envName)
 checkEnv <- function(data, envName) {
   if (is.numeric(envName)) {
     envName <- names(data)[envName]

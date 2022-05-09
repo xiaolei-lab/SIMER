@@ -36,9 +36,10 @@ Last update: Apr 28, 2022
 jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
 
-# DO NOT RUN
+\dontrun{
 # It needs 'hiblup' software
-# jsonList <- simer.Data.SELIND(jsonList = jsonList)
+jsonList <- simer.Data.SELIND(jsonList = jsonList)
+}
 }
 \references{
 Y. S. Chen, Z. L. Sheng (1988) The Theory of General Selection Index. Genetic Report, 15(3): P185-P190

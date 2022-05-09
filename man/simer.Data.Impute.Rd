@@ -46,9 +46,10 @@ Last update: Apr 28, 2022
 # Get the prefix of genotype data
 fileMVP <- system.file("extdata", "02plinkb", "demo", package = "simer")
 
-# DO NOT RUN
+\dontrun{
 # It needs 'beagle' software
-# fileMVPimp <- simer.Data.Impute(fileBed = fileBed)
+fileMVPimp <- simer.Data.Impute(fileBed = fileBed)
+}
 }
 \author{
 Dong Yin

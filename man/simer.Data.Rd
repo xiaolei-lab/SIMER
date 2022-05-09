@@ -38,9 +38,10 @@ Last update: Apr 28, 2022
 jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 jsonList <- rjson::fromJSON(file = jsonFile)
 
-# DO NOT RUN
+\dontrun{
 # It needs 'plink' and 'hiblup' software
-# jsonList <- simer.Data(jsonList = jsonList)
+jsonList <- simer.Data(jsonList = jsonList)
+}
 }
 \author{
 Dong Yin
