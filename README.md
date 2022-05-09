@@ -1892,7 +1892,7 @@ SP <- param.pheno(SP = SP, pop.ind = 100)
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "2waycro")
+SP <- param.reprod(SP = SP, reprod.way = "3waycro")
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -1923,7 +1923,7 @@ SP <- param.pheno(SP = SP, pop.ind = 100)
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "2waycro")
+SP <- param.reprod(SP = SP, reprod.way = "4waycro")
 
 # Run annotation simulation
 SP <- annotation(SP)
