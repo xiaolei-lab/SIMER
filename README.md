@@ -1704,7 +1704,7 @@ SP <- selects(SP)
 ## Clone for plant
 **[back to top](#contents)** 
 
-```Clone``` is an sexual reproduction method which does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```. 
+***Clone*** is an sexual reproduction method which does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```. 
 
 ```r
 # Generate annotation simulation parameters
@@ -1733,20 +1733,30 @@ SP <- reproduces(SP)
 ## Double haploid for plant
 **[back to top](#contents)**  
 
-Breeding workers often use another culture in vitro to obtain haploid plants, and then artificially induced to double the number of chromosomes and restore the number of chromosomes in normal plants. This method is named double-haploid reproduction. Sex of offspring will be "0" in double-haploid. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced to double the number of chromosomes and restore the number of chromosomes in normal plants. Sex of offspring will be ***0*** in ````dh```. 
 
 ```r
-# double-haploid
-simer.list <-
-    simer(num.gen = 4,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          # rawgeno1 = rawgeno, # use your own genotype matrix
-          num.ind = 50,
-          mtd.reprod = "dh",
-          num.prog = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "dh")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Self pollination for plant and micro-organism
