@@ -27,7 +27,7 @@ logging.log(
 \item{verbose}{whether to print detail.}
 }
 \value{
-print information.
+none.
 }
 \description{
 Print or write log.

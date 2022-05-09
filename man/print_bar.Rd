@@ -41,6 +41,9 @@ print_bar(
 
 \item{verbose}{whether to print detail.}
 }
+\value{
+none.
+}
 \description{
 Print progress bar.
 }

@@ -11,6 +11,9 @@ print_accomplished(width = 60, verbose = TRUE)
 
 \item{verbose}{whether to print detail.}
 }
+\value{
+none.
+}
 \description{
 Print accomplishment information.
 }

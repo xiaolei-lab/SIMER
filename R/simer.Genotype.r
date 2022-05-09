@@ -487,6 +487,7 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
 #' @param len.chr the length of chromosomes.
 #'
 #' @return a data frame with marker information.
+#' 
 #' @export
 #'
 #' @examples
@@ -532,6 +533,7 @@ generate.map <- function(pop.marker = NULL, num.chr = 18, len.chr = 1.5e8) {
 #' @param pop.geno genotype matrix of (0, 1).
 #'
 #' @return genotype matrix of (0, 1, 2).
+#' 
 #' @export
 #'
 #' @examples
@@ -562,6 +564,7 @@ geno.cvt1 <- function(pop.geno) {
 #' @param pop.geno genotype matrix of (0, 1, 2).
 #' 
 #' @return genotype matrix of (0, 1).
+#' 
 #' @export
 #'
 #' @examples

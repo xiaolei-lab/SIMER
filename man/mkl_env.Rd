@@ -11,6 +11,9 @@ mkl_env(exprs, threads = 1)
 
 \item{threads}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 }
+\value{
+none.
+}
 \description{
 Run code in the MKL environment.
 }

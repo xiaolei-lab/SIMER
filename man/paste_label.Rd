@@ -15,6 +15,9 @@ paste_label(line, label, side = "right", margin = 2)
 
 \item{margin}{the margin information, default 2.}
 }
+\value{
+none.
+}
 \description{
 Paste label to a line.
 }

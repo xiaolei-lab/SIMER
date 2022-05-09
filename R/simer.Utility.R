@@ -67,6 +67,8 @@ simer.Version <- function(width = 60, verbose = TRUE) {
 #' @param verbose whether to print detail.
 #'
 #' @keywords internal
+#' 
+#' @return none.
 print_bar <- function(i,
                       n,
                       type = c("type1", "type3"),
@@ -196,6 +198,8 @@ print_bar <- function(i,
 #' @param verbose whether to print detail.
 #'
 #' @keywords internal
+#' 
+#' @return none.
 print_accomplished <- function(width = 60, verbose = TRUE) {
   logging.log(make_line("SIMER ACCOMPLISHED", width = width, linechar = '='), "\n", verbose = verbose)
 }
@@ -221,6 +225,8 @@ print_accomplished <- function(width = 60, verbose = TRUE) {
 #' @param verbose whether to print detail.
 #'
 #' @export
+#' 
+#' @return welcome information.
 #' 
 #' @keywords internal
 #'
@@ -314,6 +320,8 @@ print_info <- function(welcome = NULL, title = NULL, short_title = NULL, logo = 
 #' @param margin the margin information, default 2.
 #'
 #' @keywords internal
+#' 
+#' @return none.
 make_line <- function(string, width, linechar = " ", align = "center", margin = 1) {
   string <- paste0(paste0(rep(" ", margin), collapse = ""),
                    string,
@@ -354,6 +362,8 @@ make_line <- function(string, width, linechar = " ", align = "center", margin = 
 #' @param linechar char in every line.
 #'
 #' @keywords internal
+#' 
+#' @return none.
 rule_wrap <- function(string, width, align = "center", linechar = " ") {
   # define
   msg <- c()
@@ -382,6 +392,8 @@ rule_wrap <- function(string, width, align = "center", linechar = " ") {
 #' @param margin the margin information, default 2.
 #' 
 #' @keywords internal
+#' 
+#' @return none.
 paste_label <- function(line, label, side = "right", margin = 2) {
   if (side == "right") {
     end   <- nchar(line) - margin
@@ -408,6 +420,11 @@ paste_label <- function(line, label, side = "right", margin = 2) {
 #' @keywords internal
 #' 
 #' @export
+#' 
+#' @return running time.
+#'
+#' @examples
+#' format_time(x = 7200)
 format_time <- function(x) {
   h <- x %/% 3600
   m <- (x %% 3600) %/% 60
@@ -432,6 +449,8 @@ format_time <- function(x) {
 #' @param package the package name.
 #' 
 #' @keywords internal
+#' 
+#' @return none.
 load_if_installed <- function(package) {
   if (!identical(system.file(package = package), "")) {
     do.call('library', list(package))
@@ -455,6 +474,8 @@ load_if_installed <- function(package) {
 #' @param threads the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #' 
 #' @keywords internal
+#' 
+#' @return none.
 mkl_env <- function(exprs, threads = 1) {
   if (load_if_installed("RevoUtilsMath")) {
     math.cores <- eval(parse(text = "getMKLthreads()"))

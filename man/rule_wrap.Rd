@@ -15,6 +15,9 @@ rule_wrap(string, width, align = "center", linechar = " ")
 
 \item{linechar}{char in every line.}
 }
+\value{
+none.
+}
 \description{
 Print accomplishment information.
 }

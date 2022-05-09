@@ -38,6 +38,9 @@ print_info(
 
 \item{line}{1, 2, or char.}
 }
+\value{
+welcome information.
+}
 \description{
 Print R Package information, include title, short_title, logo, version, authors, contact.
 }

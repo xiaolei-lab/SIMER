@@ -486,6 +486,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
 #' @param gen generation ID of the population.
 #'
 #' @return a data frame of population information.
+#' 
 #' @export
 #'
 #' @examples
@@ -521,7 +522,9 @@ generate.pop <- function(pop.ind = 100, from = 1, ratio = 0.5, gen = 1) {
 #' @param tol tolerance (relative to largest variance) for numerical lack of positive-definiteness in Sigma.
 #'
 #' @return a data frame with expected correlation
+#' 
 #' @export
+#' 
 #' @references B. D. Ripley (1987) Stochastic Simulation. Wiley. Page 98
 #'
 #' @examples

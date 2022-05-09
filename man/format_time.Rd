@@ -9,12 +9,18 @@ format_time(x)
 \arguments{
 \item{x}{the total seconds.}
 }
+\value{
+running time.
+}
 \description{
 Format the time.
 }
 \details{
 Build date: Oct 22, 2018
 Last update: Apr 30, 2022
+}
+\examples{
+format_time(x = 7200)
 }
 \author{
 Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu

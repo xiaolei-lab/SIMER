@@ -1037,6 +1037,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
 #' \item{$covA}{the genetic covariance matrix for all traits.}
 #' \item{$corA}{the genetic correlation matrix for all traits.}
 #' }
+#' 
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
@@ -1392,6 +1393,7 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
 #' @param envName the environmental factor name within the data.
 #' 
 #' @return data without environmental factors of wrong level.
+#' 
 #' @export
 #'
 #' @examples

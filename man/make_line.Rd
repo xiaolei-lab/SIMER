@@ -17,6 +17,9 @@ make_line(string, width, linechar = " ", align = "center", margin = 1)
 
 \item{margin}{the margin information, default 2.}
 }
+\value{
+none.
+}
 \description{
 Add a line to the screen.
 }

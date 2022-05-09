@@ -9,6 +9,9 @@ load_if_installed(package)
 \arguments{
 \item{package}{the package name.}
 }
+\value{
+none.
+}
 \description{
 Check if the software is installed.
 }

@@ -1439,6 +1439,7 @@ mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @param mode "pat": paternal mode; "mat": maternal mode; "pm": paternal and maternal mode.
 #' 
 #' @return a matrix with family indice and within-family indice.
+#' 
 #' @export
 #'
 #' @examples
@@ -1496,6 +1497,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
 #' @param prog the progeny number of an individual.
 #'
 #' @return the vector containing the individual number per generation.
+#' 
 #' @export
 #'
 #' @examples

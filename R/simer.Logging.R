@@ -54,7 +54,7 @@ logging.initialize <- function(module, outpath) {
 #' @param labels a character vector of labels for the lines printed. Ignored if fill is FALSE.
 #' @param verbose whether to print detail.
 #'
-#' @return print information.
+#' @return none.
 #' 
 #' @export
 #'
@@ -88,7 +88,8 @@ logging.log <- function(..., file = NULL, sep = " ", fill = FALSE, labels = NULL
 #' @param append logical. If TRUE, output will be appended to file; otherwise, it will overwrite the contents of file.
 #' @param verbose whether to print details.
 #'
-#' @return print in the screen.
+#' @return none.
+#' 
 #' @export
 #'
 #' @examples

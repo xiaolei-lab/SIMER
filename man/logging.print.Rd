@@ -16,7 +16,7 @@ logging.print(x, file = NULL, append = TRUE, verbose = TRUE)
 \item{verbose}{whether to print details.}
 }
 \value{
-print in the screen.
+none.
 }
 \description{
 Print R object information into file.
