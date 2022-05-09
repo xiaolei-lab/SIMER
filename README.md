@@ -2004,7 +2004,7 @@ SP <- reproduces(SP)
 ## AN EASY WAY TO GENERATE A POPULATION
 **[back to top](#contents)**  
 
-The above methods are to generate population step by step, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population by a ***MORE CONVENIENT*** way. 
+The above methods are to generate population ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population by a ***MORE CONVENIENT*** way. 
 
 ```r
 # Generate all simulation parameters
