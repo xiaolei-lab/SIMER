@@ -54,7 +54,7 @@
     - [Double haploid for plant](#double-haploid-for-plant)
     - [Self pollination for plant and micro-organism](#self-pollination-for-plant-and-micro-organism)
     - [Random mating for plant and animal](#random-mating-for-plant-and-animal)
-    - [Random mating without self pollination for plant and animal](#random-mating-without-self-pollination-for-plant-and-animal)
+    - [Random mating without self pollination for animal](#random-mating-without-self-pollination-for-animal)
     - [Two way cross for animal](#two-way-cross-for-animal)
     - [Three way cross for animal](#three-way-cross-for-animal)
     - [Four way cross for animal](#four-way-cross-for-animal)
