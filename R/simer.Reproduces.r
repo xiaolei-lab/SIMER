@@ -789,6 +789,8 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Two different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
 #' # Run selection
 #' SP <- selects(SP)
 #' # Run two-way cross
@@ -893,7 +895,7 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
-#' # three different breeds are cut by sex
+#' # Three different breeds are cut by sex
 #' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1), c(30, 30, 40))
 #' # Run selection
 #' SP <- selects(SP)
@@ -1051,7 +1053,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
-#' # four different breeds are cut by sex
+#' # Four different breeds are cut by sex
 #' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
 #' # Run selection
 #' SP <- selects(SP)
