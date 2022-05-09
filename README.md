@@ -62,7 +62,7 @@
     - [User designed pedigree mating for plant and animal](#user-designed-pedigree-mating-for-plant-and-animal)
     - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
 - [Breeding Program Design](#breeding-program-design)
-    - [Gallery of comparison input parameters](#gallery-of-comparison-input-parameters)
+    - [Gallery of breeding program design parameters](#gallery-of-breeding-program-design-parameters)
     - [Breeding plan preparation](#breeding-plan-preparation)
     - [Breeding plan comparison](#breeding-plan-comparison)
 - [Global Options](#global-options)
@@ -2019,9 +2019,9 @@ SP <- simer(SP)
 # Breeding Program Design
 **[back to top](#contents)**  
 
-After a total reproduction process, further work can be done. For breeders, they want to predict their breeding plans. To save a lot of money and time, simulation will assist them to make comparison on different breeding plans. 
+After generating a population, further work can be done. Breeders wish to evaluate their ***Breeding Program Design***. To save a lot of money and time, **```SIMER```** can assist breeders to evaluate their ***Breeding Program Design***. 
 
-## Gallery of comparison input parameters
+## Gallery of breeding program design parameters
 **[back to top](#contents)**
 
 `read.selgeno()`, function to make comparison on breeding plans:  
