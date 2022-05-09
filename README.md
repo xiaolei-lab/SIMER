@@ -54,7 +54,7 @@
     - [Double haploid for plant](#double-haploid-for-plant)
     - [Self pollination for plant and micro-organism](#self-pollination-for-plant-and-micro-organism)
     - [Random mating for plant and animal](#random-mating-for-plant-and-animal)
-    - [Random mating without self pollination for animal](#random-mating-without-self-pollination-for-animal)
+    - [Random mating excluding self pollination for animal](#random-mating-excluding-self-pollination-for-animal)
     - [Two way cross for animal](#two-way-cross-for-animal)
     - [Three way cross for animal](#three-way-cross-for-animal)
     - [Four way cross for animal](#four-way-cross-for-animal)
@@ -1817,23 +1817,33 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Random mating without self pollination for animal
+## Random mating excluding self pollination for animal
 **[back to top](#contents)**  
 
-In random mating without self-pollination, a individual cannot mate to itself. Sex of offspring in random mating without self-pollination is up to sex of parents. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+In ***random mating excluding self pollination***, an individual cannot mate to itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```. 
 
 ```r
-# random-mating without self-pollination
-simer.list <-
-    simer(num.gen = 3,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          # rawgeno1 = rawgeno, # use your own genotype matrix
-          num.ind = 100,
-          mtd.reprod = "randexself",
-          num.prog = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "randexself")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Two way cross for animal
