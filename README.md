@@ -1849,21 +1849,32 @@ SP <- reproduces(SP)
 ## Two way cross for animal
 **[back to top](#contents)**  
 
-Two-way cross method needs two genotype matrice of different two breeds. You can input your own genotype matrix by parameters **rawgeno1** and **rawgeno2**. If any of these two is NULL, **SIMER** will generates a random one.
+***Two-way cross*** method needs to use ***sex*** to distinguish two different breeds, in which the first breed is the male parent and the second breed is the female parent.
 
 ```r
-# two-way cross
-simer.list <-
-    simer(num.gen = 5,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          rawgeno1 = rawgeno, # use your own genotype matrix
-          rawgeno2 = NULL,
-          # num.ind = 100,
-          mtd.reprod = "singcro",
-          num.prog = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Two different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "2waycro")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Three way cross for animal
