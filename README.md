@@ -1762,20 +1762,30 @@ SP <- reproduces(SP)
 ## Self pollination for plant and micro-organism
 **[back to top](#contents)** 
 
-Self-pollination refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. Sex of offspring will be "0" in self-pollination. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.  
+***Self pollination*** refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. ***Sex*** of offspring will be ***0*** in ```selfpol```. 
 
 ```r
-# self-pollination
-simer.list <-
-    simer(num.gen = 5,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          # rawgeno1 = rawgeno, # use your own genotype matrix
-          num.ind = 50,
-          mtd.reprod = "selfpol",
-          num.prog = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "selfpol")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Random mating for plant and animal
