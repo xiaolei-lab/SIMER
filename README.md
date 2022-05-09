@@ -61,7 +61,7 @@
     - [Back cross for animal](#back-cross-for-animal)
     - [User designed pedigree mating for plant and animal](#user-designed-pedigree-mating-for-plant-and-animal)
     - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
-- [Comparison on Breeding Plans](#comparison-on-breeding-plans) 
+- [Breeding Program Design](#breeding-program-design)
     - [Gallery of comparison input parameters](#gallery-of-comparison-input-parameters)
     - [Breeding plan preparation](#breeding-plan-preparation)
     - [Breeding plan comparison](#breeding-plan-comparison)
@@ -2016,7 +2016,7 @@ SP <- simer(SP)
 
 ---
 
-# Comparison on Breeding Plans
+# Breeding Program Design
 **[back to top](#contents)**  
 
 After a total reproduction process, further work can be done. For breeders, they want to predict their breeding plans. To save a lot of money and time, simulation will assist them to make comparison on different breeding plans. 
