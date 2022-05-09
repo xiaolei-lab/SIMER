@@ -1791,20 +1791,30 @@ SP <- reproduces(SP)
 ## Random mating for plant and animal
 **[back to top](#contents)**  
 
-In random mating, any female or male individual have the same probability to mate with any opposite sex in a sexually reproducing organism. Sex of offspring in random mating is up to sex of parents. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.
+In ***random mating***, any female or male individual have the same probability to mate with any opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```. 
 
 ```r
-# random-mating
-simer.list <-
-    simer(num.gen = 4,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          # rawgeno1 = rawgeno, # use your own genotype matrix
-          num.ind = 100,
-          mtd.reprod = "randmate",
-          num.prog = 2,
-          ratio = 0.5)
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = 10)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "comb")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "randmate")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
 ```
 
 ## Random mating without self pollination for animal
