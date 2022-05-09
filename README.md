@@ -1733,7 +1733,7 @@ SP <- reproduces(SP)
 ## Double haploid for plant
 **[back to top](#contents)**  
 
-***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced to double the number of chromosomes and restore the number of chromosomes in normal plants. Sex of offspring will be ***0*** in ````dh```. 
+***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced to double the number of chromosomes and restore the number of chromosomes in normal plants. Sex of offspring will be ***0*** in ```dh```. 
 
 ```r
 # Generate annotation simulation parameters
