@@ -1220,6 +1220,8 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Two different breeds are cut by sex
+#' SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
 #' # Run selection
 #' SP <- selects(SP)
 #' # Run back cross
