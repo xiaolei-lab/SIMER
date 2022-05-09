@@ -1942,7 +1942,7 @@ SP <- reproduces(SP)
 ## Back cross for animal
 **[back to top](#contents)**  
 
-***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the first ***two-way cross***.
+***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the ***first two-way cross***.
 
 ```r
 # Generate annotation simulation parameters
