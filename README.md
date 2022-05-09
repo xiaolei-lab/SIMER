@@ -1704,7 +1704,7 @@ SP <- selects(SP)
 ## Clone for plant
 **[back to top](#contents)** 
 
-Asexual reproduction does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone````. 
+Asexual reproduction does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```. 
 
 ```r
 # Generate annotation simulation parameters
