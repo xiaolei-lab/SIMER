@@ -1849,7 +1849,7 @@ SP <- reproduces(SP)
 ## Two way cross for animal
 **[back to top](#contents)**  
 
-***Two-way cross*** method needs to use ***sex*** to distinguish two different breeds, in which the first breed is the male parent and the second breed is the female parent.
+***Two-way cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is the ***male parent*** and the ***second breed*** is the ***female parent***.
 
 ```r
 # Generate annotation simulation parameters
