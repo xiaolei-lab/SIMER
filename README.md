@@ -1739,7 +1739,7 @@ simer.list <-
           ratio = 0.5)
 ```
 
-## Self pollination plant and micro-organism
+## Self pollination for plant and micro-organism
 **[back to top](#contents)** 
 
 Self-pollination refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. Sex of offspring will be "0" in self-pollination. Single-breed methods needs only one genotype matrix, you can generate a random genotype matrix by setting **num.prog** or use your own genotype matrix by setting **rawgeno1 = your_own_matrix**.  
