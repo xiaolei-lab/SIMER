@@ -471,7 +471,7 @@ param.reprod <- function(SP = NULL, ...) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$replication}{the replication times of simulation.}
-#' \item{seed.sim}{simulation random seed.}
+#' \item{$seed.sim}{simulation random seed.}
 #' \item{$out}{the prefix of output files.}
 #' \item{$outpath}{the path of output files, Simer writes files only if outpath is not 'NULL'.}
 #' \item{$out.format}{'numeric' or 'plink', the data format of output files.}
