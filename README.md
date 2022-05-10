@@ -2387,7 +2387,7 @@ SP <- simer(SP)
 # Output
 **[back to top](#contents)**  
 
-**```SIMER```** outputs data including ***annotation data***, ***genotype data***, and ***phenotype data*** in the following two format. 
+**```SIMER```** outputs data including ***annotation data***, ***genotype data***, and ***phenotype data*** in the following two format.  
 ***Numeric*** format:  
 ```simer.geno.ind``` contains indice of genotyped individuals;  
 ```simer.geno.desc``` and ```simer.geno.bin``` contain genotype matrix of all individuals;  
