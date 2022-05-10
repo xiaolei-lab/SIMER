@@ -476,7 +476,7 @@ param.reprod <- function(SP = NULL, ...) {
 #' \item{$outpath}{the path of output files, Simer writes files only if outpath is not 'NULL'.}
 #' \item{$out.format}{'numeric' or 'plink', the data format of output files.}
 #' \item{$pop.gen}{the generations of simulated population.}
-#' \item{out.geno.gen}{the output generations of genotype data.}
+#' \item{$out.geno.gen}{the output generations of genotype data.}
 #' \item{$out.pheno.gen}{the output generations of phenotype data.}
 #' \item{$useAllGeno}{whether to use all genotype data to simulate phenotype.}
 #' \item{$ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
