@@ -10,10 +10,6 @@ using namespace std;
 using namespace Rcpp;
 using namespace arma;
 
-static const double kSmallEpsilon = 0.00000000000005684341886080801486968994140625;
-static const double kExactTestBias = 0.00000000000000000000000010339757656912845935892608650874535669572651386260986328125;
-static const double kExactTestEpsilon2 = 0.0000000000009094947017729282379150390625;
-
 template<typename T>
 NumericVector FilterMind(XPtr<BigMatrix> pMat, double NA_C, int threads=0) {
   omp_setup(threads);
@@ -147,12 +143,9 @@ NumericVector FilterMAF(arma::mat genoFreq, int threads=0) {
   return MAF;
 }
 
-double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
-{
-  if ((obs_hom1 < 0) || (obs_hom2 < 0) || (obs_hets < 0)) 
-  {
-    Rcpp::stop("FATAL ERROR - SNP-HWE: Current genotype configuration (%d  %d %d ) includes a"
-             " negative count", obs_hets, obs_hom1, obs_hom2);
+double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2) {
+  if ((obs_hom1 < 0) || (obs_hom2 < 0) || (obs_hets < 0)) {
+    Rcpp::stop("FATAL ERROR - SNP-HWE: Current genotype configuration (%d  %d %d ) includes a negative count", obs_hets, obs_hom1, obs_hom2);
   }
   
   int obs_homc = obs_hom1 < obs_hom2 ? obs_hom2 : obs_hom1;
@@ -162,21 +155,20 @@ double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
   int genotypes   = obs_hets + obs_homc + obs_homr;
   
   double * het_probs = (double *) malloc((size_t) (rare_copies + 1) * sizeof(double));
-  if (het_probs == NULL) 
-  {
-    Rcpp::stop("FATAL ERROR - SNP-HWE: Unable to allocate array for heterozygote probabilities" );
+  if (het_probs == NULL) {
+    Rcpp::stop("FATAL ERROR - SNP-HWE: Unable to allocate array for heterozygote probabilities");
   }
   
   int i;
-  for (i = 0; i <= rare_copies; i++)
+  for (i = 0; i <= rare_copies; i++) {
     het_probs[i] = 0.0;
+  }
   
-  /* start at midpoint */
   int mid = rare_copies * (2 * genotypes - rare_copies) / (2 * genotypes);
   
-  /* check to ensure that midpoint and rare alleles have same parity */
-  if ((rare_copies & 1) ^ (mid & 1))
+  if ((rare_copies & 1) ^ (mid & 1)) {
     mid++;
+  }
   
   int curr_hets = mid;
   int curr_homr = (rare_copies - mid) / 2;
@@ -184,13 +176,11 @@ double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
   
   het_probs[mid] = 1.0;
   double sum = het_probs[mid];
-  for (curr_hets = mid; curr_hets > 1; curr_hets -= 2)
-  {
+  for (curr_hets = mid; curr_hets > 1; curr_hets -= 2) {
     het_probs[curr_hets - 2] = het_probs[curr_hets] * curr_hets * (curr_hets - 1.0)
     / (4.0 * (curr_homr + 1.0) * (curr_homc + 1.0));
     sum += het_probs[curr_hets - 2];
     
-    /* 2 fewer heterozygotes for next iteration -> add one rare, one common homozygote */
     curr_homr++;
     curr_homc++;
   }
@@ -198,39 +188,25 @@ double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
   curr_hets = mid;
   curr_homr = (rare_copies - mid) / 2;
   curr_homc = genotypes - curr_hets - curr_homr;
-  for (curr_hets = mid; curr_hets <= rare_copies - 2; curr_hets += 2)
-  {
+  for (curr_hets = mid; curr_hets <= rare_copies - 2; curr_hets += 2) {
     het_probs[curr_hets + 2] = het_probs[curr_hets] * 4.0 * curr_homr * curr_homc
     /((curr_hets + 2.0) * (curr_hets + 1.0));
     sum += het_probs[curr_hets + 2];
     
-    /* add 2 heterozygotes for next iteration -> subtract one rare, one common homozygote */
     curr_homr--;
     curr_homc--;
   }
   
-  for (i = 0; i <= rare_copies; i++)
+  for (i = 0; i <= rare_copies; i++) {
     het_probs[i] /= sum;
-  
-  /* alternate p-value calculation for p_hi/p_lo
-   double p_hi = het_probs[obs_hets];
-   for (i = obs_hets + 1; i <= rare_copies; i++)
-   p_hi += het_probs[i];
-   
-   double p_lo = het_probs[obs_hets];
-   for (i = obs_hets - 1; i >= 0; i--)
-   p_lo += het_probs[i];
-   
-   
-   double p_hi_lo = p_hi < p_lo ? 2.0 * p_hi : 2.0 * p_lo;
-   */
+  }
   
   double p_hwe = 0.0;
-  /*  p-value calculation for p_hwe  */
-  for (i = 0; i <= rare_copies; i++)
-  {
-    if (het_probs[i] > het_probs[obs_hets])
+  
+  for (i = 0; i <= rare_copies; i++) {
+    if (het_probs[i] > het_probs[obs_hets]) {
       continue;
+    }
     p_hwe += het_probs[i];
   }
   
@@ -239,160 +215,6 @@ double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
   free(het_probs);
   
   return p_hwe;
-}
-
-// [[Rcpp::export]]
-double SNPHWE2(int32_t obs_hets, int32_t obs_hom1, int32_t obs_hom2, uint32_t midp) {
-  // This function implements an exact SNP test of Hardy-Weinberg
-  // Equilibrium as described in Wigginton, JE, Cutler, DJ, and
-  // Abecasis, GR (2005) A Note on Exact Tests of Hardy-Weinberg
-  // Equilibrium. American Journal of Human Genetics. 76: 887 - 893.
-  //
-  // The original version was written by Jan Wigginton.
-  //
-  // This version was written by Christopher Chang.  It contains the following
-  // improvements over the original SNPHWE():
-  // - Proper handling of >64k genotypes.  Previously, there was a potential
-  //   integer overflow.
-  // - Detection and efficient handling of floating point overflow and
-  //   underflow.  E.g. instead of summing a tail all the way down, the loop
-  //   stops once the latest increment underflows the partial sum's 53-bit
-  //   precision; this results in a large speedup when max heterozygote count
-  //   >1k.
-  // - No malloc() call.  It's only necessary to keep track of a few partial
-  //   sums.
-  // - Support for the mid-p variant of this test.  See Graffelman J, Moreno V
-  //   (2013) The mid p-value in exact tests for Hardy-Weinberg equilibrium.
-  //
-  // Note that the SNPHWE_t() function below is a lot more efficient for
-  // testing against a p-value inclusion threshold.  SNPHWE2() should only be
-  // used if you need the actual p-value.
-  intptr_t obs_homc;
-  intptr_t obs_homr;
-  if (obs_hom1 < obs_hom2) {
-    obs_homc = obs_hom2;
-    obs_homr = obs_hom1;
-  } else {
-    obs_homc = obs_hom1;
-    obs_homr = obs_hom2;
-  }
-  const int64_t rare_copies = 2LL * obs_homr + obs_hets;
-  const int64_t genotypes2 = (obs_hets + obs_homc + obs_homr) * 2LL;
-  if (!genotypes2) {
-    if (midp) {
-      return 0.5;
-    }
-    return 1;
-  }
-  int32_t tie_ct = 1;
-  double curr_hets_t2 = obs_hets;
-  double curr_homr_t2 = obs_homr;
-  double curr_homc_t2 = obs_homc;
-  double tailp = (1 - kSmallEpsilon) * kExactTestBias;
-  double centerp = 0;
-  double lastp2 = tailp;
-  double lastp1 = tailp;
-  
-  if (obs_hets * genotypes2 > rare_copies * (genotypes2 - rare_copies)) {
-    // tail 1 = upper
-    while (curr_hets_t2 > 1.5) {
-      // het_probs[curr_hets] = 1
-      // het_probs[curr_hets - 2] = het_probs[curr_hets] * curr_hets * (curr_hets - 1.0)
-      curr_homr_t2 += 1;
-      curr_homc_t2 += 1;
-      lastp2 *= (curr_hets_t2 * (curr_hets_t2 - 1)) / (4 * curr_homr_t2 * curr_homc_t2);
-      curr_hets_t2 -= 2;
-      if (lastp2 < kExactTestBias) {
-        tie_ct += (lastp2 > (1 - 2 * kSmallEpsilon) * kExactTestBias);
-        tailp += lastp2;
-        break;
-      }
-      centerp += lastp2;
-      // doesn't seem to make a difference, but seems best to minimize use of
-      // INFINITY
-      if (centerp > std::numeric_limits<double>::max()) {
-        return 0;
-      }
-    }
-    if ((centerp == 0) && (!midp)) {
-      return 1;
-    }
-    while (curr_hets_t2 > 1.5) {
-      curr_homr_t2 += 1;
-      curr_homc_t2 += 1;
-      lastp2 *= (curr_hets_t2 * (curr_hets_t2 - 1)) / (4 * curr_homr_t2 * curr_homc_t2);
-      curr_hets_t2 -= 2;
-      const double preaddp = tailp;
-      tailp += lastp2;
-      if (tailp <= preaddp) {
-        break;
-      }
-    }
-    double curr_hets_t1 = obs_hets + 2;
-    double curr_homr_t1 = obs_homr;
-    double curr_homc_t1 = obs_homc;
-    while (curr_homr_t1 > 0.5) {
-      // het_probs[curr_hets + 2] = het_probs[curr_hets] * 4 * curr_homr * curr_homc / ((curr_hets + 2) * (curr_hets + 1))
-      lastp1 *= (4 * curr_homr_t1 * curr_homc_t1) / (curr_hets_t1 * (curr_hets_t1 - 1));
-      const double preaddp = tailp;
-      tailp += lastp1;
-      if (tailp <= preaddp) {
-        break;
-      }
-      curr_hets_t1 += 2;
-      curr_homr_t1 -= 1;
-      curr_homc_t1 -= 1;
-    }
-  } else {
-    // tail 1 = lower
-    while (curr_homr_t2 > 0.5) {
-      curr_hets_t2 += 2;
-      lastp2 *= (4 * curr_homr_t2 * curr_homc_t2) / (curr_hets_t2 * (curr_hets_t2 - 1));
-      curr_homr_t2 -= 1;
-      curr_homc_t2 -= 1;
-      if (lastp2 < kExactTestBias) {
-        tie_ct += (lastp2 > (1 - 2 * kSmallEpsilon) * kExactTestBias);
-        tailp += lastp2;
-        break;
-      }
-      centerp += lastp2;
-      if (centerp > std::numeric_limits<double>::max()) {
-        return 0;
-      }
-    }
-    if ((centerp == 0) && (!midp)) {
-      return 1;
-    }
-    while (curr_homr_t2 > 0.5) {
-      curr_hets_t2 += 2;
-      lastp2 *= (4 * curr_homr_t2 * curr_homc_t2) / (curr_hets_t2 * (curr_hets_t2 - 1));
-      curr_homr_t2 -= 1;
-      curr_homc_t2 -= 1;
-      const double preaddp = tailp;
-      tailp += lastp2;
-      if (tailp <= preaddp) {
-        break;
-      }
-    }
-    double curr_hets_t1 = obs_hets;
-    double curr_homr_t1 = obs_homr;
-    double curr_homc_t1 = obs_homc;
-    while (curr_hets_t1 > 1.5) {
-      curr_homr_t1 += 1;
-      curr_homc_t1 += 1;
-      lastp1 *= (curr_hets_t1 * (curr_hets_t1 - 1)) / (4 * curr_homr_t1 * curr_homc_t1);
-      const double preaddp = tailp;
-      tailp += lastp1;
-      if (tailp <= preaddp) {
-        break;
-      }
-      curr_hets_t1 -= 2;
-    }
-  }
-  if (!midp) {
-    return tailp / (tailp + centerp);
-  }
-  return (tailp - ((1 - kSmallEpsilon) * kExactTestBias * 0.5) * tie_ct) / (tailp + centerp);
 }
 
 NumericVector FilterHWE(arma::mat genoFreq, int threads=0) {
@@ -406,8 +228,7 @@ NumericVector FilterHWE(arma::mat genoFreq, int threads=0) {
   
   #pragma omp parallel for schedule(dynamic) private(i)
   for (i = 0; i < genoFreq.n_rows; i++) {
-    // PVAL[i] = SNPHWE(freq1[i], freq0[i], freq2[i]);
-    PVAL[i] = SNPHWE2(freq1[i], freq0[i], freq2[i], false);
+    PVAL[i] = SNPHWE(freq1[i], freq0[i], freq2[i]);
   }
   
   return PVAL;
