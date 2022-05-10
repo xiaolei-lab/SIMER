@@ -644,7 +644,7 @@ write.file <- function(SP) {
   }))
   
   if (out.format == "numeric") {
-    write.table(pheno.total[, 1], file = file.path(directory.rep, paste0(out, ".geno.id")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+    write.table(pheno.total[, 1], file = file.path(directory.rep, paste0(out, ".geno.ind")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
     write.table(SP$map$pop.map, file = file.path(directory.rep, paste0(out, ".geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
     if (!is.null(SP$map$pop.map.GxG)) {
       write.table(SP$map$pop.map.GxG, file = file.path(directory.rep, paste0(out, ".GxG.geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
