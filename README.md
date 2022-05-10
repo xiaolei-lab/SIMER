@@ -2107,6 +2107,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>>> ***assign_threshold***: if the number of base error is less than this threshold, this parent will be assigned to this individual  
 
 >>> ***phenotype_quality_control***: the quality control plan for phenotype  
+
 >> ***analysis_plan***: the genetic evaluation plan  
 
 ```json
