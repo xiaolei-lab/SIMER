@@ -2197,9 +2197,9 @@ After generating a population, further work can be done. Breeders wish to evalua
 **[back to top](#contents)**  
 
 In ***Breeding program design evaluation***, **```SIMER```** will complete the following three tasks:  
-(1) Data quality control for genotype, pedigree, and phenotype  
-(2) Model optimization (the most suitable covariate, fixed effect, and random effect)  
-(3) Selection Index construction and Genetic Progress calculation  
+***(1)*** Data quality control for genotype, pedigree, and phenotype  
+***(2)*** Model optimization (the most suitable covariate, fixed effect, and random effect)  
+***(3)*** Selection Index construction and Genetic Progress calculation  
 
 ```r
 # Get JSON file
