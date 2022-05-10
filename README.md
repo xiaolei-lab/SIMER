@@ -2404,7 +2404,7 @@ SP <- simer(SP)
 ## Annotation data
 **[back to top](#contents)**  
 
-***Annotation data*** contains ***SNP name***, ***Chromosome name***, ***Base Position***, ***ALT***, ***REF***, and the ***QTN genetic effect***. 
+***Annotation data*** contains ***SNP name***, ***Chromosome name***, ***Base Position***, ***ALT***, ***REF***, and the ***QTN genetic effect***. Note that only markers selected as QTNs have values. 
 ```r
 # Generate all simulation parameters
 SP <- param.simer(out = "simer")
@@ -2412,7 +2412,7 @@ SP <- param.simer(out = "simer")
 # Run Simer
 SP <- simer(SP)
 
-# show annotation data
+# Show annotation data
 head(SP$map$pop.map)
   SNP Chrom     BP ALT REF QTN1_A
 1  M1     1 130693   C   A     NA
@@ -2423,18 +2423,39 @@ head(SP$map$pop.map)
 6  M6     1 355889   A   C     NA
 ```
 
-## Marker effects
+## Genotype data
 **[back to top](#contents)**  
 
-Marker effects is a list with selected markers and effects of markers. 
+***Genotype data*** is stored in ```big.matrix``` format.
 
 ```r
-> effs <- simer.list$effs
-> str(effs)
-List of 2
- $ mrk1: int [1:18] 4006 4950 10416 18070 21899 23817 26038 28886 29437 30012 ...
- $ eff1:List of 1
-  ..$ eff.a: num [1:18] -0.0144 -5.7868 -1.2436 1.2436 -3.4893 ...
+# Generate all simulation parameters
+SP <- param.simer(out = "simer")
+
+# Run Simer
+SP <- simer(SP)
+
+# Show genotype data
+print(SP$geno$pop.geno)
+$gen1
+An object of class "big.matrix"
+Slot "address":
+<pointer: 0x00000000176f09e0>
+
+
+$gen2
+An object of class "big.matrix"
+Slot "address":
+<pointer: 0x00000000176ef940>
+
+print(SP$geno$pop.geno$gen1[1:6, 1:6])
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]    0    2    0    1    0    2
+[2,]    1    1    1    1    0    0
+[3,]    0    1    2    2    1    0
+[4,]    2    0    1    1    1    0
+[5,]    2    1    0    1    2    1
+[6,]    1    2    1    1    1    2
 ```
 
 ## Trait information
