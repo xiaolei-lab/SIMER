@@ -2019,15 +2019,67 @@ SP <- simer(SP)
 # Breeding Program Design
 **[back to top](#contents)**  
 
-After generating a population, further work can be done. Breeders wish to evaluate their ***Breeding Program Design***. To save a lot of money and time, **```SIMER```** can assist breeders to evaluate their ***Breeding Program Design***. 
+After generating a population, further work can be done. Breeders wish to evaluate their ***Breeding Program Design***. To save a lot of money and time, **```SIMER```** can assist breeders to evaluate their ***Breeding Program Design*** by simulation. 
 
 ## Gallery of breeding program design parameters
 **[back to top](#contents)**
 
-`read.selgeno()`, function to make comparison on breeding plans:  
-**pop**, total population information  
-**selPath**, the path of breeding plans  
-**outpath**, path of output files  
+```simer.Data.Json```, main function of ***Breeding Program Design***:
+
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>jsonFile</b></td>
+<td>NULL</td>
+<td>character</td>
+<td>the path of JSON file.</td>
+</tr>
+<tr>
+<td><b>out</b></td>
+<td>'simer.qc'</td>
+<td>character</td>
+<td>the prefix of output files.</td>
+</tr>
+<tr>
+<td><b>dataQC</b></td>
+<td>TRUE</td>
+<td>TRUE or FALSE</td>
+<td>whether to make data quality control.</td>
+</tr>
+<tr>
+<td><b>buildModel</b></td>
+<td>TRUE</td>
+<td>TRUR or FALSE</td>
+<td>whether to build EBV model.</td>
+</tr>
+<tr>
+<td><b>buildIndex</b></td>
+<td>TRUE</td>
+<td>TRUR or FALSE</td>
+<td>whether to build Selection Index.</td>
+</tr>
+<tr>
+<td><b>ncpus</b></td>
+<td>10</td>
+<td>num</td>
+<td>the number of threads used, if NULL, (logical core number - 1) is automatically used.</td>
+</tr>
+<tr>
+<td><b>verbose</b></td>
+<td>TRUE</td>
+<td>TRUE or FALSE</td>
+<td>whether to print detail.</td>
+</tr>
+</tbody>
+</table>
 
 ## Breeding plan preparation
 **[back to top](#contents)**
