@@ -2269,6 +2269,30 @@ Users can use global parameters to control the ***populaiton properties*** , ***
 <td>the generations of simulated population.</td>
 </tr>
 <tr>
+<td><b>out.geno.gen</b></td>
+<td>1:2</td>
+<td>num vector</td>
+<td>the output generations of genotype data.</td>
+</tr>
+<tr>
+<td><b>out.pheno.gen</b></td>
+<td>1:2</td>
+<td>num vector</td>
+<td>the output generations of phenotype data.</td>
+</tr>
+<tr>
+<td><b>useAllGeno</b></td>
+<td>FALSE</td>
+<td>TRUE or FALSE</td>
+<td>whether to use all genotype data to simulate phenotype.</td>
+</tr>
+<tr>
+<td><b>ncpus</b></td>
+<td>0</td>
+<td>num</td>
+<td>the number of threads used, if NULL, (logical core number - 1) is automatically used.</td>
+</tr>
+<tr>
 <td><b>verbose</b></td>
 <td>TRUE</td>
 <td>TRUE or FALSE</td>
