@@ -74,12 +74,8 @@
     - [Generation-selective output](#generation-selective-output)
 - [Output](#output)
     - [Annotation data](#annotation-data)
-    - [Marker effects](#marker-effects)
-    - [Trait information](#trait-information)
-    - [Genotype](#genotype)
-    - [Genotypic id](#genotypic-id)
-    - [Genotypic map](#genotypic-map)
-    - [Selection intensity](#selection-intensity)
+    - [Genotype data](#genotype-data)
+    - [Phenotype data](#phenotype-data)
 - [Citation](#citation)
 - [FAQ and Hints](#faq-and-hints)
 
@@ -2458,152 +2454,27 @@ print(SP$geno$pop.geno$gen1[1:6, 1:6])
 [6,]    1    2    1    1    1    2
 ```
 
-## Trait information
+## Phenotype data
 **[back to top](#contents)**  
 
-Trait information is displayed by generation in single-breed reproduction or by breed in multiple-breeds reproduction. In every generation (or breed), it contains trait information (variance components and heritability), effect information (phenotype decomposition), phenotype information (TBV, TGV, pEBVs, gEBVs, ssEBVs, phenotype), and others.  
+***Phenotype data*** contains ***sample ID***, ***generation index***, ***family index***, ***within-family index***, ***sire***, ***dam***, ***sex***, ***phenotype***, ***TBV***, ***TGV***, and other effect.
 
 ```r
-> trait <- simer.list$trait
-> str(trait)
-List of 5
- $ gen1:List of 4
-  ..$ info.tr   :List of 3
-  .. ..$ Vg: num 23.3
-  .. ..$ Ve: num 63
-  .. ..$ h2: num 0.27
-  ..$ info.eff  :'data.frame':	40 obs. of  2 variables:
-  .. ..$ ind.a  : num [1:40] -6.46 6.46 6.46 6.46 0 ...
-  .. ..$ ind.env: num [1:40] 5.419 -5.912 -12.191 -0.638 4.431 ...
-  ..$ info.pheno:'data.frame':	40 obs. of  3 variables:
-  .. ..$ TBV  : num [1:40] -6.46 6.46 6.46 6.46 0 ...
-  .. ..$ TGV  : num [1:40] -6.46 6.46 6.46 6.46 0 ...
-  .. ..$ pheno: num [1:40] -1.044 0.551 -5.728 5.826 4.431 ...
-  ..$ qtn.a     : num [1:18, 1:40] 1 1 1 1 1 1 1 1 1 1 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : NULL
-  .. .. ..$ : chr [1:40] "V1" "V3" "V5" "V7" ...
- $ gen2:List of 4
-  ..$ info.tr   :List of 3
-  .. ..$ Vg: num 41.7
-  .. ..$ Ve: num 113
-  .. ..$ h2: num 0.27
-  ..$ info.eff  :'data.frame':	32 obs. of  2 variables:
-  .. ..$ ind.a  : num [1:32] 5.17 1.29 6.46 6.46 6.46 ...
-  .. ..$ ind.env: num [1:32] 10.8 -8.61 -2.41 1.8 -5.04 ...
-  ..$ info.pheno:'data.frame':	32 obs. of  3 variables:
-  .. ..$ TBV  : num [1:32] 5.17 1.29 6.46 6.46 6.46 ...
-  .. ..$ TGV  : num [1:32] 5.17 1.29 6.46 6.46 6.46 ...
-  .. ..$ pheno: num [1:32] 15.97 -7.31 4.06 8.26 1.43 ...
-  ..$ qtn.a     : num [1:18, 1:32] 0 -1 0 0 0 0 0 0 0 0 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : NULL
-  .. .. ..$ : chr [1:32] "V17" "V18" "t1" "t2" ...
- $ gen3:List of 4
-  ..$ info.tr   :List of 3
-  .. ..$ Vg: num 17.5
-  .. ..$ Ve: num 36.5
-  .. ..$ h2: num 0.324
-  ..$ info.eff  :'data.frame':	26 obs. of  2 variables:
-  .. ..$ ind.a  : num [1:26] -1.525 -1.525 0 0.609 6.463 ...
-  .. ..$ ind.env: num [1:26] 3.29 2.31 -6.94 5.97 15.28 ...
-  ..$ info.pheno:'data.frame':	26 obs. of  3 variables:
-  .. ..$ TBV  : num [1:26] -1.525 -1.525 0 0.609 6.463 ...
-  .. ..$ TGV  : num [1:26] -1.525 -1.525 0 0.609 6.463 ...
-  .. ..$ pheno: num [1:26] 1.77 0.781 -6.936 6.576 21.743 ...
-  ..$ qtn.a     : num [1:18, 1:26] 0 0 0 0 0 0 0 0 0 0 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : NULL
-  .. .. ..$ : chr [1:26] "t2" "t2" "t2" "t1" ...
- $ gen4:List of 4
-  ..$ info.tr   :List of 3
-  .. ..$ Vg: num 15.8
-  .. ..$ Ve: num 32
-  .. ..$ h2: num 0.33
-  ..$ info.eff  :'data.frame':	20 obs. of  2 variables:
-  .. ..$ ind.a  : num [1:20] -2.808 -0.242 9.085 -2.013 4.052 ...
-  .. ..$ ind.env: num [1:20] 3.96 2.64 -2.9 -2.65 2.2 ...
-  ..$ info.pheno:'data.frame':	20 obs. of  3 variables:
-  .. ..$ TBV  : num [1:20] -2.808 -0.242 9.085 -2.013 4.052 ...
-  .. ..$ TGV  : num [1:20] -2.808 -0.242 9.085 -2.013 4.052 ...
-  .. ..$ pheno: num [1:20] 1.15 2.4 6.19 -4.66 6.26 ...
-  ..$ qtn.a     : num [1:18, 1:20] 1 1 1 0 0 1 1 1 0 1 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : NULL
-  .. .. ..$ : chr [1:20] "V18" "t2" "t1" "t1" ...
- $ gen5:List of 4
-  ..$ info.tr   :List of 3
-  .. ..$ Vg: num 12.1
-  .. ..$ Ve: num 28.4
-  .. ..$ h2: num 0.299
-  ..$ info.eff  :'data.frame':	16 obs. of  2 variables:
-  .. ..$ ind.a  : num [1:16] 3.79 4.377 0.551 0.551 7.68 ...
-  .. ..$ ind.env: num [1:16] -1.22 -5.5 -7.99 8.79 3.1 ...
-  ..$ info.pheno:'data.frame':	16 obs. of  3 variables:
-  .. ..$ TBV  : num [1:16] 3.79 4.377 0.551 0.551 7.68 ...
-  .. ..$ TGV  : num [1:16] 3.79 4.377 0.551 0.551 7.68 ...
-  .. ..$ pheno: num [1:16] 2.57 -1.12 -7.44 9.34 10.78 ...
-  ..$ qtn.a     : num [1:18, 1:16] -1 -1 -1 0 0 0 -1 -1 -1 -1 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : NULL
-  .. .. ..$ : chr [1:16] "t2" "t1" "t2" "t2" ...
-```
+# Generate all simulation parameters
+SP <- param.simer(out = "simer")
 
-## Genotype
-**[back to top](#contents)**  
+# Run Simer
+SP <- simer(SP)
 
-In genotype matrix, each row represents a marker and each column represents a individual. 
-
-```r
-> geno <- simer.list$geno
-> geno[1:6, 1:6]
-     [,1] [,2] [,3] [,4] [,5] [,6]
-[1,]    1    1    1    1    0    0
-[2,]    1    1    1    1    0    0
-[3,]    1    1    1    1    0    0
-[4,]    1    1    1    1    0    0
-[5,]    1    1    1    1    0    0
-[6,]    1    1    1    1    0    0
-```
-
-## Genotypic id
-**[back to top](#contents)**  
-
-Genotypic id is the indice of genotyped individuals. 
-
-```r
-> genoid <- simer.list$genoid
-> head(genoid)
-[1] 73 74 75 76 77 78
-```
-
-## Genotypic map
-**[back to top](#contents)**  
-
-In SNP map information, the first column is SNP name, the second column is Chromosome ID, the third column is phsical position, the fourth column is REF, the fifth column is ALT, the sixth column is block ID, and the seventh is recombination information ("1" represents making recombination and "0" represents not).   
-
-
-```r
-> map <- simer.list$map
-> head(map)
-     SNP          Chrom BP          REF ALT block recom
-[1,] "1_10673082" "1"   " 10673082" "T" "C" "1"   "1"  
-[2,] "1_10723065" "1"   " 10723065" "A" "G" "1"   "1"  
-[3,] "1_11407894" "1"   " 11407894" "A" "G" "1"   "1"  
-[4,] "1_11426075" "1"   " 11426075" "T" "C" "1"   "1"  
-[5,] "1_13996200" "1"   " 13996200" "T" "C" "1"   "1"  
-[6,] "1_14638936" "1"   " 14638936" "T" "C" "1"   "1"  
-```
-
-## Selection intensity
-**[back to top](#contents)**  
-
-Selection intensity is calculated according to ratio of selected individuals. 
-
-```r
-> si <- simer.list$si
-> si
-[1] 0.3499524
+# Show phenotype data
+head(SP$pheno$pop$gen1)
+  index gen fam infam sir dam sex          T1     T1_TBV     T1_TGV   T1_A_eff    T1_E_eff
+1     1   1   1     1   0   0   1  -0.4934935 -1.3507888 -1.3507888 -1.3507888   0.8572953
+2     2   1   2     2   0   0   1   7.7710404 -1.6756353 -1.6756353 -1.6756353   9.4466757
+3     3   1   3     3   0   0   1  -4.6567338 -2.2608387 -2.2608387 -2.2608387  -2.3958951
+4     4   1   4     4   0   0   1  -5.9064589 -1.7394139 -1.7394139 -1.7394139  -4.1670450
+5     5   1   5     5   0   0   1 -16.7438931 -2.8000846 -2.8000846 -2.8000846 -13.9438085
+6     6   1   6     6   0   0   1   6.0043912  0.3413561  0.3413561  0.3413561   5.6630351
 ```
 
 ---
