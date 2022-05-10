@@ -52,14 +52,14 @@
     - [Index selection on multiple traits](#index-selection-on-multiple-traits)
     - [Clone for plant](#clone-for-plant)
     - [Double haploid for plant](#double-haploid-for-plant)
-    - [Self pollination for plant and micro-organism](#self-pollination-for-plant-and-micro-organism)
+    - [Self-pollination for plant and micro-organism](#self-pollination-for-plant-and-micro-organism)
     - [Random mating for plant and animal](#random-mating-for-plant-and-animal)
-    - [Random mating excluding self pollination for animal](#random-mating-excluding-self-pollination-for-animal)
+    - [Random mating excluding self-pollination for animal](#random-mating-excluding-self-pollination-for-animal)
     - [Two way cross for animal](#two-way-cross-for-animal)
     - [Three way cross for animal](#three-way-cross-for-animal)
     - [Four way cross for animal](#four-way-cross-for-animal)
     - [Back cross for animal](#back-cross-for-animal)
-    - [User designed pedigree mating for plant and animal](#user-designed-pedigree-mating-for-plant-and-animal)
+    - [User-designed pedigree mating for plant and animal](#user-designed-pedigree-mating-for-plant-and-animal)
     - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
 - [Breeding Program Design](#breeding-program-design)
     - [Gallery of breeding program design parameters](#gallery-of-breeding-program-design-parameters)
@@ -1508,7 +1508,7 @@ SP <- phenotype(SP)
 ## Individual selection on single trait
 **[back to top](#contents)**  
 
-***Individual selection*** is a selecting method according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to used for traits with ***high heritability***.
+***Individual selection*** is a selecting method according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to be used for traits with ***high heritability***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1533,7 +1533,7 @@ SP <- selects(SP)
 ## Family selection on single trait
 **[back to top](#contents)** 
 
-***Family selection*** is a selecting method by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.
+***Family selection*** is a selection method by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1558,7 +1558,7 @@ SP <- selects(SP)
 ## Within family selection on single trait
 **[back to top](#contents)** 
 
-***Within-family*** selection is a selecting method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.
+***Within-family*** selection is a selection method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.
 
 ```r
 # Generate annotation simulation parameters
@@ -1608,7 +1608,7 @@ SP <- selects(SP)
 ## Tandem selection on multiple traits
 **[back to top](#contents)**  
 
-***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of selected trait is ```index.tdm``` and this parameter should ***not controlled by Users***.
+***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of the selected trait is ```index.tdm``` and this parameter should ***not be controlled by Users***.
 
 ```r
 # Generate genotype simulation parameters
@@ -1707,7 +1707,7 @@ SP <- selects(SP)
 ## Clone for plant
 **[back to top](#contents)** 
 
-***Clone*** is an sexual reproduction method which does not involve germ cells, and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```. 
+***Clone*** is a sexual reproduction method that does not involve germ cells and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```. 
 
 ```r
 # Generate annotation simulation parameters
@@ -1736,7 +1736,7 @@ SP <- reproduces(SP)
 ## Double haploid for plant
 **[back to top](#contents)**  
 
-***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced to double the number of chromosomes and restore the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```. 
+***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced double the number of chromosomes and restore the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```. 
 
 ```r
 # Generate annotation simulation parameters
@@ -1762,10 +1762,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Self pollination for plant and micro-organism
+## Self-pollination for plant and micro-organism
 **[back to top](#contents)** 
 
-***Self pollination*** refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. ***Sex*** of offspring will be ***0*** in ```selfpol```. 
+***Self-pollination*** refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. ***Sex*** of offspring will be ***0*** in ```selfpol```. 
 
 ```r
 # Generate annotation simulation parameters
@@ -1794,7 +1794,7 @@ SP <- reproduces(SP)
 ## Random mating for plant and animal
 **[back to top](#contents)**  
 
-In ***random mating***, any female or male individual have the same probability to mate with any opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```. 
+In ***random mating***, any female or male individual has the same probability to mate with any opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```. 
 
 ```r
 # Generate annotation simulation parameters
@@ -1820,10 +1820,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Random mating excluding self pollination for animal
+## Random mating excluding self-pollination for animal
 **[back to top](#contents)**  
 
-In ***random mating excluding self pollination***, an individual cannot mate to itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```. 
+In ***random mating excluding self-pollination***, an individual cannot mate to itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```. 
 
 ```r
 # Generate annotation simulation parameters
@@ -1973,10 +1973,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## User designed pedigree mating for plant and animal
+## User-designed pedigree mating for plant and animal
 **[back to top](#contents)**  
 
-***User designed pedigree mating*** needs a specific ***user designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.
+***User-designed pedigree mating*** needs a specific ***user designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.
 
 ```r
 # Generate annotation simulation parameters
@@ -2001,7 +2001,7 @@ SP <- reproduces(SP)
 ## AN EASY WAY TO GENERATE A POPULATION
 **[back to top](#contents)**  
 
-The above methods are to generate population ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population by a ***MORE CONVENIENT*** way. 
+The above methods are to generate population ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population in a ***MORE CONVENIENT*** way. 
 
 ```r
 # Generate all simulation parameters
