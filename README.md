@@ -2086,8 +2086,8 @@ After generating a population, further work can be done. Breeders wish to evalua
 
 ***Breeding program design*** should be stored on a JSON file. 
 > plan1.json  
-    >> genotype: the path of genotype data  
-    >> pedigree: the filename of pedigree data  
+    > > genotype: the path of genotype data  
+    > > pedigree: the filename of pedigree data  
 
 ```json
 {
