@@ -2093,7 +2093,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >> ***quality_control_plan***: the quality control plan for genotype, pedigree, and phenotype  
 
 >>> ***genotype_quality_control***: the quality control plan for genotype  
->>>> ***filter***: the filter condition for genotyped individual  
+>>>> ***filter***: the 'filter' (individual) condition for genotyped individual  
 >>>> ***filter_geno***: the genotype missing rate filter  
 >>>> ***filter_mind*** the sample missing rate filter  
 >>>> ***filter_maf*** the Minor Allele Frequency filter  
@@ -2107,8 +2107,22 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>>> ***assign_threshold***: if the number of base error is less than this threshold, this parent will be assigned to this individual  
 
 >>> ***phenotype_quality_control***: the quality control plan for phenotype  
+>>>> ***job_name***: the name of phenotype quality control job  
+>>>> ***sample_info***: the filename of phenotype data   
+>>>> ***repeated_records***: whether phenotype data contains repeated records  
+>>>> ***multi_trait***: whether phenotype data contains multiple traits  
+>>>> ***filter***: the 'filter' (individual) condition for phenotyped individual  
+>>>> ***select***: the 'select' (trait) condition for phenotyped individual  
+>>>> ***arrange***: the 'arrange' (order) condition for phenotyped individual  
+>>>> ***job_trait***: the trait need quality control and its definition and range  
 
 >> ***analysis_plan***: the genetic evaluation plan  
+>>> ***job_name***: the name of phenotype quality control job  
+>>> ***sample_info***: the filename of phenotype data   
+>>> ***repeated_records***: whether phenotype data contains repeated records  
+>>> ***multi_trait***: whether phenotype data contains multiple traits  
+>>> ***random_ratio***: the least random effect ratio to phenotype variance  
+>>> ***job_trait***: the trait need analysis and its covariate, fixed effect, and random effect  
 
 ```json
 {
