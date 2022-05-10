@@ -2457,7 +2457,7 @@ print(SP$geno$pop.geno$gen1[1:6, 1:6])
 ## Phenotype data
 **[back to top](#contents)**  
 
-***Phenotype data*** contains ***sample ID***, ***generation index***, ***family index***, ***within-family index***, ***sire***, ***dam***, ***sex***, ***phenotype***, ***TBV***, ***TGV***, and other effect.
+***Phenotype data*** contains ***sample ID***, ***generation index***, ***family index***, ***within-family index***, ***sire***, ***dam***, ***sex***, ***phenotype***, ***TBV***, ***TGV***, and other effects.
 
 ```r
 # Generate all simulation parameters
