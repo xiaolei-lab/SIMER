@@ -45,7 +45,7 @@
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
     - [Family selection on single trait](#family-selection-on-single-trait)
-    - [Within family selection on single trait](#within-family-selection-on-single-trait)
+    - [Within-family selection on single trait](#within-family-selection-on-single-trait)
     - [Combined selection on single trait](#combined-selection-on-single-trait)
     - [Tandem selection on multiple traits](#tandem-selection-on-multiple-traits)
     - [Independent culling selection on multiple traits](#independent-culling-selection-on-multiple-traits)
@@ -1555,7 +1555,7 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Within family selection on single trait
+## Within-family selection on single trait
 **[back to top](#contents)** 
 
 ***Within-family*** selection is a selection method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.
