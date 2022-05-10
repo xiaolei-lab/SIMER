@@ -64,7 +64,7 @@
 - [Breeding Program Design](#breeding-program-design)
     - [Gallery of breeding program design parameters](#gallery-of-breeding-program-design-parameters)
     - [Breeding program design preparation](#breeding-program-design-preparation)
-    - [Breeding plan comparison](#breeding-plan-comparison)
+    - [Breeding program design evaluation](#breeding-program-design-evaluation)
 - [Global Options](#global-options)
     - [Gallery of global input parameters](#gallery-of-global-input-parameters)
     - [Counts of total population size](#counts-of-total-population-size)
