@@ -71,7 +71,7 @@
     - [Multi-thread Simulation](#multi-thread-simulation)
     - [Multi-population simulation](#multi-population-simulation)
     - [File output](#file-output)
-    - [Generation selective output](#generation-selective-output)
+    - [Generation-selective output](#generation-selective-output)
 - [Output](#output)
     - [Population information](#population-information)
     - [Marker effects](#marker-effects)
@@ -2369,27 +2369,17 @@ SP <- param.simer(out = "simer", outpath = getwd(), out.format = "plink")
 SP <- simer(SP)
 ```
 
-## Generation selective output
+## Generation-selective output
 **[back to top](#contents)**  
 
-Output of genotype and phenotype can be generation-selective by **out.geno.gen** and **out.pheno.gen**. For example, **out.geno.gen = 3:5** and **out.pheno.gen = 1:5** represent outputting genotype from generation3 to generation5 and outputting phenotype from generation1 to generation5.
+Output of genotype and phenotype can be ***generation-selective*** by ```out.geno.gen``` and ```out.pheno.gen```. 
 
 ```r
-# set output generations of genotype and phenotype
-out.geno.gen <- 3:5
-out.pheno.gen <- 1:5
-simer.list <-
-  simer(num.gen = 5,
-        verbose = verbose, 
-        outpath = outpath,
-        out.geno.gen = out.geno.gen, 
-        out.pheno.gen = out.pheno.gen, 
-        input.map = input.map,
-        # rawgeno1 = rawgeno, # use your own genotype matrix
-        num.ind = 100,
-        mtd.reprod = "randmate",
-        num.prog = 2,
-        ratio = 0.5)
+# Generate all simulation parameters
+SP <- param.simer(out = "simer", outpath = getwd(), pop.gen = 2, out.geno.gen = 1:2, out.pheno.gen = 1:2)
+
+# Run Simer
+SP <- simer(SP)
 ```
 
 ---
