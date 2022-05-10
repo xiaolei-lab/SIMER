@@ -2092,8 +2092,19 @@ After generating a population, further work can be done. Breeders wish to evalua
 >> ***breeding_value_index***: the economic weight of breeding value for each trait  
 >> ***quality_control_plan***: the quality control plan for genotype, pedigree, and phenotype  
 >>> ***genotype_quality_control***: the quality control plan for genotype  
->>> ***pedigree_quality_control***: the quality control plan for pedigree
+>>>> ***filter***: the filter condition for genotyped individual  
+>>>> ***filter_geno***: the genotype missing rate filter  
+>>>> ***filter_mind*** the sample missing rate filter  
+>>>> ***filter_maf*** the Minor Allele Frequency filter  
+>>>> ***filter_hwe*** the Hardy-Weinberg Equilibrium filter  
+>>> ***pedigree_quality_control***: the quality control plan for pedigree  
+>>>> ***standard_ID***: whether ID is standard 15-digit ID  
+>>>> ***candidate_sire_file***: the filename of candidate sire  
+>>>> ***candidate_dam_file***: the filename of candidate dam  
+>>>> ***exclude_threshold***: if the number of base error is more than this threshold, this individual will be excluded  
+>>>> ***assign_threshold***: if the number of base error is less than this threshold, this parent will be assigned to this individual  
 >>> ***phenotype_quality_control***: the quality control plan for phenotype  
+>> ***analysis_plan***: the genetic evaluation plan  
 
 ```json
 {
