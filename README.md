@@ -2361,7 +2361,7 @@ SP <- param.simer(out = "simer", outpath = getwd(), out.format = "numeric")
 # Run Simer
 SP <- simer(SP)
 
-### 02 Plink Binary Format ###
+### 02 PLINK Binary Format ###
 # Generate all simulation parameters
 SP <- param.simer(out = "simer", outpath = getwd(), out.format = "plink")
 
@@ -2387,8 +2387,9 @@ SP <- simer(SP)
 # Output
 **[back to top](#contents)**  
 
-**SIMER** outputs data including population information, marker effects, trait information, genotype, genotypic id, genotypic map, and selection intensity. Note that several result files with prefix `out = "simer"` will be generated. Firstly, a result path will be generated. The number at the beginning represents the total individuals number and the ending character is the format of output ("num_Simer_Data_format"). Secondly, you will see a path named "replication1". It is the first replication of simulation and you can get numerous different replications by setting parameter **replication**. In "replication1", results are following:  
-`simer.geno.id` contains indice of genotyped individuals  
+**```SIMER```** outputs data including ***annotation data***, ***genotype data***, and ***phenotype data***. ***Genotype data*** can be output in the following two format. 
+***Numeric*** format:  
+`simer.geno.ind` contains indice of genotyped individuals  
 `simer.geno.bin` and `simer.geno.desc` contain genotype matrix of all individuals  
 `simer.map` contains input map with block information and recombination information  
 `simer.ped` contains pedigree of individuals  
