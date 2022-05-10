@@ -73,7 +73,7 @@
     - [File output](#file-output)
     - [Generation-selective output](#generation-selective-output)
 - [Output](#output)
-    - [Population information](#population-information)
+    - [Annotation data](#annotation-data)
     - [Marker effects](#marker-effects)
     - [Trait information](#trait-information)
     - [Genotype](#genotype)
@@ -2401,21 +2401,26 @@ SP <- simer(SP)
 ```simer.ped``` contains pedigree of individuals;  
 ```simer.phe``` contains phenotype of individuals.  
 
-## Population information
+## Annotation data
 **[back to top](#contents)**  
 
-Population information contains generation,  individual indice, family indice, within-family indice, sire indice, dam indice, sex, and phenotpye. 
-
+***Annotation data*** contains ***SNP name***, ***Chromosome name***, ***Base Position***, ***ALT***, ***REF***, and the ***QTN genetic effect***. 
 ```r
-> pop <- simer.list$pop
-> head(pop)
-  gen index fam infam sir dam sex     pheno
-1   1     1   1     1   0   0   1 -1.043716
-2   1     2   2     2   0   0   1  0.551076
-3   1     3   3     3   0   0   1 -5.727581
-4   1     4   4     4   0   0   1  5.825591
-5   1     5   5     5   0   0   1  4.430751
-6   1     6   6     6   0   0   1 15.059641
+# Generate all simulation parameters
+SP <- param.simer(out = "simer")
+
+# Run Simer
+SP <- simer(SP)
+
+# show annotation data
+head(SP$map$pop.map)
+  SNP Chrom     BP ALT REF QTN1_A
+1  M1     1 130693   C   A     NA
+2  M2     1 168793   G   A     NA
+3  M3     1 286553   A   T     NA
+4  M4     1 306913   C   G     NA
+5  M5     1 350926   T   A     NA
+6  M6     1 355889   A   C     NA
 ```
 
 ## Marker effects
