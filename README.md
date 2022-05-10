@@ -2193,34 +2193,21 @@ After generating a population, further work can be done. Breeders wish to evalua
 }
 ```
 
-## Breeding plan comparison
+## Breeding program design evaluation
 **[back to top](#contents)**  
 
-After a total reproduction process, breeding plans comparison can be done. 
+In ***Breeding program design evaluation***, **```SIMER```** will complete the following three tasks:  
+(1) Data quality control for genotype, pedigree, and phenotype  
+(2) Model optimization (the most suitable covariate, fixed effect, and random effect)  
+(3) Selection Index construction and Genetic Progress calculation  
 
 ```r
-# random-mating
-simer.list <-
-    simer(num.gen = 10,
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          rawgeno1 = rawgeno, # use your own genotype matrix
-          # num.ind = 100,
-          mtd.reprod = "randmate",
-          num.prog = 2,
-          ratio = 0.5)
+# Get JSON file
+jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 
-pop <- simer.list$pop
-out.pop <- read.selgeno(pop = pop, selPath = selPath, outpath = outpath)
+# It needs 'plink' and 'hiblup' software
+jsonList <- simer.Data.Json(jsonFile = jsonFile)
 
-# make comparison on breeding plans
-plan1 <- out.pop$plan1
-plan2 <- out.pop$plan2
-plan3 <- out.pop$plan3
-summary(plan1)
-summary(plan2)
-summary(plan3)
 ```
 
 ---
