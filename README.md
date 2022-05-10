@@ -2212,7 +2212,7 @@ jsonList <- simer.Data.Json(jsonFile = jsonFile)
 # Global Options
 **[back to top](#contents)**  
 
-Users can use global parameters to control the ***populaiton properties*** , ***the number of threads*** used for simulation and the ***output of simulation data***.
+Users can use global parameters to control the ***population properties*** , ***the number of threads*** used for simulation, and the ***output of simulation data***.
 
 ## Gallery of global parameters
 **[back to top](#contents)** 
@@ -2347,7 +2347,7 @@ for (i in 1:rep) {
 ## File output
 **[back to top](#contents)** 
 
-**```SIMER```** won't output files by default. A series of files with prefix ```out``` will output when specifying ```outpath```.
+**```SIMER```** won't output files by default. A series of files with the prefix ```out``` will output when specifying ```outpath```.
 
 ```r
 ### 01 Numeric Format ###
