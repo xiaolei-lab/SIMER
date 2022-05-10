@@ -425,7 +425,7 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 ```
 
-Note that recombination only exists in meiosis. Therefore, some reproduction methods such as ```clone``` do not have recombination process. Users can set ```recom.spot = FALSE``` to add only mutations to genotype matrix.  
+Note that recombination only exists in meiosis. Therefore, some reproduction methods such as ```clone``` do not have recombination processes. Users can set ```recom.spot = FALSE``` to add only mutations to the genotype matrix.  
 
 ```r
 # Generate annotation simulation parameters
@@ -700,7 +700,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple-trait simulation is displayed as follows: 
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple-trait simulation is displayed as follows: 
 
 
 ```r
@@ -729,7 +729,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In single-trait simulation, the trait can be controlled by ***multiple-group QTNs***. An example of single-trait controlled by two-group QTNs is displayed as follows: 
+In the single-trait simulation, the trait can be controlled by ***multiple-group QTNs***. An example of the single-trait controlled by two-group QTNs is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -841,7 +841,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows: 
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows: 
 
 
 ```r
@@ -903,7 +903,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows: 
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
@@ -1134,7 +1134,7 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Beta distribution
 **[back to top](#contents)** 
 
-***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to ***Beta*** distribution in single-trait simulation is displayed as follows: 
+***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to the ***Beta*** distribution in single-trait simulation is displayed as follows: 
 
 ```r
 # Generate annotation simulation parameters
