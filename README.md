@@ -2387,13 +2387,19 @@ SP <- simer(SP)
 # Output
 **[back to top](#contents)**  
 
-**```SIMER```** outputs data including ***annotation data***, ***genotype data***, and ***phenotype data***. ***Genotype data*** can be output in the following two format. 
+**```SIMER```** outputs data including ***annotation data***, ***genotype data***, and ***phenotype data*** in the following two format. 
 ***Numeric*** format:  
-`simer.geno.ind` contains indice of genotyped individuals  
-`simer.geno.bin` and `simer.geno.desc` contain genotype matrix of all individuals  
-`simer.map` contains input map with block information and recombination information  
-`simer.ped` contains pedigree of individuals  
-`simer.phe` contains phenotype of individuals  
+```simer.geno.ind``` contains indice of genotyped individuals;  
+```simer.geno.desc``` and ```simer.geno.bin``` contain genotype matrix of all individuals;  
+```simer.map``` contains input map with block information and recombination information;  
+```simer.ped``` contains pedigree of individuals;  
+```simer.phe``` contains phenotype of individuals.  
+***PLINK Binary*** format:  
+```simer.bim``` contains marker information of genotype data;  
+```simer.bed``` contains genotype data in binary format;  
+```simer.fam``` contains sample information of genotype data;  
+```simer.ped``` contains pedigree of individuals;  
+```simer.phe``` contains phenotype of individuals.  
 
 ## Population information
 **[back to top](#contents)**  
