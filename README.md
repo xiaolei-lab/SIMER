@@ -2215,22 +2215,67 @@ jsonList <- simer.Data.Json(jsonFile = jsonFile)
 # Global Options
 **[back to top](#contents)**  
 
-In this part, calculation of population size and different ourput methods will be introduced. 
+Users can use global parameters to control the ***populaiton properties*** , ***the number of threads*** used for simulation and the ***output of simulation data***.
 
-## Gallery of global input parameters
+## Gallery of global parameters
 **[back to top](#contents)** 
 
-`simer()`, main function:  
-**num.gen**, number of generations in simulation  
-**replication**, replication index of simulation  
-**verbose**, whether to print detail  
-**out**, prefix of output file name  
-**outpath**, path of output files  
-**out.format**, format of output, "numeric" or "plink"  
-**seed.sim**, random seed of a simulation process  
-**seed.map**, random seed of map file  
-**out.geno.gen**, indice of generations of output genotype  
-**out.pheno.gen**, indice of generations of output phenotype  
+```simer```, main function of simulation:
+
+<table text-algn="left">
+<thead>
+<tr>
+<td><i><b>Paramater</b></i></td>
+<td><i><b>Default</b></i></td>
+<td><i><b>Options</b></i></td>
+<td><i><b>Description</b></i></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>replication</b></td>
+<td>1</td>
+<td>num</td>
+<td>the replication times of simulation.</td>
+</tr>
+<tr>
+<td><b>out</b></td>
+<td>'simer.qc'</td>
+<td>character</td>
+<td>the prefix of output files.</td>
+</tr>
+<tr>
+<td><b>dataQC</b></td>
+<td>TRUE</td>
+<td>TRUE or FALSE</td>
+<td>whether to make data quality control.</td>
+</tr>
+<tr>
+<td><b>buildModel</b></td>
+<td>TRUE</td>
+<td>TRUR or FALSE</td>
+<td>whether to build EBV model.</td>
+</tr>
+<tr>
+<td><b>buildIndex</b></td>
+<td>TRUE</td>
+<td>TRUR or FALSE</td>
+<td>whether to build Selection Index.</td>
+</tr>
+<tr>
+<td><b>ncpus</b></td>
+<td>10</td>
+<td>num</td>
+<td>the number of threads used, if NULL, (logical core number - 1) is automatically used.</td>
+</tr>
+<tr>
+<td><b>verbose</b></td>
+<td>TRUE</td>
+<td>TRUE or FALSE</td>
+<td>whether to print detail.</td>
+</tr>
+</tbody>
+</table>
 
 ## Counts of total population size
 **[back to top](#contents)**  
