@@ -68,6 +68,7 @@
 - [Global Options](#global-options)
     - [Gallery of global parameters](#gallery-of-global-parameters)
     - [Counts of total population size](#counts-of-total-population-size)
+    - [Multi-thread Simulation](#multi-thread-simulation)
     - [Simulation of multiple populations](#simulation-of-multiple-populations)
     - [File output](#file-output)
     - [Generation selective output](#generation-selective-output)
@@ -2309,6 +2310,19 @@ Users can calculate the ***number of individuals per generation*** by ```IndPerG
 ```r
 pop <- generate.pop(pop.ind = 100)
 count.ind <- IndPerGen(pop = pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "randmate", sex.rate = 0.5, prog = 2)
+```
+
+## Multi-thread Simulation
+**[back to top](#contents)**  
+
+**```SIMER```** is able to run on multiple threads. Users can easily change the number of threads used for simulation by following:
+
+```r
+# Generate all simulation parameters
+SP <- param.simer(out = "simer", ncpus = 2)
+
+# Run Simer
+SP <- simer(SP)
 ```
 
 ## Simulation of multiple populations
