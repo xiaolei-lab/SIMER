@@ -2304,88 +2304,34 @@ Users can use global parameters to control the ***populaiton properties*** , ***
 ## Counts of total population size
 **[back to top](#contents)**  
 
-The following is the method of obtaining population size of every generation. Every elements in **cound.ind** are population size in this generation respectively. 
+Users can calculate the ***number of individuals per generation*** by ```IndPerGen``` directly.
 
 ```r
-# parameters that controls population size of every generations 
-nind <- 40
-num.gen <- 10
-ratio <- 0.5
-sel.on <- TRUE # whether selection exsits
-ps <- 0.8
-ps <- ifelse(sel.on, ps, 1)
-num.prog <- 2
-mtd.reprod <- "randmate"
-
-# populations of the first generation
-basepop <- getpop(nind = nind, from = 1, ratio = ratio)
-pop2 <- getpop(nind = nind, from = 41, ratio = ratio)
-pop3 <- getpop(nind = nind, from = 81, ratio = ratio)
-pop4 <- getpop(nind = nind, from = 121, ratio = ratio)
-
-# calculate number of individuals in every generation
-count.ind <- rep(nind, num.gen)
-if (mtd.reprod == "clone" || mtd.reprod == "dh" || mtd.reprod == "selfpol") {
-  if (num.gen > 1) {
-    for(i in 2:num.gen) {
-      count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
-    }
-  }
-  
-} else if (mtd.reprod == "randmate" || mtd.reprod == "randexself") {
-  if (num.gen > 1) {
-    for(i in 2:num.gen) {
-      count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
-    }
-  }
-
-} else if (mtd.reprod == "singcro") {
-  sing.ind <- round(nrow(pop2) * ps) * num.prog
-  count.ind <- c(nrow(basepop), nrow(pop2), sing.ind)
-
-} else if (mtd.reprod == "tricro") {
-  dam21.ind <- round(nrow(pop2) * ps) * prog.tri
-  tri.ind <- round(dam21.ind * (1-ratio) * ps) * num.prog
-  count.ind <- c(nrow(basepop), nrow(pop2), nrow(pop3), dam21.ind, tri.ind)
-
-} else if (mtd.reprod == "doubcro") {
-  sir11.ind <- round(nrow(pop2) * ps) * prog.doub
-  dam22.ind <- round(nrow(pop4) * ps) * prog.doub
-  doub.ind <- round(dam22.ind * (1-ratio) * ps) * num.prog
-  count.ind <- c(nrow(basepop), nrow(pop2), nrow(pop3), nrow(pop4), sir11.ind, dam22.ind, doub.ind)
-
-} else if (mtd.reprod == "backcro") {
-  count.ind[1] <- nrow(basepop) + nrow(pop2)
-  if (num.gen > 1) {
-    count.ind[2] <- round(nrow(pop2) * ps) * num.prog
-    for(i in 3:num.gen) {
-      count.ind[i] <- round(count.ind[i-1] * (1-ratio) * ps) * num.prog
-    }
-  }
-}
+pop <- generate.pop(pop.ind = 100)
+count.ind <- IndPerGen(pop = pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "randmate", sex.rate = 0.5, prog = 2)
 ```
 
 ## Simulation of multiple populations
 **[back to top](#contents)**
 
-Simulation of multiple populations can be realized by "for" in **R** and **replication**. Random seed of simulation is random in every replication and random seed of map is fixed. In every replication, you can set your own random seed of simulation and random seed of map by **seed.geno**| and **seed.map** respectively. 
+Simulation of ***multiple populations*** can be realized by ```for``` in **R** software.
 
 ```r
-# random-mating 
+# Replication times
 rep <- 2
+
+# Result list
+SPs <- list()
+length(SPs) <- rep
+
 for (i in 1:rep) {
-  simer.list <-
-    simer(num.gen = 3,
-          replication = i, # set index of replication
-          verbose = verbose, 
-          outpath = outpath,
-          input.map = input.map,
-          # rawgeno1 = rawgeno, # use your own genotype matrix
-          num.ind = 100,
-          mtd.reprod = "randmate",
-          num.prog = 2,
-          ratio = 0.5)
+  # Generate all simulation parameters
+  SP <- param.simer(out = "simer")
+
+  # Run Simer
+  SPs[[i]] <- simer(SP)
 }
+
 ```
 
 ## File output
