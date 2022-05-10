@@ -1976,7 +1976,7 @@ SP <- reproduces(SP)
 ## User-designed pedigree mating for plant and animal
 **[back to top](#contents)**  
 
-***User-designed pedigree mating*** needs a specific ***user designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.
+***User-designed pedigree mating*** needs a specific ***user-designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.
 
 ```r
 # Generate annotation simulation parameters
