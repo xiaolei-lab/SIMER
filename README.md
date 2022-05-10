@@ -2081,37 +2081,78 @@ After generating a population, further work can be done. Breeders wish to evalua
 </tbody>
 </table>
 
-## Breeding plan preparation
+## Breeding program design preparation
 **[back to top](#contents)**
 
-Breeding plans should be stored on different files respectively. Filenames must begin with breeding_plan, such like breeding_plan01.txt. For now, **SIMER** supports different breeding plans on generation, family_index, within_family_index, and sex. 
+***Breeding program design** should be stored on a JSON file. 
 
-```r
-> # get path of breeding plan
-> selPath <- system.file("extdata", "01breeding_plan", package = "simer")
-
-> # show filename format
-> dir(selPath)
-[1] "breeding_plan01.txt" "breeding_plan02.txt" "breeding_plan03.txt" "ReadMe.txt" 
-
-> # show file contents format
-> fn1 <- file.path(selPath, "breeding_plan01.txt")
-> bp1 <- read.delim(fn1, header = TRUE)
-
-> # ###NOTE###
-> # 1. any generation can be choosed within num.gen.
-> # 2. any sex(1 represents sir 2 represents dam) can be choosed.
-> # 3. any family index can be choosed in all family. 1:5 means 
-> #    that the first 5 family will be chosen.
-> # 4. any infamily index can be choosed in every family.
-> # 5. numbers should be separated by comma(",").
-> # 6. ":" can choose serial number, "1:3,7" represents "1 2 3 7".
-> # 7. "all" will choose all of options in a category.
-> bp1
-  generation family_index within_family_index sex
-1          1        1:3,7                 all   1
-2          2        1:3,7                 all   1
-3          3        1:3,7                 all   1
+```json
+{
+    "genotype": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/02plinkb"],
+    "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/05others/pedigree.txt"],
+    "selection_index": [],
+    "breeding_value_index": "0.2 * T1 + 0.8 * T2",
+    "quality_control_plan": {
+        "genotype_quality_control":{
+            "filter": ["F1 == 'Male'"],
+            "filter_geno": 0.1,
+            "filter_mind": 0.1,
+            "filter_maf": 0.05,
+            "filter_hwe": 0.001
+        },
+        "pedigree_quality_control":{
+            "standard_ID": false,
+            "candidate_sire_file": [],
+            "candidate_dam_file": [],
+            "exclude_threshold": 0.01, 
+            "assign_threshold": 0.005
+        },
+        "phenotype_quality_control":[
+            {
+                "job_name": "Data Quality Control Demo",
+                "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/05others/phenotype.txt",
+                "repeated_records": false,
+                "multi_trait": true,
+                "filter": ["F1 == 'Male'"],
+                "job_traits": [
+                    {
+                        "traits": "T1",
+                        "definition": "T1",
+                        "range": []
+                    },
+                    {
+                        "traits": "T2",
+                        "definition": "T2",
+                        "range": []
+                    }
+                ]
+            }
+        ]
+    },
+    "analysis_plan":[
+        {
+            "job_name": "EBV Model Demo",
+            "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/05others/phenotype.txt",
+            "repeated_records": false,
+            "multi_trait": true,
+            "random_ratio": 0.05,
+            "job_traits": [
+                {
+                    "traits": "T1",
+                    "covariates": [],
+                    "fixed_effects": ["F1", "F2"],
+                    "random_effects": ["R1"]
+                },
+                {
+                    "traits": "T2",
+                    "covariates": [],
+                    "fixed_effects": ["F1", "F2"],
+                    "random_effects": ["R1"]
+                }
+            ]
+        }
+    ]
+}
 ```
 
 ## Breeding plan comparison
