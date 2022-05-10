@@ -66,7 +66,7 @@
     - [Breeding program design preparation](#breeding-program-design-preparation)
     - [Breeding program design evaluation](#breeding-program-design-evaluation)
 - [Global Options](#global-options)
-    - [Gallery of global input parameters](#gallery-of-global-input-parameters)
+    - [Gallery of global parameters](#gallery-of-global-parameters)
     - [Counts of total population size](#counts-of-total-population-size)
     - [Simulation of multiple populations](#simulation-of-multiple-populations)
     - [File output](#file-output)
@@ -2239,34 +2239,34 @@ Users can use global parameters to control the ***populaiton properties*** , ***
 <td>the replication times of simulation.</td>
 </tr>
 <tr>
+<td><b>seed.sim</b></td>
+<td>random</td>
+<td>num</td>
+<td>simulation random seed.</td>
+</tr>
+<tr>
 <td><b>out</b></td>
-<td>'simer.qc'</td>
+<td>'simer'</td>
 <td>character</td>
 <td>the prefix of output files.</td>
 </tr>
 <tr>
-<td><b>dataQC</b></td>
-<td>TRUE</td>
-<td>TRUE or FALSE</td>
-<td>whether to make data quality control.</td>
+<td><b>outpath</b></td>
+<td>NULL</td>
+<td>character</td>
+<td>the path of output files, Simer writes files only if outpath is not 'NULL'.</td>
 </tr>
 <tr>
-<td><b>buildModel</b></td>
-<td>TRUE</td>
-<td>TRUR or FALSE</td>
-<td>whether to build EBV model.</td>
+<td><b>out.format</b></td>
+<td>'numeric'</td>
+<td>'numeric' or 'plink'</td>
+<td>'numeric' or 'plink', the data format of output files.</td>
 </tr>
 <tr>
-<td><b>buildIndex</b></td>
-<td>TRUE</td>
-<td>TRUR or FALSE</td>
-<td>whether to build Selection Index.</td>
-</tr>
-<tr>
-<td><b>ncpus</b></td>
-<td>10</td>
+<td><b>pop.gen</b></td>
+<td>2</td>
 <td>num</td>
-<td>the number of threads used, if NULL, (logical core number - 1) is automatically used.</td>
+<td>the generations of simulated population.</td>
 </tr>
 <tr>
 <td><b>verbose</b></td>
