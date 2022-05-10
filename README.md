@@ -2351,37 +2351,22 @@ for (i in 1:rep) {
 ## File output
 **[back to top](#contents)** 
 
-**SIMER** won't output files by default. A series of files with prefix `out = simer` output when specify a exsited out path by **outpath**. File output format can be "numeric" or "plink" by **out.format**. 
+**```SIMER```** won't output files by default. A series of files with prefix ```out``` will output when specifying ```outpath```.
 
 ```r
-# set a output path
-outpath = getwd()
+### 01 Numeric Format ###
+# Generate all simulation parameters
+SP <- param.simer(out = "simer", outpath = getwd(), out.format = "numeric")
 
-# "numeric" format
-simer.list <-
-  simer(num.gen = 3,
-        verbose = verbose, 
-        outpath = outpath,
-        out.format = "numeric", 
-        input.map = input.map,
-        # rawgeno1 = rawgeno, # use your own genotype matrix
-        num.ind = 100,
-        mtd.reprod = "randmate",
-        num.prog = 2,
-        ratio = 0.5)
+# Run Simer
+SP <- simer(SP)
 
-# "plink" format
-simer.list <-
-  simer(num.gen = 3,
-        verbose = verbose, 
-        outpath = outpath,
-        out.format = "plink", 
-        input.map = input.map,
-        # rawgeno1 = rawgeno, # use your own genotype matrix
-        num.ind = 100,
-        mtd.reprod = "randmate",
-        num.prog = 2,
-        ratio = 0.5)
+### 02 Plink Binary Format ###
+# Generate all simulation parameters
+SP <- param.simer(out = "simer", outpath = getwd(), out.format = "plink")
+
+# Run Simer
+SP <- simer(SP)
 ```
 
 ## Generation selective output
