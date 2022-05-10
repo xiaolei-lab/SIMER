@@ -27,7 +27,7 @@
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
-    - [Generate genotype matrix of base population](#generate-genotype-matrix-of-base-population)
+    - [Generate a genotype matrix](#generate-a-genotype-matrix)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
@@ -208,7 +208,7 @@ pop.map <- read.table("map.txt" , head = TRUE)
 
 ## Optional
 **[back to top](#contents)**  
-Mating process can be designed by ***user designed pedigree***. 
+The mating process can be designed by ***user-designed pedigree***. 
 
 ***pedigree***, pedigree information, the first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Note that the individuals in the ***pedigree*** do not need to be sorted by the date of birth, and the missing value can be replaced by NA or 0.
 
@@ -293,7 +293,7 @@ SP <- phenotype(SP)
 # Genotype Simulation
 **[back to top](#contents)** 
 
-***Genotype data*** in **```SIMER```** will be generated randomly or from outside genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of ***Annotation data***. 
+***Genotype data*** in **```SIMER```** will be generated randomly or external genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of ***Annotation data***. 
 
 ## Gallery of genotype simulation parameters
 **[back to top](#contents)** 
@@ -382,10 +382,10 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
-## Generate genotype matrix of base population
+## Generate a genotype matrix
 **[back to top](#contents)** 
 
-There are two different ways to generate genotype matrix of base population.
+There are two different ways to generate a genotype matrix
 
 ```r
 ### 01 Use Genotype Data from Outside ###
