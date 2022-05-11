@@ -41,6 +41,7 @@
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
     - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
+    - [Generate phenotype controlled by multiple-group QTNs](#generate-phenotype-controlled-by-multiple-group-QTNs)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
@@ -453,6 +454,7 @@ SP <- genotype(SP)
 **(4)** Genetic Effect Model (***A***dditive effect, ***D***ominant effect, and ***G***enetic-***G***enetic interaction effect)  
 **(5)** Effect Distribution Model (QTN effect distribution: ****Norm***al distribution, ***Geom***etric distribution, ***Gamma*** distribution, and ***Beta*** distribution)  
 **(6)** Linear Mixed Model (***F***ixed effect, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, and ***G***enetic-***E***nvironmental effect)  
+**(7)** QTN Mixed Model (Trait controlled by ***Multiple-Group*** QTNs)  
 
 ## Gallery of phenotype simulation parameters
 **[back to top](#contents)**  
@@ -1371,6 +1373,33 @@ SP <- param.pheno(
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+## Generate phenotype controlled by multiple-group QTNs
+**[back to top](#contents)** 
+
+In the single-trait simulation, the trait can be controlled by ***Multiple-Group QTNs***. An example of the single-trait controlled by two-group QTNs is displayed as follows: 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(qtn.num = c(2, 8), qtn.model = "A") # Group1: 2 QTNs; Group 2: 8 QTNs
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
 )
 
 # Run annotation simulation
