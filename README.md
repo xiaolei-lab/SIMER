@@ -2336,7 +2336,7 @@ Simulation of ***multiple populations*** can be realized by ```for``` in **R** s
 rep <- 2
 
 # Result list
-SPs <- rep(list(), rep)
+SPs <- rep(list(NULL), rep)
 
 for (i in 1:rep) {
   # Generate all simulation parameters
