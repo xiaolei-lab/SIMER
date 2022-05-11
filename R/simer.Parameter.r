@@ -97,25 +97,25 @@ param.annot <- function(SP = NULL, ...) {
   }
   
   for (i in 1:nTrait) {
-    if (SP.map$qtn.dist[[i]] == "norm") {
-      SP.map$qtn.sd[[i]] <- 1
-    } else if (SP.map$qtn.dist[[i]] == "geom") {
-      SP.map$qtn.prob[[i]] <- 0.5
-    } else if (SP.map$qtn.dist[[i]] == "gamma") {
-      SP.map$qtn.shape[[i]] <- 1
-      SP.map$qtn.scale[[i]] <- 1
-    } else if (SP.map$qtn.dist[[i]] == "beta") {
-      SP.map$qtn.shape1[[i]] <- 1
-      SP.map$qtn.shape2[[i]] <- 1
-      SP.map$qtn.ncp[[i]] <- 0
-    } else {
-      stop("QTN effect distribution should be 'norm', 'geom', 'gamma' or 'beta'!")
+    nGroup <- ifelse(is.matrix(SP$map$qtn.num), 1, length(SP.map$qtn.num))
+    if (length(SP.map$qtn.dist[[i]]) != nGroup) {
+      SP.map$qtn.dist[[i]] <- rep(SP.map$qtn.dist[[i]], nGroup)
     }
-  }
-  
-  if (nTrait == 1 & length(SP.tmp$qtn.num) > 0) {
-    for (x in group2) {
-      SP.map[[x]][[1]] <- rep(SP.map[[x]][[1]], length(SP.tmp$qtn.num))
+    for (j in 1:nGroup) {
+      if (SP.map$qtn.dist[[i]][j] == "norm") {
+        SP.map$qtn.sd[[i]][j] <- 1
+      } else if (SP.map$qtn.dist[[i]][j] == "geom") {
+        SP.map$qtn.prob[[i]][j] <- 0.5
+      } else if (SP.map$qtn.dist[[i]][j] == "gamma") {
+        SP.map$qtn.shape[[i]][j] <- 1
+        SP.map$qtn.scale[[i]][j] <- 1
+      } else if (SP.map$qtn.dist[[i]][j] == "beta") {
+        SP.map$qtn.shape1[[i]][j] <- 1
+        SP.map$qtn.shape2[[i]][j] <- 1
+        SP.map$qtn.ncp[[i]][j] <- 0
+      } else {
+        stop("QTN effect distribution should be 'norm', 'geom', 'gamma' or 'beta'!")
+      }
     }
   }
   

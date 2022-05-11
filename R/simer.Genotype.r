@@ -148,7 +148,11 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     }
   }
   
-  SP$geno$pop.geno[[ifelse(is.null(SP$geno$pop.geno), 1, length(SP$geno$pop.geno))]] <- bigmat
+  if (is.null(SP$geno$pop.geno)) {
+    SP$geno$pop.geno <- list(bigmat)
+  } else {
+    SP$geno$pop.geno[[length(SP$geno$pop.geno)]] <- bigmat
+  }
   names(SP$geno$pop.geno)[length(SP$geno$pop.geno)] <- paste0("gen", length(SP$geno$pop.geno))
   return(SP)
 }
