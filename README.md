@@ -829,7 +829,7 @@ In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map, qtn.num = 10, qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
