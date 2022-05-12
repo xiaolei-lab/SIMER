@@ -27,7 +27,7 @@
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
-    - [Generate a external genotype matrix](#generate-a-external-genotype-matrix)
+    - [Generate an external genotype matrix](#generate-an-external-genotype-matrix)
     - [Generate a random genotype matrix](#generate-a-random-genotype-matrix)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
@@ -384,7 +384,7 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
-## Generate a external genotype matrix
+## Generate an external genotype matrix
 **[back to top](#contents)** 
 
 Users can use ***real genotype data*** with specific genetic structure for subsequent simulation. 
