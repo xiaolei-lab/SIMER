@@ -391,6 +391,8 @@ There are two different ways to generate a genotype matrix
 ```r
 ### 01 Use Genotype Data from Outside ###
 # Create a genotype matrix
+# pop.geno <- read.table("genotype.txt")
+# pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
 pop.geno <- matrix(0, nrow = 1e4, ncol = 1e2)
 
 # Generate genotype simulation parameters
@@ -681,10 +683,16 @@ SP <- genotype(SP)
 In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10, qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -706,10 +714,17 @@ In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive
 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -737,10 +752,16 @@ SP <- phenotype(SP)
 In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10, qtn.model = "A + D") # Additive effect and Dominant effect
+SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A + D") # Additive effect and Dominant effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -763,10 +784,16 @@ In multiple-trait simulation, **```SIMER```** can build ***accurate Additive gen
 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D") # Additive effect and Dominant effect
+SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D") # Additive effect and Dominant effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -796,10 +823,16 @@ SP <- phenotype(SP)
 In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10, qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+SP <- param.annot(pop.map, qtn.num = 10, qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -823,10 +856,16 @@ In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-
 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+SP <- param.annot(pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -858,10 +897,16 @@ SP <- phenotype(SP)
 In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10, qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -884,10 +929,16 @@ SP <- phenotype(SP)
 In the multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -918,15 +969,22 @@ SP <- phenotype(SP)
 ***Norm***al distribution is the most common QTN effect distribution. Phenotype controlled by QTNs subject to ***Norm***al distribution in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = 10,
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm"),
   qtn.sd = list(tr1 = 1)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -947,15 +1005,22 @@ SP <- phenotype(SP)
 Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm", tr2 = "norm"),
   qtn.sd = list(tr1 = 1, tr2 = 1)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -983,15 +1048,22 @@ SP <- phenotype(SP)
 ***Geom***etric distribution is the probability of success for the first time obtained only after K trials among the N Bernoulli trials. ***Geom***etric distribution can be used as a QTN effect distribution. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = 10,
   qtn.model = "A",
   qtn.dist = list(tr1 = "geom"),
   qtn.prob = list(tr1 = 0.5)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1012,15 +1084,22 @@ SP <- phenotype(SP)
 Phenotype controlled by QTNs subject to ***Geom***etric distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
   qtn.model = "A",
   qtn.dist = list(tr1 = "geom", tr2 = "geom"),
   qtn.prob = list(tr1 = 0.5, tr2 = 0.5)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1048,8 +1127,14 @@ SP <- phenotype(SP)
 ***Gamma*** distribution is the sum of N independent exponential random variables. Note that ***Exp***onential distribution is a special form of ***Gamma*** distribution when ```qtn.shape = 1``` and ```qtn.scale = 1```. Phenotype controlled by QTNs subject to ***Gamma*** distribution in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = 10,
   qtn.model = "A",
   qtn.dist = list(tr1 = "gamma"),
@@ -1057,7 +1142,8 @@ SP <- param.annot(
   qtn.scale = list(tr1 = 1)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1078,8 +1164,14 @@ SP <- phenotype(SP)
 Phenotype controlled by QTNs subject to ***Gamma*** distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
   qtn.model = "A",
   qtn.dist = list(tr1 = "gamma", tr2 = "gamma"),
@@ -1087,7 +1179,8 @@ SP <- param.annot(
   qtn.scale = list(tr1 = 1, tr2 = 1)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1115,8 +1208,14 @@ SP <- phenotype(SP)
 ***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to the ***Beta*** distribution in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = 10,
   qtn.model = "A",
   qtn.dist = list(tr1 = "beta"),
@@ -1125,7 +1224,8 @@ SP <- param.annot(
   qtn.ncp = list(tr1 = 0)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1146,8 +1246,14 @@ SP <- phenotype(SP)
 Phenotype controlled by QTNs subject to ***Beta*** distribution in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
 SP <- param.annot(
+  pop.map = pop.map,
   qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
   qtn.model = "A",
   qtn.dist = list(tr1 = "beta", tr2 = "beta"),
@@ -1156,7 +1262,8 @@ SP <- param.annot(
   qtn.ncp = list(tr1 = 0, tr2 = 0)
 )
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1184,6 +1291,11 @@ SP <- phenotype(SP)
 **```SIMER```** supports add ***F***ixed effects and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. The effect value of ***F***ixed effect is determined by ```eff``` and the variance ratio to phenotype variance (similar to heritability) of ***E***nvironmental ***R***andom is set by ```ratio```. Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Prepare environmental factor list
 pop.env <- list(
   F1 = list( # fixed effect 1
@@ -1201,9 +1313,10 @@ pop.env <- list(
 )
 
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = 10, qtn.model = "A")
+SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A")
 # Generate annotation simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP, 
@@ -1225,6 +1338,11 @@ SP <- phenotype(SP)
 Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Prepare environmental factor list
 pop.env <- list(
   F1 = list( # fixed effect 1
@@ -1242,9 +1360,10 @@ pop.env <- list(
 )
 
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
 # Generate annotation simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP, 
@@ -1273,6 +1392,11 @@ SP <- phenotype(SP)
 In ***GxE*** model, **```SIMER```** adds ***G***enetic-***E***nvironmental interaction effect to phenotype. Users should prepare ***G***enetic ***QTN*** effect in the ***Annotation data*** and environmental factor by ```pop.env``` for generating ***G***enetic-***E***nvironmental ***I***ndividual effect. An example of ***G***enetic-***E***nvironmental interaction in single-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Prepare environmental factor list
 pop.env <- list(
   F1 = list( # fixed effect 1
@@ -1290,9 +1414,10 @@ pop.env <- list(
 )
 
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10, qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1317,6 +1442,11 @@ SP <- phenotype(SP)
 An example of ***G***enetic-***E***nvironmental interaction in multiple-trait simulation is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Prepare environmental factor list
 pop.env <- list(
   F1 = list( # fixed effect 1
@@ -1334,9 +1464,10 @@ pop.env <- list(
 )
 
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
@@ -1365,10 +1496,16 @@ SP <- phenotype(SP)
 In the single-trait simulation, the trait can be controlled by ***Multiple-Group QTNs***. An example of the single-trait controlled by two-group QTNs is displayed as follows: 
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = c(2, 8), qtn.model = "A") # Group1: 2 QTNs; Group 2: 8 QTNs
+SP <- param.annot(pop.map = pop.map, qtn.num = c(2, 8), qtn.model = "A") # Group1: 2 QTNs; Group 2: 8 QTNs
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
