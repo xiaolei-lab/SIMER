@@ -27,7 +27,8 @@
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
-    - [Generate a genotype matrix](#generate-a-genotype-matrix)
+    - [Generate a external genotype matrix](#generate-a-external-genotype-matrix)
+    - [Generate a random genotype matrix](#generate-a-random-genotype-matrix)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
@@ -383,13 +384,12 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
-## Generate a genotype matrix
+## Generate a external genotype matrix
 **[back to top](#contents)** 
 
-There are two different ways to generate a genotype matrix
+Users can use ***real genotype data*** with specific genetic structure for subsequent simulation. 
 
 ```r
-### 01 Use Genotype Data from Outside ###
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
@@ -400,8 +400,14 @@ SP <- param.geno(pop.geno = pop.geno)
 
 # Run genotype simulation
 SP <- genotype(SP)
+```
 
-### 02 Create Genotype Data Randomly ###
+## Generate a random genotype matrix
+**[back to top](#contents)** 
+
+Users can also specify ```pop.marker``` and ```pop.ind``` to generate ***random genotype data***.
+
+```r
 # Generate genotype simulation parameters
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 
