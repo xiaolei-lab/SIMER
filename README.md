@@ -862,7 +862,7 @@ In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
