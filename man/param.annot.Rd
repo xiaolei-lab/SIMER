@@ -15,7 +15,7 @@ param.annot(SP = NULL, ...)
 the function returns a list containing
 \describe{
 \item{$map$pop.map}{the map data with annotation information.}
-\item{$map$qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
+\item{$map$qtn.num}{the QTN number for (each group in) each trait.}
 \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
 \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
 \item{$map$qtn.sd}{the standard deviations for normal distribution.}
