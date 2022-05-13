@@ -48,7 +48,7 @@
 #' @export
 #'
 #' @examples
-#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' str(SP)
 param.annot <- function(SP = NULL, ...) {
   
@@ -56,8 +56,8 @@ param.annot <- function(SP = NULL, ...) {
   
   SP.map <- list(
     pop.map = NULL,
-    qtn.num = 10,
     qtn.model = "A",
+    qtn.num = list(tr1 = 10),
     qtn.dist = list(tr1 = "norm"),
     qtn.sd = list(tr1 = NA),
     qtn.prob = list(tr1 = NA),
@@ -74,8 +74,8 @@ param.annot <- function(SP = NULL, ...) {
     range.cold = 1:5
   )
   
-  group1 <- c("pop.map", "qtn.num", "qtn.model")
-  group2 <- c("qtn.dist", "qtn.sd", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
+  group1 <- c("pop.map", "qtn.model")
+  group2 <- c("qtn.num", "qtn.dist", "qtn.sd", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
   group3 <- c("qtn.spot", "len.block", "maf", "recom.spot", "range.hot", "range.cold")
   
   for (x in names(SP.tmp)) {
@@ -84,10 +84,7 @@ param.annot <- function(SP = NULL, ...) {
     }
   }
   
-  nTrait <- 1
-  if (is.matrix(SP.map$qtn.num)) {
-    nTrait <- nrow(SP.map$qtn.num)
-  }
+  nTrait <- length(SP.map$qtn.num)
   
   if (nTrait > 1) {
     for (x in group2) {
@@ -97,7 +94,7 @@ param.annot <- function(SP = NULL, ...) {
   }
   
   for (i in 1:nTrait) {
-    nGroup <- ifelse(is.matrix(SP$map$qtn.num), 1, length(SP.map$qtn.num))
+    nGroup <- length(SP.map$qtn.num[[i]])
     if (length(SP.map$qtn.dist[[i]]) != nGroup) {
       SP.map$qtn.dist[[i]] <- rep(SP.map$qtn.dist[[i]], nGroup)
     }

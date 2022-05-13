@@ -41,7 +41,7 @@ Build date: Feb 24, 2022
 Last update: Apr 28, 2022
 }
 \examples{
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 str(SP)
 }
 \author{

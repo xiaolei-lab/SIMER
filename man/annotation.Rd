@@ -42,7 +42,7 @@ Last update: Apr 28, 2022
 }
 \examples{
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 
 # Run annotation simulation
 SP <- annotation(SP)

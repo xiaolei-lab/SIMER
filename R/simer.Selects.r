@@ -42,7 +42,7 @@
 #'
 #' @examples
 #' # Generate annotation simulation parameters
-#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters

@@ -195,7 +195,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 #'
 #' @examples
 #' # Generate annotation simulation parameters
-#' SP <- param.annot(qtn.num = 10)
+#' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' 
 #' # Run annotation simulation
 #' SP <- annotation(SP)
@@ -297,42 +297,14 @@ annotation <- function(SP, verbose = TRUE) {
   }
   
   # select markers as QTNs
-  nTrait <- 1
-  if (is.matrix(qtn.num)) {
-    nTrait <- nrow(qtn.num)
-  }
-  
-  if (nTrait == 1 & length(qtn.num) > 1) {
-    # multiple groups of genetic effects
-    qtn.num.all <- sum(qtn.num)
-  } else {
-    qtn.num.all <- sum(qtn.num[lower.tri(qtn.num)], diag(qtn.num))
-  }
-  
-  qtn.all <- sort(sample(1:nrow(pop.map), qtn.num.all))
+  nTrait <- length(qtn.num)
   qtn.trn <- rep(list(NULL), nTrait)
-  qtn.trn.num <- rep(list(NULL), nTrait)
   
   # QTN number
-  if (nTrait == 1) {
-    qtn.trn[[1]] <- qtn.all
-    qtn.trn.num[[1]] <- qtn.num
-    logging.log(" Number of selected markers of trait", 1, ":", qtn.trn.num[[1]], "\n", verbose = verbose)
-  } else {
-    k <- 1
-    for (i in 1:nTrait) {
-      for (j in i:nTrait) {
-        if (qtn.num[i, j] <= 0) { next  }
-        qtn.tmp <- qtn.all[k:(k+qtn.num[i, j]-1)]
-        qtn.trn[[i]] <- c(qtn.trn[[i]], qtn.tmp)
-        if (i != j) {
-          qtn.trn[[j]] <- c(qtn.trn[[j]], qtn.tmp)
-        }
-        k <- k + qtn.num[i, j]
-      }
-      qtn.trn.num[[i]] <- sum(qtn.num[i, ])
-      logging.log(" Number of selected markers of trait", i, ":", length(qtn.trn[[i]]), "\n", verbose = verbose)
-    }
+  for (i in 1:nTrait) {
+    if (sum(qtn.num[[i]]) <= 0) { next  }
+    qtn.trn[[i]] <- sort(sample(1:nrow(pop.map), sum(qtn.num[[i]])))
+    logging.log(" Number of selected markers of trait", i, ":", qtn.num[[i]], "\n", verbose = verbose)
   }
   
   # QTN effect
@@ -345,7 +317,7 @@ annotation <- function(SP, verbose = TRUE) {
   names(qtn.trn.eff) <- paste0(qtn.eff.name[, 2], "_", qtn.eff.name[, 1])
   for (i in 1:nTrait) {
     for (j in 1:nAD) {
-      qtn.trn.eff[qtn.trn[[i]], nAD*(i-1) + j] <- cal.eff(qtn.trn.num[[i]], qtn.dist[[i]], qtn.sd[[i]], qtn.prob[[i]], qtn.shape[[i]], qtn.scale[[i]], qtn.shape1[[i]], qtn.shape2[[i]], qtn.ncp[[i]])
+      qtn.trn.eff[qtn.trn[[i]], nAD*(i-1) + j] <- cal.eff(qtn.num[[i]], qtn.dist[[i]], qtn.sd[[i]], qtn.prob[[i]], qtn.shape[[i]], qtn.scale[[i]], qtn.shape1[[i]], qtn.shape2[[i]], qtn.ncp[[i]])
     }
   }
   pop.map <- cbind(pop.map, qtn.trn.eff)
