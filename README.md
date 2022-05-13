@@ -250,7 +250,7 @@ A quick start for ***Annotation Simulation*** is shown below:
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10)
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10))
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -276,7 +276,7 @@ A quick start for ***Phenotype Simulation*** is shown below:
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -605,8 +605,8 @@ SP <- genotype(SP)
 <tr>
 <td><b>qtn.num</b></td>
 <td>10</td>
-<td>num, vector or matrix</td>
-<td>integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.</td>
+<td>list</td>
+<td>the QTN number for (each group in) each trait.</td>
 </tr>
 <tr>
 <td><b>qtn.model</b></td>
@@ -695,7 +695,7 @@ In ***A*** model, **```SIMER```** only considers ***A***dditive effect as geneti
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -726,7 +726,7 @@ In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -764,7 +764,7 @@ In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***om
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A + D") # Additive effect and Dominant effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A + D") # Additive effect and Dominant effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -796,7 +796,7 @@ In multiple-trait simulation, **```SIMER```** can build ***accurate Additive gen
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D") # Additive effect and Dominant effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A + D") # Additive effect and Dominant effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -835,7 +835,7 @@ In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -868,7 +868,7 @@ In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A + D + A:D") # Additive effect, Dominant effect, and Additive-Dominant interaction effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -909,7 +909,7 @@ In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent *
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -941,7 +941,7 @@ In the multiple-trait simulation, **```SIMER```** can build ***accurate Permanen
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -983,7 +983,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = 10,
+  qtn.num = list(tr1 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm"),
   qtn.sd = list(tr1 = 1)
@@ -1019,7 +1019,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
+  qtn.num = list(tr1 = 10, tr2 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm", tr2 = "norm"),
   qtn.sd = list(tr1 = 1, tr2 = 1)
@@ -1062,7 +1062,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = 10,
+  qtn.num = list(tr1 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "geom"),
   qtn.prob = list(tr1 = 0.5)
@@ -1098,7 +1098,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
+  qtn.num = list(tr1 = 10, tr2 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "geom", tr2 = "geom"),
   qtn.prob = list(tr1 = 0.5, tr2 = 0.5)
@@ -1141,7 +1141,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = 10,
+  qtn.num = list(tr1 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "gamma"),
   qtn.shape = list(tr1 = 1),
@@ -1178,7 +1178,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
+  qtn.num = list(tr1 = 10, tr2 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "gamma", tr2 = "gamma"),
   qtn.shape = list(tr1 = 1, tr2 = 1),
@@ -1222,7 +1222,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = 10,
+  qtn.num = list(tr1 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "beta"),
   qtn.shape1 = list(tr1 = 1),
@@ -1260,7 +1260,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map,
-  qtn.num = matrix(c(6, 4, 4, 6), 2, 2),
+  qtn.num = list(tr1 = 10, tr2 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "beta", tr2 = "beta"),
   qtn.shape1 = list(tr1 = 1, tr2 = 1),
@@ -1319,7 +1319,7 @@ pop.env <- list(
 )
 
 # Generate genotype simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A")
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -1366,7 +1366,7 @@ pop.env <- list(
 )
 
 # Generate genotype simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -1420,7 +1420,7 @@ pop.env <- list(
 )
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = 10, qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -1470,7 +1470,7 @@ pop.env <- list(
 )
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -1508,7 +1508,7 @@ In the single-trait simulation, the trait can be controlled by ***Multiple-Group
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = c(2, 8), qtn.model = "A") # Group1: 2 QTNs; Group 2: 8 QTNs
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = c(2, 8)), qtn.model = "A") # Group1: 2 QTNs; Group 2: 8 QTNs
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
@@ -1660,7 +1660,7 @@ SP <- phenotype(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1685,7 +1685,7 @@ SP <- selects(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1710,7 +1710,7 @@ SP <- selects(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1735,7 +1735,7 @@ SP <- selects(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1760,7 +1760,7 @@ SP <- selects(SP)
 
 ```r
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1793,7 +1793,7 @@ After setting a ***minimum selection criterion*** for each target trait. ***Inde
 
 ```r
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1826,7 +1826,7 @@ SP <- selects(SP)
 
 ```r
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = matrix(c(6, 4, 4, 6), 2, 2), qtn.model = "A")
+SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1859,7 +1859,7 @@ SP <- selects(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1888,7 +1888,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1917,7 +1917,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1946,7 +1946,7 @@ In ***random mating***, any female or male individual has the same probability t
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -1975,7 +1975,7 @@ In ***random mating excluding self-pollination***, an individual cannot mate to 
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -2004,7 +2004,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -2035,7 +2035,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -2066,7 +2066,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -2097,7 +2097,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -2128,7 +2128,7 @@ SP <- reproduces(SP)
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = 10)
+SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
@@ -2153,7 +2153,7 @@ The above methods are to generate population ***step by step***, which are ***ea
 
 ```r
 # Generate all simulation parameters
-SP <- param.simer(qtn.num = 10, pop.marker = 1e4, pop.ind = 1e2, sel.single = "comb", reprod.way = "randmate")
+SP <- param.simer(qtn.num = list(tr1 = 10), pop.marker = 1e4, pop.ind = 1e2, sel.single = "comb", reprod.way = "randmate")
 
 # Run Simer
 SP <- simer(SP)
