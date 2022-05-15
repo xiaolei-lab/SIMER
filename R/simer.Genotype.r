@@ -51,6 +51,9 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   if (is.matrix(SP$geno$pop.geno) | is.big.matrix(SP$geno$pop.geno)) {
     pop.geno <- SP$geno$pop.geno
     SP$geno$pop.geno <- list(1)
+  } else if (is.data.frame(SP$geno$pop.geno)) {
+    pop.geno <- as.matrix(SP$geno$pop.geno)
+    SP$geno$pop.geno <- list(1)
   } else {
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
   }
@@ -73,9 +76,6 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     if (is.big.matrix(pop.geno)) {
       bigmat <- pop.geno
     } else {
-      if (is.list(pop.geno)) {
-        pop.geno <- as.matrix(pop.geno)
-      }
       bigmat <- big.matrix(
         nrow = nrow(pop.geno),
         ncol = ncol(pop.geno),
@@ -231,8 +231,8 @@ annotation <- function(SP, verbose = TRUE) {
     pop.map <- as.data.frame(pop.map)
   }
     
-  if (!is.numeric(pop.map$BP)) {
-    pop.map$BP <- as.numeric(pop.map$BP)
+  if (!is.numeric(pop.map[, 3])) {
+    pop.map[, 3] <- as.numeric(pop.map[, 3])
   }
   nc.map <- ncol(pop.map)
   
@@ -241,19 +241,19 @@ annotation <- function(SP, verbose = TRUE) {
   }
   
   if (is.null(pop.map$Block) & (recom.spot | qtn.spot)) {
-    pop.map$Block <- pop.map$BP %/% len.block + 1
+    pop.map$Block <- pop.map[, 3] %/% len.block + 1
   }
   
   if (is.null(pop.map$Recom) & recom.spot) {
-    chrs <- unique(pop.map$Chrom)
+    chrs <- unique(pop.map[, 2])
     Recom <- rep(0, nrow(pop.map))
     for (i in 1:length(chrs)) {
-      block.tab <- table(pop.map$Block[pop.map$Chrom == chrs[i]])
+      block.tab <- table(pop.map$Block[pop.map[, 2] == chrs[i]])
       nblock <- length(block.tab)
       sublock <- nblock %/% 3
       recom.chr <- rep(c(1, 0, 1), c(sublock, (nblock-2*sublock), sublock))
       for (j in 1:nblock) {
-        recom.flag <- pop.map$Chrom == chrs[i] & pop.map$Block == j
+        recom.flag <- pop.map[, 2] == chrs[i] & pop.map$Block == j
         recom.sum <- sum(recom.flag)
         if (recom.sum != 0) {
           if (recom.chr[j] == 0) {
@@ -290,7 +290,7 @@ annotation <- function(SP, verbose = TRUE) {
     if (nrow(pop.geno) != nrow(pop.map)) {
       stop("Marker number should be same in both 'pop.map' and 'pop.geno'!")
     }
-    MAF <- rowSums(pop.geno) / ncol(pop.geno)
+    MAF <- rowSums(pop.geno[]) / ncol(pop.geno)
     MAF <- pmin(MAF, 1 - MAF)
     pop.map$QTNProb[MAF < maf] <- 0
     pop.map$MAF <- MAF
