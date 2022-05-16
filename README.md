@@ -1310,11 +1310,11 @@ pop.env <- list(
   ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
-    eff = list(tr1 = c(50, 30))
+    effect = list(tr1 = c(50, 30))
   ), 
   F2 = list( # fixed effect 2
     level = c("d1", "d2", "d3"),
-    eff = list(tr1 = c(10, 20, 30))
+    effect = list(tr1 = c(10, 20, 30))
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
@@ -1361,11 +1361,11 @@ pop.env <- list(
   ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
-    eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+    effect = list(tr1 = c(50, 30), tr2 = c(50, 30))
   ), 
   F2 = list( # fixed effect 2
     level = c("d1", "d2", "d3"),
-    eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+    effect = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
@@ -1419,11 +1419,11 @@ pop.env <- list(
   ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
-    eff = list(tr1 = c(50, 30))
+    effect = list(tr1 = c(50, 30))
   ), 
   F2 = list( # fixed effect 2
     level = c("d1", "d2", "d3"),
-    eff = list(tr1 = c(10, 20, 30))
+    effect = list(tr1 = c(10, 20, 30))
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
@@ -1473,11 +1473,11 @@ pop.env <- list(
   ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
-    eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
+    effect = list(tr1 = c(50, 30), tr2 = c(50, 30))
   ), 
   F2 = list( # fixed effect 2
     level = c("d1", "d2", "d3"),
-    eff = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+    effect = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
