@@ -1345,7 +1345,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows: 
+Phenotype with ***C***ovariate, ***F***ixed effect, and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows: 
 
 ```r
 # Real genotypic map
