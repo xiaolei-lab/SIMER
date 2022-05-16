@@ -369,7 +369,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
     if (options("simer.show.warning") == TRUE) {
       eff.cor <- cor(phe.eff[[i]])
       diag(eff.cor) <- 0
-      if (sum(eff.cor > 0.5)) {
+      if (sum(eff.cor > 0.5, na.rm = TRUE)) {
         warning("There are hign-correlations between fixed effects or fixed effects and random effects, and it will reduce the accuracy of effects in the simulation!")
       }
     }
