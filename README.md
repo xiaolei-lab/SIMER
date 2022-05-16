@@ -40,7 +40,7 @@
     - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)
     - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
-    - [Generate phenotype with fixed effect and environmental random effect](#generate-phenotype-with-fixed-effect-and-environmental-random-effect)
+    - [Generate phenotype with covariate and fixed effect and environmental random effect](#generate-phenotype-with-covariate-fixed-effect-and-environmental-random-effect)
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
     - [Generate phenotype controlled by multiple-group QTNs](#generate-phenotype-controlled-by-multiple-group-QTNs)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
@@ -461,7 +461,7 @@ SP <- genotype(SP)
 **(3)** Repeated Record Model  
 **(4)** Genetic Effect Model (***A***dditive effect, ***D***ominant effect, and ***G***enetic-***G***enetic interaction effect)  
 **(5)** Effect Distribution Model (QTN effect distribution: ****Norm***al distribution, ***Geom***etric distribution, ***Gamma*** distribution, and ***Beta*** distribution)  
-**(6)** Linear Mixed Model (***F***ixed effect, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, and ***G***enetic-***E***nvironmental effect)  
+**(6)** Linear Mixed Model (***C***ovariate, ***F***ixed effect, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, and ***G***enetic-***E***nvironmental effect)  
 **(7)** QTN Mixed Model (Trait controlled by ***Multiple-Group*** QTNs)  
 
 ## Gallery of phenotype simulation parameters
@@ -1291,10 +1291,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype with fixed effect and environmental random effect
+## Generate phenotype with covariate and fixed effect and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports add ***F***ixed effects and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. The effect value of ***F***ixed effect is determined by ```eff``` and the variance ratio to phenotype variance (similar to heritability) of ***E***nvironmental ***R***andom is set by ```ratio```. Phenotype with ***F***ixed effect and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
+**```SIMER```** supports add ***C***ovariates, ***F***ixed effects, and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. ***C***ovariates , ***F***ixed effects, and ***E***nvironmental ***R***andom effects are determined by ```intercept```, ```effect```, and ```ratio``` respectively. Phenotype with ***C***ovariate, ***F***ixed effect, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
 
 ```r
 # Real genotypic map
@@ -1304,6 +1304,10 @@ pop.map <- generate.map(pop.marker = 1e4)
 
 # Prepare environmental factor list
 pop.env <- list(
+  C1 = list( # covariate 1
+    level = c(70, 80, 90),
+    intercept = list(tr1 = 1.5)
+  ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30))
@@ -1328,7 +1332,7 @@ SP <- param.pheno(
   SP = SP, 
   pop.ind = 100,
   pop.env = pop.env,
-  phe.model = list(tr1 = "T1 = A + F1 + F2 + R1 + E"), # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, and Residual effect
+  phe.model = list(tr1 = "T1 = A + C1 + F1 + F2 + R1 + E"), # "T1" (Trait 1) consists of Additive effect, C1, F1, F2, R1, and Residual effect
   # phe.var = list(tr1 = 100),
   phe.h2A = list(tr1 = 0.3)
 )
@@ -1351,6 +1355,10 @@ pop.map <- generate.map(pop.marker = 1e4)
 
 # Prepare environmental factor list
 pop.env <- list(
+  C1 = list( # covariate 1
+    level = c(70, 80, 90),
+    intercept = list(tr1 = 1.5, tr2 = 1.5)
+  ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
@@ -1376,8 +1384,8 @@ SP <- param.pheno(
   pop.ind = 100,
   pop.env = pop.env,
   phe.model = list(
-    tr1 = "T1 = A + F1 + F2 + R1 + E", # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, and Residual effect
-    tr2 = "T2 = A + F1 + F2 + R1 + E"  # "T2" (Trait 1) consists of Additive effect, F1, F2, R1, and Residual effect
+    tr1 = "T1 = A + C1 + F1 + F2 + R1 + E", # "T1" (Trait 1) consists of Additive effect, C1, F1, F2, R1, and Residual effect
+    tr2 = "T2 = A + C1 + F1 + F2 + R1 + E"  # "T2" (Trait 1) consists of Additive effect, C1, F1, F2, R1, and Residual effect
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
@@ -1405,6 +1413,10 @@ pop.map <- generate.map(pop.marker = 1e4)
 
 # Prepare environmental factor list
 pop.env <- list(
+  C1 = list( # covariate 1
+    level = c(70, 80, 90),
+    intercept = list(tr1 = 1.5)
+  ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30))
@@ -1430,7 +1442,7 @@ SP <- param.pheno(
   pop.ind = 100,
   pop.env = pop.env,
   phe.model = list(
-    tr1 = "T1 = A + F1 + F2 + R1 + A:F1 + E" # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+    tr1 = "T1 = A + C1 + F1 + F2 + R1 + A:F1 + E" # "T1" (Trait 1) consists of Additive effect, C1, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
   ),
   # phe.var = list(tr1 = 100),
   phe.h2A = list(tr1 = 0.3),
@@ -1455,6 +1467,10 @@ pop.map <- generate.map(pop.marker = 1e4)
 
 # Prepare environmental factor list
 pop.env <- list(
+  C1 = list( # covariate 1
+    level = c(70, 80, 90),
+    intercept = list(tr1 = 1.5, tr2 = 1.5)
+  ),
   F1 = list( # fixed effect 1
     level = c("1", "2"),
     eff = list(tr1 = c(50, 30), tr2 = c(50, 30))
@@ -1480,8 +1496,8 @@ SP <- param.pheno(
   pop.ind = 100,
   pop.env = pop.env,
   phe.model = list(
-    tr1 = "T1 = A + F1 + F2 + R1 + A:F1 + E", # "T1" (Trait 1) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
-    tr2 = "T2 = A + F1 + F2 + R1 + A:F1 + E"  # "T2" (Trait 2) consists of Additive effect, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+    tr1 = "T1 = A + C1 + F1 + F2 + R1 + A:F1 + E", # "T1" (Trait 1) consists of Additive effect, C1, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
+    tr2 = "T2 = A + C1 + F1 + F2 + R1 + A:F1 + E"  # "T2" (Trait 2) consists of Additive effect, C1, F1, F2, R1, Additive-F1 interaction effect, and Residual effect
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
