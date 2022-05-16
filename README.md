@@ -40,7 +40,7 @@
     - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)
     - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
-    - [Generate phenotype with covariate and fixed effect and environmental random effect](#generate-phenotype-with-covariate-fixed-effect-and-environmental-random-effect)
+    - [Generate phenotype with covariate and fixed effect and environmental random effect](#generate-phenotype-with-covariate-and-fixed-effect-and-environmental-random-effect)
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
     - [Generate phenotype controlled by multiple-group QTNs](#generate-phenotype-controlled-by-multiple-group-QTNs)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
