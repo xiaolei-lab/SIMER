@@ -52,10 +52,6 @@
 #' @examples
 #' # Prepare environmental factor list
 #' pop.env <- list(
-#'   C1 = list( # covariate 1
-#'     level = c(70, 80, 90),
-#'     intercept = list(tr1 = 1.5, tr2 = 1.5)
-#'   ),
 #'   F1 = list( # fixed effect 1
 #'     level = c("1", "2"),
 #'     effect = list(tr1 = c(50, 30), tr2 = c(50, 30))
@@ -63,6 +59,10 @@
 #'   F2 = list( # fixed effect 2
 #'     level = c("d1", "d2", "d3"),
 #'     effect = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+#'   ),
+#'   C1 = list( # covariate 1
+#'     level = c(70, 80, 90),
+#'     intercept = list(tr1 = 1.5, tr2 = 1.5)
 #'   ),
 #'   R1 = list( # random effect 1
 #'     level = c("l1", "l2", "l3"),
@@ -84,8 +84,8 @@
 #'   pop.env = pop.env,
 #'   phe.var = list(tr1 = 100, tr2 = 100),
 #'   phe.model = list(
-#'     tr1 = "T1 = A + D + A:D + C1 + F1 + F2 + R1 + A:F1 + E",
-#'     tr2 = "T2 = A + D + A:D + C1 + F1 + F2 + R1 + A:F1 + E"
+#'     tr1 = "T1 = A + D + A:D + F1 + F2 + C1 + R1 + A:F1 + E",
+#'     tr2 = "T2 = A + D + A:D + F1 + F2 + C1 + R1 + A:F1 + E"
 #'   )
 #' )
 #' 
@@ -263,7 +263,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         new.env <- pop.env[[eff.name[j]]]
         if (!is.null(new.env$effect)) {
           if (length(new.env$level) != length(new.env$effect[[i]])) {
-            stop("The length of level and eff should be same!")
+            stop("The length of level and effect should be same!")
           }
         } else {
           if (!is.null(new.env$intercept)) {
