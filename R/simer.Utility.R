@@ -588,7 +588,7 @@ write.file <- function(SP) {
   pop.marker <- nrow(SP$geno$pop.geno[[1]])
   pop.inds <- sapply(out.geno.gen, function(i) {
     return(ncol(SP$geno$pop.geno[[i]]) / incols)
-  })[out.geno.gen]
+  })
   pop.ind <- sum(pop.inds)
   
   if (max(out.geno.gen) > SP$reprod$pop.gen) {
