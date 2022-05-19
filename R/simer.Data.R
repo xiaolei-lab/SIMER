@@ -366,7 +366,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
     keepInds <- NULL
   }
   
-  if (!is.null(filePhe)) {
+  if (FALSE) {
     if (length(filter) > 0) {
       pheList <- read.table(filePhe[1], header = TRUE)
       filterRow <- pheList[with(pheList, eval(parse(text = filter))), 1]
