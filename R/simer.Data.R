@@ -359,7 +359,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
   t1 <- as.numeric(Sys.time())
   logging.log(" Start Checking Genotype Data.\n", verbose = verbose)
   
-  if (!is.null(filePed)) {
+  if (length(filePed) != 0) {
     ped <-  read.table(filePed, sep = '\t', header = TRUE)
     keepInds <- unique(unlist(ped))
   } else {
