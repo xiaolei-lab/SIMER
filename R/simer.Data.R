@@ -103,7 +103,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
   
   logging.initialize("Simer.Data", outpath)
   
-  if (!is.null(fileBed)) {
+  if (length(fileBed) != 0) {
     logging.log("*************** Genotype Data Quality Control ***************\n", verbose = verbose)
     genoFileName <-
       simer.Data.Geno(
@@ -125,7 +125,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
     jsonList$genotype <- dirname(genoFileName)
   }
   
-  if (!is.null(filePed)) {
+  if (length(filePed) != 0) {
     logging.log("*************** Pedigree Data Quality Control ***************\n", verbose = verbose)
     pedFileName <- 
       simer.Data.Ped(
@@ -145,7 +145,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
     jsonList$pedigree <- pedFileName
   }
   
-  if (!is.null(filePhe)) {
+  if (length(filePhe) != 0) {
     logging.log("*************** Phenotype Data Quality Control **************\n", verbose = verbose)
     pheFileName <- 
       simer.Data.Pheno(
