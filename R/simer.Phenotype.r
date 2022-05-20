@@ -472,6 +472,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   
   pop <- do.call(rbind, rep(list(pop), pop.rep))
   pop <- cbind(pop, phe, TBV, TGV, phe.eff)
+  pop <- pop[order(pop[, 1]), ]
   
   if (useAllGeno) {
     for (i in 1:length(SP$pheno$pop)) {
