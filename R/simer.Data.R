@@ -101,6 +101,8 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
   pheSep <- "\t"
   missing = c(NA, 'NA', 'Na', '.', '-', 'NAN', 'nan', 'na', 'N/A', 'n/a', '<NA>', '', '-9', 9999)
   
+  genoFileName <- pedFileName <- pheFileName <- NULL
+  
   logging.initialize("Simer.Data", outpath)
   
   if (length(fileBed) != 0) {
@@ -421,11 +423,11 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
     }
     completeCmd <- 
       paste("plink", ifelse(is.null(fileBed), " --file", "--bfile"), fileBed,
-            ifelse(is.null(keepInds), "", paste("--keep simer.geno.ind")),
-            ifelse(is.null(filterGeno), "", paste("--geno", filterGeno)),
-            ifelse(is.null(filterHWE), "", paste("--hwe", filterHWE)),
-            ifelse(is.null(filterMind), "", paste("--mind", filterMind)),
-            ifelse(is.null(filterMAF), "", paste("--maf", filterMAF)),
+            ifelse(length(keepInds) == 0, "", paste("--keep simer.geno.ind")),
+            ifelse(length(filterGeno) == 0, "", paste("--geno", filterGeno)),
+            ifelse(length(filterHWE) == 0, "", paste("--hwe", filterHWE)),
+            ifelse(length(filterMind) == 0, "", paste("--mind", filterMind)),
+            ifelse(length(filterMAF) == 0, "", paste("--maf", filterMAF)),
             "--make-bed --out", out)
     
     system(completeCmd)
