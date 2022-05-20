@@ -366,7 +366,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
     keepInds <- NULL
   }
   
-  if (FALSE) {
+  if (length(filePhe) != 0) {
     if (length(filter) > 0) {
       pheList <- read.table(filePhe[1], header = TRUE)
       filterRow <- pheList[with(pheList, eval(parse(text = filter))), 1]
@@ -378,7 +378,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
     }
   }
   
-  if (!is.null(fileMVP)) {
+  if (FALSE) {
     if (length(fileMVP) == 0) { fileMVP <- NULL }
     if (length(filePed) == 0) { filePed <- NULL }
     if (is.null(out)) { out <- paste0(fileMVP, ".qc") }
