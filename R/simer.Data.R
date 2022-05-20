@@ -973,26 +973,29 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
       covariates <- covariates[covariates %in% names(finalPhe)]
       fixedEffects <- fixedEffects[fixedEffects %in% names(finalPhe)]
       randomEffects <- randomEffects[randomEffects %in% names(finalPhe)]
-      lmPhe <- lm(paste(paste0(traits, "~1"), 
-                        paste(unlist(c(covariates, fixedEffects)), collapse = "+"), 
-                        sep = "+"), data = finalPhe)
-      # choose a model by BIC in a stepwise algorithm
-      file <- NULL
-      if (verbose) {
-        try(file <- get("logging.file", envir = package.env), silent = TRUE)
-        sink(file = file, append = TRUE, split = TRUE)
-      }
-      slmPhe <- step(lmPhe, k = log(nrow(finalPhe)))
-      if (verbose) {
-        sink()
+      
+      if (length(c(covariates, fixedEffects)) != 0) {
+        lmPhe <- lm(paste(paste0(traits, "~1"), 
+                          paste(unlist(c(covariates, fixedEffects)), collapse = "+"), 
+                          sep = "+"), data = finalPhe)
+        # choose a model by BIC in a stepwise algorithm
+        file <- NULL
+        if (verbose) {
+          try(file <- get("logging.file", envir = package.env), silent = TRUE)
+          sink(file = file, append = TRUE, split = TRUE)
+        }
+        slmPhe <- step(lmPhe, k = log(nrow(finalPhe)))
+        if (verbose) {
+          sink()
+        }
+        envName <- names(slmPhe$model)[-1]
+        covariates <- covariates[covariates %in% envName]
+        fixedEffects <- fixedEffects[fixedEffects %in% envName]
+        # reset covariates and fixed effects
+        planPheN[[j]]$job_traits[[1]]$covariates <- covariates
+        planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
       }
       
-      envName <- names(slmPhe$model)[-1]
-      covariates <- covariates[covariates %in% envName]
-      fixedEffects <- fixedEffects[fixedEffects %in% envName]
-      # reset covariates and fixed effects
-      planPheN[[j]]$job_traits[[1]]$covariates <- covariates
-      planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
       jsonListN$analysis_plan <- list(planPheN[[j]])
       # select random effect which ratio less than threshold
       gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, ncpus = ncpus, verbose = verbose)
