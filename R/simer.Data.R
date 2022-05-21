@@ -51,6 +51,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
   
   # global parameters
   outpath <- dirname(out)
+  if (!dir.exists(outpath)) { dir.create(outpath) }
   maxLine <- 10000
   priority <- "speed"
   
