@@ -1299,7 +1299,7 @@ SP <- phenotype(SP)
 ## Generate phenotype with fixed effect and covariate and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports adding ***F***ixed effects, ***C***ovariates, and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. ***F***ixed effects, ***C***ovariates , and ***E***nvironmental ***R***andom effects are determined by ```effect```, ```intercept```, and ```ratio``` respectively. Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
+**```SIMER```** supports adding ***F***ixed effects, ***C***ovariates, and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. ***F***ixed effects, ***C***ovariates , and ***E***nvironmental ***R***andom effects are determined by ```effect```, ```slope```, and ```ratio``` respectively. Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
 
 ```r
 # Real genotypic map
@@ -1319,7 +1319,7 @@ pop.env <- list(
   ),
   C1 = list( # covariate 1
     level = c(70, 80, 90),
-    intercept = list(tr1 = 1.5)
+    slope = list(tr1 = 1.5)
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
@@ -1370,7 +1370,7 @@ pop.env <- list(
   ),
   C1 = list( # covariate 1
     level = c(70, 80, 90),
-    intercept = list(tr1 = 1.5, tr2 = 1.5)
+    slope = list(tr1 = 1.5, tr2 = 1.5)
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
@@ -1428,7 +1428,7 @@ pop.env <- list(
   ),
   C1 = list( # covariate 1
     level = c(70, 80, 90),
-    intercept = list(tr1 = 1.5)
+    slope = list(tr1 = 1.5)
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
@@ -1482,7 +1482,7 @@ pop.env <- list(
   ),
   C1 = list( # covariate 1
     level = c(70, 80, 90),
-    intercept = list(tr1 = 1.5, tr2 = 1.5)
+    slope = list(tr1 = 1.5, tr2 = 1.5)
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),
