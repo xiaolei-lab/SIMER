@@ -53,7 +53,7 @@ pop.env <- list(
   ),
   C1 = list( # covariate 1
     level = c(70, 80, 90),
-    intercept = list(tr1 = 1.5, tr2 = 1.5)
+    slope = list(tr1 = 1.5, tr2 = 1.5)
   ),
   R1 = list( # random effect 1
     level = c("l1", "l2", "l3"),

@@ -62,7 +62,7 @@
 #'   ),
 #'   C1 = list( # covariate 1
 #'     level = c(70, 80, 90),
-#'     intercept = list(tr1 = 1.5, tr2 = 1.5)
+#'     slope = list(tr1 = 1.5, tr2 = 1.5)
 #'   ),
 #'   R1 = list( # random effect 1
 #'     level = c("l1", "l2", "l3"),
@@ -157,7 +157,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
       old.env <- pop[[env.name[i]]]
       if (!(env.name[i] %in% names(pop))) {
         logging.log(" Add", env.name[i], "to population...\n", verbose = verbose)
-        if (!is.null(new.env$intercept)) {
+        if (!is.null(new.env$slope)) {
           if (!is.numeric(new.env$level)) {
             stop("The levels of covariates should be numeric!")
           }
@@ -266,8 +266,8 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
             stop("The length of level and effect should be same!")
           }
         } else {
-          if (!is.null(new.env$intercept)) {
-            new.env$effect[[i]] <- new.env$level * new.env$intercept[[i]]
+          if (!is.null(new.env$slope)) {
+            new.env$effect[[i]] <- new.env$level * new.env$slope[[i]]
           } else {
             new.env$effect[[i]] <- rnorm(length(new.env$level))
           }
