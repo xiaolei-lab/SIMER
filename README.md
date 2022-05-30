@@ -70,7 +70,7 @@
 - [Global Options](#global-options)
     - [Gallery of global parameters](#gallery-of-global-parameters)
     - [Counts of total population size](#counts-of-total-population-size)
-    - [Multi-thread Simulation](#multi-thread-simulation)
+    - [Multi-thread simulation](#multi-thread-simulation)
     - [Multi-population simulation](#multi-population-simulation)
     - [File output](#file-output)
     - [Generation-selective output](#generation-selective-output)
