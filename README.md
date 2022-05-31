@@ -21,8 +21,7 @@
     - [Basic](#basic)
     - [Optional](#optional)
 - [Quick Start](#quick-start)
-    - [Quick Start for Complete Simulation](#quick-start-for-complete-simulation)
-    - [Quick Start for Annotation Simulation](#quick-start-for-annotation-simulation)
+    - [Quick Start for Population Simulation](#quick-start-for-population-simulation)
     - [Quick Start for Genotype Simulation](#quick-start-for-genotype-simulation)
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
@@ -230,10 +229,10 @@ userped <- read.table("userped.txt", header = TRUE)
 
 All simulation processes can be devided into 2 steps: ***1) generate simulation parameters***; ***2) run simulation process***.
 
-## Quick Start for Complete Simulation
+## Quick Start for Population Simulation
 **[back to top](#contents)**
 
-A quick start for ***Complete Simulation*** is shown below:
+A quick start for ***Population Simulation*** is shown below:
 
 ```r
 # Generate all simulation parameters
@@ -241,24 +240,6 @@ SP <- param.simer(out = "simer")
 
 # Run Simer
 SP <- simer(SP)
-```
-
-## Quick Start for Annotation Simulation
-**[back to top](#contents)** 
-
-A quick start for ***Annotation Simulation*** is shown below:
-
-```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
-# Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10))
-
-# Run annotation simulation
-SP <- annotation(SP)
 ```
 
 ## Quick Start for Genotype Simulation
@@ -280,8 +261,13 @@ SP <- genotype(SP)
 A quick start for ***Phenotype Simulation*** is shown below:
 
 ```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
