@@ -1516,8 +1516,8 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.map = pop.map, 
-  qtn.num = list(tr1 = c(2, 8)),  # Group1: 2 QTNs; Group 2: 8 QTNs
-  qtn.dist = list(tr1 = "norm", tr2 = "norm"),
+  qtn.num = list(tr1 = c(2, 8)), # Group1: 2 QTNs; Group 2: 8 QTNs
+  qtn.dist = list(tr1 = c("norm", "norm")),
   qtn.model = "A"
 )
 # Generate genotype simulation parameters
