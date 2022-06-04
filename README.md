@@ -41,7 +41,7 @@
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
     - [Generate phenotype with fixed effect and covariate and environmental random effect](#generate-phenotype-with-fixed-effect-and-covariate-and-environmental-random-effect)
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
-    - [Generate phenotype controlled by multiple-group QTNs](#generate-phenotype-controlled-by-multiple-group-QTNs)
+    - [Generate phenotype controlled by varied QTN effect distribution](#generate-phenotype-controlled-by-varied-QTN-effect-distribution)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
     - [Individual selection on single trait](#individual-selection-on-single-trait)
@@ -451,9 +451,8 @@ SP <- genotype(SP)
 **(2)** Multiple-Trait Model  
 **(3)** Repeated Record Model  
 **(4)** Genetic Effect Model (***A***dditive effect, ***D***ominant effect, and ***G***enetic-***G***enetic interaction effect)  
-**(5)** Effect Distribution Model (QTN effect distribution: ***Norm***al distribution, ***Geom***etric distribution, ***Gamma*** distribution, and ***Beta*** distribution)  
+**(5)** Genetic Model with Varied QTN Effect Distributions (QTN effect distribution: ***Norm***al distribution, ***Geom***etric distribution, ***Gamma*** distribution, ***Beta*** distribution, and their combination)  
 **(6)** Linear Mixed Model (***F***ixed effect, ***C***ovariate, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, and ***G***enetic-***E***nvironmental interaction effect)  
-**(7)** QTN Mixed Model (Trait controlled by ***Multiple-Group*** QTNs)  
 
 ## Gallery of phenotype simulation parameters
 **[back to top](#contents)**  
@@ -1503,10 +1502,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype controlled by multiple-group QTNs
+## Generate phenotype controlled by varied QTN effect distribution
 **[back to top](#contents)** 
 
-In the single-trait simulation, the trait can be controlled by ***Multiple-Group QTNs***. An example of the single-trait controlled by two-group QTNs is displayed as follows: 
+In the single-trait simulation, the trait can be controlled by ***varied QTN effect distribution***. An example of the single-trait controlled by two-group QTNs is displayed as follows: 
 
 ```r
 # Real genotypic map
@@ -1515,7 +1514,12 @@ In the single-trait simulation, the trait can be controlled by ***Multiple-Group
 pop.map <- generate.map(pop.marker = 1e4)
 
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = c(2, 8)), qtn.model = "A") # Group1: 2 QTNs; Group 2: 8 QTNs
+SP <- param.annot(
+  pop.map = pop.map, 
+  qtn.num = list(tr1 = c(2, 8)),  # Group1: 2 QTNs; Group 2: 8 QTNs
+  qtn.dist = list(tr1 = "norm", tr2 = "norm")
+  qtn.model = "A"
+)
 # Generate genotype simulation parameters
 # SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
