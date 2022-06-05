@@ -937,6 +937,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
   t1 <- as.numeric(Sys.time())
   
   planPhe <- jsonList$analysis_plan
+  auto_optim <- jsonList$auto_optimization
   
   for (i in 1:length(planPhe)) {
     # logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
@@ -975,39 +976,45 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
       fixedEffects <- fixedEffects[fixedEffects %in% names(finalPhe)]
       randomEffects <- randomEffects[randomEffects %in% names(finalPhe)]
       
-      if (length(c(covariates, fixedEffects)) != 0) {
-        lmPhe <- lm(paste(paste0(traits, "~1"), 
-                          paste(unlist(c(covariates, fixedEffects)), collapse = "+"), 
-                          sep = "+"), data = finalPhe)
-        # choose a model by BIC in a stepwise algorithm
-        file <- NULL
-        if (verbose) {
-          try(file <- get("logging.file", envir = package.env), silent = TRUE)
-          sink(file = file, append = TRUE, split = TRUE)
+      if (auto_optim) {
+        if (length(c(covariates, fixedEffects)) != 0) {
+          lmPhe <- lm(paste(paste0(traits, "~1"), 
+                            paste(unlist(c(covariates, fixedEffects)), collapse = "+"), 
+                            sep = "+"), data = finalPhe)
+          # choose a model by BIC in a stepwise algorithm
+          file <- NULL
+          if (verbose) {
+            try(file <- get("logging.file", envir = package.env), silent = TRUE)
+            sink(file = file, append = TRUE, split = TRUE)
+          }
+          slmPhe <- step(lmPhe, k = log(nrow(finalPhe)))
+          if (verbose) {
+            sink()
+          }
+          envName <- names(slmPhe$model)[-1]
+          covariates <- covariates[covariates %in% envName]
+          fixedEffects <- fixedEffects[fixedEffects %in% envName]
+          # reset covariates and fixed effects
+          planPheN[[j]]$job_traits[[1]]$covariates <- covariates
+          planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
         }
-        slmPhe <- step(lmPhe, k = log(nrow(finalPhe)))
-        if (verbose) {
-          sink()
-        }
-        envName <- names(slmPhe$model)[-1]
-        covariates <- covariates[covariates %in% envName]
-        fixedEffects <- fixedEffects[fixedEffects %in% envName]
-        # reset covariates and fixed effects
-        planPheN[[j]]$job_traits[[1]]$covariates <- covariates
-        planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
+        
+        jsonListN$analysis_plan <- list(planPheN[[j]])
+        # select random effect which ratio less than threshold
+        gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, ncpus = ncpus, verbose = verbose)
+        vc <- gebv[[1]]$varList[[1]]
+        randomEffectRatio <- vc[1:length(randomEffects)] / sum(vc)
+        randomEffects <- randomEffects[randomEffectRatio > randomRatio]
+        # reset covariates, fixed effects, and random effects
+        planPhe[[i]]$job_traits[[j]]$covariates <- covariates
+        planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
+        planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
       }
       
-      jsonListN$analysis_plan <- list(planPheN[[j]])
-      # select random effect which ratio less than threshold
-      gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, ncpus = ncpus, verbose = verbose)
-      vc <- gebv[[1]]$varList[[1]]
-      randomEffectRatio <- vc[1:length(randomEffects)] / sum(vc)
-      randomEffects <- randomEffects[randomEffectRatio > randomRatio]
-      # reset covariates, fixed effects, and random effects
-      planPhe[[i]]$job_traits[[j]]$covariates <- covariates
-      planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
-      planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
-      envFormula <- c(paste0(covariates, "(C)"), paste0(fixedEffects, "(F)"), paste0(randomEffects, "(R)"))
+      envFormula <- c(
+        paste0(planPhe[[i]]$job_traits[[j]]$fixed_effects, "(F)"), 
+        paste0(planPhe[[i]]$job_traits[[j]]$covariates, "(C)"), 
+        paste0(planPhe[[i]]$job_traits[[j]]$random_effects, "(R)"))
       envFormula <- envFormula[nchar(envFormula) > 3]
       logging.log(" *********************************************************\n",
                   "Model optimized by BIC and random variance ratio is:\n", 
@@ -1250,6 +1257,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
   
   BVIndex <- jsonList$breeding_value_index
   planPhe <- jsonList$analysis_plan
+  auto_optim <- jsonList$auto_optimization
   
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
   str1 <- gsub("^\\s+|\\s+$", "", str1)
@@ -1257,11 +1265,10 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
   BVWeight <- as.numeric(str1[!strIsNA])
   names(BVWeight) <- str1[strIsNA]
   
-  gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
-  
   covPList <- NULL
   covAList <- NULL
   pheNames <- NULL
+  usePhes <- NULL
   for (i in 1:length(planPhe)) {
     filePhe <- planPhe[[i]]$sample_info
     pheno <- read.table(filePhe, header = TRUE)
@@ -1284,33 +1291,56 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
     } else {
       usePhe <- pheno[, pheName, drop = FALSE]
     }
+    if (is.null(usePhes)) {
+      usePhes <- usePhe
+    } else {
+      usePhes <- cbind(usePhes, usePhe)
+    }
     covP <- var(usePhe, na.rm = TRUE)
     covPList[[i]] <- covP
-    if (planPhe[[i]]$multi_trait) {
-      covAList[[i]] <- gebvs[[i]]$covA
-    } else {
-      covAList[[i]] <- gebvs[[i]]$varList[[1]][1]
+  }
+  
+  if (auto_optim) {
+    gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
+    
+    for (i in 1:length(planPhe)) {
+      if (planPhe[[i]]$multi_trait) {
+        covAList[[i]] <- gebvs[[i]]$covA
+      } else {
+        covAList[[i]] <- gebvs[[i]]$varList[[1]][1]
+      }
     }
-  }
+    
+    P <- as.matrix(Matrix::bdiag(covPList))
+    A <- as.matrix(Matrix::bdiag(covAList))
+    iP <- try(solve(P), silent = TRUE)
+    if (inherits(iP, "try-error")) {
+      iP <- MASS::ginv(P)
+    }
+    
+    # selection index
+    if (any(sort(pheNames) != sort(names(BVWeight)))) {
+      stop("Trait names should be consistent between planPhe and BVWeight!")
+    }
+    BVWeight <- BVWeight[match(pheNames, names(BVWeight))]
+    b <- iP %*% A %*% BVWeight
+    b <- round(as.vector(b), digits = 2)
   
-  P <- as.matrix(Matrix::bdiag(covPList))
-  A <- as.matrix(Matrix::bdiag(covAList))
-  iP <- try(solve(P), silent = TRUE)
-  if (inherits(iP, "try-error")) {
-    iP <- MASS::ginv(P)
-  }
+  } else {
+    if (is.null(jsonList$selection_index)) {
+      stop("A selection index is necessary!")
+    }
+    str1 <- unlist(strsplit(jsonList$selection_index, split = c("\\+|\\*")))
+    str1 <- gsub("^\\s+|\\s+$", "", str1)
+    strIsNA <- is.na(suppressWarnings(as.numeric(str1)))
+    b <- as.numeric(str1[!strIsNA])
+    names(b) <- str1[strIsNA]
+  } 
   
-  # selection index
-  if (any(sort(pheNames) != sort(names(BVWeight)))) {
-    stop("Trait names should be consistent between planPhe and BVWeight!")
-  }
-  BVWeight <- BVWeight[match(pheNames, names(BVWeight))]
-  b <- iP %*% A %*% BVWeight
-  b <- round(as.vector(b), digits = 2)
   selIndex <- paste(paste(b, names(BVWeight), sep = "*"), collapse = " + ")
-
+  
   # genetic progress
-  scores <- sort(as.matrix(usePhe) %*% b, decreasing = TRUE)
+  scores <- sort(as.matrix(usePhes) %*% b, decreasing = TRUE)
   geneticProgress <- round(mean(scores[1:(0.8*length(scores))]) - mean(scores), digits = 2)
   selIndex <- paste0(selIndex, " = ", geneticProgress)
   

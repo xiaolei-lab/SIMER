@@ -1,8 +1,9 @@
 {
     "genotype": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/02plinkb"],
     "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/05others/pedigree.txt"],
-    "selection_index": [],
+    "selection_index": "0.2 * T1 + 0.8 * T2",
     "breeding_value_index": "0.2 * T1 + 0.8 * T2",
+    "auto_optimization": true,
     "quality_control_plan": {
         "genotype_quality_control":{
             "filter": ["F1 == 'Male'"],
