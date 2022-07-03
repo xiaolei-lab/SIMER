@@ -2527,14 +2527,24 @@ for (i in 1:rep) {
 ```r
 ### 01 Numeric Format ###
 # Generate all simulation parameters
-SP <- param.simer(out = "simer", outpath = getwd(), out.format = "numeric")
+SP <- param.simer(
+  # SP = SP, # uncomment it when users already have a 'SP'
+  out = "simer",
+  outpath = getwd(),
+  out.format = "numeric"
+ )
 
 # Run Simer
 SP <- simer(SP)
 
 ### 02 PLINK Binary Format ###
 # Generate all simulation parameters
-SP <- param.simer(out = "simer", outpath = getwd(), out.format = "plink")
+SP <- param.simer(
+  # SP = SP, # uncomment it when users already have a 'SP'
+  out = "simer",
+  outpath = getwd(),
+  out.format = "plink"
+)
 
 # Run Simer
 SP <- simer(SP)
