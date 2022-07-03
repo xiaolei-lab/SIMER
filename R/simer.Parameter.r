@@ -54,25 +54,30 @@ param.annot <- function(SP = NULL, ...) {
   
   SP.tmp <- list(...)
   
-  SP.map <- list(
-    pop.map = NULL,
-    qtn.model = "A",
-    qtn.num = list(tr1 = 10),
-    qtn.dist = list(tr1 = "norm"),
-    qtn.sd = list(tr1 = NA),
-    qtn.prob = list(tr1 = NA),
-    qtn.shape = list(tr1 = NA),
-    qtn.scale = list(tr1 = NA),
-    qtn.shape1 = list(tr1 = NA),
-    qtn.shape2 = list(tr1 = NA),
-    qtn.ncp = list(tr1 = NA),
-    qtn.spot = FALSE,
-    len.block = 5e7,
-    maf = NULL,
-    recom.spot = FALSE,
-    range.hot = 4:6,
-    range.cold = 1:5
-  )
+  if (is.null(SP$map)) {
+    SP.map <- list(
+      pop.map = NULL,
+      qtn.model = "A",
+      qtn.num = list(tr1 = 10),
+      qtn.dist = list(tr1 = "norm"),
+      qtn.sd = list(tr1 = NA),
+      qtn.prob = list(tr1 = NA),
+      qtn.shape = list(tr1 = NA),
+      qtn.scale = list(tr1 = NA),
+      qtn.shape1 = list(tr1 = NA),
+      qtn.shape2 = list(tr1 = NA),
+      qtn.ncp = list(tr1 = NA),
+      qtn.spot = FALSE,
+      len.block = 5e7,
+      maf = NULL,
+      recom.spot = FALSE,
+      range.hot = 4:6,
+      range.cold = 1:5
+    )
+    
+  } else {
+    SP.map <- SP$map
+  }
   
   group1 <- c("pop.map", "qtn.model")
   group2 <- c("qtn.num", "qtn.dist", "qtn.sd", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
@@ -173,14 +178,19 @@ param.geno <- function(SP = NULL, ...) {
   
   SP.tmp <- list(...)
   
-  SP.geno <- list(
-    pop.geno = NULL,
-    incols = 1, 
-    pop.marker = 1e4,
-    pop.ind = 1e2,
-    prob = NULL,
-    rate.mut = 1e-8
-  )
+  if (is.null(SP$geno)) {
+    SP.geno <- list(
+      pop.geno = NULL,
+      incols = 1, 
+      pop.marker = 1e4,
+      pop.ind = 1e2,
+      prob = NULL,
+      rate.mut = 1e-8
+    )
+    
+  } else {
+    SP.geno <- SP$geno
+  }
   
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.geno)) {
@@ -235,25 +245,30 @@ param.pheno <- function(SP = NULL, ...) {
   
   SP.tmp <- list(...)
   
-  SP.pheno <- list(
-    pop = NULL,
-    pop.ind = 100,
-    pop.rep = 1,
-    pop.rep.bal = TRUE,
-    pop.env = NULL,
-    phe.model = list(tr1 = "T1 = A + E"),
-    phe.h2A = list(tr1 = NA),
-    phe.h2D = list(tr1 = NA),
-    phe.h2GxG = list(tr1 = NULL),
-    phe.h2GxE = list(tr1 = NULL),
-    phe.h2PE = list(tr1 = NA),
-    phe.var = list(tr1 = NA),
-    phe.corA = NULL,
-    phe.corD = NULL,
-    phe.corGxG = NULL,
-    phe.corPE = NULL,
-    phe.corE = NULL
-  )
+  if (is.null(SP$pheno)) {
+    SP.pheno <- list(
+      pop = NULL,
+      pop.ind = 100,
+      pop.rep = 1,
+      pop.rep.bal = TRUE,
+      pop.env = NULL,
+      phe.model = list(tr1 = "T1 = A + E"),
+      phe.h2A = list(tr1 = NA),
+      phe.h2D = list(tr1 = NA),
+      phe.h2GxG = list(tr1 = NULL),
+      phe.h2GxE = list(tr1 = NULL),
+      phe.h2PE = list(tr1 = NA),
+      phe.var = list(tr1 = NA),
+      phe.corA = NULL,
+      phe.corD = NULL,
+      phe.corGxG = NULL,
+      phe.corPE = NULL,
+      phe.corE = NULL
+    )
+    
+  } else {
+    SP.pheno <- SP$pheno
+  }
   
   group1 <- c("pop", "pop.ind", "pop.rep", "pop.rep.bal", "pop.env")
   group2 <- c("phe.model", "phe.h2A", "phe.h2D", "phe.h2GxG", "phe.h2GxE", "phe.h2PE", "phe.var")
@@ -371,18 +386,23 @@ param.sel <- function(SP = NULL, ...) {
   
   SP.tmp <- list(...)
   
-  SP.sel <- list(
-    pop.sel = NULL,
-    ps = c(0.8, 0.8),
-    decr = TRUE,
-    sel.crit = "pheno",
-    sel.single = "comb",
-    sel.multi = "index",
-    index.wt = c(0.5, 0.5),
-    index.tdm = 1,
-    goal.perc = 0.1,
-    pass.perc = 0.9
-  )
+  if (is.null(SP$sel)) {
+    SP.sel <- list(
+      pop.sel = NULL,
+      ps = c(0.8, 0.8),
+      decr = TRUE,
+      sel.crit = "pheno",
+      sel.single = "comb",
+      sel.multi = "index",
+      index.wt = c(0.5, 0.5),
+      index.tdm = 1,
+      goal.perc = 0.1,
+      pass.perc = 0.9
+    )
+    
+  } else {
+    SP.sel <- SP$sel
+  }
   
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.sel)) {
@@ -424,12 +444,17 @@ param.reprod <- function(SP = NULL, ...) {
   
   SP.tmp <- list(...)
   
-  SP.reprod <- list(
-    pop.gen = 2,
-    reprod.way = "randmate",
-    sex.rate = 0.5,
-    prog = 2
-  )
+  if (is.null(SP$reprod)) {
+    SP.reprod <- list(
+      pop.gen = 1,
+      reprod.way = "randmate",
+      sex.rate = 0.5,
+      prog = 2
+    )
+    
+  } else {
+    SP.reprod <- SP$reprod
+  }
   
   if (!is.null(SP.tmp$reprod.way)) {
     if (SP.tmp$reprod.way == "userped" & is.null(SP.tmp$userped)) {
@@ -489,19 +514,24 @@ param.global <- function(SP = NULL, ...) {
   
   SP.tmp <- list(...)
   
-  SP.global <- list(
-    replication = 1,
-    seed.sim = runif(1, 0, 100),
-    out = "simer", 
-    outpath = NULL,
-    out.format = "numeric",
-    pop.gen = 2,
-    out.geno.gen = 1:2,
-    out.pheno.gen = 1:2,
-    useAllGeno = FALSE,
-    ncpus = 0,
-    verbose = TRUE
-  )
+  if (is.null(SP$global)) {
+    SP.global <- list(
+      replication = 1,
+      seed.sim = runif(1, 0, 100),
+      out = "simer", 
+      outpath = NULL,
+      out.format = "numeric",
+      pop.gen = 1,
+      out.geno.gen = 1,
+      out.pheno.gen = 1,
+      useAllGeno = FALSE,
+      ncpus = 0,
+      verbose = TRUE
+    )
+    
+  } else {
+    SP.global <- SP$global
+  }
   
   if (!is.null(SP.tmp$pop.gen)) {
     SP.global$pop.gen <- SP.tmp$pop.gen
