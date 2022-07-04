@@ -31,7 +31,7 @@ Generate parameters for selection.
 }
 \details{
 Build date: Apr 6, 2022
-Last update: Apr 30, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.sel(sel.single = "comb")

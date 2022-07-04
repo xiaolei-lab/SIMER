@@ -25,7 +25,7 @@ Generate parameters for reproduction.
 }
 \details{
 Build date: Apr 6, 2022
-Last update: Apr 29, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.reprod(reprod.way = "randmate")

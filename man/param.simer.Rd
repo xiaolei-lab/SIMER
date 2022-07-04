@@ -27,7 +27,7 @@ Generate parameters for Simer.
 }
 \details{
 Build date: Apr 17, 2022
-Last update: Apr 29, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.simer(out = "simer")

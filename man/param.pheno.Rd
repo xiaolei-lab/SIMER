@@ -38,7 +38,7 @@ Generate parameters for phenotype data simulation.
 }
 \details{
 Build date: Feb 21, 2022
-Last update: Apr 28, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.pheno(phe.model = list(tr1 = "T1 = A + E"))

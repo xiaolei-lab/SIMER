@@ -32,7 +32,7 @@ Generate parameters for global options.
 }
 \details{
 Build date: Apr 16, 2022
-Last update: Apr 29, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.global(out = "simer")

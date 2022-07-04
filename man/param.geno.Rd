@@ -27,7 +27,7 @@ Generate parameters for genotype data simulation.
 }
 \details{
 Build date: Feb 21, 2022
-Last update: Apr 28, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)

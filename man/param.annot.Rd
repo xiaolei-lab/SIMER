@@ -38,7 +38,7 @@ Generate parameters for annotation data simulation.
 }
 \details{
 Build date: Feb 24, 2022
-Last update: Apr 28, 2022
+Last update: Jul 4, 2022
 }
 \examples{
 SP <- param.annot(qtn.num = list(tr1 = 10))
