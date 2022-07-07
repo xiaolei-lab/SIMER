@@ -724,8 +724,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple-trait simulation is displayed as follows: 
-
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -763,7 +763,8 @@ SP <- phenotype(SP)
 ## Generate phenotype by AD model
 **[back to top](#contents)** 
 
-In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single-trait simulation is displayed as follows: 
+In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -794,8 +795,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows: 
-
+In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -834,7 +835,8 @@ SP <- phenotype(SP)
 ## Generate phenotype by GxG model
 **[back to top](#contents)** 
 
-In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction in single-trait simulation is displayed as follows: 
+In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -866,8 +868,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows: 
-
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -908,7 +910,8 @@ SP <- phenotype(SP)
 ## Generate phenotype by Repeated Record model
 **[back to top](#contents)** 
 
-In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** in single-trait simulation is displayed as follows: 
+In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -940,7 +943,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows: 
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -980,7 +984,8 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Normal distribution
 **[back to top](#contents)** 
 
-***Norm***al distribution is the most common QTN effect distribution. Phenotype controlled by QTNs subject to ***Norm***al distribution in single-trait simulation is displayed as follows: 
+***Norm***al distribution is the most common QTN effect distribution. Phenotype controlled by QTNs subject to ***Norm***al distribution in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1016,7 +1021,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple-trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Norm***al distribution in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1059,7 +1065,8 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Geometric distribution
 **[back to top](#contents)** 
 
-***Geom***etric distribution is the probability of success for the first time obtained only after K trials among the N Bernoulli trials. ***Geom***etric distribution can be used as a QTN effect distribution. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single-trait simulation is displayed as follows: 
+***Geom***etric distribution is the probability of success for the first time obtained only after K trials among the N Bernoulli trials. ***Geom***etric distribution can be used as a QTN effect distribution. Phenotype controlled by QTNs subject to ***Geom***etric distribution in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1095,7 +1102,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Geom***etric distribution in multiple-trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Geom***etric distribution in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1138,7 +1146,8 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Gamma distribution
 **[back to top](#contents)** 
 
-***Gamma*** distribution is the sum of N independent exponential random variables. Note that ***Exp***onential distribution is a special form of ***Gamma*** distribution when ```qtn.shape = 1``` and ```qtn.scale = 1```. Phenotype controlled by QTNs subject to ***Gamma*** distribution in single-trait simulation is displayed as follows: 
+***Gamma*** distribution is the sum of N independent exponential random variables. Note that ***Exp***onential distribution is a special form of ***Gamma*** distribution when ```qtn.shape = 1``` and ```qtn.scale = 1```. Phenotype controlled by QTNs subject to ***Gamma*** distribution in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1175,7 +1184,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Gamma*** distribution in multiple-trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Gamma*** distribution in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1219,7 +1229,8 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by QTNs subject to Beta distribution
 **[back to top](#contents)** 
 
-***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to the ***Beta*** distribution in single-trait simulation is displayed as follows: 
+***Beta*** distribution is a density function of conjugate prior distribution as Bernoulli distribution and Binomial distribution. Phenotype controlled by QTNs subject to the ***Beta*** distribution in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1257,7 +1268,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype controlled by QTNs subject to ***Beta*** distribution in multiple-trait simulation is displayed as follows: 
+Phenotype controlled by QTNs subject to ***Beta*** distribution in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1302,7 +1314,8 @@ SP <- phenotype(SP)
 ## Generate phenotype with fixed effect and covariate and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports adding ***F***ixed effects, ***C***ovariates, and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. ***F***ixed effects, ***C***ovariates , and ***E***nvironmental ***R***andom effects are determined by ```effect```, ```slope```, and ```ratio``` respectively. Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows: 
+**```SIMER```** supports adding ***F***ixed effects, ***C***ovariates, and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. ***F***ixed effects, ***C***ovariates , and ***E***nvironmental ***R***andom effects are determined by ```effect```, ```slope```, and ```ratio``` respectively. Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1353,7 +1366,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows: 
+Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1411,7 +1425,8 @@ SP <- phenotype(SP)
 ## Generate phenotype by GxE model
 **[back to top](#contents)** 
 
-In ***GxE*** model, **```SIMER```** adds ***G***enetic-***E***nvironmental interaction effect to phenotype. Users should prepare ***G***enetic ***QTN*** effect in the ***Annotation data*** and environmental factor by ```pop.env``` for generating ***G***enetic-***E***nvironmental ***I***ndividual effect. An example of ***G***enetic-***E***nvironmental interaction in single-trait simulation is displayed as follows: 
+In ***GxE*** model, **```SIMER```** adds ***G***enetic-***E***nvironmental interaction effect to phenotype. Users should prepare ***G***enetic ***QTN*** effect in the ***Annotation data*** and environmental factor by ```pop.env``` for generating ***G***enetic-***E***nvironmental ***I***ndividual effect. An example of ***G***enetic-***E***nvironmental interaction in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1465,7 +1480,8 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-An example of ***G***enetic-***E***nvironmental interaction in multiple-trait simulation is displayed as follows: 
+An example of ***G***enetic-***E***nvironmental interaction in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1523,7 +1539,8 @@ SP <- phenotype(SP)
 ## Generate phenotype controlled by varied QTN effect distribution
 **[back to top](#contents)** 
 
-In the single-trait simulation, the trait can be controlled by ***varied QTN effect distribution***. An example of the single-trait controlled by two-group QTNs is displayed as follows: 
+In the single-trait simulation, the trait can be controlled by ***varied QTN effect distribution***. An example of the single-trait controlled by two-group QTNs is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Real genotypic map
@@ -1685,7 +1702,8 @@ SP <- phenotype(SP)
 ## Individual selection on single trait
 **[back to top](#contents)**  
 
-***Individual selection*** is a selecting method according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to be used for traits with ***high heritability***.
+***Individual selection*** is a selecting method according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to be used for traits with ***high heritability***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1710,7 +1728,8 @@ SP <- selects(SP)
 ## Family selection on single trait
 **[back to top](#contents)** 
 
-***Family selection*** is a selection method by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.
+***Family selection*** is a selection method by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1735,7 +1754,8 @@ SP <- selects(SP)
 ## Within-family selection on single trait
 **[back to top](#contents)** 
 
-***Within-family*** selection is a selection method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.
+***Within-family*** selection is a selection method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1760,7 +1780,8 @@ SP <- selects(SP)
 ## Combined selection on single trait
 **[back to top](#contents)**  
 
-***Combined selection*** is a selecting method according to ***weighed combination of the deviation of individual phenotype and family mean value***.
+***Combined selection*** is a selecting method according to ***weighed combination of the deviation of individual phenotype and family mean value***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1785,7 +1806,8 @@ SP <- selects(SP)
 ## Tandem selection on multiple traits
 **[back to top](#contents)**  
 
-***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of the selected trait is ```index.tdm``` and this parameter should ***not be controlled by Users***.
+***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of the selected trait is ```index.tdm``` and this parameter should ***not be controlled by Users***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate genotype simulation parameters
@@ -1818,7 +1840,8 @@ SP <- selects(SP)
 ## Independent culling selection on multiple traits
 **[back to top](#contents)**  
 
-After setting a ***minimum selection criterion*** for each target trait. ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.
+After setting a ***minimum selection criterion*** for each target trait. ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate genotype simulation parameters
@@ -1851,7 +1874,8 @@ SP <- selects(SP)
 ## Index selection on multiple traits
 **[back to top](#contents)**  
 
-***Index selection*** is a comprehensive selection that will consider several traits based on their respective ***heritabilities***, ***phenotypic variances***, ***economic weights***, corresponding ***genetic correlations***, and ***phenotypes***. Then calculate the ***index value of each trait***, and eliminate or select it according to its level. Users can set the weight of each trait by ```index.wt```.
+***Index selection*** is a comprehensive selection that will consider several traits based on their respective ***heritabilities***, ***phenotypic variances***, ***economic weights***, corresponding ***genetic correlations***, and ***phenotypes***. Then calculate the ***index value of each trait***, and eliminate or select it according to its level. Users can set the weight of each trait by ```index.wt```.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate genotype simulation parameters
@@ -1884,7 +1908,8 @@ SP <- selects(SP)
 ## Clone for plant
 **[back to top](#contents)** 
 
-***Clone*** is a sexual reproduction method that does not involve germ cells and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```. 
+***Clone*** is a sexual reproduction method that does not involve germ cells and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```.   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1913,7 +1938,8 @@ SP <- reproduces(SP)
 ## Double haploid for plant
 **[back to top](#contents)**  
 
-***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced double the number of chromosomes and restore the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```. 
+***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced double the number of chromosomes and restore the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```.   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1942,7 +1968,8 @@ SP <- reproduces(SP)
 ## Self-pollination for plant and micro-organism
 **[back to top](#contents)** 
 
-***Self-pollination*** refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. ***Sex*** of offspring will be ***0*** in ```selfpol```. 
+***Self-pollination*** refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. ***Sex*** of offspring will be ***0*** in ```selfpol```.   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -1971,7 +1998,8 @@ SP <- reproduces(SP)
 ## Random mating for plant and animal
 **[back to top](#contents)**  
 
-In ***random mating***, any female or male individual has the same probability to mate with any opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```. 
+In ***random mating***, any female or male individual has the same probability to mate with any opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```.   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2000,7 +2028,8 @@ SP <- reproduces(SP)
 ## Random mating excluding self-pollination for animal
 **[back to top](#contents)**  
 
-In ***random mating excluding self-pollination***, an individual cannot mate to itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```. 
+In ***random mating excluding self-pollination***, an individual cannot mate to itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```.   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2029,7 +2058,8 @@ SP <- reproduces(SP)
 ## Two-way cross for animal
 **[back to top](#contents)**  
 
-***Two-way cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam***.
+***Two-way cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2060,7 +2090,8 @@ SP <- reproduces(SP)
 ## Three-way cross for animal
 **[back to top](#contents)** 
 
-***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is termimal ***sire***.
+***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is termimal ***sire***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2091,7 +2122,8 @@ SP <- reproduces(SP)
 ## Four-way cross for animal
 **[back to top](#contents)**  
 
-***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***.
+***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2122,7 +2154,8 @@ SP <- reproduces(SP)
 ## Back cross for animal
 **[back to top](#contents)**  
 
-***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the ***first two-way cross***.
+***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the ***first two-way cross***.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2153,7 +2186,8 @@ SP <- reproduces(SP)
 ## User-designed pedigree mating for plant and animal
 **[back to top](#contents)**  
 
-***User-designed pedigree mating*** needs a specific ***user-designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.
+***User-designed pedigree mating*** needs a specific ***user-designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.  
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate annotation simulation parameters
@@ -2178,7 +2212,8 @@ SP <- reproduces(SP)
 ## AN EASY WAY TO GENERATE A POPULATION
 **[back to top](#contents)**  
 
-The above methods are to generate population ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population in a ***MORE CONVENIENT*** way. 
+The above methods are to generate population ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population in a ***MORE CONVENIENT*** way.   
+If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
 # Generate all simulation parameters
