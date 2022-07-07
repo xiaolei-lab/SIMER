@@ -694,7 +694,7 @@ SP <- genotype(SP)
 **[back to top](#contents)** 
 
 In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single-trait simulation is displayed as follows:   
-***If users want to writing data, please turn to [File output](## File output).***  
+**[File output](## File output)**  
 
 ```r
 # Real genotypic map
