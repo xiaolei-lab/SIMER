@@ -112,8 +112,8 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   }
   rm(pop.geno); gc()
   
-  pop.marker <- nrow(bigmat)
-  pop.ind <- ncol(bigmat) / incols    
+  SP$geno$pop.marker <- pop.marker <- nrow(bigmat)
+  SP$geno$pop.ind <- pop.ind <- ncol(bigmat) / incols
   
   if (!is.null(pop.map)) {
     if (nrow(bigmat) != nrow(pop.map)) {
@@ -206,8 +206,9 @@ annotation <- function(SP, verbose = TRUE) {
   # annotation parameters
   pop.map <- SP$map$pop.map
   pop.geno <- SP$geno$pop.geno
-  qtn.num <- SP$map$qtn.num
   qtn.model <- SP$map$qtn.model
+  qtn.index <- SP$map$qtn.index
+  qtn.num <- SP$map$qtn.num
   qtn.dist <- SP$map$qtn.dist
   qtn.sd <- SP$map$qtn.sd
   qtn.prob <- SP$map$qtn.prob
@@ -297,14 +298,26 @@ annotation <- function(SP, verbose = TRUE) {
   }
   
   # select markers as QTNs
-  nTrait <- length(qtn.num)
+  if (is.null(qtn.index)) {
+    nTrait <- length(qtn.num)
+  } else {
+    nTrait <- length(qtn.index)
+  }
   qtn.trn <- rep(list(NULL), nTrait)
+  names(qtn.trn) <- paste0('tr', 1:nTrait)
   
   # QTN number
-  for (i in 1:nTrait) {
-    if (sum(qtn.num[[i]]) <= 0) { next  }
-    qtn.trn[[i]] <- sort(sample(1:nrow(pop.map), sum(qtn.num[[i]])))
-    logging.log(" Number of selected markers of trait", i, ":", qtn.num[[i]], "\n", verbose = verbose)
+  if (is.null(qtn.index)) {
+    for (i in 1:nTrait) {
+      if (sum(qtn.num[[i]]) <= 0) { next  }
+      qtn.trn[[i]] <- sort(sample(1:nrow(pop.map), sum(qtn.num[[i]])))
+      logging.log(" Number of selected markers of trait", i, ":", qtn.num[[i]], "\n", verbose = verbose)
+    }
+    SP$map$qtn.index <- qtn.trn
+    
+  } else {
+    qtn.trn <- qtn.index
+    SP$map$qtn.num <- qtn.num <- lapply(qtn.trn, length)
   }
   
   # QTN effect

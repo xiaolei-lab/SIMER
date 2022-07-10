@@ -58,6 +58,7 @@ param.annot <- function(SP = NULL, ...) {
     SP.map <- list(
       pop.map = NULL,
       qtn.model = "A",
+      qtn.index = NULL,
       qtn.num = list(tr1 = 10),
       qtn.dist = list(tr1 = "norm"),
       qtn.sd = list(tr1 = NA),
@@ -75,7 +76,7 @@ param.annot <- function(SP = NULL, ...) {
       range.cold = 1:5
     )
     
-    group1 <- c("pop.map", "qtn.model")
+    group1 <- c("pop.map", "qtn.model", "qtn.index")
     group2 <- c("qtn.num", "qtn.dist", "qtn.sd", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
     group3 <- c("qtn.spot", "len.block", "maf", "recom.spot", "range.hot", "range.cold")
     
@@ -85,7 +86,11 @@ param.annot <- function(SP = NULL, ...) {
       }
     }
     
-    nTrait <- length(SP.map$qtn.num)
+    if (is.null(SP.map$qtn.index)) {
+      nTrait <- length(SP.map$qtn.num)
+    } else {
+      nTrait <- length(SP.map$qtn.index)
+    }
     
     if (nTrait > 1) {
       for (x in group2) {
