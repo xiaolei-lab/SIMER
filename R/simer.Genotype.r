@@ -162,7 +162,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 #' Generating a map with annotation information
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 28, 2022
+#' Last update: Jul 10, 2022
 #'
 #' @author Dong Yin
 #'
@@ -173,8 +173,9 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$map$pop.map}{the map data with annotation information.}
-#' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
 #' \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
+#' \item{$map$qtn.index}{the QTN index for each trait.}
+#' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
 #' \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
 #' \item{$map$qtn.sd}{the standard deviations for normal distribution.}
 #' \item{$map$qtn.prob}{the probability of success for geometric distribution.}
