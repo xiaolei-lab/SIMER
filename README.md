@@ -610,16 +610,22 @@ SP <- genotype(SP)
 <td>the map data with annotation information.</td>
 </tr>
 <tr>
-<td><b>qtn.num</b></td>
-<td>10</td>
-<td>list</td>
-<td>the QTN number for (each group in) each trait.</td>
-</tr>
-<tr>
 <td><b>qtn.model</b></td>
 <td>'A'</td>
 <td>character</td>
 <td>the genetic model of QTN such as 'A + D'.</td>
+</tr>
+<tr>
+<td><b>qtn.index</b></td>
+<td>10</td>
+<td>list</td>
+<td>the QTN index for each trait.</td>
+</tr>
+<tr>
+<td><b>qtn.num</b></td>
+<td>10</td>
+<td>list</td>
+<td>the QTN number for (each group in) each trait.</td>
 </tr>
 <tr>
 <td><b>qtn.dist</b></td>
