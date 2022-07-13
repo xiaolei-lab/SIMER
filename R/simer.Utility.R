@@ -582,6 +582,7 @@ write.file <- function(SP) {
   out.pheno.gen <- SP$global$out.pheno.gen
   verbose <- SP$global$verbose
   incols <- SP$geno$incols
+  ncpus <- SP$global$ncpus
   
   if (is.null(outpath)) return(SP)
   
@@ -630,9 +631,9 @@ write.file <- function(SP) {
   pop.inds <- c(0, pop.inds[-length(pop.inds)]) + 1
   for (i in 1:length(out.geno.gen)) {
     if (incols == 1) {
-      BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i])
+      BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i], threads = ncpus)
     } else {
-      Mat2BigMat(geno.total@address, geno.cvt1(SP$geno$pop.geno[[out.geno.gen[i]]][]), op = pop.inds[i])
+      Mat2BigMat(geno.total@address, geno.cvt1(SP$geno$pop.geno[[out.geno.gen[i]]][]), op = pop.inds[i], threads = ncpus)
     }
   }
   
