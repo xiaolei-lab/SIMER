@@ -1,9 +1,6 @@
 #' @import bigmemory
 NULL
 
-#' @import rMVP
-NULL
-
 #' @import Rcpp
 NULL
 

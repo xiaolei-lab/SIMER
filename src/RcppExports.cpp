@@ -73,6 +73,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// write_bfile
+void write_bfile(SEXP pBigMat, std::string bed_file, int threads, bool verbose);
+RcppExport SEXP _simer_write_bfile(SEXP pBigMatSEXP, SEXP bed_fileSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< std::string >::type bed_file(bed_fileSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    write_bfile(pBigMat, bed_file, threads, verbose);
+    return R_NilValue;
+END_RCPP
+}
 // hasNA
 bool hasNA(SEXP pBigMat, const int threads);
 RcppExport SEXP _simer_hasNA(SEXP pBigMatSEXP, SEXP threadsSEXP) {
@@ -126,6 +139,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_simer_Mat2BigMat", (DL_FUNC) &_simer_Mat2BigMat, 5},
     {"_simer_BigMat2BigMat", (DL_FUNC) &_simer_BigMat2BigMat, 5},
     {"_simer_GenoMixer", (DL_FUNC) &_simer_GenoMixer, 7},
+    {"_simer_write_bfile", (DL_FUNC) &_simer_write_bfile, 4},
     {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 2},
     {"_simer_hasNABed", (DL_FUNC) &_simer_hasNABed, 5},
     {"_simer_PedigreeCorrector", (DL_FUNC) &_simer_PedigreeCorrector, 10},

@@ -17,6 +17,10 @@ GenoMixer <- function(pBigMat, pBigmat, sirIdx, damIdx, nBlock = 100L, op = 1L, 
     invisible(.Call('_simer_GenoMixer', PACKAGE = 'simer', pBigMat, pBigmat, sirIdx, damIdx, nBlock, op, threads))
 }
 
+write_bfile <- function(pBigMat, bed_file, threads = 0L, verbose = TRUE) {
+    invisible(.Call('_simer_write_bfile', PACKAGE = 'simer', pBigMat, bed_file, threads, verbose))
+}
+
 hasNA <- function(pBigMat, threads = 0L) {
     .Call('_simer_hasNA', PACKAGE = 'simer', pBigMat, threads)
 }

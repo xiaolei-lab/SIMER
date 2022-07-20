@@ -1464,3 +1464,87 @@ checkEnv <- function(data, envName) {
   }
   return(data)
 }
+
+#' simer.Data.MVP2Bfile: To transform MVP data to binary format
+#' 
+#' transforming MVP data to binary format.
+#' 
+#' Build date: Sep 12, 2018
+#' Last update: July 20, 2022
+#'
+#' @author Haohao Zhang and Dong Yin
+#' 
+#' @param bigmat Genotype in bigmatrix format (0,1,2).
+#' @param map the map file.
+#' @param pheno the phenotype file.
+#' @param out the name of output file.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param verbose whether to print the reminder.
+#'
+#' @return NULL
+#' Output files:
+#' .bed, .bim, .fam
+#' 
+#' @export
+#' 
+#' @examples
+#' # Generate bigmat and map
+#' bigmat <- as.big.matrix(matrix(1:6, 3, 2))
+#' map <- generate.map(pop.marker = 3)
+#' 
+#' # Data converting
+#' simer.Data.MVP2Bfile(bigmat, map, out=tempfile("outfile"))
+simer.Data.MVP2Bfile <- function(bigmat, map, pheno=NULL, out='simer.plink', ncpus = 10, verbose=TRUE) {
+  t1 <- as.numeric(Sys.time())
+  # write bed file
+  write_bfile(bigmat@address, out, threads = ncpus, verbose = verbose)
+  
+  # write fam
+  #  1. Family ID ('FID')
+  #  2. Within-family ID ('IID'; cannot be '0')
+  #  3. Within-family ID of father ('0' if father isn't in dataset)
+  #  4. Within-family ID of mother ('0' if mother isn't in dataset)
+  #  5. Sex code ('1' = male, '2' = female, '0' = unknown)
+  #  6. Phenotype value ('1' = control, '2' = case, '-9'/'0'/non-numeric = missing data if case/control)
+  
+  if (is.null(pheno)) {
+    ind <- paste0("ind", 1:ncol(bigmat))
+    sir <- rep(0, ncol(bigmat))
+    dam <- rep(0, ncol(bigmat))
+    sex <- rep(0, ncol(bigmat))
+    pheno <- rep(-9, ncol(bigmat))
+    message("pheno is NULL, automatically named individuals.")
+    
+  } else if (ncol(pheno) == 1) {
+    ind <- pheno[, 1]
+    sir <- rep(0, ncol(bigmat))
+    dam <- rep(0, ncol(bigmat))
+    sex <- rep(0, ncol(bigmat))
+    pheno <- rep(-9, ncol(bigmat))
+    
+  } else {
+    if (ncol(pheno) > 2) { 
+      message("Only the first phenotype is written to the fam file, and the remaining phenotypes are ignored.")
+    }
+    ind <- pheno[, 1]
+    sir <- pheno[, 5]
+    dam <- pheno[, 6]
+    sex <- pheno[, 7]
+    pheno <- pheno[, 8]
+  }
+  
+  fam <- cbind(ind, ind, sir, dam, sex, pheno)
+  write.table(fam, paste0(out, '.fam'), quote = FALSE, row.names = FALSE, col.names = FALSE, sep = ' ')
+  
+  # write bim
+  #  1. Chromosome code (either an integer, or 'X'/'Y'/'XY'/'MT'; '0' indicates unknown) or name
+  #  2. Variant identifier
+  #  3. Position in morgans or centimorgans (safe to use dummy value of '0')
+  #  4. Base-pair coordinate (normally 1-based, but 0 ok; limited to 231-2)
+  #  5. Allele 1 (corresponding to clear bits in .bed; usually minor)
+  #  6. Allele 2 (corresponding to set bits in .bed; usually major)
+  bim <- cbind(map[, 2], map[, 1], 0, map[, 3], map[, 4], map[, 5])
+  write.table(bim, paste0(out, '.bim'), quote = FALSE, row.names = FALSE, col.names = FALSE, sep = '\t')
+  t2 <- as.numeric(Sys.time())
+  logging.log("Done within", format_time(t2 - t1), "\n", verbose = verbose)
+}

@@ -655,8 +655,7 @@ write.file <- function(SP) {
     pheno.geno <- do.call(rbind, lapply(out.geno.gen, function(i) {
       return(SP$pheno$pop[[i]])
     }))
-    MVP.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno[, 1, drop = FALSE], out = file.path(directory.rep, out), verbose = verbose)
-    remove_bigmatrix(file.path(directory.rep, out))
+    simer.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno, out = file.path(directory.rep, out), ncpus = ncpus, verbose = verbose)
     geno.total <- 0
   }
   write.table(pheno.total[, c(1, 5, 6)], file = file.path(directory.rep, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
@@ -665,6 +664,7 @@ write.file <- function(SP) {
   logging.log(" All files have been saved successfully!\n", verbose = verbose)
   
   rm(geno.total); rm(pheno.total); rm(pheno.geno); gc()
+  remove_bigmatrix(file.path(directory.rep, out))
   
   return(SP)
 }
