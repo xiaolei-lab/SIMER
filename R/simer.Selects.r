@@ -76,6 +76,11 @@ selects <- function(SP = NULL, verbose = TRUE) {
   goal.perc <- SP$sel$goal.perc
   pass.perc <- SP$sel$pass.perc
   pop.ind <- length(pop$index)
+  pop.gen <- SP$global$pop.gen - 1
+  
+  if (length(pop.gen) == 0) return(SP)
+  if (pop.gen == 0) return(SP)
+  if (all(ps == 1)) return(SP)
   
   if (!(all(ps <= 1) | all(ps > 1))) {
     stop("Please input a correct ps!")

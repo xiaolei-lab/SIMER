@@ -1496,6 +1496,9 @@ checkEnv <- function(data, envName) {
 #' simer.Data.MVP2Bfile(bigmat, map, out=tempfile("outfile"))
 simer.Data.MVP2Bfile <- function(bigmat, map, pheno=NULL, out='simer.plink', ncpus = 10, verbose=TRUE) {
   t1 <- as.numeric(Sys.time())
+  
+  logging.log(paste0("inds: ", ncol(bigmat), "\tmarkers:", nrow(bigmat), '\n'), verbose = verbose)
+  
   # write bed file
   write_bfile(bigmat@address, out, threads = ncpus, verbose = verbose)
   
