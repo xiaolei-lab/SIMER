@@ -78,177 +78,180 @@ selects <- function(SP = NULL, verbose = TRUE) {
   pop.ind <- length(pop$index)
   pop.gen <- SP$global$pop.gen - 1
   
-  if (length(pop.gen) == 0) return(SP)
-  if (pop.gen == 0) return(SP)
-  if (all(ps == 1)) return(SP)
+  if (length(pop.gen) == 0) { pop.gen <- 0  }
   
-  if (!(all(ps <= 1) | all(ps > 1))) {
-    stop("Please input a correct ps!")
-  }
-  if (sel.crit == "pheno") {
-    phe.name <- grep(pattern = "TBV", x = names(pop), value = TRUE)
-    phe.name <- substr(phe.name, 1, nchar(phe.name) - 4)
-  } else if (sel.crit == "TBV") {
-    phe.name <- grep(pattern = "TBV", x = names(pop), value = TRUE)
-  } else if (sel.crit == "TGV") {
-    phe.name <- grep(pattern = "TGV", x = names(pop), value = TRUE)
+  if (pop.gen == 0 || all(ps == 1)) {
+    ind.ordered <- pop$index
+
   } else {
-    stop("'sel.crit' should be 'pheno', 'TBV', 'TGV', 'pEBVs', 'gEBVs' or 'ssEBVs'!") 
+    if (!(all(ps <= 1) | all(ps > 1))) {
+      stop("Please input a correct ps!")
+    }
+    if (sel.crit == "pheno") {
+      phe.name <- grep(pattern = "TBV", x = names(pop), value = TRUE)
+      phe.name <- substr(phe.name, 1, nchar(phe.name) - 4)
+    } else if (sel.crit == "TBV") {
+      phe.name <- grep(pattern = "TBV", x = names(pop), value = TRUE)
+    } else if (sel.crit == "TGV") {
+      phe.name <- grep(pattern = "TGV", x = names(pop), value = TRUE)
+    } else {
+      stop("'sel.crit' should be 'pheno', 'TBV', 'TGV', 'pEBVs', 'gEBVs' or 'ssEBVs'!") 
+    }
+    phe.pos <- match(phe.name, names(pop))
+    
+    ### single trait selection ###
+    if (length(phe.pos) == 1) {
+      num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
+      if (sel.single == "comb") {
+        # calculate A matrix
+        A.cal <- function(s, d) {
+          n <- length(s)
+          A <- matrix(0, nrow = n, ncol = n)
+          for (x in 1:n) {
+            if (s[x] > 0 && d[x] > 0) {
+              A[x, x] <- 1 + 0.5 * A[s[x], d[x]];
+            } else {
+              A[x, x] <- 1;
+            }
+            if (x == n) next
+            for (y in (x+1):n) {
+              axy <- 0
+              if (s[y] > 0) axy <- axy + 0.5 * A[x, s[y]]
+              if (d[y] > 0) axy <- axy + 0.5 * A[x, d[y]]
+              A[x, y] <- axy
+              A[y, x] <- axy
+            }
+          }
+          return(A)
+        }
+        # calculate average family correlation coefficient
+        cal.r <- function(pop, pop.total) {
+          if (nrow(pop.total) == nrow(pop)) { return(0.01) }
+          sir <- pop.total$sir
+          sir <- as.numeric(sir[sir != "NA"])
+          dam <- pop.total$dam
+          dam <- as.numeric(dam[dam != "NA"])
+          A.mat <- A.cal(sir, dam)
+          cor.ani <- pop[!duplicated(pop$fam), ]$index
+          cor.r <- rep(0, length(cor.ani))
+          for (i in 1:length(cor.ani)) {
+            cor.r[i] <- A.mat[cor.ani[i], cor.ani[i]+1]
+          }
+          cor.r <- mean(cor.r)
+          return(cor.r)
+        }
+        cor.r <- cal.r(pop, pop.total)
+        # calculate combination selection method
+        cal.comb <- function(pop) {
+          pop.ind <- length(pop$index)
+          num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
+          pf <- rep(tapply(pop[, phe.pos], pop$fam, mean), num.infam)
+          cor.n <- num.infam[[1]]
+          
+          if (length(num.infam) == 1) {
+            cor.t <- 2
+          } else {
+            pop.tab <- summary(aov(pop[, phe.pos]~as.factor(pop$fam)))
+            MB <- pop.tab[[1]][1, 3]
+            MW <- pop.tab[[1]][2, 3]
+            if (is.na(MW)) MW <- 0
+            cor.t <- (MB - MW) / (MB + (cor.n - 1) * MW)
+          }
+          
+          I <- pop[, phe.pos] + ((cor.r-cor.t)*cor.n / (1-cor.r) / (1+(cor.n-1)*cor.t)) * pf
+          ind.score <- cbind(pop$index, I)
+          ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing=decr), ]
+          ind.ordered <- as.vector(ind.score.ordered[, 1])
+          return(ind.ordered)
+        }
+        ind.ordered <- cal.comb(pop)
+        
+      } else {
+        if (sel.single == "ind") {
+          bf <- rep(1, pop.ind)
+          bw <- rep(1, pop.ind)
+          
+        } else if (sel.single == "fam") {
+          bf <- rep(1, pop.ind)
+          bw <- rep(0, pop.ind)
+          
+        } else if (sel.single == "infam") {
+          bf <- rep(0, pop.ind)
+          bw <- rep(1, pop.ind)
+        }
+        bfw <- cbind(bf, bw)
+        
+        # calculate pf and pw
+        cal.pfw <- function(pop) {
+          pop.ind <- length(pop$index)
+          num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
+          pf <- rep(tapply(pop[, phe.pos], pop$fam, mean), num.infam)
+          pw <- pop[, phe.pos] - pf
+          pfw <- cbind(pf, pw)
+          return(pfw)
+        }
+        
+        pfw <- cal.pfw(pop)
+        I <- apply(bfw * pfw, 1, sum)
+        ind.score <- cbind(pop$index, I)
+        ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing=decr), ]
+        ind.ordered <- ind.score.ordered[, 1]
+      }
+      
+      ### multiple trait selection ###
+    } else {
+      pheno <- pop[, phe.pos]
+      
+      goal <- (1 + goal.perc) * apply(pheno, 2, mean)
+      
+      if (sel.multi == "index") {
+        # calculate the weight of index selection
+        cal.idx <- function(pheno, index.wt) {
+          if(ncol(pheno) != length(index.wt)) {
+            stop("Column of phenotype should equal length of weight of index")
+          }
+          # phenotype covariance matrix
+          P <- var(pheno)
+          iP <- try(solve(P), silent = TRUE)
+          if (inherits(iP, "try-error")) {
+            iP <- ginv(P)
+          }
+          TBV <- pop[, grep(pattern = "TBV", x = names(pop))]
+          # BV covariance matrix
+          A <- var(TBV)
+          b <- iP %*% A %*% index.wt
+          b <- as.vector(b)
+        } 
+        b <- cal.idx(pheno = pheno, index.wt = index.wt)
+        
+        ind.score <- cbind(pop$index, apply(pheno * b, 1, sum))
+        ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
+        ind.ordered <- ind.score.ordered[, 1]
+        attr(ind.ordered, "names") <- NULL
+        
+      } else if (sel.multi == "indcul") {
+        flag.prior <- apply(pheno, 1, function(v) {
+          return(all(v > goal))
+        })
+        ind.ordered <- c(pop$index[flag.prior], pop$index[!flag.prior])
+        
+      } else if (sel.multi == "tdm") {
+        ind.score <- cbind(pop$index, pheno[, index.tdm])
+        ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
+        ind.ordered <- ind.score.ordered[, 1]
+        if (index.tdm == ncol(pheno)) {
+          logging.log(" All phenotype have selected by tandem method.\n", verbose = verbose)
+          SP$sel$index.wt <- 1
+        }
+        if (pheno[nrow(pheno) * pass.perc, index.tdm] >= goal[index.tdm]) {
+          SP$sel$index.wt <- index.tdm + 1
+        }
+        
+      } else {
+        stop("sel.multi should be index, indcul or tdm")
+      }
+    }
   }
-  phe.pos <- match(phe.name, names(pop))
-  
-  ### single trait selection ###
-	if (length(phe.pos) == 1) {
-	  num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
-	  if (sel.single == "comb") {
-	    # calculate A matrix
-	    A.cal <- function(s, d) {
-	      n <- length(s)
-	      A <- matrix(0, nrow = n, ncol = n)
-	      for (x in 1:n) {
-	        if (s[x] > 0 && d[x] > 0) {
-	          A[x, x] <- 1 + 0.5 * A[s[x], d[x]];
-	        } else {
-	          A[x, x] <- 1;
-	        }
-	        if (x == n) next
-	        for (y in (x+1):n) {
-	          axy <- 0
-	          if (s[y] > 0) axy <- axy + 0.5 * A[x, s[y]]
-	          if (d[y] > 0) axy <- axy + 0.5 * A[x, d[y]]
-	          A[x, y] <- axy
-	          A[y, x] <- axy
-	        }
-	      }
-	      return(A)
-	    }
-	    # calculate average family correlation coefficient
-	    cal.r <- function(pop, pop.total) {
-	      if (nrow(pop.total) == nrow(pop)) { return(0.01) }
-	      sir <- pop.total$sir
-	      sir <- as.numeric(sir[sir != "NA"])
-	      dam <- pop.total$dam
-	      dam <- as.numeric(dam[dam != "NA"])
-	      A.mat <- A.cal(sir, dam)
-	      cor.ani <- pop[!duplicated(pop$fam), ]$index
-	      cor.r <- rep(0, length(cor.ani))
-	      for (i in 1:length(cor.ani)) {
-	        cor.r[i] <- A.mat[cor.ani[i], cor.ani[i]+1]
-	      }
-	      cor.r <- mean(cor.r)
-	      return(cor.r)
-	    }
-	    cor.r <- cal.r(pop, pop.total)
-	    # calculate combination selection method
-	    cal.comb <- function(pop) {
-	      pop.ind <- length(pop$index)
-	      num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
-	      pf <- rep(tapply(pop[, phe.pos], pop$fam, mean), num.infam)
-	      cor.n <- num.infam[[1]]
-	      
-	      if (length(num.infam) == 1) {
-	        cor.t <- 2
-	      } else {
-	        pop.tab <- summary(aov(pop[, phe.pos]~as.factor(pop$fam)))
-	        MB <- pop.tab[[1]][1, 3]
-	        MW <- pop.tab[[1]][2, 3]
-	        if (is.na(MW)) MW <- 0
-	        cor.t <- (MB - MW) / (MB + (cor.n - 1) * MW)
-	      }
-	      
-	      I <- pop[, phe.pos] + ((cor.r-cor.t)*cor.n / (1-cor.r) / (1+(cor.n-1)*cor.t)) * pf
-	      ind.score <- cbind(pop$index, I)
-	      ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing=decr), ]
-	      ind.ordered <- as.vector(ind.score.ordered[, 1])
-	      return(ind.ordered)
-	    }
-	    ind.ordered <- cal.comb(pop)
-	    
-	  } else {
-	    if (sel.single == "ind") {
-	      bf <- rep(1, pop.ind)
-	      bw <- rep(1, pop.ind)
-	      
-	    } else if (sel.single == "fam") {
-	      bf <- rep(1, pop.ind)
-	      bw <- rep(0, pop.ind)
-	      
-	    } else if (sel.single == "infam") {
-	      bf <- rep(0, pop.ind)
-	      bw <- rep(1, pop.ind)
-	    }
-	    bfw <- cbind(bf, bw)
-	    
-	    # calculate pf and pw
-	    cal.pfw <- function(pop) {
-	      pop.ind <- length(pop$index)
-	      num.infam <- tapply(rep(1, pop.ind), pop$fam, sum)
-	      pf <- rep(tapply(pop[, phe.pos], pop$fam, mean), num.infam)
-	      pw <- pop[, phe.pos] - pf
-	      pfw <- cbind(pf, pw)
-	      return(pfw)
-	    }
-	    
-	    pfw <- cal.pfw(pop)
-	    I <- apply(bfw * pfw, 1, sum)
-	    ind.score <- cbind(pop$index, I)
-	    ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing=decr), ]
-	    ind.ordered <- ind.score.ordered[, 1]
-	  }
-	  
-	### multiple trait selection ###
-	} else {
-	  pheno <- pop[, phe.pos]
-	  
-	  goal <- (1 + goal.perc) * apply(pheno, 2, mean)
-	  
-	  if (sel.multi == "index") {
-	    # calculate the weight of index selection
-	    cal.idx <- function(pheno, index.wt) {
-	      if(ncol(pheno) != length(index.wt)) {
-	        stop("Column of phenotype should equal length of weight of index")
-	      }
-	      # phenotype covariance matrix
-	      P <- var(pheno)
-	      iP <- try(solve(P), silent = TRUE)
-	      if (inherits(iP, "try-error")) {
-	        iP <- ginv(P)
-	      }
-	      TBV <- pop[, grep(pattern = "TBV", x = names(pop))]
-	      # BV covariance matrix
-	      A <- var(TBV)
-	      b <- iP %*% A %*% index.wt
-	      b <- as.vector(b)
-	    } 
-	    b <- cal.idx(pheno = pheno, index.wt = index.wt)
-	    
-	    ind.score <- cbind(pop$index, apply(pheno * b, 1, sum))
-	    ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
-	    ind.ordered <- ind.score.ordered[, 1]
-	    attr(ind.ordered, "names") <- NULL
-	    
-	  } else if (sel.multi == "indcul") {
-	    flag.prior <- apply(pheno, 1, function(v) {
-	      return(all(v > goal))
-	    })
-	    ind.ordered <- c(pop$index[flag.prior], pop$index[!flag.prior])
-	    
-	  } else if (sel.multi == "tdm") {
-	    ind.score <- cbind(pop$index, pheno[, index.tdm])
-	    ind.score.ordered <- ind.score[order(ind.score[, 2], decreasing = decr), ]
-	    ind.ordered <- ind.score.ordered[, 1]
-	    if (index.tdm == ncol(pheno)) {
-	      logging.log(" All phenotype have selected by tandem method.\n", verbose = verbose)
-	      SP$sel$index.wt <- 1
-	    }
-	    if (pheno[nrow(pheno) * pass.perc, index.tdm] >= goal[index.tdm]) {
-	      SP$sel$index.wt <- index.tdm + 1
-	    }
-	    
-	  } else {
-	    stop("sel.multi should be index, indcul or tdm")
-	  }
-	}
   
   # get selected sires and dams
   ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]

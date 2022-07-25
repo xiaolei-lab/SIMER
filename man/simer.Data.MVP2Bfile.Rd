@@ -8,8 +8,8 @@ simer.Data.MVP2Bfile(
   bigmat,
   map,
   pheno = NULL,
-  out = "simer.plink",
-  ncpus = 10,
+  out = "simer",
+  threads = 10,
   verbose = TRUE
 )
 }
@@ -22,7 +22,7 @@ simer.Data.MVP2Bfile(
 
 \item{out}{the name of output file.}
 
-\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
+\item{threads}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print the reminder.}
 }

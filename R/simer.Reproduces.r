@@ -798,6 +798,7 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
 mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
+  SP$reprod$pop.gen <- 2
   
   # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
@@ -904,6 +905,7 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
+  SP$reprod$pop.gen <- 3
   
   # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
@@ -1062,6 +1064,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
+  SP$reprod$pop.gen <- 3
   
   # reproduction parameters
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]

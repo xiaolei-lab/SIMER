@@ -278,7 +278,7 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
       mapFile <- normalizePath(paste0(fileMVP, ".geno.map"), mustWork = TRUE)
       map <- read.table(mapFile, header = TRUE)
       tmpout <- tempfile()
-      MVP.Data.MVP2Bfile(bigmat = bigmat, map = map, out = tmpout)
+      simer.Data.MVP2Bfile(bigmat = bigmat, map = map, out = tmpout, threads = ncpus, verbose = verbose)
       system(paste('plink --bfile', tmpout, "--recode vcf-iid --out", tmpout))
     }
   }
@@ -308,7 +308,7 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
   
   system(paste0('plink --vcf ', tmpout, ".vcf.gz --make-bed --out ", tmpout))
   
-  MVP.Data.Bfile2MVP(bfile = tmpout, out = out)
+  simer.Data.Bfile2MVP(bfile = tmpout, out = out, threads = ncpus, verbose = verbose)
   
   return(out)
 }
@@ -1478,7 +1478,7 @@ checkEnv <- function(data, envName) {
 #' @param map the map file.
 #' @param pheno the phenotype file.
 #' @param out the name of output file.
-#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#' @param threads the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #' @param verbose whether to print the reminder.
 #'
 #' @return NULL
@@ -1494,13 +1494,13 @@ checkEnv <- function(data, envName) {
 #' 
 #' # Data converting
 #' simer.Data.MVP2Bfile(bigmat, map, out=tempfile("outfile"))
-simer.Data.MVP2Bfile <- function(bigmat, map, pheno=NULL, out='simer.plink', ncpus = 10, verbose=TRUE) {
+simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threads = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   logging.log(paste0("inds: ", ncol(bigmat), "\tmarkers:", nrow(bigmat), '\n'), verbose = verbose)
   
   # write bed file
-  write_bfile(bigmat@address, out, threads = ncpus, verbose = verbose)
+  write_bfile(bigmat@address, out, threads = threads, verbose = verbose)
   
   # write fam
   #  1. Family ID ('FID')
@@ -1549,5 +1549,124 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno=NULL, out='simer.plink', ncp
   bim <- cbind(map[, 2], map[, 1], 0, map[, 3], map[, 4], map[, 5])
   write.table(bim, paste0(out, '.bim'), quote = FALSE, row.names = FALSE, col.names = FALSE, sep = '\t')
   t2 <- as.numeric(Sys.time())
-  logging.log("Done within", format_time(t2 - t1), "\n", verbose = verbose)
+  logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n", verbose = verbose)
+}
+
+#' simer.Data.Bfile2MVP: To transform plink binary data to MVP package
+#' 
+#' transforming plink binary data to MVP package.
+#' 
+#' Build date: Sep 12, 2018
+#' Last update: July 25, 2022
+#'
+#' @author Haohao Zhang and Dong Yin
+#' 
+#' @param bfile Genotype in binary format (.bed, .bim, .fam).
+#' @param out the name of output file.
+#' @param maxLine the max number of line to write to big matrix for each loop.
+#' @param priority 'memory' or 'speed'.
+#' @param type.geno the type of genotype elements.
+#' @param threads number of thread for transforming.
+#' @param verbose whether to print the reminder.
+#'
+#' @return number of individuals and markers.
+#' Output files:
+#' genotype.desc, genotype.bin: genotype file in bigmemory format
+#' phenotype.phe: ordered phenotype file, same taxa order with genotype file
+#' map.map: SNP information
+#' 
+#' @export
+#' 
+#' @examples
+#' # Get bfile path
+#' bfilePath <- file.path(system.file("extdata", "02plinkb", package = "simer"), "demo")
+#' 
+#' # Data converting
+#' simer.Data.Bfile2MVP(bfilePath, tempfile("outfile"))
+simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority = 'speed', type.geno = 'char', threads = 10, verbose = TRUE) {
+  t1 <- as.numeric(Sys.time())
+  bim_file <- normalizePath(paste0(bfile, '.bim'), mustWork = TRUE)
+  fam_file <- normalizePath(paste0(bfile, '.fam'), mustWork = TRUE)
+  bed_file <- normalizePath(paste0(bfile, '.bed'), mustWork = TRUE)
+  # check old file
+  backingfile <- paste0(basename(out), ".geno.bin")
+  descriptorfile <- paste0(basename(out), ".geno.desc")
+  remove_bigmatrix(out)
+  
+  # parser map
+  logging.log("Reading file...\n", verbose = verbose)
+  m <- simer.Data.Map(bim_file, out = out, cols = c(2, 1, 4, 6, 5), header = FALSE)
+  
+  # parser phenotype, ind file
+  fam <- read.table(fam_file, header = FALSE)
+  n <- nrow(fam)
+  write.table(fam[, 2], paste0( out, '.geno.ind'), row.names = FALSE, col.names = FALSE, quote = FALSE)
+  
+  logging.log(paste0("inds: ", n, "\tmarkers:", m, '\n'), verbose = verbose)
+  
+  # parse genotype
+  bigmat <- filebacked.big.matrix(
+    nrow = m,
+    ncol = n,
+    type = type.geno,
+    backingfile = backingfile,
+    backingpath = dirname(out),
+    descriptorfile = descriptorfile,
+    dimnames = c(NULL, NULL)
+  )
+  
+  if (priority == "speed") { maxLine <- -1 }
+  read_bfile(bed_file = bed_file, pBigMat = bigmat@address, maxLine = maxLine, threads = threads, verbose = verbose)
+  t2 <- as.numeric(Sys.time())
+  logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n", verbose = verbose)
+  return(invisible(c(m, n)))
+}
+
+#' simer.Data.Map: To check map file
+#' 
+#' checking map file.
+#' 
+#' Build date: Sep 12, 2018
+#' Last update: July 25, 2022
+#'
+#' @author Haohao Zhang and Dong Yin
+#' 
+#' @param map the name of map file or map object(data.frame or matrix)
+#' @param out the name of output file
+#' @param cols selected columns
+#' @param header whether the file contains header
+#' @param sep seperator of the file
+#' @param verbose whether to print detail.
+#' 
+#' @return 
+#' Output file:
+#' <out>.map
+#' 
+#' @export
+#' 
+#' @examples
+#' # Get map path
+#' mapPath <- system.file("extdata", "05_mvp", "mvp.geno.map", package = "rMVP")
+#' 
+#' # Check map data
+#' simer.Data.Map(mapPath, tempfile("outfile"))
+simer.Data.Map <- function(map, out = 'simer', cols = 1:5, header = TRUE, sep = '\t', verbose = TRUE) {
+  t1 <- as.numeric(Sys.time())
+  if (is.character(map) && !is.data.frame(map)) {
+    map <- read.table(map, header = header, stringsAsFactors = FALSE)
+  }
+  map <- map[, cols]
+  colnames(map) <- c("SNP", "CHROM", "POS", "REF", "ALT")
+  if (length(unique(map[, 1])) != nrow(map)) {
+    warning("WARNING: SNP is not unique and has been automatically renamed.")
+    map[, 1] <- paste(map[, 2], map[, 3], sep = "-")
+  }
+  allels <- map[, 4:5]
+  allels[allels == 0] <- '.'
+  map[, 4:5] <- allels
+  
+  write.table(map, paste0(out, ".geno.map"), row.names = FALSE, col.names = TRUE, sep = '\t', quote = FALSE)
+  t2 <- as.numeric(Sys.time())
+  logging.log("Preparation for MAP data is done within", format_time(t2 - t1), "\n", verbose = verbose)
+  return(nrow(map))
 }
