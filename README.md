@@ -2305,6 +2305,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >> ***pedigree***: the filename of pedigree data  
 >> ***selection_index***: the economic weight of phenotype for each trait  
 >> ***breeding_value_index***: the economic weight of breeding value for each trait  
+>> ***auto_optimization***: optimizing EBV estimated model and selection index automatically  
 >> ***quality_control_plan***: the quality control plan for genotype, pedigree, and phenotype  
 
 >>> ***genotype_quality_control***: the quality control plan for genotype  
@@ -2345,6 +2346,7 @@ After generating a population, further work can be done. Breeders wish to evalua
     "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.0/simer/extdata/05others/pedigree.txt"],
     "selection_index": [],
     "breeding_value_index": "0.2 * T1 + 0.8 * T2",
+    "auto_optimization": true,
     "quality_control_plan": {
         "genotype_quality_control":{
             "filter": ["F1 == 'Male'"],
