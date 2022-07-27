@@ -1341,7 +1341,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
   
   # genetic progress
   scores <- sort(as.matrix(usePhes) %*% b, decreasing = TRUE)
-  geneticProgress <- round(mean(scores[1:(0.8*length(scores))]) - mean(scores), digits = 2)
+  geneticProgress <- round(mean(scores[1:(0.1*length(scores))]) - mean(scores), digits = 2)
   selIndex <- paste0(selIndex, " = ", geneticProgress)
   
   logging.log(" *********************************************************\n",
