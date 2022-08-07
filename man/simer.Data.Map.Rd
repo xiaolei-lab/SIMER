@@ -39,7 +39,7 @@ Last update: July 25, 2022
 }
 \examples{
 # Get map path
-mapPath <- system.file("extdata", "05_mvp", "mvp.geno.map", package = "rMVP")
+mapPath <- system.file("extdata", "01bigmemory", "demo.geno.map", package = "simer")
 
 # Check map data
 simer.Data.Map(mapPath, tempfile("outfile"))

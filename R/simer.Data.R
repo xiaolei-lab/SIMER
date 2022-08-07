@@ -1646,7 +1646,7 @@ simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority =
 #' 
 #' @examples
 #' # Get map path
-#' mapPath <- system.file("extdata", "05_mvp", "mvp.geno.map", package = "rMVP")
+#' mapPath <- system.file("extdata", "01bigmemory", "demo.geno.map", package = "simer")
 #' 
 #' # Check map data
 #' simer.Data.Map(mapPath, tempfile("outfile"))
