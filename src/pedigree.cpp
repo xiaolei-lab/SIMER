@@ -190,7 +190,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   // ******* 04 seek parents of NotMatch in the rawPed *******
   for (int i = 0; i < n; i++) {
 
-    if (sirState[i] != "NotFound" & damState[i] != "NotFound") { continue; }
+    if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
 
     candKid.fill(kidID[i]);
     kidFlag = (sirID == candKid | damID == candKid) & !naKid;

@@ -296,7 +296,7 @@ List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> keepI
   }
   
   arma::mat genoFreq;
-  if (filterMAF.isNotNull() | filterHWE.isNotNull()) {
+  if (filterMAF.isNotNull() || filterHWE.isNotNull()) {
     if (verbose) { Rcout << " Calculating Genotype Frequencies..."; }
     genoFreq = CalGenoFreq(pMat, keepRows, keepCols, threads);
     if (verbose) {  Rcout << " done." << endl << endl; }
@@ -493,7 +493,7 @@ void GenoMixer(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, IntegerVector sirIdx,
   if (op + n > pMat->ncol()) {
     Rcpp::stop("'pmat' cannot be intert to bigmat completely!");
   }
-  if ((max(sirIdx) > pmat->ncol()) | (max(damIdx) > pmat->ncol())) {
+  if ((max(sirIdx) > pmat->ncol()) || (max(damIdx) > pmat->ncol())) {
     Rcpp::stop("'sirIdx' or 'damIdx' is out of bound!");
   }
   if (sirIdx.length() != damIdx.length()) {
