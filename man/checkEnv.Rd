@@ -4,12 +4,14 @@
 \alias{checkEnv}
 \title{Environmental factor checking}
 \usage{
-checkEnv(data, envName)
+checkEnv(data, envName, verbose = TRUE)
 }
 \arguments{
 \item{data}{data needing check.}
 
 \item{envName}{the environmental factor name within the data.}
+
+\item{verbose}{whether to print detail.}
 }
 \value{
 data without environmental factors of wrong level.

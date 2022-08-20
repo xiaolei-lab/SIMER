@@ -971,7 +971,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
       lapply(covariates, function(col) {  mode(finalPhe[, col]) <<- "numeric" })
       lapply(fixedEffects, function(col) {  mode(finalPhe[, col]) <<- "character" })
       # remove column of one level or full levels
-      finalPhe <- checkEnv(finalPhe, c(covariates, fixedEffects, randomEffects))
+      finalPhe <- checkEnv(finalPhe, c(covariates, fixedEffects, randomEffects), verbose = verbose)
       covariates <- covariates[covariates %in% names(finalPhe)]
       fixedEffects <- fixedEffects[fixedEffects %in% names(finalPhe)]
       randomEffects <- randomEffects[randomEffects %in% names(finalPhe)]
@@ -1100,7 +1100,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
     lapply(covariates, function(col) {  mode(finalPhe[, col]) <<- "numeric" })
     lapply(fixedEffects, function(col) {  mode(finalPhe[, col]) <<- "character" })
     # remove column of one level or full levels
-    finalPhe <- checkEnv(finalPhe, c(covariates, fixedEffects, randomEffects))
+    finalPhe <- checkEnv(finalPhe, c(covariates, fixedEffects, randomEffects), verbose = verbose)
     # show data information
     logging.log(" Data Summary:\n", verbose = verbose)
     logging.print(summary(finalPhe), verbose = verbose)
@@ -1434,6 +1434,7 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
 #' 
 #' @param data data needing check.
 #' @param envName the environmental factor name within the data.
+#' @param verbose whether to print detail.
 #' 
 #' @return data without environmental factors of wrong level.
 #' 
@@ -1443,7 +1444,7 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
 #' data <- data.frame(a = c(1, 1, 2), b = c(2, 2, 3), c = c(3, 3, 4))
 #' envName <- c("a", "b", "c")
 #' data <- checkEnv(data = data, envName = envName)
-checkEnv <- function(data, envName) {
+checkEnv <- function(data, envName, verbose = TRUE) {
   if (is.numeric(envName)) {
     envName <- names(data)[envName]
   }
@@ -1459,7 +1460,7 @@ checkEnv <- function(data, envName) {
     }
   }
   if (length(drop) > 0) {
-    warning(paste(names(data)[drop], collapse=', '), ' has been remove because of its one or full levels!')
+    logging.log(paste(names(data)[drop], collapse=', '), ' has been remove because of its one or full levels!\n', verbose = verbose)
     data <- data[, -drop, drop = FALSE]
   }
   return(data)
