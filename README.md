@@ -2555,7 +2555,7 @@ SPs <- rep(list(NULL), rep)
 
 for (i in 1:rep) {
   # Generate all simulation parameters
-  SP <- param.simer(replication = i, sim.seed = i, out = "simer")
+  SP <- param.simer(replication = i, seed.sim = i, out = "simer")
 
   # Run Simer
   SPs[[i]] <- simer(SP)
