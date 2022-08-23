@@ -277,8 +277,8 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
       names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
     
     ### phenotype and selection ###
-    SP <- phenotype(SP)
-    SP <- selects(SP)
+    SP <- phenotype(SP, verbose = FALSE)
+    SP <- selects(SP, verbose = FALSE)
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
@@ -404,8 +404,8 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
       names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
     
     ### phenotype and selection ###
-    SP <- phenotype(SP)
-    SP <- selects(SP)
+    SP <- phenotype(SP, verbose = FALSE)
+    SP <- selects(SP, verbose = FALSE)
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
@@ -506,8 +506,8 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
       names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
     
     ### phenotype and selection ###
-    SP <- phenotype(SP)
-    SP <- selects(SP)
+    SP <- phenotype(SP, verbose = FALSE)
+    SP <- selects(SP, verbose = FALSE)
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
@@ -615,9 +615,9 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
       names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
     
     ### genotype, phenotype, and selection ###
-    SP <- genotype(SP)
-    SP <- phenotype(SP)
-    SP <- selects(SP)
+    SP <- genotype(SP, verbose = FALSE)
+    SP <- phenotype(SP, verbose = FALSE)
+    SP <- selects(SP, verbose = FALSE)
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
@@ -735,9 +735,9 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
       names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
     
     ### genotype, phenotype, and selection ###
-    SP <- genotype(SP)
-    SP <- phenotype(SP)
-    SP <- selects(SP)
+    SP <- genotype(SP, verbose = FALSE)
+    SP <- phenotype(SP, verbose = FALSE)
+    SP <- selects(SP, verbose = FALSE)
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
   }
@@ -843,9 +843,9 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
   ### genotype, phenotype, and selection ###
-  SP <- genotype(SP)
-  SP <- phenotype(SP)
-  SP <- selects(SP)
+  SP <- genotype(SP, verbose = FALSE)
+  SP <- phenotype(SP, verbose = FALSE)
+  SP <- selects(SP, verbose = FALSE)
   count.ind <- c(count.ind, nrow(pop.curr))
   logging.log(" After generation", 2, ",", sum(count.ind[1:2]), "individuals are generated...\n", verbose = verbose)
   
@@ -959,9 +959,9 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
   ### genotype, phenotype, and selection ###
-  SP <- genotype(SP)
-  SP <- phenotype(SP)
-  SP <- selects(SP)
+  SP <- genotype(SP, verbose = FALSE)
+  SP <- phenotype(SP, verbose = FALSE)
+  SP <- selects(SP, verbose = FALSE)
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- c(pop.geno.id, pop[, 1])
   pop.geno.curr <- big.matrix(
@@ -1002,9 +1002,9 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
   ### genotype, phenotype, and selection ###
-  SP <- genotype(SP)
-  SP <- phenotype(SP)
-  SP <- selects(SP)
+  SP <- genotype(SP, verbose = FALSE)
+  SP <- phenotype(SP, verbose = FALSE)
+  SP <- selects(SP, verbose = FALSE)
   count.ind <- c(count.ind, nrow(pop.curr))
   logging.log(" After generation", 3, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
   
@@ -1133,9 +1133,9 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
   ### genotype, phenotype, and selection ###
-  SP <- genotype(SP)
-  SP <- phenotype(SP)
-  SP <- selects(SP)
+  SP <- genotype(SP, verbose = FALSE)
+  SP <- phenotype(SP, verbose = FALSE)
+  SP <- selects(SP, verbose = FALSE)
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
@@ -1170,9 +1170,9 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
     names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   
   ### genotype, phenotype, and selection ###
-  SP <- genotype(SP)
-  SP <- phenotype(SP)
-  SP <- selects(SP)
+  SP <- genotype(SP, verbose = FALSE)
+  SP <- phenotype(SP, verbose = FALSE)
+  SP <- selects(SP, verbose = FALSE)
   count.ind <- c(count.ind, nrow(pop.curr))
   logging.log(" After generation", 3, ",", sum(count.ind[1:3]), "individuals are generated...\n", verbose = verbose)
   
@@ -1282,9 +1282,9 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
       names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
     
     ### genotype, phenotype, and selection ###
-    SP <- genotype(SP)
-    SP <- phenotype(SP)
-    SP <- selects(SP)
+    SP <- genotype(SP, verbose = FALSE)
+    SP <- phenotype(SP, verbose = FALSE)
+    SP <- selects(SP, verbose = FALSE)
     count.ind <- c(count.ind, nrow(pop.curr))
     logging.log(" After generation", i + 1, ",", sum(count.ind[1:(i + 1)]), "individuals are generated...\n", verbose = verbose)
     
