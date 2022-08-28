@@ -142,7 +142,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
       snp.index <- (1:pop.marker)[-qtn.index]
       num.mut.qtn <- ceiling(spot.total * rate.mut[[1]])
       num.mut.snp <- ceiling(spot.total * rate.mut[[2]])
-      row.mut <- c(sample(qtn.index, num.mut.qtn), sample(snp.index, num.mut.snp))
+      row.mut <- c(sample(qtn.index, num.mut.qtn, replace = TRUE), sample(snp.index, num.mut.snp, replace = TRUE))
       col.mut <- sample(1:(incols*pop.ind), num.mut.qtn+num.mut.snp, replace = TRUE)
       for (j in 1:length(row.mut)) {
         if (bigmat[row.mut[j], col.mut[j]] == 1) {

@@ -145,8 +145,8 @@ mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
   )
 
   if (incols == 2) {
-    s1 <- sample(c(0, 1), size = length(index.dam), replace=TRUE)
-    s2 <- sample(c(0, 1), size = length(index.dam), replace=TRUE)
+    s1 <- sample(c(0, 1), size = length(index.dam), replace = TRUE)
+    s2 <- sample(c(0, 1), size = length(index.dam), replace = TRUE)
     gmt.sir <- index.sir * 2 - s1
     gmt.dam <- index.dam * 2 - s2
     gmt.comb <- c(gmt.sir, gmt.dam)
