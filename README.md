@@ -433,8 +433,8 @@ With ***annotation data***, chromosome crossovers and mutations can be added to 
 # If recom.spot = TRUE, chromsome crossovers will be added to genotype matrix
 SP <- param.annot(recom.spot = TRUE)
 # Generate genotype simulation parameters
-# Base mutation rate is 1e8
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2, rate.mut = 1e-8)
+# Base mutation rate of QTN and SNP are 1e8
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2, rate.mut = list(qtn = 1e-8, snp = 1e-8))
 
 # Run annotation simulation
 SP <- annotation(SP)
