@@ -191,7 +191,7 @@ param.geno <- function(SP = NULL, ...) {
       pop.marker = 1e4,
       pop.ind = 1e2,
       prob = NULL,
-      rate.mut = 1e-8
+      rate.mut = list(qtn = 1e-8, snp = 1e-8)
     )
     
   } else {

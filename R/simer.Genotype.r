@@ -131,21 +131,28 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         bigmat[Recom, (2*ind-1)] <- geno.swap
       }
     }
-  }
-      
-  if (!is.null(rate.mut)) {
-    # logging.log(" Mutation on genotype matrix...\n", verbose = verbose)
-    spot.total <- pop.marker * incols * pop.ind
-    num.mut <- ceiling(spot.total * rate.mut)
-    row.mut <- sample(1:pop.marker, num.mut)
-    col.mut <- sample(1:(incols*pop.ind), num.mut)
-    for (i in 1:length(row.mut)) {
-      if (bigmat[row.mut[i], col.mut[i]] == 1) {
-        bigmat[row.mut[i], col.mut[i]] <- 0
-      } else {
-        bigmat[row.mut[i], col.mut[i]] <- 1
+    
+    if (!is.null(rate.mut)) {
+      # logging.log(" Mutation on genotype matrix...\n", verbose = verbose)
+      if (length(rate.mut) != 2) {
+        stop("Please input the mutation rate of SNP and QTN!")
+      }
+      spot.total <- pop.marker * incols * pop.ind
+      qtn.index <- sort(unique(unlist((SP$map$qtn.index))))
+      snp.index <- (1:pop.marker)[-qtn.index]
+      num.mut.qtn <- ceiling(spot.total * rate.mut[[1]])
+      num.mut.snp <- ceiling(spot.total * rate.mut[[2]])
+      row.mut <- c(sample(qtn.index, num.mut.qtn), sample(qtn.index, num.mut.qtn))
+      col.mut <- sample(1:(incols*pop.ind), num.mut.qtn+num.mut.snp)
+      for (j in 1:length(row.mut)) {
+        if (bigmat[row.mut[j], col.mut[j]] == 1) {
+          bigmat[row.mut[j], col.mut[j]] <- 0
+        } else {
+          bigmat[row.mut[j], col.mut[j]] <- 1
+        }
       }
     }
+    
   }
   
   if (is.null(SP$geno$pop.geno)) {
