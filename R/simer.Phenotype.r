@@ -106,6 +106,9 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   }
   pop <- SP$pheno$pop
   pop.ind <- SP$pheno$pop.ind
+  if (!is.null(SP$geno$pop.geno)) {
+    pop.ind <- ncol(SP$geno$pop.geno[[length(SP$geno$pop.geno)]]) / SP$geno$incols
+  }
   if (is.null(pop) & !is.null(pop.ind)) {
     pop <- generate.pop(pop.ind = pop.ind)
     SP$pheno$pop <- list(pop)
