@@ -393,9 +393,10 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
       Sigma <- diag(sqrt(phe.varA)) %*% phe.corA %*% diag(sqrt(phe.varA))
       phe.add <- build.cov(df = phe.add, Sigma = Sigma)
       phe.eff[, grep(pattern = "_A_", x = names(phe.eff))] <- phe.add
-      for (i in 1:nTrait) {
-        SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]]] <- c(crossprod(ginv(pop.qtn.add[[i]]), phe.add[, i]))
-      }
+      # it can be better
+      # for (i in 1:nTrait) {
+      #   SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]]] <- c(crossprod(ginv(pop.qtn.add[[i]]), phe.add[, i]))
+      # }
     }
     if (!is.null(phe.corD)) {
       phe.dom <- phe.eff[, grep(pattern = "_D_", x = names(phe.eff))]
@@ -403,9 +404,10 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
       Sigma <- diag(sqrt(phe.varD)) %*% phe.corD %*% diag(sqrt(phe.varD))
       phe.dom <- build.cov(df = phe.dom, Sigma = Sigma)
       phe.eff[, grep(pattern = "_D_", x = names(phe.eff))] <- phe.dom
-      for (i in 1:nTrait) {
-        SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]]] <- c(crossprod(ginv(pop.qtn.dom[[i]]), phe.dom[, i]))
-      }
+      # it can be better
+      # for (i in 1:nTrait) {
+      #   SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]]] <- c(crossprod(ginv(pop.qtn.dom[[i]]), phe.dom[, i]))
+      # }
     }
     if (!is.null(phe.corGxG)) {
       eff.name <- names(phe.corGxG)
@@ -416,9 +418,10 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         Sigma <- diag(sqrt(phe.varGxG)) %*% phe.corGxG[[j]] %*% diag(sqrt(phe.varGxG))
         phe.GxG <- build.cov(df = phe.GxG, Sigma = Sigma)
         phe.eff[, grep(pattern = paste0("_", eff.name[j], "_"), x = names(phe.eff))] <- phe.GxG
-        for (i in 1:nTrait) {
-          SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] <- c(crossprod(ginv(pop.qtn.GxG[[i]]), phe.GxG[, i]))
-        }
+        # it can be better
+        # for (i in 1:nTrait) {
+        #   SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] <- c(crossprod(ginv(pop.qtn.GxG[[i]]), phe.GxG[, i]))
+        # }
       }
     }
     if (!is.null(phe.corPE)) {
