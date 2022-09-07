@@ -470,7 +470,7 @@ SP <- genotype(SP)
 **(3)** Repeated Record Model  
 **(4)** Genetic Effect Model (***A***dditive effect, ***D***ominant effect, and ***G***enetic-***G***enetic interaction effect)  
 **(5)** Genetic Model with Varied QTN Effect Distributions (QTN effect distribution: ***Norm***al distribution, ***Geom***etric distribution, ***Gamma*** distribution, ***Beta*** distribution, and their combination)  
-**(6)** Linear Mixed Model (***F***ixed effect, ***C***ovariate, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, and ***G***enetic-***E***nvironmental interaction effect)  
+**(6)** Linear Mixed Model (***F***ixed effect, ***C***ovariate, ***E***nvironmental ***R***andom effect, ***G***enetic ***R***andom effect, ***G***enetic-***E***nvironmental interaction effect, and ***E***nvironmental-***E***nvironmental interaction effect)  
 
 ## Gallery of phenotype simulation parameters
 **[back to top](#contents)**  
