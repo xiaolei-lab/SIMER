@@ -228,6 +228,7 @@ param.geno <- function(SP = NULL, ...) {
 #' \item{$pheno$pop.rep}{the repeated times of repeated records.}
 #' \item{$pheno$pop.rep.bal}{whether repeated records are balanced.}
 #' \item{$pheno$pop.env}{a list of environmental factors setting.}
+#' \item{$pheno$phe.type}{a list of phenotype types.}
 #' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "T1 = A + E".}
 #' \item{$pheno$phe.h2A}{a list of additive heritability.}
 #' \item{$pheno$phe.h2D}{a list of dominant heritability.}
@@ -258,6 +259,7 @@ param.pheno <- function(SP = NULL, ...) {
       pop.rep = 1,
       pop.rep.bal = TRUE,
       pop.env = NULL,
+      phe.type = list(tr1 = "continuous"),
       phe.model = list(tr1 = "T1 = A + E"),
       phe.h2A = list(tr1 = NA),
       phe.h2D = list(tr1 = NA),
@@ -273,7 +275,7 @@ param.pheno <- function(SP = NULL, ...) {
     )
     
     group1 <- c("pop", "pop.ind", "pop.rep", "pop.rep.bal", "pop.env")
-    group2 <- c("phe.model", "phe.h2A", "phe.h2D", "phe.h2GxG", "phe.h2GxE", "phe.h2PE", "phe.var")
+    group2 <- c("phe.type", "phe.model", "phe.h2A", "phe.h2D", "phe.h2GxG", "phe.h2GxE", "phe.h2PE", "phe.var")
     group3 <- c("phe.corA", "phe.corA", "phe.corGxG", "phe.corGxE", "phe.corPE", "phe.corE")
     
     for (x in names(SP.tmp)) {

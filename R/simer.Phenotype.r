@@ -31,6 +31,7 @@
 #' \item{$pheno$pop.rep}{the repeated times of repeated records.}
 #' \item{$pheno$pop.rep.bal}{whether repeated records are balanced.}
 #' \item{$pheno$pop.env}{a list of environmental factors setting.}
+#' \item{$pheno$phe.type}{a list of phenotype types.}
 #' \item{$pheno$phe.model}{a list of genetic model of phenotype such as "T1 = A + E".}
 #' \item{$pheno$phe.h2A}{a list of additive heritability.}
 #' \item{$pheno$phe.h2D}{a list of dominant heritability.}
@@ -82,11 +83,15 @@
 #'   pop.rep = 2, # 2 repeated record
 #'   pop.rep.bal = TRUE, # balanced repeated record
 #'   pop.env = pop.env,
-#'   phe.var = list(tr1 = 100, tr2 = 100),
+#'   phe.type = list(
+#'     tr1 = "continuous",
+#'     tr2 = list(case = 0.01, control = 0.99)
+#'   ),
 #'   phe.model = list(
 #'     tr1 = "T1 = A + D + A:D + F1 + F2 + C1 + R1 + A:F1 + E",
 #'     tr2 = "T2 = A + D + A:D + F1 + F2 + C1 + R1 + A:F1 + E"
-#'   )
+#'   ),
+#'   phe.var = list(tr1 = 100, tr2 = 100)
 #' )
 #' 
 #' # Run annotation simulation
@@ -132,6 +137,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   pop.geno <- SP$geno$pop.geno
   incols <- SP$geno$incols
   pop.env <- SP$pheno$pop.env
+  phe.type <- SP$pheno$phe.type
   phe.model <- SP$pheno$phe.model
   phe.h2A <- SP$pheno$phe.h2A
   phe.h2D <- SP$pheno$phe.h2D
@@ -475,6 +481,23 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
     return(rowSums(phe.eff[, grep(pattern = paste0(phe.name[[i]], c("_A_eff", "_D_eff"), collapse = "|"), x = names(phe.eff)), drop = FALSE]))
   })))
   names(TGV) <- paste0(phe.name, "_TGV")
+  
+  # apply phenotype type
+  for (i in 1:length(phe.type)) {
+    if (is.list(phe.type[[i]])) {
+      cutPoint <- unlist(phe.type[[i]])
+      cutPoint <- cutPoint / sum(cutPoint)
+      cutPoint <- c(-1, cumsum(cutPoint) * 100)
+      pheTmp <- phe[[i]] - min(phe[[i]])
+      pheTmp <- pheTmp / max(pheTmp) * 100
+      phe[[i]] <- cut(pheTmp, cutPoint, labels = names(phe.type[[i]]))
+      
+    } else {
+      if (phe.type[[i]] != "continuous") {
+        stop("Please input a correct 'phe.type'")
+      }
+    }
+  }
   
   pop <- do.call(rbind, rep(list(pop), pop.rep))
   pop <- cbind(pop, phe, TBV, TGV, phe.eff)
