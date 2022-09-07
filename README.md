@@ -2258,6 +2258,12 @@ After generating a population, further work can be done. Breeders wish to evalua
 <td>the path of JSON file.</td>
 </tr>
 <tr>
+<td><b>hiblupPath</b></td>
+<td>''</td>
+<td>character</td>
+<td>the path of HIBLUP software.</td>
+</tr>
+<tr>
 <td><b>out</b></td>
 <td>'simer.qc'</td>
 <td>character</td>
