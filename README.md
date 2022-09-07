@@ -1531,7 +1531,7 @@ SP <- param.pheno(
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
-  phe.h2GxE = list(tr1 = list("A:F1" = 0.1), tr2 = list("A:F1" = 0.1))
+  phe.h2GxE = list(tr1 = list("A:F1" = 0.1), tr2 = list("A:F1" = 0.1)),
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
 )
 
