@@ -4,10 +4,12 @@
 \alias{simer.Data.SELIND}
 \title{Selection index construction}
 \usage{
-simer.Data.SELIND(jsonList = NULL, ncpus = 10, verbose = TRUE)
+simer.Data.SELIND(jsonList = NULL, hiblupPath = "", ncpus = 10, verbose = TRUE)
 }
 \arguments{
 \item{jsonList}{the list of selection index construction parameters.}
+
+\item{hiblupPath}{the path of HIBLUP software.}
 
 \item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 

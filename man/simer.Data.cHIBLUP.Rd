@@ -6,6 +6,7 @@
 \usage{
 simer.Data.cHIBLUP(
   jsonList = NULL,
+  hiblupPath = "",
   mode = "A",
   vc.method = "AI",
   ncpus = 10,
@@ -14,6 +15,8 @@ simer.Data.cHIBLUP(
 }
 \arguments{
 \item{jsonList}{the list of genetic evaluation parameters.}
+
+\item{hiblupPath}{the path of HIBLUP software.}
 
 \item{mode}{'A' or 'AD', Additive effect model or Additive and Dominance model.}
 

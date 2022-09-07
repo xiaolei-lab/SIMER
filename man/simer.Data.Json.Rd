@@ -6,6 +6,7 @@
 \usage{
 simer.Data.Json(
   jsonFile,
+  hiblupPath = "",
   out = "simer.qc",
   dataQC = TRUE,
   buildModel = TRUE,
@@ -16,6 +17,8 @@ simer.Data.Json(
 }
 \arguments{
 \item{jsonFile}{the path of JSON file.}
+
+\item{hiblupPath}{the path of HIBLUP software.}
 
 \item{out}{the prefix of output files.}
 

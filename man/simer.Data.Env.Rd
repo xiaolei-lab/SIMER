@@ -6,6 +6,7 @@
 \usage{
 simer.Data.Env(
   jsonList = NULL,
+  hiblupPath = "",
   header = TRUE,
   sep = "\\t",
   ncpus = 10,
@@ -14,6 +15,8 @@ simer.Data.Env(
 }
 \arguments{
 \item{jsonList}{the list of environmental factor selection parameters.}
+
+\item{hiblupPath}{the path of HIBLUP software.}
 
 \item{header}{the header of file.}
 

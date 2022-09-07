@@ -906,6 +906,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' @author Dong Yin
 #' 
 #' @param jsonList the list of environmental factor selection parameters.
+#' @param hiblupPath the path of HIBLUP software.
 #' @param header the header of file.
 #' @param sep the separator of file.
 #' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
@@ -933,7 +934,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' # It needs 'hiblup' solfware
 #' jsonList <- simer.Data.Env(jsonList = jsonList)
 #' }
-simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
+simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   planPhe <- jsonList$analysis_plan
@@ -1001,7 +1002,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
         
         jsonListN$analysis_plan <- list(planPheN[[j]])
         # select random effect which ratio less than threshold
-        gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, ncpus = ncpus, verbose = verbose)
+        gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
         vc <- gebv[[1]]$varList[[1]]
         randomEffectRatio <- vc[1:length(randomEffects)] / sum(vc)
         randomEffects <- randomEffects[randomEffectRatio > randomRatio]
@@ -1039,6 +1040,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
 #' @author Dong Yin
 #' 
 #' @param jsonList the list of genetic evaluation parameters.
+#' @param hiblupPath the path of HIBLUP software.
 #' @param mode 'A' or 'AD', Additive effect model or Additive and Dominance model.
 #' @param vc.method default is 'AI', the method of calculating variance components in HIBLUP software.
 #' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
@@ -1064,7 +1066,7 @@ simer.Data.Env <- function(jsonList = NULL, header = TRUE, sep = '\t', ncpus = 1
 #' # It needs 'hiblup' software
 #' gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
 #' }
-simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", ncpus = 10, verbose = TRUE) {
+simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.method = "AI", ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   genoPath <- jsonList$genotype
@@ -1139,7 +1141,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
     out <- paste(traits, collapse = '_')
 
     completeCmd <- 
-      paste("hiblup", nTraitCmd,
+      paste(paste0(hiblupPath, "hiblup"), nTraitCmd,
         paste("--pheno", filePhe),
         paste("--pheno-pos", phenoCmd),
         paste("--dcovar", fixedEffectsCmd),
@@ -1225,6 +1227,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
 #' @author Dong Yin
 #' 
 #' @param jsonList the list of selection index construction parameters.
+#' @param hiblupPath the path of HIBLUP software.
 #' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #' @param verbose whether to print detail.
 #'
@@ -1252,7 +1255,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, mode = "A", vc.method = "AI", nc
 #' # It needs 'hiblup' software
 #' jsonList <- simer.Data.SELIND(jsonList = jsonList)
 #' }
-simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
+simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
   BVIndex <- jsonList$breeding_value_index
@@ -1301,7 +1304,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
   }
   
   if (auto_optim) {
-    gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
+    gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
     
     for (i in 1:length(planPhe)) {
       if (planPhe[[i]]$multi_trait) {
@@ -1366,6 +1369,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
 #' @author Dong Yin
 #' 
 #' @param jsonFile the path of JSON file.
+#' @param hiblupPath the path of HIBLUP software.
 #' @param out the prefix of output files.
 #' @param dataQC whether to make data quality control.
 #' @param buildModel whether to build EBV model.
@@ -1394,7 +1398,7 @@ simer.Data.SELIND <- function(jsonList = NULL, ncpus = 10, verbose = TRUE) {
 #' # It needs 'plink' and 'hiblup' software
 #' jsonList <- simer.Data.Json(jsonFile = jsonFile)
 #' }
-simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
+simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
   jsonList <- rjson::fromJSON(file = jsonFile)
   
@@ -1405,14 +1409,14 @@ simer.Data.Json <- function(jsonFile, out = "simer.qc", dataQC = TRUE, buildMode
   
   ## step 2. find the best environmental factors for EBV model
   if (buildModel) {
-    jsonList <- simer.Data.Env(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
+    jsonList <- simer.Data.Env(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
   newJsonFile <- paste0(out, ".model.json")
   newJson <- rjson::toJSON(jsonList)
   
   ## step 3. construct selection index
   if (buildIndex) {
-    jsonList <- simer.Data.SELIND(jsonList = jsonList, ncpus = ncpus, verbose = verbose)
+    jsonList <- simer.Data.SELIND(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
   newJson <- rjson::toJSON(jsonList)
   
