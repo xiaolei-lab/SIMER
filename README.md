@@ -58,6 +58,7 @@
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
     - [Generate phenotype with fixed effect and covariate and environmental random effect](#generate-phenotype-with-fixed-effect-and-covariate-and-environmental-random-effect)
     - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
+    - [Generate phenotype by ExE model](#generate-phenotype-by-ExE-model)
     - [Generate phenotype controlled by varied QTN effect distribution](#generate-phenotype-controlled-by-varied-QTN-effect-distribution)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
@@ -1532,6 +1533,121 @@ SP <- param.pheno(
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
   phe.h2GxE = list(tr1 = list("A:F1" = 0.1), tr2 = list("A:F1" = 0.1)),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+## Generate phenotype by ExE model
+**[back to top](#contents)** 
+
+In ***ExE*** model, **```SIMER```** adds ***E***nvironmental-***E***nvironmental interaction effect to phenotype. Users should prepare environmental factor by ```pop.env``` for generating ***E***nvironmental-***E***nvironmental ***I***ndividual effect. An example of ***E***nvironmental-***E***nvironmental interaction in single-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
+# Prepare environmental factor list
+pop.env <- list(
+  F1 = list( # fixed effect 1
+    level = c("1", "2"),
+    effect = list(tr1 = c(50, 30))
+  ), 
+  F2 = list( # fixed effect 2
+    level = c("d1", "d2", "d3"),
+    effect = list(tr1 = c(10, 20, 30))
+  ),
+  C1 = list( # covariate 1
+    level = c(70, 80, 90),
+    slope = list(tr1 = 1.5)
+  ),
+  R1 = list( # random effect 1
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1)
+  )
+)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  pop.env = pop.env,
+  phe.model = list(
+    tr1 = "T1 = A + F1 + F2 + C1 + R1 + F1:R1 + E" # "T1" (Trait 1) consists of Additive effect, F1, F2, C1, R1, F1-R1 interaction effect, and Residual effect
+  ),
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3),
+  phe.h2GxE = list(tr1 = list("F1:R1" = 0.1))
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+An example of ***E***nvironmental-***E***nvironmental interaction in multiple-trait simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
+# Prepare environmental factor list
+pop.env <- list(
+  F1 = list( # fixed effect 1
+    level = c("1", "2"),
+    effect = list(tr1 = c(50, 30), tr2 = c(50, 30))
+  ), 
+  F2 = list( # fixed effect 2
+    level = c("d1", "d2", "d3"),
+    effect = list(tr1 = c(10, 20, 30), tr2 = c(10, 20, 30))
+  ),
+  C1 = list( # covariate 1
+    level = c(70, 80, 90),
+    slope = list(tr1 = 1.5, tr2 = 1.5)
+  ),
+  R1 = list( # random effect 1
+    level = c("l1", "l2", "l3"),
+    ratio = list(tr1 = 0.1, tr2 = 0.1)
+  )
+)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  pop.env = pop.env,
+  phe.model = list(
+    tr1 = "T1 = A + F1 + F2 + C1 + R1 + F1:R1 + E", # "T1" (Trait 1) consists of Additive effect, F1, F2, C1, R1, F1:R1 interaction effect, and Residual effect
+    tr2 = "T2 = A + F1 + F2 + C1 + R1 + F1:R1 + E"  # "T2" (Trait 2) consists of Additive effect, F1, F2, C1, R1, F1:R1 interaction effect, and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.h2GxE = list(tr1 = list("F1:R1" = 0.1), tr2 = list("F1:R1" = 0.1)),
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
 )
 
