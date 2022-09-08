@@ -48,6 +48,7 @@
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
+    - [Generate continuous phenotype](#generate-continuous-phenotype)
     - [Generate phenotype by A model](#generate-phenotype-by-A-model)
     - [Generate phenotype by AD model](#generate-phenotype-by-AD-model)
     - [Generate phenotype by GxG model](#generate-phenotype-by-GxG-model)
@@ -696,6 +697,78 @@ SP <- genotype(SP)
 </tr>
 </tbody>
 </table>
+
+## Generate continuous phenotype
+**[back to top](#contents)** 
+
+**```SIMER```** generates continuous phenotypes by default. Continuous phenotype simulation is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.type = list(tr1 = "continuous"),
+  phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
+  # phe.var = list(tr1 = 100),
+  phe.h2A = list(tr1 = 0.3)
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+Multiple-trait simulation of continuous phenotype is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
+# Generate genotype simulation parameters
+# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  pop.ind = 100,
+  phe.type = list(tr1 = "continuous", tr2 = "continuous"),
+  phe.model = list(
+    tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
+    tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
 
 ## Generate phenotype by A model
 **[back to top](#contents)** 
