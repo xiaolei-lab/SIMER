@@ -142,6 +142,10 @@ param.annot <- function(SP = NULL, ...) {
     SP.map <- SP$map
   }
   
+  if (!all((names(SP.tmp) %in% allparam))) {
+    stop(paste(names(SP.tmp)[!(names(SP.tmp) %in% allparam)], collapse = ", "), " are not right parameters!")
+  }
+  
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.map)) {
       SP.map[[x]] <- SP.tmp[[x]]
@@ -196,6 +200,10 @@ param.geno <- function(SP = NULL, ...) {
     
   } else {
     SP.geno <- SP$geno
+  }
+  
+  if (!all((names(SP.tmp) %in% allparam))) {
+    stop(paste(names(SP.tmp)[!(names(SP.tmp) %in% allparam)], collapse = ", "), " are not right parameters!")
   }
   
   for (x in names(SP.tmp)) {
@@ -348,6 +356,10 @@ param.pheno <- function(SP = NULL, ...) {
     SP.pheno <- SP$pheno
   }
   
+  if (!all((names(SP.tmp) %in% allparam))) {
+    stop(paste(names(SP.tmp)[!(names(SP.tmp) %in% allparam)], collapse = ", "), " are not right parameters!")
+  }
+  
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.pheno)) {
       SP.pheno[[x]] <- SP.tmp[[x]]
@@ -412,6 +424,10 @@ param.sel <- function(SP = NULL, ...) {
     SP.sel <- SP$sel
   }
   
+  if (!all((names(SP.tmp) %in% allparam))) {
+    stop(paste(names(SP.tmp)[!(names(SP.tmp) %in% allparam)], collapse = ", "), " are not right parameters!")
+  }
+  
   for (x in names(SP.tmp)) {
     if (x %in% names(SP.sel)) {
       SP.sel[[x]] <- SP.tmp[[x]]
@@ -473,6 +489,10 @@ param.reprod <- function(SP = NULL, ...) {
     
   } else {
     SP.reprod <- SP$reprod
+  }
+  
+  if (!all((names(SP.tmp) %in% allparam))) {
+    stop(paste(names(SP.tmp)[!(names(SP.tmp) %in% allparam)], collapse = ", "), " are not right parameters!")
   }
   
   for (x in names(SP.tmp)) {
@@ -545,6 +565,10 @@ param.global <- function(SP = NULL, ...) {
     
   } else {
     SP.global <- SP$global
+  }
+  
+  if (!all((names(SP.tmp) %in% allparam))) {
+    stop(paste(names(SP.tmp)[!(names(SP.tmp) %in% allparam)], collapse = ", "), " are not right parameters!")
   }
   
   for (x in names(SP.tmp)) {
