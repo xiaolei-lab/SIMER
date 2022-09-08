@@ -781,7 +781,7 @@ SP <- phenotype(SP)
 ## Generate case-control phenotype
 **[back to top](#contents)** 
 
-**```SIMER```** generates case-control phenotypes by ```phe.type```. Case-control phenotype simulation is displayed as follows:   
+**```SIMER```** generates case-control phenotypes by ```phe.type```. ```phe.type``` consists of the variable names and their percentages. Case-control phenotype simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -856,7 +856,7 @@ SP <- phenotype(SP)
 ## Generate categorical phenotype
 **[back to top](#contents)** 
 
-**```SIMER```** generates categorical phenotypes by ```phe.type```. Categorical phenotype simulation is displayed as follows:   
+**```SIMER```** generates categorical phenotypes by ```phe.type```. ```phe.type``` consists of the variable names and their percentages. Categorical phenotype simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
