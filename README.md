@@ -49,6 +49,7 @@
 - [Phenotype Simulation](#phenotype-simulation)
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
     - [Generate continuous phenotype](#generate-continuous-phenotype)
+    - [Generate case-control phenotype](#generate-case-control-phenotype)
     - [Generate phenotype by A model](#generate-phenotype-by-A-model)
     - [Generate phenotype by AD model](#generate-phenotype-by-AD-model)
     - [Generate phenotype by GxG model](#generate-phenotype-by-GxG-model)
@@ -517,6 +518,12 @@ SP <- genotype(SP)
 <td>NULL</td>
 <td>list</td>
 <td>a list of environmental factors setting.</td>
+</tr>
+<tr>
+<td><b>phe.type</b></td>
+<td>list(tr1 = "continuous")</td>
+<td>list</td>
+<td>a list of phenotype types.</td>
 </tr>
 <tr>
 <td><b>phe.model</b></td>
