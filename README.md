@@ -45,7 +45,7 @@
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
     - [Generate an external genotype matrix](#generate-an-external-genotype-matrix)
     - [Generate a random genotype matrix](#generate-a-random-genotype-matrix)
-    - [Generate a genotype matrix with complete linkage disequilibrium](generate-a-genotype-matrix-with-complete-linkage-disequilibrium)
+    - [Generate a genotype matrix with complete linkage disequilibrium](#generate-a-genotype-matrix-with-complete-linkage-disequilibrium)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
