@@ -20,6 +20,7 @@ the function returns a list containing
 \item{$geno$pop.ind}{the number of individuals in the base population.}
 \item{$geno$prob}{the genotype code probability.}
 \item{$geno$rate.mut}{the mutation rate of the genotype data.}
+\item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
 }
 }
 \description{

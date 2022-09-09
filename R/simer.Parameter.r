@@ -177,6 +177,7 @@ param.annot <- function(SP = NULL, ...) {
 #' \item{$geno$pop.ind}{the number of individuals in the base population.}
 #' \item{$geno$prob}{the genotype code probability.}
 #' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
+#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
 #' }
 #' 
 #' @export
@@ -195,7 +196,8 @@ param.geno <- function(SP = NULL, ...) {
       pop.marker = 1e4,
       pop.ind = 1e2,
       prob = NULL,
-      rate.mut = list(qtn = 1e-8, snp = 1e-8)
+      rate.mut = list(qtn = 1e-8, snp = 1e-8),
+      cld = FALSE
     )
     
   } else {

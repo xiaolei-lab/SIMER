@@ -9,7 +9,7 @@ allparam <- c(
   "qtn.shape1" ,   "qtn.shape2",    "qtn.ncp"     ,  "qtn.spot"     ,
   "len.block"  ,   "maf"       ,    "recom.spot"  ,  "range.hot"    ,
   "range.cold" ,   "pop.geno"  ,    "incols"      ,  "pop.marker"   ,
-  "pop.ind"    ,   "prob"      ,    "rate.mut"    ,  "snp"          ,
+  "pop.ind"    ,   "prob"      ,    "rate.mut"    ,  "cld"          ,
   "pop"        ,   "pop.ind"   ,    "pop.rep"     ,  "pop.rep.bal"  ,
   "pop.env"    ,   "phe.type"  ,    "phe.model"   ,  "phe.h2A"      ,
   "phe.h2D"    ,   "phe.h2GxG" ,    "phe.h2GxE"   ,  "phe.h2PE"     ,

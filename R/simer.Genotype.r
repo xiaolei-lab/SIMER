@@ -33,6 +33,7 @@
 #' \item{$geno$pop.ind}{the number of individuals in the base population.}
 #' \item{$geno$prob}{the genotype code probability.}
 #' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
+#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
 #' }
 #' 
 #' @export
@@ -63,6 +64,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   pop.ind <- SP$geno$pop.ind
   prob <- SP$geno$prob
   rate.mut <- SP$geno$rate.mut
+  cld <- SP$geno$cld
   
   if (is.null(SP)) {
     stop("'SP' should be specified!")
@@ -99,7 +101,13 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     } else {
       stop("'incols' should only be 1 or 2!")
     }
-    pop.geno <- matrix(sample(codes, pop.marker*pop.ind*incols, prob = prob, replace = TRUE), pop.marker, incols*pop.ind)
+    if (incols == 2 & cld) {
+      pop.geno <- matrix(0, pop.marker, incols*pop.ind)
+      if (is.null(prob)) {  prob <- c(0.5, 0.5) }
+      pop.geno[, sample(1:ncol(pop.geno), prob[2] * ncol(pop.geno))] <- 1
+    } else {
+      pop.geno <- matrix(sample(codes, pop.marker*pop.ind*incols, prob = prob, replace = TRUE), pop.marker, incols*pop.ind)
+    }
     bigmat <- big.matrix(
       nrow = nrow(pop.geno),
       ncol = ncol(pop.geno),
