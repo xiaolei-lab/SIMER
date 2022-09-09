@@ -427,6 +427,19 @@ SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 SP <- genotype(SP)
 ```
 
+## Generate a genotype matrix with complete linkage disequilibrium
+**[back to top](#contents)** 
+
+Users can generate a genotype matrix with ***complete linkage disequilibrium*** by ```incols == 2``` and ```cld = TRUE```.
+
+```r
+# Generate genotype simulation parameters
+SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 2, cld = TRUE)
+
+# Run genotype simulation
+SP <- genotype(SP)
+```
+
 ## Add chromosome crossovers and mutations to genotype matrix
 **[back to top](#contents)** 
 
