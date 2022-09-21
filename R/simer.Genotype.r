@@ -495,6 +495,7 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
 #'
 #' @author Dong Yin
 #' 
+#' @param species the species of genetic map.
 #' @param pop.marker the number of markers.
 #' @param num.chr the number of chromosomes.
 #' @param len.chr the length of chromosomes.
@@ -506,31 +507,42 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
 #' @examples
 #' pop.map <- generate.map(pop.marker = 1e4)
 #' str(pop.map)
-generate.map <- function(pop.marker = NULL, num.chr = 18, len.chr = 1.5e8) {
+generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.chr = 1.5e8) {
   
-  if(is.null(pop.marker)) {
-    stop("Please specify the number of markers!")
-  }
-  
-  num.every <- rep(pop.marker %/% num.chr, num.chr)
-  num.every[num.chr] <- num.every[num.chr] + pop.marker %% num.chr
-  
-  SNP <- paste("M", 1:(pop.marker), sep = "")
-  Chrom <- rep(1:num.chr, num.every)
-  BP <- do.call('c', lapply(1:num.chr, function(chr) {
-    return(sort(sample(1:len.chr, num.every[chr]))) 
-  }))
-  
-  base <- c("A", "T", "C", "G")
-  ALT <- sample(base, pop.marker, replace = TRUE)
-  REF <- sample(base, pop.marker, replace = TRUE)
-  ff <- ALT == REF
-  while (sum(ff) > 0) {
-    REF[ff] <- sample(base, sum(ff), replace = TRUE)
+  if (is.null(species)) {
+    
+    if(is.null(pop.marker)) {
+      stop("Please specify the number of markers!")
+    }
+    
+    num.every <- rep(pop.marker %/% num.chr, num.chr)
+    num.every[num.chr] <- num.every[num.chr] + pop.marker %% num.chr
+    
+    SNP <- paste("M", 1:(pop.marker), sep = "")
+    Chrom <- rep(1:num.chr, num.every)
+    BP <- do.call('c', lapply(1:num.chr, function(chr) {
+      return(sort(sample(1:len.chr, num.every[chr]))) 
+    }))
+    
+    base <- c("A", "T", "C", "G")
+    ALT <- sample(base, pop.marker, replace = TRUE)
+    REF <- sample(base, pop.marker, replace = TRUE)
     ff <- ALT == REF
+    while (sum(ff) > 0) {
+      REF[ff] <- sample(base, sum(ff), replace = TRUE)
+      ff <- ALT == REF
+    }
+    
+    map <- data.frame(SNP, Chrom, BP, ALT, REF)
+    
+  } else {
+    mapPath <- system.file("extdata", "06map", paste0(species, "_map.txt"), package = "simer")
+    if (!file.exists(mapPath)) {
+      stop("Please input a correct species!")
+    }
+    map <- read.table(mapPath, header = TRUE)
   }
   
-  map <- data.frame(SNP, Chrom, BP, ALT, REF)
   return(map)
 }
 

@@ -4,9 +4,16 @@
 \alias{generate.map}
 \title{Marker information}
 \usage{
-generate.map(pop.marker = NULL, num.chr = 18, len.chr = 1.5e+08)
+generate.map(
+  species = NULL,
+  pop.marker = NULL,
+  num.chr = 18,
+  len.chr = 1.5e+08
+)
 }
 \arguments{
+\item{species}{the species of genetic map.}
+
 \item{pop.marker}{the number of markers.}
 
 \item{num.chr}{the number of chromosomes.}
