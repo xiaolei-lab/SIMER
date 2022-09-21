@@ -282,6 +282,8 @@ SP <- param.annot(pop.map = pop.map)
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 
+# Run annotation simulation
+SP <- annotation(SP)
 # Run genotype simulation
 SP <- genotype(SP)
 ```
