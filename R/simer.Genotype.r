@@ -61,6 +61,9 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   pop.map <- SP$map$pop.map
   incols <- SP$geno$incols
   pop.marker <- SP$geno$pop.marker
+  if (!is.null(pop.map)) {
+    SP$geno$pop.marker <- pop.marker <- nrow(pop.map)
+  }
   pop.ind <- SP$geno$pop.ind
   prob <- SP$geno$prob
   rate.mut <- SP$geno$rate.mut
