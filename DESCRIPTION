@@ -9,6 +9,7 @@ Authors@R: c( person("Dong", "Yin", role = "aut"),
               person("Zhenshuang", "Tang", role = "aut"),
               person("Jingya", "Xu", role = "aut"),
               person("Xiaohui", "Yuan", role = "aut"),
+              person("Xiang", "Zhou", role = "aut"),
               person("Xinyun", "Li", role = "aut"),
               person("Shuhong", "Zhao", role = "aut"),
               person("Xiaolei", "Liu", role = c("cre", "aut", "cph"), email = "xiaoleiliu@mail.hzau.edu.cn"))
