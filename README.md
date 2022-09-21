@@ -280,7 +280,7 @@ pop.map <- generate.map(pop.marker = 1e4)
 # Generate annotation simulation parameters
 SP <- param.annot(pop.map = pop.map)
 # Generate genotype simulation parameters
-SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 
 # Run genotype simulation
 SP <- genotype(SP)
