@@ -270,6 +270,15 @@ SP <- simer(SP)
 A quick start for ***Genotype Simulation*** is shown below:
 
 ```r
+# Real genetic map from outside
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Real genetic map in SIMER
+# pop.map <- generate.map(species = "pig")
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.map = pop.map)
 # Generate genotype simulation parameters
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 
@@ -283,8 +292,10 @@ SP <- genotype(SP)
 A quick start for ***Phenotype Simulation*** is shown below:
 
 ```r
-# Real genotypic map
+# Real genetic map from outside
 # pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Real genetic map in SIMER
+# pop.map <- generate.map(species = "pig")
 # Simulated genotypic map
 pop.map <- generate.map(pop.marker = 1e4)
 
