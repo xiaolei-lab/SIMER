@@ -880,20 +880,13 @@ SP <- phenotype(SP)
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
-  pop.ind = 100,
   phe.type = list(tr1 = "continuous"),
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
   # phe.var = list(tr1 = 100),
@@ -912,21 +905,13 @@ Multiple-trait simulation of continuous phenotype is displayed as follows:
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
-
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
-  pop.ind = 100,
   phe.type = list(tr1 = "continuous", tr2 = "continuous"),
   phe.model = list(
     tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
@@ -952,20 +937,13 @@ SP <- phenotype(SP)
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
-  pop.ind = 100,
   phe.type = list(tr1 = list(case = 0.01, control = 0.99)), # "T1" (Trait 1) consists of 1% case and 99% control
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
   # phe.var = list(tr1 = 100),
@@ -984,21 +962,13 @@ Multiple-trait simulation of case-control phenotype is displayed as follows:
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
-
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
-  pop.ind = 100,
   phe.type = list(
     tr1 = list(case = 0.01, control = 0.99), # "T1" (Trait 1) consists of 1% case and 99% control
     tr2 = list(case = 0.01, control = 0.99)  # "T2" (Trait 2) consists of 1% case and 99% control
@@ -1027,20 +997,13 @@ SP <- phenotype(SP)
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
-  pop.ind = 100,
   phe.type = list(tr1 = list(low = 0.3, medium = 0.4, high = 0.3)), # "T1" (Trait 1) consists of 30% low, 40% medium, and 30% high
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
   # phe.var = list(tr1 = 100),
@@ -1059,21 +1022,13 @@ Multiple-trait simulation of categorical phenotype is displayed as follows:
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2) # random genotype
-
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP,
-  pop.ind = 100,
   phe.type = list(
     tr1 = list(low = 0.3, medium = 0.4, high = 0.3), # "T1" (Trait 1) consists of 30% low, 40% medium, and 30% high
     tr2 = list(low = 0.3, medium = 0.4, high = 0.3)  # "T2" (Trait 2) consists of 30% low, 40% medium, and 30% high
