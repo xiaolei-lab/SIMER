@@ -855,7 +855,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Users can also also generate phenotype using random genotype.
+Users can also generate phenotype using random genotype.
 
 ```r
 # Generate annotation simulation parameters
