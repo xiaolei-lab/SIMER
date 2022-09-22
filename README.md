@@ -435,9 +435,8 @@ Users can generate a genetic map by inputting an external genetic map.
 
 ```r
 # Real genotypic map
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
+mapPath <- system.file("extdata", "06map", "pig_map.txt", package = "simer")
+pop.map <- read.table(mapPath, header = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.map = pop.map)
