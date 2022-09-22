@@ -199,7 +199,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$map$pop.map}{the map data with annotation information.}
-#' \item{$map$species}{the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice".}
+#' \item{$map$species}{the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice".}
 #' \item{$map$pop.marker}{the number of markers.}
 #' \item{$map$num.chr}{the number of chromosomes.}
 #' \item{$map$len.chr}{the length of chromosomes.}
@@ -510,7 +510,7 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
 #'
 #' @author Dong Yin
 #' 
-#' @param species the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice".
+#' @param species the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice".
 #' @param pop.marker the number of markers.
 #' @param num.chr the number of chromosomes.
 #' @param len.chr the length of chromosomes.
@@ -553,7 +553,7 @@ generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.ch
   } else {
     mapPath <- system.file("extdata", "06map", paste0(species, "_map.txt"), package = "simer")
     if (!file.exists(mapPath)) {
-      stop("Please input a correct species, it can be 'arabidopsis', 'cattle', 'chicken', 'dog', 'horse', 'human', 'maize', 'mice', 'pig', 'rice'!")
+      stop("Please input a correct species, it can be 'arabidopsis', 'cattle', 'chicken', 'dog', 'horse', 'human', 'maize', 'mice', 'pig', and 'rice'!")
     }
     map <- read.table(mapPath, header = TRUE)
   }
