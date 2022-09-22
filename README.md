@@ -293,7 +293,7 @@ SP <- param.annot(species = "pig")
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.8))
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 
 # Run annotation simulation
 SP <- annotation(SP)
