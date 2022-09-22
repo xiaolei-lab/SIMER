@@ -2022,11 +2022,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 
@@ -2048,11 +2048,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "fam")
 
@@ -2074,11 +2074,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "infam")
 
@@ -2100,11 +2100,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 
@@ -2126,13 +2126,12 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
 # Generate annotation simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP, 
-  pop.ind = 100,
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.model = list(
     tr1 = "T1 = A + E",
@@ -2160,13 +2159,12 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
 # Generate annotation simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP, 
-  pop.ind = 100,
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.model = list(
     tr1 = "T1 = A + E",
@@ -2194,13 +2192,12 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate genotype simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
 # Generate annotation simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(
   SP = SP, 
-  pop.ind = 100,
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.model = list(
     tr1 = "T1 = A + E",
@@ -2228,11 +2225,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2258,11 +2255,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2288,11 +2285,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2318,11 +2315,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2348,11 +2345,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2378,11 +2375,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2410,11 +2407,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2442,11 +2439,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2474,11 +2471,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
@@ -2506,11 +2503,11 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate annotation simulation parameters
-SP <- param.annot(qtn.num = list(tr1 = 10))
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "userped")
 
