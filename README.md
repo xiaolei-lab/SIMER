@@ -43,9 +43,8 @@
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
-    - [Generate a genetic map](#generate-a-genetic-map)
     - [Generate an external or species-specific or random genetic map](#generate-an-external-or-species-specific-or-random-genetic-map)
-    - [Generate a random genotype matrix](#generate-a-random-genotype-matrix)
+    - [Generate an external or species-specific or random genotype matrix](#generate-an-external-or-species-specific-or-random-genotype-matrix)
     - [Generate a genotype matrix with complete linkage disequilibrium](#generate-a-genotype-matrix-with-complete-linkage-disequilibrium)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
@@ -445,7 +444,7 @@ SP <- param.annot(pop.map = pop.map)
 SP <- annotation(SP)
 ```
 
-Users can alse use the inner real genetic map with ```species```, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice". 
+Users can also use the inner real genetic map with ```species```, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice". 
 
 ```r
 # Generate annotation simulation parameters
@@ -465,7 +464,7 @@ SP <- param.annot(pop.marker = 1e4, num.chr = 18, len.chr = 1.5e8)
 SP <- annotation(SP)
 ```
 
-## Generate an external genotype matrix
+## Generate an external or species-specific or random genotype matrix
 **[back to top](#contents)** 
 
 Users can use ***real genotype data*** with specific genetic structure for subsequent simulation. 
@@ -487,8 +486,19 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 ```
 
-## Generate a random genotype matrix
-**[back to top](#contents)** 
+Users can also generate genotype matrix with the inner real genetic map with ```species```, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice". 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(species = "pig")
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.ind = 1e2)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+```
 
 Users can also specify ```pop.marker``` and ```pop.ind``` to generate ***random genotype data***.
 
