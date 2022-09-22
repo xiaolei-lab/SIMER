@@ -270,17 +270,10 @@ SP <- simer(SP)
 A quick start for ***Genotype Simulation*** is shown below:
 
 ```r
-# Real genetic map from outside
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Real genetic map in SIMER
-# pop.map <- generate.map(species = "pig")
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map)
+SP <- param.annot(species = "pig")
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 100)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -294,19 +287,12 @@ SP <- genotype(SP)
 A quick start for ***Phenotype Simulation*** is shown below:
 
 ```r
-# Real genetic map from outside
-# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
-# Real genetic map in SIMER
-# pop.map <- generate.map(species = "pig")
-# Simulated genotypic map
-pop.map <- generate.map(pop.marker = 1e4)
-
 # Generate annotation simulation parameters
-SP <- param.annot(pop.map = pop.map, qtn.num = list(tr1 = 10))
+SP <- param.annot(species = "pig")
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 100)
 # Generate phenotype simulation parameters
-SP <- param.pheno(SP = SP, pop.ind = 100)
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.8))
 
 # Run annotation simulation
 SP <- annotation(SP)
