@@ -376,6 +376,36 @@ SP <- phenotype(SP)
 </thead>
 <tbody>
 <tr>
+<td><b>pop.map</b></td>
+<td>NULL</td>
+<td>data.frame</td>
+<td>the map data with annotation information.</td>
+</tr>
+<tr>
+<td><b>species</b></td>
+<td>NULL</td>
+<td>character</td>
+<td>the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice".</td>
+</tr>
+<tr>
+<td><b>pop.marker</b></td>
+<td>1e4</td>
+<td>num</td>
+<td>the number of markers.</td>
+</tr>
+<tr>
+<td><b>num.chr</b></td>
+<td>18</td>
+<td>num</td>
+<td>the number of chromosomes.</td>
+</tr>
+<tr>
+<td><b>len.chr</b></td>
+<td>1.5e8</td>
+<td>num</td>
+<td>the length of chromosomes.</td>
+</tr>
+<tr>
 <td><b>recom.spot</b></td>
 <td>FALSE</td>
 <td>TRUE or FALSE</td>
