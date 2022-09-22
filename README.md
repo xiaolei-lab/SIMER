@@ -43,6 +43,7 @@
     - [Quick Start for Phenotype Simulation](#quick-start-for-phenotype-simulation)
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
+    - [Generate a genetic map](#generate-a-genetic-map)
     - [Generate an external genotype matrix](#generate-an-external-genotype-matrix)
     - [Generate a random genotype matrix](#generate-a-random-genotype-matrix)
     - [Generate a genotype matrix with complete linkage disequilibrium](#generate-a-genotype-matrix-with-complete-linkage-disequilibrium)
@@ -425,6 +426,45 @@ SP <- phenotype(SP)
 </tr>
 </tbody>
 </table>
+
+
+## Generate a genetic map
+**[back to top](#contents)** 
+
+Users can generate a genetic map by inputting an external genetic map.
+
+```r
+# Real genotypic map
+# pop.map <- read.table("Real_Genotypic_map.txt", header = TRUE)
+# Simulated genotypic map
+pop.map <- generate.map(pop.marker = 1e4)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.map = pop.map)
+
+# Run annotation simulation
+SP <- annotation(SP)
+```
+
+Users can alse use the inner real genetic map with ```species```, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice". 
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(species = "pig")
+
+# Run annotation simulation
+SP <- annotation(SP)
+```
+
+Users can generate a random genetic map with ```pop.marker```, ```num.chr```, and ```len.chr```.
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4, num.chr = 18, len.chr = 1.5e8)
+
+# Run annotation simulation
+SP <- annotation(SP)
+```
 
 ## Generate an external genotype matrix
 **[back to top](#contents)** 
