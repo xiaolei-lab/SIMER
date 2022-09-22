@@ -386,7 +386,7 @@ SP <- phenotype(SP)
 <td><b>species</b></td>
 <td>NULL</td>
 <td>character</td>
-<td>the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice".</td>
+<td>the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice".</td>
 </tr>
 <tr>
 <td><b>pop.marker</b></td>
@@ -446,7 +446,7 @@ SP <- param.annot(pop.map = pop.map)
 SP <- annotation(SP)
 ```
 
-Users can alse use the inner real genetic map with ```species```, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice". 
+Users can alse use the inner real genetic map with ```species```, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", and "rice". 
 
 ```r
 # Generate annotation simulation parameters
