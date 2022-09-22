@@ -1276,7 +1276,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     filePhe <- planPhe[[i]]$sample_info
     pheno <- read.table(filePhe, header = TRUE)
     if (is.null(pheno$gen)) {
-      stop("Generation index is necessary!")
+      pheno$gen <- 1
     }
     pheno <- pheno[pheno$gen == max(pheno$gen), ]
     pheName <- sapply(planPhe[[i]]$job_traits, function(x) {
