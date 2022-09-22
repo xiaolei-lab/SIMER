@@ -44,7 +44,7 @@
 - [Genotype Simulation](#genotype-simulation)
     - [Gallery of genotype simulation parameters](#gallery-of-genotype-simulation-parameters)
     - [Generate a genetic map](#generate-a-genetic-map)
-    - [Generate an external genotype matrix](#generate-an-external-genotype-matrix)
+    - [Generate an external or species-specific or random genetic map](#generate-an-external-or-species-specific-or-random-genetic-map)
     - [Generate a random genotype matrix](#generate-a-random-genotype-matrix)
     - [Generate a genotype matrix with complete linkage disequilibrium](#generate-a-genotype-matrix-with-complete-linkage-disequilibrium)
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
@@ -428,7 +428,7 @@ SP <- phenotype(SP)
 </table>
 
 
-## Generate a genetic map
+## Generate an external or species-specific or random genetic map
 **[back to top](#contents)** 
 
 Users can generate a genetic map by inputting an external genetic map.
