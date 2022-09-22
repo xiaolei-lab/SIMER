@@ -49,6 +49,7 @@
     - [Add chromosome crossovers and mutations to genotype matrix](#add-chromosome-crossovers-and-mutations-to-genotype-matrix)
 - [Phenotype Simulation](#phenotype-simulation)
     - [Gallery of phenotype simulation parameters](#gallery-of-phenotype-simulation-parameters)
+    - [Generate phenotype using an external or species-specific or random genotype matrix](#generate-phenotype-using-an-external-or-species-specific-or-random-genotype-matrix)
     - [Generate continuous phenotype](#generate-continuous-phenotype)
     - [Generate case-control phenotype](#generate-case-control-phenotype)
     - [Generate categorical phenotype](#generate-categorical-phenotype)
@@ -809,6 +810,68 @@ SP <- genotype(SP)
 </tr>
 </tbody>
 </table>
+
+## Generate phenotype using an external or species-specific or random genotype matrix
+**[back to top](#contents)** 
+
+Users can use ***real genotype data*** with specific genetic structure to generate phenotype. 
+
+```r
+# Create a genotype matrix
+# pop.geno <- read.table("genotype.txt")
+# pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
+pop.geno <- matrix(0, nrow = 1e4, ncol = 1e2)
+
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.geno = pop.geno)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+Users can also generate phenotype using species-specific genotype matrix.
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(species = "pig")
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
+
+Users can also also generate phenotype using random genotype.
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+```
 
 ## Generate continuous phenotype
 **[back to top](#contents)** 
