@@ -474,7 +474,7 @@ Users can use ***real genotype data*** with specific genetic structure for subse
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
-pop.geno <- matrix(0, nrow = 1e4, ncol = 1e2)
+pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e4, ncol = 1e2, byrow = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
@@ -820,7 +820,7 @@ Users can use ***real genotype data*** with specific genetic structure to genera
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
-pop.geno <- matrix(0, nrow = 1e4, ncol = 1e2)
+pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e4, ncol = 1e2, byrow = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
