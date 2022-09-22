@@ -4,6 +4,7 @@ allparam <- c(
   "replication",   "seed.sim"  ,    "out"         ,  "outpath"      ,
   "out.format" ,   "pop.gen"   ,    "out.geno.gen",  "out.pheno.gen",
   "useAllGeno" ,   "ncpus"     ,    "verbose"     ,  "pop.map"      ,
+  "species"    ,   "pop.marker",    "num.chr"     ,  "len.chr"      ,
   "qtn.model"  ,   "qtn.index" ,    "qtn.num"     ,  "qtn.dist"     ,
   "qtn.sd"     ,   "qtn.prob"  ,    "qtn.shape"   ,  "qtn.scale"    ,
   "qtn.shape1" ,   "qtn.shape2",    "qtn.ncp"     ,  "qtn.spot"     ,

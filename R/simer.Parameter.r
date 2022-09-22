@@ -27,6 +27,10 @@
 #' the function returns a list containing
 #' \describe{
 #' \item{$map$pop.map}{the map data with annotation information.}
+#' \item{$map$species}{the species of genetic map.}
+#' \item{$map$pop.marker}{the number of markers.}
+#' \item{$map$num.chr}{the number of chromosomes.}
+#' \item{$map$len.chr}{the length of chromosomes.}
 #' \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
 #' \item{$map$qtn.index}{the QTN index for each trait.}
 #' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
@@ -58,6 +62,10 @@ param.annot <- function(SP = NULL, ...) {
   if (is.null(SP$map)) {
     SP.map <- list(
       pop.map = NULL,
+      species = NULL,
+      pop.marker = 1e4,
+      num.chr = 18,
+      len.chr = 1.5e8,
       qtn.model = "A",
       qtn.index = NULL,
       qtn.num = list(tr1 = 10),
@@ -77,7 +85,7 @@ param.annot <- function(SP = NULL, ...) {
       range.cold = 1:5
     )
     
-    group1 <- c("pop.map", "qtn.model", "qtn.index")
+    group1 <- c("pop.map", "species", "pop.marker", "num.chr", "len.chr", "qtn.model", "qtn.index")
     group2 <- c("qtn.num", "qtn.dist", "qtn.sd", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
     group3 <- c("qtn.spot", "len.block", "maf", "recom.spot", "range.hot", "range.cold")
     

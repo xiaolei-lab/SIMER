@@ -199,6 +199,10 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$map$pop.map}{the map data with annotation information.}
+#' \item{$map$species}{the species of genetic map.}
+#' \item{$map$pop.marker}{the number of markers.}
+#' \item{$map$num.chr}{the number of chromosomes.}
+#' \item{$map$len.chr}{the length of chromosomes.}
 #' \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
 #' \item{$map$qtn.index}{the QTN index for each trait.}
 #' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
@@ -232,6 +236,10 @@ annotation <- function(SP, verbose = TRUE) {
   
   # annotation parameters
   pop.map <- SP$map$pop.map
+  species <- SP$map$species
+  pop.marker <- SP$map$pop.marker
+  num.chr <- SP$map$num.chr
+  len.chr <- SP$map$len.chr
   pop.geno <- SP$geno$pop.geno
   qtn.model <- SP$map$qtn.model
   qtn.index <- SP$map$qtn.index
@@ -252,7 +260,7 @@ annotation <- function(SP, verbose = TRUE) {
   range.cold <- SP$map$range.cold
   
   if (is.null(pop.map)) {
-    pop.map <- generate.map(pop.marker = 1e4)
+    pop.map <- generate.map(species = species, pop.marker = pop.marker, num.chr = num.chr, len.chr = len.chr)
   }
   
   if (!is.data.frame(pop.map)) {

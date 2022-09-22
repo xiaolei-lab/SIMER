@@ -15,6 +15,10 @@ param.annot(SP = NULL, ...)
 the function returns a list containing
 \describe{
 \item{$map$pop.map}{the map data with annotation information.}
+\item{$map$species}{the species of genetic map.}
+\item{$map$pop.marker}{the number of markers.}
+\item{$map$num.chr}{the number of chromosomes.}
+\item{$map$len.chr}{the length of chromosomes.}
 \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
 \item{$map$qtn.index}{the QTN index for each trait.}
 \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
