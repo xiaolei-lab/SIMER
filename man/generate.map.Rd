@@ -12,7 +12,7 @@ generate.map(
 )
 }
 \arguments{
-\item{species}{the species of genetic map.}
+\item{species}{the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice".}
 
 \item{pop.marker}{the number of markers.}
 

@@ -15,7 +15,7 @@ annotation(SP, verbose = TRUE)
 the function returns a list containing
 \describe{
 \item{$map$pop.map}{the map data with annotation information.}
-\item{$map$species}{the species of genetic map.}
+\item{$map$species}{the species of genetic map, which can be "arabidopsis", "cattle", "chicken", "dog", "horse", "human", "maize", "mice", "pig", "rice".}
 \item{$map$pop.marker}{the number of markers.}
 \item{$map$num.chr}{the number of chromosomes.}
 \item{$map$len.chr}{the length of chromosomes.}
