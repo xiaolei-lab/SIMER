@@ -274,7 +274,7 @@ A quick start for ***Genotype Simulation*** is shown below:
 # Generate annotation simulation parameters
 SP <- param.annot(species = "pig")
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.ind = 100)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -291,7 +291,7 @@ A quick start for ***Phenotype Simulation*** is shown below:
 # Generate annotation simulation parameters
 SP <- param.annot(species = "pig")
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.ind = 100)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.8))
 
@@ -476,9 +476,13 @@ Users can use ***real genotype data*** with specific genetic structure for subse
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
 pop.geno <- matrix(0, nrow = 1e4, ncol = 1e2)
 
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(pop.geno = pop.geno)
+SP <- param.geno(SP = SP, pop.geno = pop.geno)
 
+# Run annotation simulation
+SP <- annotation(SP)
 # Run genotype simulation
 SP <- genotype(SP)
 ```
@@ -489,9 +493,13 @@ SP <- genotype(SP)
 Users can also specify ```pop.marker``` and ```pop.ind``` to generate ***random genotype data***.
 
 ```r
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
+SP <- param.geno(SP = SP, pop.ind = 1e2)
 
+# Run annotation simulation
+SP <- annotation(SP)
 # Run genotype simulation
 SP <- genotype(SP)
 ```
@@ -499,12 +507,16 @@ SP <- genotype(SP)
 ## Generate a genotype matrix with complete linkage disequilibrium
 **[back to top](#contents)** 
 
-Users can generate a genotype matrix with ***complete linkage disequilibrium*** by ```incols == 2``` and ```cld = TRUE```.
+Users can generate a genotype matrix with ***complete linkage disequilibrium*** by ```incols = 2``` and ```cld = TRUE```.
 
 ```r
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 2, cld = TRUE)
+SP <- param.geno(SP = SP, pop.ind = 1e2, incols = 2, cld = TRUE)
 
+# Run annotation simulation
+SP <- annotation(SP)
 # Run genotype simulation
 SP <- genotype(SP)
 ```
@@ -517,10 +529,10 @@ With ***annotation data***, chromosome crossovers and mutations can be added to 
 ```r
 # Generate annotation simulation parameters
 # If recom.spot = TRUE, chromsome crossovers will be added to genotype matrix
-SP <- param.annot(recom.spot = TRUE)
+SP <- param.annot(pop.marker = 1e4, recom.spot = TRUE)
 # Generate genotype simulation parameters
 # Base mutation rate of QTN and SNP are 1e8
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2, rate.mut = list(qtn = 1e-8, snp = 1e-8))
+SP <- param.geno(SP = SP, pop.ind = 1e2, rate.mut = list(qtn = 1e-8, snp = 1e-8))
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -533,10 +545,10 @@ Note that recombination only exists in meiosis. Therefore, some reproduction met
 ```r
 # Generate annotation simulation parameters
 # If recom.spot = FALSE, chromsome crossovers will not be added to genotype matrix
-SP <- param.annot(recom.spot = FALSE)
+SP <- param.annot(pop.marker = 1e4, recom.spot = FALSE)
 # Generate genotype simulation parameters
 # Base mutation rate of QTN and SNP are 1e8
-SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2, rate.mut = list(qtn = 1e-8, snp = 1e-8))
+SP <- param.geno(SP = SP, pop.ind = 1e2, rate.mut = list(qtn = 1e-8, snp = 1e-8))
 
 # Run annotation simulation
 SP <- annotation(SP)
