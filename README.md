@@ -32,7 +32,7 @@
 - [Installation](#installation)
 - [Data Preparation](#data-preparation)
     - [Genotype](#genotype)
-    - [Genotypic map](#genotypic-map)
+    - [Genetic map](#genetic-map)
     - [Pedigree](#pedigree)<img src="https://raw.githubusercontent.com/xiaolei-lab/SIMER/master/inst/extdata/00simer_logo/simer_logo.png" height="250" align="right" />
 - [Data Input](#data-input)
     - [Basic](#basic)
@@ -188,9 +188,9 @@ Typing ```?simer``` could get the details of all parameters.
 <td align="center">0</td>
 </tr></tbody></table>
 
-## Genotypic map
+## Genetic map
 **[back to top](#contents)**  
-***Genotypic Map*** is necessary in **```SIMER```**. The first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  It will be used to generate ***annotation data***, ***genotype data***, and ***phenotype data***. 
+***Genetic Map*** is necessary in **```SIMER```**. The first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  It will be used to generate ***annotation data***, ***genotype data***, and ***phenotype data***. 
 
 > `map.txt`
 
