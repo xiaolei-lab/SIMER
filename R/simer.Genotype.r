@@ -261,6 +261,10 @@ annotation <- function(SP, verbose = TRUE) {
   
   if (is.null(pop.map)) {
     pop.map <- generate.map(species = species, pop.marker = pop.marker, num.chr = num.chr, len.chr = len.chr)
+    if (!is.null(species)) {
+      SP$map$pop.marker <- pop.marker <- nrow(pop.map)
+      SP$map$num.chr <- num.chr <- length(unique(pop.map[, 2]))
+    }
   }
   
   if (!is.data.frame(pop.map)) {
