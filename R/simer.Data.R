@@ -41,7 +41,7 @@
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- rjson::fromJSON(file = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
 #' # It needs 'plink' and 'hiblup' software
@@ -55,7 +55,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
   maxLine <- 10000
   priority <- "speed"
   
-  genoPath <- jsonList$genotype
+  genoPath <- unlist(jsonList$genotype)
   fileMVP <- fileBed <- filePlinkPed <-  NULL
   if (length(genoPath) != 0) {
     genoFiles <- list.files(genoPath)
@@ -82,21 +82,21 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
     }
   }
   genoType <- "char"
-  filter_geno <- jsonList$quality_control_plan$genotype_quality_control$filter
-  filterGeno <- jsonList$quality_control_plan$genotype_quality_control$filter_geno
-  filterHWE <- jsonList$quality_control_plan$genotype_quality_control$filter_hwe
-  filterMind <- jsonList$quality_control_plan$genotype_quality_control$filter_mind
-  filterMAF <- jsonList$quality_control_plan$genotype_quality_control$filter_maf
+  filter_geno <- unlist(jsonList$quality_control_plan$genotype_quality_control$filter)
+  filterGeno <- unlist(jsonList$quality_control_plan$genotype_quality_control$filter_geno)
+  filterHWE <- unlist(jsonList$quality_control_plan$genotype_quality_control$filter_hwe)
+  filterMind <- unlist(jsonList$quality_control_plan$genotype_quality_control$filter_mind)
+  filterMAF <- unlist(jsonList$quality_control_plan$genotype_quality_control$filter_maf)
   
-  filePed <- jsonList$pedigree
-  standardID <- jsonList$quality_control_plan$pedigree_quality_control$standard_ID
-  fileSir <- jsonList$quality_control_plan$pedigree_quality_control$candidate_sire_file
-  fileDam <- jsonList$quality_control_plan$pedigree_quality_control$candidate_dam_file
-  exclThres <- jsonList$quality_control_plan$pedigree_quality_control$exclude_threshold
-  assignThres <- jsonList$quality_control_plan$pedigree_quality_control$assign_threshold
+  filePed <- unlist(jsonList$pedigree)
+  standardID <- unlist(jsonList$quality_control_plan$pedigree_quality_control$standard_ID)
+  fileSir <- unlist(jsonList$quality_control_plan$pedigree_quality_control$candidate_sire_file)
+  fileDam <- unlist(jsonList$quality_control_plan$pedigree_quality_control$candidate_dam_file)
+  exclThres <- unlist(jsonList$quality_control_plan$pedigree_quality_control$exclude_threshold)
+  assignThres <- unlist(jsonList$quality_control_plan$pedigree_quality_control$assign_threshold)
   pedSep <- "\t"
   
-  filePhe <- sapply(jsonList$quality_control_plan$phenotype_quality_control, function(x) return(x$sample_info))
+  filePhe <- unlist(sapply(jsonList$quality_control_plan$phenotype_quality_control, function(x) return(x$sample_info)))
   planPhe <- jsonList$quality_control_plan$phenotype_quality_control
   pheCols <- NULL
   pheSep <- "\t"
@@ -744,17 +744,17 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
     } else {
       # logging.log(" JOB NAME:", planPhe$job_name, "\n", verbose = verbose)
       pheDef <- sapply(planPhe$job_traits, function(plan) {
-        return(plan$definition)
+        return(unlist(plan$definition))
       })
       pheName <- sapply(planPhe$job_traits, function(plan) {
-        if (!is.null(plan$trait)) { return(plan$trait) }
-        if (!is.null(plan$environment)) { return(plan$environment) }
+        if (!is.null(unlist(plan$trait))) { return(unlist(plan$trait)) }
+        if (!is.null(unlist(plan$environment))) { return(unlist(plan$environment)) }
       })
       envName <- sapply(planPhe$job_traits, function(plan) {
-        return(plan$environment)
+        return(unlist(plan$environment))
       })
       pheCond <- lapply(planPhe$job_traits, function(plan) {
-        return(plan$range)
+        return(unlist(plan$range))
       })
       useFlag <- sapply(1:length(pheDef), function(i) {
         flag <- FALSE
@@ -786,21 +786,21 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
       }
       
       # filter & select & arrange
-      if (length(planPhe$filter) > 0) {
-        filterRow <- with(pheList, eval(parse(text = planPhe$filter[1])))
+      if (length(unlist(planPhe$filter)) > 0) {
+        filterRow <- with(pheList, eval(parse(text = unlist(planPhe$filter))))
         filterRow[is.na(filterRow)] <- FALSE
         pheList <- pheList[filterRow, ] 
       }
-      if (length(planPhe$select) > 0) {
-        pheList <- pheList[, planPhe$select] 
+      if (length(unlist(planPhe$select)) > 0) {
+        pheList <- pheList[, unlist(planPhe$select)] 
       }
-      if (length(planPhe$arrange) > 0) {
-        if (length(planPhe$decreasing) > 0) {
-          decreasing <- planPhe$decreasing
+      if (length(unlist(planPhe$arrange)) > 0) {
+        if (length(unlist(planPhe$decreasing)) > 0) {
+          decreasing <- unlist(planPhe$decreasing)
         } else {
           decreasing <- FALSE
         }
-        orderCmd <- paste0("order(", paste0("pheList$", planPhe$arrange, collapse = ","), ",decreasing = decreasing)")
+        orderCmd <- paste0("order(", paste0("pheList$", unlist(planPhe$arrange), collapse = ","), ",decreasing = decreasing)")
         pheList <- pheList[eval(parse(text = orderCmd)), ]
       }
 
@@ -846,7 +846,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
       }
       
       # check non-repeat record trait
-      hasRep <- planPhe$repeated_records
+      hasRep <- unlist(planPhe$repeated_records)
       if (!hasRep) {
         pheList <- pheList[!duplicated(pheList[, 1]), ]
       }
@@ -928,7 +928,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- rjson::fromJSON(file = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile)
 #' 
 #' \dontrun{
 #' # It needs 'hiblup' solfware
@@ -938,14 +938,14 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
   t1 <- as.numeric(Sys.time())
   
   planPhe <- jsonList$analysis_plan
-  auto_optim <- jsonList$auto_optimization
+  auto_optim <- unlist(jsonList$auto_optimization)
   
   for (i in 1:length(planPhe)) {
     # logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
-    filePhe <- planPhe[[i]]$sample_info
+    filePhe <- unlist(planPhe[[i]]$sample_info)
     pheno <- read.table(filePhe, header = header, sep = sep)
-    multrait <- planPhe[[i]]$multi_trait
-    randomRatio <- planPhe[[i]]$random_ratio
+    multrait <- unlist(planPhe[[i]]$multi_trait)
+    randomRatio <- unlist(planPhe[[i]]$random_ratio)
     planPhe[[i]]$random_ratio <- NULL
     nTrait <- length(planPhe[[i]]$job_traits)
     jsonListN <- jsonList
@@ -959,7 +959,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
       planPheN <- planPhe[i]
     }
     for (j in 1:nTrait) {
-      traits <- planPheN[[j]]$job_traits[[1]]$traits
+      traits <- unlist(planPheN[[j]]$job_traits[[1]]$traits)
       covariates <- unlist(planPheN[[j]]$job_traits[[1]]$covariates)
       fixedEffects <- unlist(planPheN[[j]]$job_traits[[1]]$fixed_effects)
       randomEffects <- unlist(planPheN[[j]]$job_traits[[1]]$random_effects)
@@ -1060,7 +1060,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- rjson::fromJSON(file = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile)
 #' 
 #' \dontrun{
 #' # It needs 'hiblup' software
@@ -1069,20 +1069,20 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
 simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.method = "AI", ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
-  genoPath <- jsonList$genotype
+  genoPath <- unlist(jsonList$genotype)
   genoFiles <- list.files(genoPath)
   fileBed <- grep(pattern = "bed", genoFiles, value = TRUE)
   fileBed <- file.path(genoPath, fileBed)
   fileBed <- substr(fileBed, 1, nchar(fileBed) - 4)
-  filePed <- jsonList$pedigree
+  filePed <- unlist(jsonList$pedigree)
   planPhe <- jsonList$analysis_plan
   
   gebvs <- NULL
   for (i in 1:length(planPhe)) {
     # logging.log(" JOB NAME:", planPhe[[i]]$job_name, "\n", verbose = verbose)
-    filePhe <- planPhe[[i]]$sample_info
+    filePhe <- unlist(planPhe[[i]]$sample_info)
     pheno <- read.table(filePhe, header = TRUE)
-    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(x$trait))
+    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(unlist(x$trait)))
     covariates <- unique(c(unlist(sapply(planPhe[[i]]$job_traits, function(x) {
       return(unlist(c(x$covariates)))
     }))))
@@ -1126,7 +1126,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
         return(env)
     })
     phenoCmd <- match(traits, names(pheno))
-    if (!planPhe[[i]]$multi_trait) {
+    if (!unlist(planPhe[[i]]$multi_trait)) {
       covariatesCmd <- covariatesCmd[[1]]
       fixedEffectsCmd <- fixedEffectsCmd[[1]]
       randomEffectsCmd <- randomEffectsCmd[[1]]
@@ -1137,7 +1137,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
     fixedEffectsCmd <- paste(fixedEffectsCmd, collapse=' ')
     randomEffectsCmd <- paste(randomEffectsCmd, collapse=' ')
     phenoCmd <- paste(phenoCmd, collapse=' ')
-    nTraitCmd <- ifelse(planPhe[[i]]$multi_trait, "--multi-trait", "--single-trait")
+    nTraitCmd <- ifelse(unlist(planPhe[[i]]$multi_trait), "--multi-trait", "--single-trait")
     out <- paste(traits, collapse = '_')
 
     completeCmd <- 
@@ -1160,7 +1160,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
     gebv <- NULL
     
     randList <- lapply(traits, function(trait) {
-      if (planPhe[[i]]$multi_trait) {
+      if (unlist(planPhe[[i]]$multi_trait)) {
         randFile <- paste0(out, ".", trait, ".rand")
       } else {
         randFile <- paste0(trait, ".rand")
@@ -1174,7 +1174,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
     varFile <- paste0(out, ".vars")
     vars <- read.table(varFile, header = TRUE)
     varList <- lapply(traits, function(trait) {
-      if (planPhe[[i]]$multi_trait) {
+      if (unlist(planPhe[[i]]$multi_trait)) {
         return(vars[grep(pattern = trait, vars[, 1]), 2])
       } else {
         return(vars[, 2])
@@ -1185,7 +1185,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
     logging.log(" The variance components are: (R, G, E)\n", verbose = verbose)
     logging.print(gebv$varList, verbose = verbose)
 
-    if (planPhe[[i]]$multi_trait) {
+    if (unlist(planPhe[[i]]$multi_trait)) {
       covarFile <- paste0(out, ".covars")
       covars <- read.table(covarFile, header = TRUE)
       covA <- corA <- matrix(0, length(traits), length(traits))
@@ -1249,7 +1249,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- rjson::fromJSON(file = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile)
 #' 
 #' \dontrun{
 #' # It needs 'hiblup' software
@@ -1258,9 +1258,9 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
 simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
-  BVIndex <- jsonList$breeding_value_index
+  BVIndex <- unlist(jsonList$breeding_value_index)
   planPhe <- jsonList$analysis_plan
-  auto_optim <- jsonList$auto_optimization
+  auto_optim <- unlist(jsonList$auto_optimization)
   
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
   str1 <- gsub("^\\s+|\\s+$", "", str1)
@@ -1273,20 +1273,20 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   pheNames <- NULL
   usePhes <- NULL
   for (i in 1:length(planPhe)) {
-    filePhe <- planPhe[[i]]$sample_info
+    filePhe <- unlist(planPhe[[i]]$sample_info)
     pheno <- read.table(filePhe, header = TRUE)
     if (is.null(pheno$gen)) {
       pheno$gen <- 1
     }
     pheno <- pheno[pheno$gen == max(pheno$gen), ]
     pheName <- sapply(planPhe[[i]]$job_traits, function(x) {
-      return(x$trait)
+      return(unlist(x$traits))
     })
     pheNames <- c(pheNames, pheName)
     if (!all(pheName %in% names(BVWeight))) {
       stop(pheName[!(pheName %in% names(BVWeight))], " are not in the 'BVIndex'!")
     }
-    if (planPhe[[i]]$repeated_records) {
+    if (unlist(planPhe[[i]]$repeated_records)) {
       simer.mean <- function(x) { return(mean(x, na.rm = TRUE)) }
       usePhe <- sapply(pheName, function(name) {
         return(tapply(pheno[, name], as.factor(pheno[, 1]), FUN = simer.mean))
@@ -1307,7 +1307,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
     
     for (i in 1:length(planPhe)) {
-      if (planPhe[[i]]$multi_trait) {
+      if (unlist(planPhe[[i]]$multi_trait)) {
         covAList[[i]] <- gebvs[[i]]$covA
       } else {
         covAList[[i]] <- gebvs[[i]]$varList[[1]][1]
@@ -1330,10 +1330,10 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     b <- round(as.vector(b), digits = 2)
   
   } else {
-    if (is.null(jsonList$selection_index)) {
+    if (is.null(unlist(jsonList$selection_index))) {
       stop("A selection index is necessary!")
     }
-    str1 <- unlist(strsplit(jsonList$selection_index, split = c("\\+|\\*")))
+    str1 <- unlist(strsplit(unlist(jsonList$selection_index), split = c("\\+|\\*")))
     str1 <- gsub("^\\s+|\\s+$", "", str1)
     strIsNA <- is.na(suppressWarnings(as.numeric(str1)))
     b <- as.numeric(str1[!strIsNA])
@@ -1400,7 +1400,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
 #' }
 simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
-  jsonList <- rjson::fromJSON(file = jsonFile)
+  jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
   
   ## step 1. data quality control
   if (dataQC) {
@@ -1412,13 +1412,13 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     jsonList <- simer.Data.Env(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
   newJsonFile <- paste0(out, ".model.json")
-  newJson <- rjson::toJSON(jsonList)
+  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE)
   
   ## step 3. construct selection index
   if (buildIndex) {
     jsonList <- simer.Data.SELIND(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
-  newJson <- rjson::toJSON(jsonList)
+  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE)
   
   if (verbose) {
     cat(newJson, file = newJsonFile)

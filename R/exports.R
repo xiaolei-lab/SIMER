@@ -4,7 +4,7 @@ NULL
 #' @import Rcpp
 NULL
 
-#' @import rjson
+#' @import jsonlite
 NULL
 
 #' @import igraph
