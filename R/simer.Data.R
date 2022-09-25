@@ -1070,6 +1070,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
   t1 <- as.numeric(Sys.time())
   
   genoPath <- unlist(jsonList$genotype)
+  if (is.null(genoPath)) {  genoPath <- "" }
   genoFiles <- list.files(genoPath)
   fileBed <- grep(pattern = "bed", genoFiles, value = TRUE)
   fileBed <- file.path(genoPath, fileBed)
