@@ -36,7 +36,7 @@ Last update: Apr 28, 2022
 \examples{
 # Read JSON file
 jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-jsonList <- jsonlite::fromJSON(txt = jsonFile)
+jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 
 \dontrun{
 # It needs 'hiblup' software

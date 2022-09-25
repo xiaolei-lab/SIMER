@@ -928,7 +928,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- jsonlite::fromJSON(txt = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
 #' # It needs 'hiblup' solfware
@@ -1060,7 +1060,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- jsonlite::fromJSON(txt = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
 #' # It needs 'hiblup' software
@@ -1122,6 +1122,9 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
     randomEffectsCmd <- lapply(planPhe[[i]]$job_traits, function(x) {
         x$random_effects <- x$random_effects[x$random_effects %in% names(finalPhe)]
         env <- paste0(match(x$random_effects, names(pheno)), collapse=',')
+        if (unlist(planPhe[[i]]$repeated_records)) {
+          env <- paste0(c(1, env), collapse = ',')
+        }
         if (env == "") return(0)
         return(env)
     })
@@ -1249,7 +1252,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
 #' @examples
 #' # Read JSON file
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
-#' jsonList <- jsonlite::fromJSON(txt = jsonFile)
+#' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
 #' # It needs 'hiblup' software
