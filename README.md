@@ -1224,7 +1224,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype by Repeated Record model
+## Generate phenotype using Repeated Record model
 **[back to top](#contents)** 
 
 In the ***Repeated Record*** model, **```SIMER```** adds a ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. The ***Repeated Record*** in a single-trait simulation is displayed as follows:   
