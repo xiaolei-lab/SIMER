@@ -2833,17 +2833,17 @@ Users can use global parameters to control the ***population properties*** , ***
 ## Counts of total population size
 **[back to top](#contents)**  
 
-Users can calculate the ***number of individuals per generation*** by ```IndPerGen``` directly.
+Users can calculate the ***number of individuals per generation*** using ```IndPerGen``` directly.
 
 ```r
 pop <- generate.pop(pop.ind = 100)
 count.ind <- IndPerGen(pop = pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "randmate", sex.rate = 0.5, prog = 2)
 ```
 
-## Multi-thread simulation
+## Multi-thread computation
 **[back to top](#contents)**  
 
-**```SIMER```** is able to run on ***multiple threads***. Users can easily change the number of threads used for simulation by following:
+**```SIMER```** runs on ***multiple threads***. Users can easily change the number of threads used for simulation by the following:
 
 ```r
 # Generate all simulation parameters
@@ -2856,7 +2856,7 @@ SP <- simer(SP)
 ## Multi-population simulation
 **[back to top](#contents)**
 
-Simulation of ***multiple populations*** can be realized by ```for``` in **R** software.
+Simulation of ***multiple populations*** can be realized by ```for``` by using **R** software.
 
 ```r
 # Replication times
@@ -2878,7 +2878,7 @@ for (i in 1:rep) {
 ## File output
 **[back to top](#contents)** 
 
-**```SIMER```** won't output files by default. A series of files with the prefix ```out``` will output when specifying ```outpath```.
+**```SIMER```** will not output files by default. A series of files with the prefix ```out``` will output when specifying ```outpath```.
 
 ```r
 ### 01 Numeric Format ###
@@ -2909,7 +2909,7 @@ SP <- simer(SP)
 ## Generation-selective output
 **[back to top](#contents)**  
 
-Output of genotype and phenotype can be ***generation-selective*** by ```out.geno.gen``` and ```out.pheno.gen```. 
+Output of genotype and phenotype can be ***generation-selective*** using ```out.geno.gen``` and ```out.pheno.gen```. 
 
 ```r
 # Generate all simulation parameters
