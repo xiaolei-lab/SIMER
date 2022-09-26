@@ -1077,7 +1077,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. An ***A***dditive multiple-trait simulation is displayed as follows:   
+In the multiple-trait simulation, **```SIMER```** builds ***accurate Additive genetic correlation*** among multiple traits. An ***A***dditive multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1133,7 +1133,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. An ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows:   
+In multiple-trait simulation, **```SIMER```** builds ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** among multiple traits. An ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1192,7 +1192,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Genetic-Genetic interaction correlation*** between multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows:   
+In the multiple-trait simulation, **```SIMER```** builds ***accurate Genetic-Genetic interaction correlation*** among multiple traits. An example of ***A***dditive-***D***ominant interaction in multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1253,7 +1253,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Permanent Environmental correlation*** between multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows:   
+In the multiple-trait simulation, **```SIMER```** builds ***accurate Permanent Environmental correlation*** among multiple traits. ***Repeated Record*** in multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
