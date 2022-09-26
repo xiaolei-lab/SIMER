@@ -53,7 +53,7 @@
     - [Generate continuous phenotype](#generate-continuous-phenotype)
     - [Generate case-control phenotype](#generate-case-control-phenotype)
     - [Generate categorical phenotype](#generate-categorical-phenotype)
-    - [Generate phenotype using "A" model](#generate-phenotype-using-"A"-model)
+    - [Generate phenotype using \"A\" model](#generate-phenotype-using-\"A\"-model)
     - [Generate phenotype using "AD" model](#generate-phenotype-using-"AD"-model)
     - [Generate phenotype using "G by G" model](#generate-phenotype-using-"G by G"-model)
     - [Generate phenotype using Repeated Record model](#generate-phenotype-using-repeated-record-model)
