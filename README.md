@@ -87,8 +87,8 @@
     - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
 - [Breeding Program Design](#breeding-program-design)
     - [Gallery of breeding program design parameters](#gallery-of-breeding-program-design-parameters)
-    - [Breeding program design preparation](#breeding-program-design-preparation)
-    - [Breeding program design evaluation](#breeding-program-design-evaluation)
+    - [Preparation of a breeding program design](#preparation-of-a-breeding-program-design)
+    - [Evaluation of a breeding program design](#evaluation-of-a-breeding-program-design)
 - [Global Options](#global-options)
     - [Gallery of global parameters](#gallery-of-global-parameters)
     - [Counts of total population size](#counts-of-total-population-size)
@@ -2608,7 +2608,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 </tbody>
 </table>
 
-## Breeding program design preparation
+## Preparation of a breeding program design
 **[back to top](#contents)**
 
 ***Breeding program design*** should be stored on a ***JSON*** file. 
@@ -2722,13 +2722,13 @@ After generating a population, further work can be done. Breeders wish to evalua
 }
 ```
 
-## Breeding program design evaluation
+## Evaluation of a breeding program design
 **[back to top](#contents)**  
 
-In ***Breeding program design evaluation***, **```SIMER```** will complete the following three tasks:  
+To evaluate the breeding program design, **```SIMER```** completes the following three tasks:  
 ***(1)*** Data quality control for genotype, pedigree, and phenotype  
-***(2)*** Model optimization (the most suitable covariate, fixed effect, and random effect)  
-***(3)*** Selection Index construction and Genetic Progress calculation  
+***(2)*** Model optimization (i.e., the most suitable covariate, fixed effect, and random effect)  
+***(3)*** Construction of Selection Index and calculation of Genetic Progress
 
 ```r
 # Get JSON file
