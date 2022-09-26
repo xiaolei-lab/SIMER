@@ -2540,7 +2540,7 @@ SP <- simer(SP)
 # Breeding Program Design
 **[back to top](#contents)**  
 
-After generating a population, further work can be done. Breeders wish to evaluate their ***Breeding Program Design***. To save a lot of money and time, **```SIMER```** can assist breeders to evaluate their ***Breeding Program Design*** by simulation. 
+After generating a population, further work can be done. Breeders wish to evaluate their ***Breeding Program Design***. To save money and time, **```SIMER```** can assist breeders to evaluate their ***Breeding Program Design*** by simulation. 
 
 ## Gallery of breeding program design parameters
 **[back to top](#contents)**
