@@ -67,23 +67,23 @@
     - [Generate phenotype controlled by varied QTN effect distribution](#generate-phenotype-controlled-by-varied-QTN-effect-distribution)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
-    - [Individual selection on single trait](#individual-selection-on-single-trait)
-    - [Family selection on single trait](#family-selection-on-single-trait)
-    - [Within-family selection on single trait](#within-family-selection-on-single-trait)
-    - [Combined selection on single trait](#combined-selection-on-single-trait)
-    - [Tandem selection on multiple traits](#tandem-selection-on-multiple-traits)
-    - [Independent culling selection on multiple traits](#independent-culling-selection-on-multiple-traits)
-    - [Index selection on multiple traits](#index-selection-on-multiple-traits)
-    - [Clone for plant](#clone-for-plant)
-    - [Double haploid for plant](#double-haploid-for-plant)
-    - [Self-pollination for plant and micro-organism](#self-pollination-for-plant-and-micro-organism)
-    - [Random mating for plant and animal](#random-mating-for-plant-and-animal)
-    - [Random mating excluding self-pollination for animal](#random-mating-excluding-self-pollination-for-animal)
-    - [Two way cross for animal](#two-way-cross-for-animal)
-    - [Three way cross for animal](#three-way-cross-for-animal)
-    - [Four way cross for animal](#four-way-cross-for-animal)
-    - [Back cross for animal](#back-cross-for-animal)
-    - [User-designed pedigree mating for plant and animal](#user-designed-pedigree-mating-for-plant-and-animal)
+    - [Individual selection for a single trait](#individual-selection-for-a-single-trait)
+    - [Family selection for a single trait](#family-selection-for-a-single-trait)
+    - [Within-family selection for a single trait](#within-family-selection-for-a-single-trait)
+    - [Combined selection for a single trait](#combined-selection-for-a-single-trait)
+    - [Tandem selection for multiple traits](#tandem-selection-for-multiple-traits)
+    - [Independent culling selection for multiple traits](#independent-culling-selection-for-multiple-traits)
+    - [Index selection for multiple traits](#index-selection-for-multiple-traits)
+    - [Clone for plants](#clone-for-plants)
+    - [Double haploid for plants](#double-haploid-for-plants)
+    - [Self-pollination for plants and micro-organisms](#self-pollination-for-plants-and-micro-organisms)
+    - [Random mating for plants and animals](#random-mating-for-plants-and-animals)
+    - [Random mating excluding self-pollination for animals](#random-mating-excluding-self-pollination-for-animals)
+    - [Two way cross for animals](#two-way-cross-for-animals)
+    - [Three way cross for animals](#three-way-cross-for-animals)
+    - [Four way cross for animals](#four-way-cross-for-animals)
+    - [Back cross for animals](#back-cross-for-animal)
+    - [User-designed pedigree mating for plants and animals](#user-designed-pedigree-mating-for-plants-and-animals)
     - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
 - [Breeding Program Design](#breeding-program-design)
     - [Gallery of breeding program design parameters](#gallery-of-breeding-program-design-parameters)
@@ -1895,7 +1895,7 @@ SP <- phenotype(SP)
 # Population Simulation of Multiple-Generation with Genotype and Phenotype
 **[back to top](#contents)**  
 
-**```SIMER```** imitates the reproductive process of organisms to generate ***Multiple-Generation*** population. The ***genotype data*** and ***phenotype data*** of the population are screened by ***single-trait selection*** or ***multiple-trait selection***, and then amplified by ***species-specific reproduction***.
+**```SIMER```** imitates the reproductive process of organisms to generate a ***Multiple-Generation*** population. The ***genotype data*** and ***phenotype data*** of the population are screened by ***single-trait selection*** or ***multiple-trait selection***, and then those data are amplified by ***species-specific reproduction***.
 
 ## Gallery of population simulation parameters
 **[back to top](#contents)**  
@@ -2014,10 +2014,10 @@ SP <- phenotype(SP)
 </tbody>
 </table>
 
-## Individual selection on single trait
+## Individual selection for a single trait
 **[back to top](#contents)**  
 
-***Individual selection*** is a selecting method according to the ***phenotype*** of individual traits, also known as mixed selection or collective selection. This selection method is simple and easy to be used for traits with ***high heritability***.  
+***Individual selection*** is a selection method based on the ***phenotype*** of individual traits, which is also known as mixed selection or collective selection. This selection method is simple and easy to use for traits with ***high heritability***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2040,7 +2040,7 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Family selection on single trait
+## Family selection for a single trait
 **[back to top](#contents)** 
 
 ***Family selection*** is a selection method by family based on the ***average of the family***. This selection method is used for traits with ***low heritability***.  
@@ -2066,10 +2066,10 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Within-family selection on single trait
+## Within-family selection for a single trait
 **[back to top](#contents)** 
 
-***Within-family*** selection is a selection method according to the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small family***.  
+***Within-family*** selection is a selection method based on the ***deviation of individual phenotype and family mean value in each family***. This selection method is used for traits with ***low heritability and small families***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2092,10 +2092,10 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Combined selection on single trait
+## Combined selection for a single trait
 **[back to top](#contents)**  
 
-***Combined selection*** is a selecting method according to ***weighed combination of the deviation of individual phenotype and family mean value***.  
+***Combined selection*** is a selection method based on ***weighed combination of the deviation of individual phenotype and family mean value***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2118,7 +2118,7 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Tandem selection on multiple traits
+## Tandem selection for multiple traits
 **[back to top](#contents)**  
 
 ***Tandem selection*** is a method for ***sequentially selecting a plurality of target traits one by one***. The index of the selected trait is ```index.tdm``` and this parameter should ***not be controlled by Users***.  
@@ -2151,10 +2151,10 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Independent culling selection on multiple traits
+## Independent culling selection for multiple traits
 **[back to top](#contents)**  
 
-After setting a ***minimum selection criterion*** for each target trait. ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.  
+Set a ***minimum selection criterion*** for each target trait. Then a ***Independent culling selection*** will ***eliminate*** this individual when the candidate's performance on any trait is ***lower than the corresponding criteria***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2184,10 +2184,10 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Index selection on multiple traits
+## Index selection for multiple traits
 **[back to top](#contents)**  
 
-***Index selection*** is a comprehensive selection that will consider several traits based on their respective ***heritabilities***, ***phenotypic variances***, ***economic weights***, corresponding ***genetic correlations***, and ***phenotypes***. Then calculate the ***index value of each trait***, and eliminate or select it according to its level. Users can set the weight of each trait by ```index.wt```.  
+***Index selection*** is a comprehensive selection that will consider several traits based on their respective ***heritabilities***, ***phenotypic variances***, ***economic weights***, corresponding ***genetic correlations***, and ***phenotypes***. Then, **```SIMER```** calculates the ***index value of each trait***, eliminates it, or selects it according to its level. Users can set the weight of each trait at ```index.wt```.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2217,10 +2217,10 @@ SP <- phenotype(SP)
 SP <- selects(SP)
 ```
 
-## Clone for plant
+## Clone for plants
 **[back to top](#contents)** 
 
-***Clone*** is a sexual reproduction method that does not involve germ cells and does not require a process of fertilization, directly forming a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in ```clone```.   
+***Clone*** is a sexual reproduction method that does not involve germ cells and does not require a process of fertilization, but directly forms a new individual's reproductive mode from a part of the mother. ***Sex*** of offspring will be ***0*** in the ```clone```.   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2247,10 +2247,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Double haploid for plant
+## Double haploid for plants
 **[back to top](#contents)**  
 
-***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induced double the number of chromosomes and restore the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```.   
+***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induces a doubling of the number of chromosomes and restores the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```.   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2277,7 +2277,7 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Self-pollination for plant and micro-organism
+## Self-pollination for plants and micro-organisms
 **[back to top](#contents)** 
 
 ***Self-pollination*** refers to the combination of male and female gametes from the same individual or between individuals from the same clonal breeding line. ***Sex*** of offspring will be ***0*** in ```selfpol```.   
@@ -2307,10 +2307,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Random mating for plant and animal
+## Random mating for plants and animals
 **[back to top](#contents)**  
 
-In ***random mating***, any female or male individual has the same probability to mate with any opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```.   
+In ***random mating***, any female or male individual has the same probability to mate with any member of opposite sex in a sexually reproducing organism. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randmate```.   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2337,10 +2337,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Random mating excluding self-pollination for animal
+## Random mating excluding self-pollination for animals
 **[back to top](#contents)**  
 
-In ***random mating excluding self-pollination***, an individual cannot mate to itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```.   
+In ***random mating excluding self-pollination***, an individual cannot mate with itself. ***Sex*** of offspring in random mating is controlled by ```sex.ratio``` in ```randexself```.   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2367,10 +2367,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Two-way cross for animal
+## Two-way cross for animals
 **[back to top](#contents)**  
 
-***Two-way cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam***.  
+The ***Two-way cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2399,10 +2399,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Three-way cross for animal
+## Three-way cross for animals
 **[back to top](#contents)** 
 
-***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is termimal ***sire***.  
+The ***Three-way cross*** method needs to use ***sex*** to distinguish ***three*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, and the ***third breed*** is terminal ***sire***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2434,7 +2434,7 @@ SP <- reproduces(SP)
 ## Four-way cross for animal
 **[back to top](#contents)**  
 
-***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***.  
+The ***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2466,7 +2466,7 @@ SP <- reproduces(SP)
 ## Back cross for animal
 **[back to top](#contents)**  
 
-***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the ***first two-way cross***.  
+The ***Back cross*** method needs to use ***sex*** to distinguish ***two*** different breeds, in which the ***first breed*** is always ***sire*** in each generation and the ***second breed*** is ***dam*** in the ***first two-way cross***.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2495,10 +2495,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## User-designed pedigree mating for plant and animal
+## User-designed pedigree mating for plants and animals
 **[back to top](#contents)**  
 
-***User-designed pedigree mating*** needs a specific ***user-designed pedigree*** to control mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match to genotype data.  
+***User-designed pedigree mating*** needs a specific ***user-designed pedigree*** to control the mating process. The first column is ***sample id***, the second column is ***paternal id***, and the third column is ***maternal id***. Please make sure that ***paternal id*** and ***maternal id*** can match the genotype data.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2524,7 +2524,7 @@ SP <- reproduces(SP)
 ## AN EASY WAY TO GENERATE A POPULATION
 **[back to top](#contents)**  
 
-The above methods are to generate population ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can directly generate a population in a ***MORE CONVENIENT*** way.   
+The above methods are to generate populations ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can generate a population directly in a ***MORE CONVENIENT*** way.   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
