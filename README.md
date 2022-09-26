@@ -53,17 +53,17 @@
     - [Generate continuous phenotype](#generate-continuous-phenotype)
     - [Generate case-control phenotype](#generate-case-control-phenotype)
     - [Generate categorical phenotype](#generate-categorical-phenotype)
-    - [Generate phenotype by A model](#generate-phenotype-by-A-model)
-    - [Generate phenotype by AD model](#generate-phenotype-by-AD-model)
-    - [Generate phenotype by GxG model](#generate-phenotype-by-GxG-model)
-    - [Generate phenotype by Repeated Record model](#generate-phenotype-by-repeated-record-model)
+    - [Generate phenotype using "A" model](#generate-phenotype-using-"A"-model)
+    - [Generate phenotype using "AD" model](#generate-phenotype-using-"AD"-model)
+    - [Generate phenotype using "G by G" model](#generate-phenotype-using-"G by G"-model)
+    - [Generate phenotype using Repeated Record model](#generate-phenotype-using-repeated-record-model)
     - [Generate phenotype controlled by QTNs subject to Normal distribution](#generate-phenotype-controlled-by-QTNs-subject-to-normal-distribution)
     - [Generate phenotype controlled by QTNs subject to Geometric distribution](#generate-phenotype-controlled-by-QTNs-subject-to-geometric-distribution)
     - [Generate phenotype controlled by QTNs subject to Gamma distribution](#generate-phenotype-controlled-by-QTNs-subject-to-gamma-distribution)
     - [Generate phenotype controlled by QTNs subject to Beta distribution](#generate-phenotype-controlled-by-QTNs-subject-to-beta-distribution)
     - [Generate phenotype with fixed effect and covariate and environmental random effect](#generate-phenotype-with-fixed-effect-and-covariate-and-environmental-random-effect)
-    - [Generate phenotype by GxE model](#generate-phenotype-by-GxE-model)
-    - [Generate phenotype by ExE model](#generate-phenotype-by-ExE-model)
+    - [Generate phenotype using "G by E" model](#generate-phenotype-using-"G by E"-model)
+    - [Generate phenotype using "E by E" model](#generate-phenotype-using-"E by E"-model)
     - [Generate phenotype controlled by varied QTN effect distribution](#generate-phenotype-controlled-by-varied-QTN-effect-distribution)
 - [Population Simulation of Multiple-Generation with Genotype and Phenotype](#population-simulation-of-multiple-generation-with-genotype-and-phenotype)
     - [Gallery of population simulation parameters](#gallery-of-population-simulation-parameters)
@@ -137,7 +137,7 @@ Typing ```?simer``` could get the details of all parameters.
 ## Genotype
 **[back to top](#contents)**  
 
-***Genotype data*** should be ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals). Other ***genotype data*** such as ***PLINK Binary*** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), ***VCF*** or ***Hapmap*** can be converted to ***Numeric*** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
+***Genotype data*** should be ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals). Other ***genotype data***, such as ***PLINK Binary*** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), ***VCF***, or ***Hapmap*** can be converted to ***Numeric*** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
@@ -191,7 +191,7 @@ Typing ```?simer``` could get the details of all parameters.
 
 ## Genetic map
 **[back to top](#contents)**  
-***Genetic Map*** is necessary in **```SIMER```**. The first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  It will be used to generate ***annotation data***, ***genotype data***, and ***phenotype data***. 
+A ***genetic map*** is necessary in **```SIMER```**. The first column is the ***SNP name***, the second column is the ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  This will be used to generate ***annotation data***, ***genotype data***, and ***phenotype data***. 
 
 > `map.txt`
 
@@ -250,7 +250,7 @@ userped <- read.table("userped.txt", header = TRUE)
 # Quick Start
 **[back to top](#contents)** 
 
-All simulation processes can be divided into 2 steps: ***1) generate simulation parameters***; ***2) run simulation process***.
+All simulation processes can be divided into two steps: ***1) generation of simulation parameters***; ***2) run simulation process***.
 
 ## Quick Start for Population Simulation
 **[back to top](#contents)**
@@ -308,7 +308,7 @@ SP <- phenotype(SP)
 # Genotype Simulation
 **[back to top](#contents)** 
 
-***Genotype data*** in **```SIMER```** will be generated randomly or external genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of ***Annotation data***. 
+***Genotype data*** in **```SIMER```** is generated randomly or through an external genotype matrix. Chromosome crossovers and base mutations depend on block information and recombination information of ***Annotation data***. 
 
 ## Gallery of genotype simulation parameters
 **[back to top](#contents)** 
@@ -535,7 +535,7 @@ SP <- genotype(SP)
 ## Add chromosome crossovers and mutations to genotype matrix
 **[back to top](#contents)** 
 
-With ***annotation data***, chromosome crossovers and mutations can be added to genotype matrix.  
+With ***annotation data***, chromosome crossovers and mutations can be added to a genotype matrix.  
 
 ```r
 # Generate annotation simulation parameters
@@ -572,7 +572,7 @@ SP <- genotype(SP)
 # Phenotype Simulation
 **[back to top](#contents)**  
 
-***Phenotype data*** in **```SIMER```** will be generated according to different models, including:  
+***Phenotype data*** in **```SIMER```** is generated according to different models, which include:  
 **(1)** Single-Trait Model  
 **(2)** Multiple-Trait Model  
 **(3)** Repeated Record Model  
@@ -1050,10 +1050,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype by A model
+## Generate phenotype using "A" model
 **[back to top](#contents)** 
 
-In ***A*** model, **```SIMER```** only considers ***A***dditive effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect. ***A***dditive single-trait simulation is displayed as follows:   
+In an "***A***" model, **```SIMER```** only considers an ***A***dditive effect as a genetic effect. Users should prepare ***A***dditive ***QTN*** effect in the ***Annotation data*** to generate an ***A***dditive ***I***ndividual effect. An ***A***dditive single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1077,7 +1077,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. ***A***dditive multiple-trait simulation is displayed as follows:   
+In the multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** between multiple traits. An ***A***dditive multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1105,10 +1105,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype by AD model
+## Generate phenotype using "AD" model
 **[back to top](#contents)** 
 
-In ***AD*** model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** for generating ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single-trait simulation is displayed as follows:   
+In an "***AD***" model, **```SIMER```** considers ***A***dditive effect and ***D***ominant effect as genetic effect. Users should prepare ***A***dditive ***QTN*** effect and ***D***ominant ***QTN*** effect in the ***Annotation data*** to generate an ***A***dditive ***I***ndividual effect and ***D***ominant ***I***ndividual effect. ***A***dditive and ***D***ominant single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1133,7 +1133,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows:   
+In multiple-trait simulation, **```SIMER```** can build ***accurate Additive genetic correlation*** and ***accurate Dominant genetic correlation*** between multiple traits. An ***A***dditive and ***D***ominant multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1163,10 +1163,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype by GxG model
+## Generate phenotype using "G by G" model
 **[back to top](#contents)** 
 
-In ***GxG*** model, **```SIMER```** considers ***G***enetic-***G***enetic effect as genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** for generating ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction in single-trait simulation is displayed as follows:   
+In a "***G by G***" model, **```SIMER```** considers ***G***enetic-***G***enetic effect as a genetic effect. Users should prepare ***G***enetic-***G***enetic ***QTN*** effect in the ***Annotation data*** to generate ***G***enetic-***G***enetic ***I***ndividual effect. An example of ***A***dditive-***D***ominant interaction in single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1227,7 +1227,7 @@ SP <- phenotype(SP)
 ## Generate phenotype by Repeated Record model
 **[back to top](#contents)** 
 
-In ***Repeated Record*** model, **```SIMER```** adds ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. ***Repeated Record*** in single-trait simulation is displayed as follows:   
+In the ***Repeated Record*** model, **```SIMER```** adds a ***PE*** (***P***ermanent ***E***nvironmental) effect to the phenotype. The number of repeated records can be set by ```pop.rep```. In the meantime, ```pop.rep.bal``` can be used to determine whether repeated records are balanced. The ***Repeated Record*** in a single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1561,7 +1561,7 @@ SP <- phenotype(SP)
 ## Generate phenotype with fixed effect and covariate and environmental random effect
 **[back to top](#contents)** 
 
-**```SIMER```** supports adding ***F***ixed effects, ***C***ovariates, and ***E***nvironmental ***R***andom effects to phenotype. Users should prepare a list of environmental factors setting. ***F***ixed effects, ***C***ovariates , and ***E***nvironmental ***R***andom effects are determined by ```effect```, ```slope```, and ```ratio``` respectively. Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows:   
+**```SIMER```** supports adding ***F***ixed effects, ***C***ovariates, and ***E***nvironmental ***R***andom effects to a phenotype. Users should prepare a list of environmental factors setting. ***F***ixed effects, ***C***ovariates , and ***E***nvironmental ***R***andom effects are determined by ```effect```, ```slope```, and ```ratio``` respectively. A phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1606,7 +1606,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-Phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows:   
+A phenotype with ***F***ixed effect, ***C***ovariate, and ***E***nvironmental ***R***andom effect in multiple-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1655,10 +1655,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype by GxE model
+## Generate phenotype using "G by E" model
 **[back to top](#contents)** 
 
-In ***GxE*** model, **```SIMER```** adds ***G***enetic-***E***nvironmental interaction effect to phenotype. Users should prepare ***G***enetic ***QTN*** effect in the ***Annotation data*** and environmental factor by ```pop.env``` for generating ***G***enetic-***E***nvironmental ***I***ndividual effect. An example of ***G***enetic-***E***nvironmental interaction in single-trait simulation is displayed as follows:   
+In a "***G by E***" model, **```SIMER```** adds a ***G***enetic-***E***nvironmental interaction effect to the phenotype. Users should prepare the ***G***enetic ***QTN*** effect in the ***Annotation data*** and environmental factor by ```pop.env``` to generate a ***G***enetic-***E***nvironmental ***I***ndividual effect. An example of a ***G***enetic-***E***nvironmental interaction in a single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -1756,10 +1756,10 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 ```
 
-## Generate phenotype by ExE model
+## Generate phenotype using "E by E" model
 **[back to top](#contents)** 
 
-In ***ExE*** model, **```SIMER```** adds ***E***nvironmental-***E***nvironmental interaction effect to phenotype. Users should prepare environmental factor by ```pop.env``` for generating ***E***nvironmental-***E***nvironmental ***I***ndividual effect. An example of ***E***nvironmental-***E***nvironmental interaction in single-trait simulation is displayed as follows:   
+In an "***E by E***" model, **```SIMER```** adds ***E***nvironmental-***E***nvironmental interaction effect to phenotype. Users should prepare environmental factor by ```pop.env``` for generating ***E***nvironmental-***E***nvironmental ***I***ndividual effect. An example of ***E***nvironmental-***E***nvironmental interaction in single-trait simulation is displayed as follows:   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
