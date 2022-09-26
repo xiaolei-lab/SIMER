@@ -75,7 +75,7 @@
     - [Independent culling selection for multiple traits](#independent-culling-selection-for-multiple-traits)
     - [Index selection for multiple traits](#index-selection-for-multiple-traits)
     - [Clone for plants](#clone-for-plants)
-    - [Double haploid for plants](#double-haploid-for-plants)
+    - [Doubled haploid for plants](#doubled-haploid-for-plants)
     - [Self-pollination for plants and micro-organisms](#self-pollination-for-plants-and-micro-organisms)
     - [Random mating for plants and animals](#random-mating-for-plants-and-animals)
     - [Random mating excluding self-pollination for animals](#random-mating-excluding-self-pollination-for-animals)
@@ -2247,10 +2247,10 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Double haploid for plants
+## Doubled haploid for plants
 **[back to top](#contents)**  
 
-***Double haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induces a doubling of the number of chromosomes and restores the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```.   
+***Doubled haploid*** is a reproduction method for breeding workers to obtain haploid plants. It induces a doubling of the number of chromosomes and restores the number of chromosomes in normal plants. ***Sex*** of offspring will be ***0*** in ```dh```.   
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -2431,7 +2431,7 @@ SP <- selects(SP)
 SP <- reproduces(SP)
 ```
 
-## Four-way cross for animal
+## Four-way cross for animals
 **[back to top](#contents)**  
 
 The ***Four-way cross*** method needs to use ***sex*** to distinguish ***four*** different breeds, in which the ***first breed*** is ***sire*** and the ***second breed*** is ***dam*** in the ***first two-way cross***, the ***third breed*** is ***sire*** and the ***fourth breed*** is ***dam*** in the ***second two-way cross***.  
