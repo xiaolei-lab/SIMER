@@ -3031,6 +3031,6 @@ set_config(config(ssl_verifypeer = 0L))
 
 ---
 
-**Questions, suggestions, and bug reports are welcome and appreciated.** [:arrow_right:](https://github.com/xiaolei-lab/SIMER/issues)
+**Questions, suggestions, and bug reports are welcome and appreciated.** [:arrow_right:](https://github.com/xiaolei-lab/SIMER/issues1)
  
 **[back to top](#contents)**  
