@@ -1339,8 +1339,6 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
-#' # Generate selection parameters
-#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "userped")
 #' 
@@ -1350,8 +1348,6 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
-#' # Run selection
-#' SP <- selects(SP)
 #' # Run user-specified pedigree mating
 #' SP <- mate.userped(SP)
 mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
