@@ -2230,8 +2230,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "clone")
 
@@ -2241,8 +2239,6 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2260,8 +2256,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "dh")
 
@@ -2271,8 +2265,6 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2290,8 +2282,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "selfpol")
 
@@ -2301,8 +2291,6 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2320,8 +2308,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "randmate")
 
@@ -2331,8 +2317,6 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2350,8 +2334,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "randexself")
 
@@ -2361,8 +2343,6 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2380,8 +2360,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "2waycro")
 
@@ -2393,8 +2371,6 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Two different breeds are cut by sex
 SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2412,8 +2388,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "3waycro")
 
@@ -2425,8 +2399,6 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Three different breeds are cut by sex
 SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1), c(30, 30, 40))
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2444,8 +2416,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "4waycro")
 
@@ -2457,8 +2427,6 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Three different breeds are cut by sex
 SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
@@ -2476,8 +2444,6 @@ SP <- param.annot(pop.marker = 1e4)
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "backcro")
 
@@ -2489,8 +2455,6 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Two different breeds are cut by sex
 SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
-# Run selection
-SP <- selects(SP)
 # Run reproduction
 SP <- reproduces(SP)
 ```
