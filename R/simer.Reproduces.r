@@ -99,6 +99,9 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
     stop("'reprod.way' should be 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro' or 'userped'!")
   }
 
+  SP$global$useAllGeno <- TRUE
+  SP <- phenotype(SP)
+  
   return(SP)
 }
 

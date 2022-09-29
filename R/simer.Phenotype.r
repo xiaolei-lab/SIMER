@@ -151,6 +151,11 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   phe.corPE <- SP$pheno$phe.corPE
   phe.corE <- SP$pheno$phe.corE
   
+  if (!useAllGeno) {
+    pop.rep <- 1
+    phe.corPE <- NULL
+  }
+  
   if (is.null(SP)) {
     stop("'SP' should be specified!")
   }

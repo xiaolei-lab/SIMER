@@ -637,8 +637,6 @@ write.file <- function(SP) {
     }
   }
   
-  SP$global$useAllGeno <- TRUE
-  SP <- phenotype(SP)
   pheno.geno <- NULL
   pheno.total <- do.call(rbind, lapply(out.pheno.gen, function(i) {
     return(SP$pheno$pop[[i]])
