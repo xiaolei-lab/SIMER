@@ -38,8 +38,6 @@ SP <- param.annot(qtn.num = list(tr1 = 10))
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, pop.ind = 100)
-# Generate selection parameters
-SP <- param.sel(SP = SP, sel.single = "comb")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "backcro")
 
@@ -51,8 +49,6 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Two different breeds are cut by sex
 SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
-# Run selection
-SP <- selects(SP)
 # Run back cross
 SP <- mate.backcro(SP)
 }

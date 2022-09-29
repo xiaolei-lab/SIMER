@@ -34,7 +34,7 @@ Build date: Apr 6, 2022
 Last update: Jul 4, 2022
 }
 \examples{
-SP <- param.sel(sel.single = "comb")
+SP <- param.sel(sel.single = "ind")
 str(SP)
 }
 \author{

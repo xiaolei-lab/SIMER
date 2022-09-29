@@ -410,7 +410,7 @@ param.pheno <- function(SP = NULL, ...) {
 #' @export
 #'
 #' @examples
-#' SP <- param.sel(sel.single = "comb")
+#' SP <- param.sel(sel.single = "ind")
 #' str(SP)
 param.sel <- function(SP = NULL, ...) {
   
