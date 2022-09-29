@@ -38,6 +38,8 @@ SP <- param.annot(qtn.num = list(tr1 = 10))
 SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(SP = SP, pop.ind = 100)
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "dh")
 
@@ -47,6 +49,8 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
 # Run doubled haploid
 SP <- mate.dh(SP)
 }

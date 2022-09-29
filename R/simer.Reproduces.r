@@ -199,6 +199,8 @@ mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "clone")
 #' 
@@ -208,6 +210,8 @@ mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run clone
 #' SP <- mate.clone(SP)
 mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -318,6 +322,8 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "dh")
 #' 
@@ -327,6 +333,8 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run doubled haploid
 #' SP <- mate.dh(SP)
 mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -441,6 +449,8 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "selfpol")
 #' 
@@ -450,6 +460,8 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run self-pollination
 #' SP <- mate.selfpol(SP)
 mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -539,6 +551,8 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "randmate")
 #' 
@@ -548,6 +562,8 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run random mating
 #' SP <- mate.randmate(SP)
 mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -645,6 +661,8 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "randexself")
 #' 
@@ -654,6 +672,8 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run random mating excluding self-pollination
 #' SP <- mate.randexself(SP)
 mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -761,6 +781,8 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "2waycro")
 #' 
@@ -772,6 +794,8 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- phenotype(SP)
 #' # Two different breeds are cut by sex
 #' SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run two-way cross
 #' SP <- mate.2waycro(SP)
 mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -864,6 +888,8 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "3waycro")
 #' 
@@ -875,6 +901,8 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- phenotype(SP)
 #' # Three different breeds are cut by sex
 #' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1), c(30, 30, 40))
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run three-way cross
 #' SP <- mate.3waycro(SP)
 mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -1019,6 +1047,8 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "4waycro")
 #' 
@@ -1030,6 +1060,8 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- phenotype(SP)
 #' # Four different breeds are cut by sex
 #' SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run four-way cross
 #' SP <- mate.4waycro(SP)
 mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -1183,6 +1215,8 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "backcro")
 #' 
@@ -1194,6 +1228,8 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- phenotype(SP)
 #' # Two different breeds are cut by sex
 #' SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run back cross
 #' SP <- mate.backcro(SP)
 mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
@@ -1303,6 +1339,8 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
 #' # Generate phenotype simulation parameters
 #' SP <- param.pheno(SP = SP, pop.ind = 100)
+#' # Generate selection parameters
+#' SP <- param.sel(SP = SP, sel.single = "ind")
 #' # Generate reproduction parameters
 #' SP <- param.reprod(SP = SP, reprod.way = "userped")
 #' 
@@ -1312,6 +1350,8 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' # Run selection
+#' SP <- selects(SP)
 #' # Run user-specified pedigree mating
 #' SP <- mate.userped(SP)
 mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
