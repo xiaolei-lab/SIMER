@@ -1299,13 +1299,16 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
       usePhe <- pheno[, pheName, drop = FALSE]
     }
     if (is.null(usePhes)) {
-      usePhes <- usePhe
+      usePhes <- pheno[, c(names(pheno)[1], pheName), drop = FALSE]
     } else {
-      usePhes <- cbind(usePhes, usePhe)
+      usePhes <- merge(x = usePhes, y = pheno[, c(names(pheno)[1], pheName), drop = FALSE], by = names(pheno)[1], all = TRUE)
     }
     covP <- var(usePhe, na.rm = TRUE)
     covPList[[i]] <- covP
   }
+  
+  usePhes <- usePhes[, -1]
+  usePhes[is.na(usePhes)] <- 0
   
   if (auto_optim) {
     gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
