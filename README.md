@@ -79,6 +79,8 @@
     - [Self-pollination for plants and micro-organisms](#self-pollination-for-plants-and-micro-organisms)
     - [Random mating for plants and animals](#random-mating-for-plants-and-animals)
     - [Random mating excluding self-pollination for animals](#random-mating-excluding-self-pollination-for-animals)
+    - [Assortative mating for plants and animals](#assortative-mating-for-plants-and-animals)
+    - [Disassortative mating for plants and animals](#disassortative-mating-for-plants-and-animals)
     - [Two way cross for animals](#two-way-cross-for-animals)
     - [Three way cross for animals](#three-way-cross-for-animals)
     - [Four way cross for animals](#four-way-cross-for-animals)
@@ -1997,7 +1999,7 @@ SP <- phenotype(SP)
 <td><b>reprod.way</b></td>
 <td>'randmate'</td>
 <td>character</td>
-<td>reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.</td>
+<td>reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', 'assort', 'disassort', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.</td>
 </tr>
 <tr>
 <td><b>sex.rate</b></td>
@@ -2354,6 +2356,66 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
 SP <- param.reprod(SP = SP, reprod.way = "randexself")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
+```
+
+## Assortative mating for plants and animals
+**[back to top](#contents)**  
+
+In ***assortative mating***, mated pairs are of the same phenotype more often than would occur by chance. ***Sex*** of offspring in assortative mating is controlled by ```sex.ratio``` in ```assort```.   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "ind")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "assort")
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+# Run selection
+SP <- selects(SP)
+# Run reproduction
+SP <- reproduces(SP)
+```
+
+## Disassortative mating for plants and animals
+**[back to top](#contents)**  
+
+In ***disassortative mating***, mated pairs are of the same phenotype less often than would occur by chance. ***Sex*** of offspring in disassortative mating is controlled by ```sex.ratio``` in ```disassort```.   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.ind = 1e2)
+# Generate phenotype simulation parameters
+SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
+# Generate selection parameters
+SP <- param.sel(SP = SP, sel.single = "ind")
+# Generate reproduction parameters
+SP <- param.reprod(SP = SP, reprod.way = "disassort")
 
 # Run annotation simulation
 SP <- annotation(SP)
