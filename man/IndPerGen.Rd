@@ -20,7 +20,7 @@ IndPerGen(
 
 \item{ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
 
-\item{reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+\item{reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', 'assort', 'disassort', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
 
 \item{sex.rate}{the sex ratio of simulated population.}
 
