@@ -1295,14 +1295,17 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
       usePhe <- sapply(pheName, function(name) {
         return(tapply(pheno[, name], as.factor(pheno[, 1]), FUN = simer.mean))
       })
+      usePhe <- data.frame(rownames(usePhe), usePhe)
+      names(usePhe)[1] <- names(pheno)[1]
     } else {
-      usePhe <- pheno[, pheName, drop = FALSE]
+      usePhe <- pheno[, c(names(pheno)[1], pheName), drop = FALSE]
     }
     if (is.null(usePhes)) {
-      usePhes <- pheno[, c(names(pheno)[1], pheName), drop = FALSE]
+      usePhes <- usePhe
     } else {
-      usePhes <- merge(x = usePhes, y = pheno[, c(names(pheno)[1], pheName), drop = FALSE], by = names(pheno)[1], all = TRUE)
+      usePhes <- merge(x = usePhes, y = usePhe, by = names(pheno)[1], all = TRUE)
     }
+    usePhe <- usePhe[, -1, drop = FALSE]
     covP <- var(usePhe, na.rm = TRUE)
     covPList[[i]] <- covP
   }
