@@ -2718,8 +2718,10 @@ After generating a population, further work can be done. Breeders wish to evalua
 {
     "genotype": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/02plinkb",
     "pedigree": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/pedigree.txt",
-    "selection_index": "0.2 * T1 + 0.8 * T2",
-    "breeding_value_index": "0.2 * T1 + 0.8 * T2",
+    "selection_index": "100 + 0.2 * T1 - 0.8 * T2",
+    "threads": 16,
+    "genetic_progress": [],
+    "breeding_value_index": "0.2 * T1 - 0.8 * T2",
     "auto_optimization": true,
     "quality_control_plan": {
         "genotype_quality_control":{
@@ -2738,7 +2740,7 @@ After generating a population, further work can be done. Breeders wish to evalua
         },
         "phenotype_quality_control":[
             {
-                "job_name": "Data Quality Control Demo",
+                "job_name": "Data_Quality_Control_Demo",
                 "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt",
                 "repeated_records": false,
                 "multi_trait": true,
@@ -2758,12 +2760,14 @@ After generating a population, further work can be done. Breeders wish to evalua
             }
         ]
     },
-    "analysis_plan":[
+    "breeding_plan":[
         {
-            "job_name": "EBV Model Demo",
+            "job_name": "EBV_Model_Demo",
             "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt",
             "repeated_records": false,
             "multi_trait": true,
+            "vc_vars": [],
+            "vc_covars": [],
             "random_ratio": 0.05,
             "job_traits": [
                 {

@@ -1,10 +1,10 @@
 {
     "genotype": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/02plinkb",
     "pedigree": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/pedigree.txt",
-    "selection_index": "0.2 * T1 + 0.8 * T2",
+    "selection_index": "100 + 0.2 * T1 - 0.8 * T2",
     "threads": 16,
     "genetic_progress": [],
-    "breeding_value_index": "0.2 * T1 + 0.8 * T2",
+    "breeding_value_index": "0.2 * T1 - 0.8 * T2",
     "auto_optimization": true,
     "quality_control_plan": {
         "genotype_quality_control":{

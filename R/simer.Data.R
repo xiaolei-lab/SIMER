@@ -35,7 +35,7 @@
 #' \item{$selection_index}{the selection index for all traits.}
 #' \item{$breeding_value_index}{the breeding value index for all traits.}
 #' \item{$quality_control_plan}{a list of parameters for data quality control.}
-#' \item{$analysis_plan}{a list of parameters for genetic evaluation.}
+#' \item{$breeding_plan}{a list of parameters for genetic evaluation.}
 #' }
 #' 
 #' @examples
@@ -162,7 +162,7 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
         verbose = verbose)
     
     for (i in 1:length(filePhe)) {
-      jsonList$analysis_plan[[i]]$sample_info <- pheFileName[i]
+      jsonList$breeding_plan[[i]]$sample_info <- pheFileName[i]
     }
   }
   
@@ -920,7 +920,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' \item{$selection_index}{the selection index for all traits.}
 #' \item{$breeding_value_index}{the breeding value index for all traits.}
 #' \item{$quality_control_plan}{a list of parameters for data quality control.}
-#' \item{$analysis_plan}{a list of parameters for genetic evaluation.}
+#' \item{$breeding_plan}{a list of parameters for genetic evaluation.}
 #' }
 #' 
 #' @export
@@ -937,7 +937,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
-  planPhe <- jsonList$analysis_plan
+  planPhe <- jsonList$breeding_plan
   auto_optim <- unlist(jsonList$auto_optimization)
   
   for (i in 1:length(planPhe)) {
@@ -1000,7 +1000,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
           planPheN[[j]]$job_traits[[1]]$fixed_effects <- fixedEffects
         }
         
-        jsonListN$analysis_plan <- list(planPheN[[j]])
+        jsonListN$breeding_plan <- list(planPheN[[j]])
         # select random effect which ratio less than threshold
         gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
         vc <- gebv[[1]]$varList[[1]]
@@ -1010,6 +1010,11 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
         planPhe[[i]]$job_traits[[j]]$covariates <- covariates
         planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
         planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
+      }
+      
+      planPhe[[i]]$vc_vars <- paste0(planPhe[[i]]$job_name, ".vars")
+      if (unlist(planPhe[[i]]$multi_trait)) {
+        planPhe[[i]]$vc_covars <- paste0(planPhe[[i]]$job_name, ".covars")
       }
       
       envFormula <- c(
@@ -1024,7 +1029,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
     }
   }
   
-  jsonList$analysis_plan <- planPhe
+  jsonList$breeding_plan <- planPhe
   t2 <- as.numeric(Sys.time())
   logging.log(" Model optimization is Done within", format_time(t2 - t1), "\n", verbose = verbose)
   return(jsonList)
@@ -1076,7 +1081,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
   fileBed <- file.path(genoPath, fileBed)
   fileBed <- substr(fileBed, 1, nchar(fileBed) - 4)
   filePed <- unlist(jsonList$pedigree)
-  planPhe <- jsonList$analysis_plan
+  planPhe <- jsonList$breeding_plan
   
   gebvs <- NULL
   for (i in 1:length(planPhe)) {
@@ -1142,7 +1147,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
     randomEffectsCmd <- paste(randomEffectsCmd, collapse=' ')
     phenoCmd <- paste(phenoCmd, collapse=' ')
     nTraitCmd <- ifelse(unlist(planPhe[[i]]$multi_trait), "--multi-trait", "--single-trait")
-    out <- paste(traits, collapse = '_')
+    out <- planPhe[[i]]$job_name
 
     completeCmd <- 
       paste(paste0(hiblupPath, "hiblup"), nTraitCmd,
@@ -1167,7 +1172,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
       if (unlist(planPhe[[i]]$multi_trait)) {
         randFile <- paste0(out, ".", trait, ".rand")
       } else {
-        randFile <- paste0(trait, ".rand")
+        randFile <- paste0(out, ".rand")
       }
       rand <- read.table(randFile, header = TRUE)
       return(rand[, c(1, ncol(rand) - 1)])
@@ -1243,7 +1248,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
 #' \item{$selection_index}{the selection index for all traits.}
 #' \item{$breeding_value_index}{the breeding value index for all traits.}
 #' \item{$quality_control_plan}{a list of parameters for data quality control.}
-#' \item{$analysis_plan}{a list of parameters for genetic evaluation.}
+#' \item{$breeding_plan}{a list of parameters for genetic evaluation.}
 #' }
 #' 
 #' @export
@@ -1263,13 +1268,14 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   t1 <- as.numeric(Sys.time())
   
   BVIndex <- unlist(jsonList$breeding_value_index)
-  planPhe <- jsonList$analysis_plan
+  BVIndex <- gsub(pattern = "\\-", replacement = "+ -", x = BVIndex)
+  planPhe <- jsonList$breeding_plan
   auto_optim <- unlist(jsonList$auto_optimization)
   
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
-  str1 <- gsub("^\\s+|\\s+$", "", str1)
-  strIsNA <- is.na(suppressWarnings(as.numeric(str1)))
-  BVWeight <- as.numeric(str1[!strIsNA])
+  str1 <- gsub(pattern = "\\s+", replacement = "", x = str1)
+  strIsNA <- which(is.na(suppressWarnings(as.numeric(str1))))
+  BVWeight <- as.numeric(str1[strIsNA - 1])
   names(BVWeight) <- str1[strIsNA]
   
   covPList <- NULL
@@ -1338,24 +1344,32 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     BVWeight <- BVWeight[match(pheNames, names(BVWeight))]
     b <- iP %*% A %*% BVWeight
     b <- round(as.vector(b), digits = 2)
+    names(b) <- pheNames
   
   } else {
     if (is.null(unlist(jsonList$selection_index))) {
       stop("A selection index is necessary!")
     }
-    str1 <- unlist(strsplit(unlist(jsonList$selection_index), split = c("\\+|\\*")))
-    str1 <- gsub("^\\s+|\\s+$", "", str1)
-    strIsNA <- is.na(suppressWarnings(as.numeric(str1)))
-    b <- as.numeric(str1[!strIsNA])
+    selIndex <- unlist(jsonList$selection_index)
+    selIndex <- gsub(pattern = "\\-", replacement = "+ -", x = selIndex)
+    str1 <- unlist(strsplit(selIndex, split = c("\\+|\\*")))
+    str1 <- gsub(pattern = "\\s+", replacement = "", x = str1)
+    strIsNA <- which(is.na(suppressWarnings(as.numeric(str1))))
+    b <- as.numeric(str1[strIsNA - 1])
     names(b) <- str1[strIsNA]
+    if (any(sort(pheNames) != sort(names(b)))) {
+      stop("Trait names should be consistent between planPhe and selection_index!")
+    }
+    b <- b[match(pheNames, b)]
   } 
   
-  selIndex <- paste(paste(b, names(BVWeight), sep = "*"), collapse = " + ")
+  selIndex <- paste(paste(b, names(b), sep = " * "), collapse = " + ")
+  selIndex <- gsub(pattern = "\\+ \\-", replacement = "\\- ", x = selIndex)
+  selIndex <- paste0("100 + ", selIndex)
   
   # genetic progress
   scores <- sort(as.matrix(usePhes) %*% b, decreasing = TRUE)
   geneticProgress <- round(mean(scores[1:(0.1*length(scores))]) - mean(scores), digits = 2)
-  selIndex <- paste0("100 + ", selIndex)
   
   logging.log(" *********************************************************\n",
                 "General Selection Index ~ Genetic Progress is:\n", 
@@ -1364,7 +1378,6 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
 
   jsonList$selection_index <- selIndex
   jsonList$genetic_progress <- geneticProgress
-  jsonList$breeding_value_index <- NULL
   t2 <- as.numeric(Sys.time())
   logging.log(" Selection Index Construction is Done within", format_time(t2 - t1), "\n", verbose = verbose)
   return(jsonList)
@@ -1396,7 +1409,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
 #' \item{$selection_index}{the selection index for all traits.}
 #' \item{$breeding_value_index}{the breeding value index for all traits.}
 #' \item{$quality_control_plan}{a list of parameters for data quality control.}
-#' \item{$analysis_plan}{a list of parameters for genetic evaluation.}
+#' \item{$breeding_plan}{a list of parameters for genetic evaluation.}
 #' }
 #' 
 #' @export
