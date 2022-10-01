@@ -1355,14 +1355,15 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   # genetic progress
   scores <- sort(as.matrix(usePhes) %*% b, decreasing = TRUE)
   geneticProgress <- round(mean(scores[1:(0.1*length(scores))]) - mean(scores), digits = 2)
-  selIndex <- paste0(selIndex, " = ", geneticProgress)
+  selIndex <- paste0("100 + ", selIndex)
   
   logging.log(" *********************************************************\n",
-                "General Selection Index and Genetic Progress is:\n", 
-                selIndex, "\n",
+                "General Selection Index ~ Genetic Progress is:\n", 
+                paste0(selIndex, " ~ ", geneticProgress), "\n",
                 "*********************************************************\n", verbose = verbose)
 
   jsonList$selection_index <- selIndex
+  jsonList$genetic_progress <- geneticProgress
   jsonList$breeding_value_index <- NULL
   t2 <- as.numeric(Sys.time())
   logging.log(" Selection Index Construction is Done within", format_time(t2 - t1), "\n", verbose = verbose)
@@ -1411,6 +1412,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
 simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
   jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
+  if (length(jsonList$threads) != 0) { ncpus <- jsonList$threads  }
   
   ## step 1. data quality control
   if (dataQC) {
