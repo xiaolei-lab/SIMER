@@ -1010,7 +1010,6 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
         }
         randomEffectRatio <- vc[randIdx] / sum(vc)
         randomEffects <- randomEffects[randomEffectRatio > randomRatio]
-        # reset covariates, fixed effects, and random effects
         planPhe[[i]]$job_traits[[j]]$covariates <- covariates
         planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
         planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
@@ -1278,6 +1277,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   
   str1 <- unlist(strsplit(BVIndex, split = c("\\+|\\*")))
   str1 <- gsub(pattern = "\\s+", replacement = "", x = str1)
+  str1 <- str1[nchar(str1) != 0]
   strIsNA <- which(is.na(suppressWarnings(as.numeric(str1))))
   BVWeight <- as.numeric(str1[strIsNA - 1])
   names(BVWeight) <- str1[strIsNA]
