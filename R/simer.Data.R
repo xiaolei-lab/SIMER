@@ -1367,9 +1367,11 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     b <- b[match(pheNames, b)]
   } 
   
-  selIndex <- paste(paste(b, names(b), sep = " * "), collapse = " + ")
-  selIndex <- gsub(pattern = "\\+ \\-", replacement = "\\- ", x = selIndex)
-  selIndex <- paste0("100 + ", selIndex)
+  signSet <- c(" - ", " + ", " + ")
+  signUse <- signSet[sign(b) + 2]
+  selIndex <- paste(abs(b), names(b), sep = " * ")
+  selIndex <- paste0(signUse, selIndex, collapse = "")
+  selIndex <- paste0("100", selIndex)
   
   # genetic progress
   scores <- sort(as.matrix(usePhes) %*% b, decreasing = TRUE)
