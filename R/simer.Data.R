@@ -1004,12 +1004,13 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
         # select random effect which ratio less than threshold
         gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
         vc <- gebv[[1]]$varList[[1]]
-        randomEffectRatio <- vc[1:length(randomEffects)] / sum(vc)
+        randIdx <- 1:length(randomEffects)
+        if (unlist(planPhe[[i]]$repeated_records)) {
+          randIdx <- randIdx + 1
+        }
+        randomEffectRatio <- vc[randIdx] / sum(vc)
         randomEffects <- randomEffects[randomEffectRatio > randomRatio]
         # reset covariates, fixed effects, and random effects
-        planPhe[[i]]$job_traits[[j]]$covariates <- unlist(planPhe[[i]]$job_traits[[j]]$covariates)
-        planPhe[[i]]$job_traits[[j]]$fixed_effects <- unlist(planPhe[[i]]$job_traits[[j]]$fixed_effects)
-        planPhe[[i]]$job_traits[[j]]$random_effects <- unlist(planPhe[[i]]$job_traits[[j]]$random_effects)
         planPhe[[i]]$job_traits[[j]]$covariates <- covariates
         planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
         planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
