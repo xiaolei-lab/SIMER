@@ -2716,42 +2716,42 @@ After generating a population, further work can be done. Breeders wish to evalua
 
 ```json
 {
-    "genotype": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/02plinkb"],
-    "pedigree": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/pedigree.txt"],
-    "selection_index": ["0.2 * T1 + 0.8 * T2"],
-    "breeding_value_index": ["0.2 * T1 + 0.8 * T2"],
-    "auto_optimization": [true],
+    "genotype": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/02plinkb",
+    "pedigree": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/pedigree.txt",
+    "selection_index": "0.2 * T1 + 0.8 * T2",
+    "breeding_value_index": "0.2 * T1 + 0.8 * T2",
+    "auto_optimization": true,
     "quality_control_plan": {
         "genotype_quality_control":{
-            "filter": ["F1 == 'Male'"],
-            "filter_geno": [0.1],
-            "filter_mind": [0.1],
-            "filter_maf": [0.05],
-            "filter_hwe": [0.001]
+            "filter": "F1 == 'Male'",
+            "filter_geno": 0.1,
+            "filter_mind": 0.1,
+            "filter_maf": 0.05,
+            "filter_hwe": 0.001
         },
         "pedigree_quality_control":{
-            "standard_ID": [false],
+            "standard_ID": false,
             "candidate_sire_file": [],
             "candidate_dam_file": [],
-            "exclude_threshold": [0.01], 
-            "assign_threshold": [0.005]
+            "exclude_threshold": 0.01, 
+            "assign_threshold": 0.005
         },
         "phenotype_quality_control":[
             {
-                "job_name": ["Data Quality Control Demo"],
-                "sample_info": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt"],
-                "repeated_records": [false],
-                "multi_trait": [true],
-                "filter": ["F1 == 'Male'"],
+                "job_name": "Data Quality Control Demo",
+                "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt",
+                "repeated_records": false,
+                "multi_trait": true,
+                "filter": "F1 == 'Male'",
                 "job_traits": [
                     {
-                        "traits": ["T1"],
-                        "definition": ["T1"],
+                        "traits": "T1",
+                        "definition": "T1",
                         "range": []
                     },
                     {
-                        "traits": ["T2"],
-                        "definition": ["T2"],
+                        "traits": "T2",
+                        "definition": "T2",
                         "range": []
                     }
                 ]
@@ -2760,20 +2760,20 @@ After generating a population, further work can be done. Breeders wish to evalua
     },
     "analysis_plan":[
         {
-            "job_name": ["EBV Model Demo"],
-            "sample_info": ["/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt"],
-            "repeated_records": [false],
-            "multi_trait": [true],
-            "random_ratio": [0.05],
+            "job_name": "EBV Model Demo",
+            "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt",
+            "repeated_records": false,
+            "multi_trait": true,
+            "random_ratio": 0.05,
             "job_traits": [
                 {
-                    "traits": ["T1"],
+                    "traits": "T1",
                     "covariates": [],
                     "fixed_effects": ["F1", "F2"],
                     "random_effects": ["R1"]
                 },
                 {
-                    "traits": ["T2"],
+                    "traits": "T2",
                     "covariates": [],
                     "fixed_effects": ["F1", "F2"],
                     "random_effects": ["R1"]
