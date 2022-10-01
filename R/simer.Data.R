@@ -1422,13 +1422,13 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     jsonList <- simer.Data.Env(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
   newJsonFile <- paste0(out, ".model.json")
-  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE)
+  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
   
   ## step 3. construct selection index
   if (buildIndex) {
     jsonList <- simer.Data.SELIND(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
-  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE)
+  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
   
   if (verbose) {
     cat(newJson, file = newJsonFile)
