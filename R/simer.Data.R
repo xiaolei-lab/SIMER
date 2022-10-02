@@ -1010,9 +1010,9 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
         }
         randomEffectRatio <- vc[randIdx] / sum(vc)
         randomEffects <- randomEffects[randomEffectRatio > randomRatio]
-        planPhe[[i]]$job_traits[[j]]$covariates <- covariates
-        planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
-        planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
+        planPhe[[i]]$job_traits[[j]]$covariates <- ifelse(length(covariates) == 1, list(covariates), covariates)
+        planPhe[[i]]$job_traits[[j]]$fixed_effects <- ifelse(length(fixedEffects) == 1, list(fixedEffects), fixedEffects)
+        planPhe[[i]]$job_traits[[j]]$random_effects <- ifelse(length(randomEffects) == 1, list(randomEffects), randomEffects)
       }
       
       planPhe[[i]]$vc_vars <- paste0(planPhe[[i]]$job_name, ".vars")
