@@ -2678,6 +2678,8 @@ After generating a population, further work can be done. Breeders wish to evalua
 >> ***genotype***: the path of genotype data  
 >> ***pedigree***: the filename of pedigree data  
 >> ***selection_index***: the economic weight of phenotype for each trait  
+>> ***threads***: the threads number used in multiple threads computation  
+>> ***genetic_progress***: the genetic progress of a breeding plan  
 >> ***breeding_value_index***: the economic weight of breeding value for each trait  
 >> ***auto_optimization***: optimizing EBV estimated model and selection index automatically  
 >> ***quality_control_plan***: the quality control plan for genotype, pedigree, and phenotype  
@@ -2706,11 +2708,13 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>>> ***arrange***: the 'arrange' (order) condition for phenotyped individual  
 >>>> ***job_traits***: the trait need quality control and its definition and range  
 
->> ***analysis_plan***: the genetic evaluation plan  
+>> ***breeding_plan***: the genetic evaluation plan  
 >>> ***job_name***: the name of phenotype quality control job  
 >>> ***sample_info***: the filename of phenotype data   
 >>> ***repeated_records***: whether phenotype data contains repeated records  
 >>> ***multi_trait***: whether phenotype data contains multiple traits  
+>>> ***vc_vars***: the filename of variance component data  
+>>> ***vc_covars***: the filename of covariance component data  
 >>> ***random_ratio***: the least random effect ratio to phenotype variance  
 >>> ***job_traits***: the trait need analysis and its covariate, fixed effect, and random effect  
 
