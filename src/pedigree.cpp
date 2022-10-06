@@ -191,9 +191,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   Progress p(n, verbose, pb);
 
   // ******* 04 seek parents of NotMatch in the rawPed *******
+  if(verbose) { Rcout << " Seeking Parents..." << endl; }
   for (int i = 0; i < n; i++) {
-    
-    if(verbose) { Rcout << " Seeking Parents..." << endl; }
     
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
 
