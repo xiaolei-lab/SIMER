@@ -186,10 +186,15 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   string candPar1, candPar2;
   StringVector candKid(n);
   int numCand;
+  
+  MinimalProgressBar pb;
+  Progress p(n, verbose, pb);
 
   // ******* 04 seek parents of NotMatch in the rawPed *******
   for (int i = 0; i < n; i++) {
-
+    
+    if(verbose) { Rcout << " Seeking Parents..." << endl; }
+    
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
 
     candKid.fill(kidID[i]);
@@ -250,6 +255,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
       }
     }
+    if ( ! Progress::check_abort() ) { p.increment(); }
   }
   
   DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
