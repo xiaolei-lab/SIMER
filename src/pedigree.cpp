@@ -178,15 +178,17 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   fullSirID = sort_unique(fullSirID);
   fullDamID = sort_unique(fullDamID);
-  IntegerVector candKidOrder, candParOrder;
+  // IntegerVector candKidOrder, candParOrder;
 
-  arma::mat subNumConfs;
-  arma::uvec candParUse, scoreOrder, findPos;
-  arma::uword maxPos, rowPos, colPos;
-  LogicalVector kidFlag;
-  string candPar1, candPar2;
-  StringVector candKid(n);
-  int numCand, i;
+  // arma::mat subNumConfs;
+  // arma::uvec candParUse;
+  // arma::uvec findPos;
+  // arma::uword maxPos, rowPos, colPos;
+  // LogicalVector kidFlag;
+  // string candPar1, candPar2;
+  // StringVector candKid(n);
+  // int numCand;
+  int i;
   double j;
   
   MinimalProgressBar pb;
@@ -198,7 +200,14 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   for (i = 0; i < n; i++) {
     
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
-
+    
+    StringVector candKid(n);
+    LogicalVector kidFlag;
+    IntegerVector candKidOrder, candParOrder;
+    arma::uvec candParUse;
+    int numCand;
+    arma::mat subNumConfs;
+    
     candKid.fill(kidID[i]);
     kidFlag = (sirID == candKid | damID == candKid) & !naKid;
     if (birthDate.isNotNull()) {  kidFlag = kidFlag |  birdate > birdate[i]; }
@@ -213,6 +222,10 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     arma::uvec sortIdx = sort_index(subNumConfs);
 
     for (j = sortIdx.max(); j > 0; j--) {
+      arma::uvec findPos;
+      arma::uword maxPos, rowPos, colPos;
+      string candPar1, candPar2;
+      
       findPos = arma::find(sortIdx == j);
       maxPos = findPos[0];
       rowPos = (maxPos + 1) % numCand;
