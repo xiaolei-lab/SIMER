@@ -123,7 +123,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   // calculate conflict of pedigree in the rawPed
   //arma::mat numConfs = calConf(pMat, threads, verbose);
-  arma::mat numConfs(n, n, fill::zeros);
+  arma::mat numConfs(n, n, fill::randu);
+  numConfs = numConfs * m;
   
   for (int i = 0; i < n; i++) {
 
