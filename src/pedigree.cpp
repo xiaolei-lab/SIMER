@@ -198,7 +198,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   // ******* 04 seek parents of NotMatch in the rawPed *******
   if(verbose) { Rcout << " Seeking Parents..." << endl; }
-  #pragma omp parallel for schedule(dynamic) private(i, j)
+  //#pragma omp parallel for schedule(dynamic) private(i, j)
   for (i = 0; i < n; i++) {
     
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
