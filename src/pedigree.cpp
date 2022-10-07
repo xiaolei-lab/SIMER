@@ -41,6 +41,7 @@ class MinimalProgressBar: public ProgressBar{
 
 template<typename T>
 arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
+  omp_setup(threads);
   
   if(verbose) { Rcout << " Computing Mendel Conflict Matrix..." << endl; }
   
@@ -93,7 +94,7 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
 
 template <typename T>
 DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame rawPed, Nullable<StringVector> candSirID=R_NilValue, Nullable<StringVector> candDamID=R_NilValue, double exclThres=0.005, double assignThres=0.01, Nullable<NumericVector> birthDate=R_NilValue, int threads=0, bool verbose=true) {
-  //omp_setup(threads);
+  omp_setup(threads);
   
   // ******* 01 prepare data for checking rawPed *******
   StringVector kidID = rawPed[0], sirID = rawPed[1], damID = rawPed[2];
@@ -185,14 +186,16 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   LogicalVector kidFlag;
   string candPar1, candPar2;
   StringVector candKid(n);
-  int numCand;
+  int numCand, i;
+  double j;
   
   MinimalProgressBar pb;
   Progress p(n, verbose, pb);
 
   // ******* 04 seek parents of NotMatch in the rawPed *******
   if(verbose) { Rcout << " Seeking Parents..." << endl; }
-  for (int i = 0; i < n; i++) {
+  #pragma omp parallel for schedule(dynamic) private(i, j)
+  for (i = 0; i < n; i++) {
     
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
 
@@ -209,7 +212,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
     arma::uvec sortIdx = sort_index(subNumConfs);
 
-    for (double j = sortIdx.max(); j > 0; j--) {
+    for (j = sortIdx.max(); j > 0; j--) {
       findPos = arma::find(sortIdx == j);
       maxPos = findPos[0];
       rowPos = (maxPos + 1) % numCand;

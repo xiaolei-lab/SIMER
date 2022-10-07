@@ -475,8 +475,11 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' # Get the filename of pedigree data
 #' filePed <- system.file("extdata", "05others", "pedigree.txt", package = "simer")
 #' 
+#' # Get the prefix of genotype data
+#' fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
+#' 
 #' # Run pedigree correction
-#' simer.Data.Ped(filePed = filePed, out = tempfile("outfile"))
+#' simer.Data.Ped(filePed = filePed, fileMVP = fileMVP, out = tempfile("outfile"))
 simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FALSE, fileSir = NULL, fileDam = NULL, 
                            exclThres = 0.01, assignThres = 0.005, header = TRUE, sep = '\t', ncpus = 0, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())

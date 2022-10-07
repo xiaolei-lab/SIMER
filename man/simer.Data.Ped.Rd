@@ -63,8 +63,11 @@ Last update: Apr 28, 2022
 # Get the filename of pedigree data
 filePed <- system.file("extdata", "05others", "pedigree.txt", package = "simer")
 
+# Get the prefix of genotype data
+fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
+
 # Run pedigree correction
-simer.Data.Ped(filePed = filePed, out = tempfile("outfile"))
+simer.Data.Ped(filePed = filePed, fileMVP = fileMVP, out = tempfile("outfile"))
 }
 \author{
 Lilin Yin and Dong Yin
