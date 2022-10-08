@@ -173,16 +173,18 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   fullSirID = sort_unique(fullSirID);
   fullDamID = sort_unique(fullDamID);
-  NumericVector candKidOrder, candParOrder;
+  
+  // NumericVector candKidOrder, candParOrder;
 
-  arma::mat subNumConfs;
-  arma::uvec candParUse;
-  arma::uvec findPos;
-  arma::uword maxPos, rowPos, colPos;
-  LogicalVector kidFlag;
-  string candPar1, candPar2;
-  StringVector candKid(n);
-  size_t numCand;
+  // arma::mat subNumConfs;
+  // arma::uvec candParUse;
+  // arma::uvec findPos;
+  // arma::uword maxPos, rowPos, colPos;
+  // LogicalVector kidFlag;
+  // string candPar1, candPar2;
+  // StringVector candKid(n);
+  // size_t numCand;
+  
   size_t i, j;
 
   MinimalProgressBar pb;
@@ -199,7 +201,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     LogicalVector kidFlag;
     NumericVector candKidOrder, candParOrder;
     arma::uvec candParUse;
-    int numCand;
+    size_t numCand;
     arma::mat subNumConfs;
 
     candKid.fill(kidID[i]);
