@@ -68,6 +68,7 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
       }
       arma::uvec confIdx = arma::find(coli == 2 - colj);
       numConfs(i, j) = confIdx.size();
+      numConfs(j, i) = confIdx.size();
     }
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
