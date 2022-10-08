@@ -46,9 +46,9 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
   if(verbose) { Rcout << " Computing Mendel Conflict Matrix..." << endl; }
   
   MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
-  int m = pMat->nrow();
-  int n = pMat->ncol();
-  int i, j, k;
+  size_t m = pMat->nrow();
+  size_t n = pMat->ncol();
+  size_t i, j, k;
   
   arma::mat numConfs(n, n, fill::zeros);
   arma::vec coli(m), colj(m);
