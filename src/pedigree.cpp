@@ -122,8 +122,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   damState[kidID == damID] = "NotFound";
 
   // calculate conflict of pedigree in the rawPed
-  //arma::mat numConfs = calConf(pMat, threads, verbose);
-  arma::mat numConfs(pMat->ncol(), pMat->ncol(), fill::zeros);
+  arma::mat numConfs = calConf(pMat, threads, verbose);
+  // arma::mat numConfs(pMat->ncol(), pMat->ncol(), fill::zeros);
   
   for (size_t i = 0; i < n; i++) {
 
@@ -222,55 +222,55 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
     arma::uvec sortIdx = sort_index(subNumConfs);
 
-    // for (j = sortIdx.max(); j > 0; j--) {
-    //   arma::uvec findPos;
-    //   arma::uword maxPos, rowPos, colPos;
-    //   string candPar1, candPar2;
-    // 
-    //   findPos = arma::find(sortIdx == j);
-    //   maxPos = findPos[0];
-    //   rowPos = (maxPos + 1) % numCand;
-    //   colPos = (maxPos + 1) / numCand;
-    //   if (rowPos == 0) {
-    //     rowPos = numCand;
-    //     colPos = colPos - 1;
-    //   }
-    //   rowPos = rowPos - 1;
-    //   candPar1 = genoID[candParUse[rowPos]];
-    //   candPar2 = genoID[candParUse[colPos]];
-    // 
-    //   if (find(fullSirID.begin(), fullSirID.end(), candPar1) != fullSirID.end()) {
-    //     if (find(fullDamID.begin(), fullDamID.end(), candPar2) != fullDamID.end()) {
-    //       if (candPar1.compare(sirID[i])) {
-    //         sirID[i] = candPar1;
-    //         sirState[i] = "Found";
-    //         sirNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
-    //       }
-    //       if (candPar2.compare(damID[i])) {
-    //         damID[i] = candPar2;
-    //         damState[i] = "Found";
-    //         damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
-    //       }
-    //       break;
-    //     }
-    // 
-    //   } else if (find(fullSirID.begin(), fullSirID.end(), candPar2) != fullSirID.end()) {
-    //     if (find(fullDamID.begin(), fullDamID.end(), candPar1) != fullDamID.end()) {
-    //       if (candPar2.compare(sirID[i])) {
-    //         sirID[i] = candPar2;
-    //         sirState[i] = "Found";
-    //         sirNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
-    //       }
-    //       if (candPar1.compare(damID[i])) {
-    //         damID[i] = candPar1;
-    //         damState[i] = "Found";
-    //         damNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
-    //       }
-    //       break;
-    //     }
-    // 
-    //   }
-    // }
+    for (j = sortIdx.max(); j > 0; j--) {
+      arma::uvec findPos;
+      arma::uword maxPos, rowPos, colPos;
+      string candPar1, candPar2;
+
+      findPos = arma::find(sortIdx == j);
+      maxPos = findPos[0];
+      rowPos = (maxPos + 1) % numCand;
+      colPos = (maxPos + 1) / numCand;
+      if (rowPos == 0) {
+        rowPos = numCand;
+        colPos = colPos - 1;
+      }
+      rowPos = rowPos - 1;
+      candPar1 = genoID[candParUse[rowPos]];
+      candPar2 = genoID[candParUse[colPos]];
+
+      if (find(fullSirID.begin(), fullSirID.end(), candPar1) != fullSirID.end()) {
+        if (find(fullDamID.begin(), fullDamID.end(), candPar2) != fullDamID.end()) {
+          if (candPar1.compare(sirID[i])) {
+            sirID[i] = candPar1;
+            sirState[i] = "Found";
+            sirNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
+          }
+          if (candPar2.compare(damID[i])) {
+            damID[i] = candPar2;
+            damState[i] = "Found";
+            damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
+          }
+          break;
+        }
+
+      } else if (find(fullSirID.begin(), fullSirID.end(), candPar2) != fullSirID.end()) {
+        if (find(fullDamID.begin(), fullDamID.end(), candPar1) != fullDamID.end()) {
+          if (candPar2.compare(sirID[i])) {
+            sirID[i] = candPar2;
+            sirState[i] = "Found";
+            sirNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
+          }
+          if (candPar1.compare(damID[i])) {
+            damID[i] = candPar1;
+            damState[i] = "Found";
+            damNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
+          }
+          break;
+        }
+      }
+      
+    }
 
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
