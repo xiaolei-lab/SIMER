@@ -223,6 +223,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     arma::uvec sortIdx = sort_index(subNumConfs);
 
     for (j = sortIdx.max(); j > 0; j--) {
+      Rcout << "i: " << i << endl;
+      Rcout << "j: " << j << endl;
       arma::uvec findPos;
       arma::uword maxPos, rowPos, colPos;
       string candPar1, candPar2;
