@@ -126,37 +126,37 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   arma::mat numConfs(n, n, fill::randu);
   numConfs = numConfs * m;
   
-  for (int i = 0; i < n; i++) {
-
-    if (naKid[i]) { continue; }
-
-    if (!naSir[i]) {
-      if (kidOrder[i] < sirOrder[i]) {
-        sirNumConfs[i] = numConfs(kidOrder[i], sirOrder[i]);
-      } else {
-        sirNumConfs[i] = numConfs(sirOrder[i], kidOrder[i]);
-      }
-      if (sirNumConfs[i] <= exclMax) {
-        sirState[i] = "Match";
-      } else {
-        sirState[i] = "NotFound";
-      }
-    } // if (!isnan(sirOrder[i])) {
-
-    if (!naDam[i]) {
-      if (kidOrder[i] < damOrder[i]) {
-        damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
-      } else {
-        damNumConfs[i] = numConfs(damOrder[i], kidOrder[i]);
-      }
-      if (damNumConfs[i] <= exclMax) {
-        damState[i] = "Match";
-      } else {
-        damState[i] = "NotFound";
-      }
-    } // if (!isnan(damOrder[i])) {
-
-  } // for (int i = 0; i < n; i++) {
+  // for (int i = 0; i < n; i++) {
+  // 
+  //   if (naKid[i]) { continue; }
+  // 
+  //   if (!naSir[i]) {
+  //     if (kidOrder[i] < sirOrder[i]) {
+  //       sirNumConfs[i] = numConfs(kidOrder[i], sirOrder[i]);
+  //     } else {
+  //       sirNumConfs[i] = numConfs(sirOrder[i], kidOrder[i]);
+  //     }
+  //     if (sirNumConfs[i] <= exclMax) {
+  //       sirState[i] = "Match";
+  //     } else {
+  //       sirState[i] = "NotFound";
+  //     }
+  //   } // if (!isnan(sirOrder[i])) {
+  // 
+  //   if (!naDam[i]) {
+  //     if (kidOrder[i] < damOrder[i]) {
+  //       damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
+  //     } else {
+  //       damNumConfs[i] = numConfs(damOrder[i], kidOrder[i]);
+  //     }
+  //     if (damNumConfs[i] <= exclMax) {
+  //       damState[i] = "Match";
+  //     } else {
+  //       damState[i] = "NotFound";
+  //     }
+  //   } // if (!isnan(damOrder[i])) {
+  // 
+  // } // for (int i = 0; i < n; i++) {
 
   // ******* 03 prepare data for seeking parents *******
   // StringVector fullSirID, fullDamID;
