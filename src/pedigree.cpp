@@ -174,16 +174,16 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   fullSirID = sort_unique(fullSirID);
   fullDamID = sort_unique(fullDamID);
   
+  // StringVector candKid(n);
+  // LogicalVector kidFlag;
   // NumericVector candKidOrder, candParOrder;
-
-  // arma::mat subNumConfs;
   // arma::uvec candParUse;
+  // size_t numCand;
+  // arma::mat subNumConfs;
+  
   // arma::uvec findPos;
   // arma::uword maxPos, rowPos, colPos;
-  // LogicalVector kidFlag;
   // string candPar1, candPar2;
-  // StringVector candKid(n);
-  // size_t numCand;
   
   size_t i, j;
 
@@ -196,42 +196,33 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   for (i = 0; i < n; i++) {
 
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
-
+    
     StringVector candKid(n);
-    LogicalVector kidFlag;
-    NumericVector candKidOrder, candParOrder;
-    arma::uvec candParUse;
-    size_t numCand;
-    arma::mat subNumConfs;
-
     candKid.fill(kidID[i]);
-    kidFlag = (sirID == candKid | damID == candKid) & !naKid;
+    LogicalVector kidFlag = (sirID == candKid | damID == candKid) & !naKid;
     if (birthDate.isNotNull()) {  kidFlag = kidFlag |  birdate > birdate[i]; }
-    candKidOrder = kidOrder[kidFlag];
-    candParOrder = wrap(arma::find(numConfs.row(kidOrder[i]) < assignMax));
-    candParUse = as<arma::uvec>(setdiff(candParOrder, candKidOrder));
-    numCand = candParUse.size();
+    NumericVector candKidOrder = kidOrder[kidFlag];
+    NumericVector candParOrder = wrap(arma::find(numConfs.row(kidOrder[i]) < assignMax));
+    arma::uvec candParUse = as<arma::uvec>(setdiff(candParOrder, candKidOrder));
+    size_t numCand = candParUse.size();
     if (numCand == 0) { continue;  }
-    subNumConfs = numConfs.rows(candParUse);
+    arma::mat subNumConfs = numConfs.rows(candParUse);
     subNumConfs = subNumConfs.cols(candParUse);
 
     arma::uvec sortIdx = sort_index(subNumConfs);
     for (j = sortIdx.max(); j > 0; j--) {
-      arma::uvec findPos;
-      arma::uword maxPos, rowPos, colPos;
-      string candPar1, candPar2;
-
-      findPos = arma::find(sortIdx == j);
-      maxPos = findPos[0];
-      rowPos = (maxPos + 1) % numCand;
-      colPos = (maxPos + 1) / numCand;
+      
+      arma::uvec findPos = arma::find(sortIdx == j);
+      arma::uword maxPos = findPos[0];
+      arma::uword rowPos = (maxPos + 1) % numCand;
+      arma::uword colPos = (maxPos + 1) / numCand;
       if (rowPos == 0) {
         rowPos = numCand;
         colPos = colPos - 1;
       }
       rowPos = rowPos - 1;
-      candPar1 = genoID[candParUse[rowPos]];
-      candPar2 = genoID[candParUse[colPos]];
+      string candPar1 = as<string>(genoID[candParUse[rowPos]]);
+      string candPar2 = as<string>(genoID[candParUse[colPos]]);
 
       if (find(fullSirID.begin(), fullSirID.end(), candPar1) != fullSirID.end()) {
         if (find(fullDamID.begin(), fullDamID.end(), candPar2) != fullDamID.end()) {
