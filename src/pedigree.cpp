@@ -98,7 +98,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   
   // ******* 01 prepare data for checking rawPed *******
   StringVector kidID = rawPed[0], sirID = rawPed[1], damID = rawPed[2];
-  int n = kidID.size(), m = pMat->nrow();
+  size_t n = kidID.size(), m = pMat->nrow();
   NumericVector kidOrder, sirOrder, damOrder;
   kidOrder = match(kidID, genoID); kidOrder = kidOrder - 1;
   sirOrder = match(sirID, genoID); sirOrder = sirOrder - 1; 
@@ -125,8 +125,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   //arma::mat numConfs = calConf(pMat, threads, verbose);
   arma::mat numConfs(pMat->ncol(), pMat->ncol(), fill::randu);
   numConfs = numConfs * m;
-  Rcout << "n: " << n << endl;
-  for (int i = 0; i < n; i++) {
+  
+  for (size_t i = 0; i < n; i++) {
+    Rcout << "n: " << pMat->ncol() << endl;
     Rcout << "i: " << i << endl;
     Rcout << "kid: " << kidOrder[i] << endl;
     Rcout << "sir: " << sirOrder[i] << endl;
