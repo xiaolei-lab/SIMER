@@ -128,6 +128,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   
   for (size_t i = 0; i < n; i++) {
     Rcout << "n: " << pMat->ncol() << endl;
+    Rcout << "n: " << n << endl;
     Rcout << "i: " << i << endl;
     Rcout << "kid: " << kidOrder[i] << endl;
     Rcout << "sir: " << sirOrder[i] << endl;
