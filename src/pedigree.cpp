@@ -99,14 +99,14 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   // ******* 01 prepare data for checking rawPed *******
   StringVector kidID = rawPed[0], sirID = rawPed[1], damID = rawPed[2];
   int n = kidID.size(), m = pMat->nrow();
-  IntegerVector kidOrder, sirOrder, damOrder;
+  NumericVector kidOrder, sirOrder, damOrder;
   kidOrder = match(kidID, genoID); kidOrder = kidOrder - 1;
   sirOrder = match(sirID, genoID); sirOrder = sirOrder - 1; 
   damOrder = match(damID, genoID); damOrder = damOrder - 1;
   LogicalVector naKid, naSir, naDam;
   naKid = is_na(kidOrder); naSir = is_na(sirOrder); naDam = is_na(damOrder);
   StringVector sirState(n), damState(n);
-  IntegerVector sirNumConfs(n), damNumConfs(n);
+  NumericVector sirNumConfs(n), damNumConfs(n);
   
   int exclMax = exclThres * m, assignMax = assignThres * m;
   
@@ -123,7 +123,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   // calculate conflict of pedigree in the rawPed
   //arma::mat numConfs = calConf(pMat, threads, verbose);
-  arma::mat numConfs(n, n, fill::randu);
+  arma::mat numConfs(pMat->ncol(), pMat->ncol(), fill::randu);
   numConfs = numConfs * m;
   Rcout << "n: " << n << endl;
   for (int i = 0; i < n; i++) {
@@ -209,7 +209,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   //   
   //   StringVector candKid(n);
   //   LogicalVector kidFlag;
-  //   IntegerVector candKidOrder, candParOrder;
+  //   NumericVector candKidOrder, candParOrder;
   //   arma::uvec candParUse;
   //   int numCand;
   //   arma::mat subNumConfs;
