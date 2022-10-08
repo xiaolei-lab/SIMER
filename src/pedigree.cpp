@@ -211,18 +211,18 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     int numCand;
     arma::mat subNumConfs;
     
-    candKid.fill(kidID[i]);
-    kidFlag = (sirID == candKid | damID == candKid) & !naKid;
-    if (birthDate.isNotNull()) {  kidFlag = kidFlag |  birdate > birdate[i]; }
-    candKidOrder = kidOrder[kidFlag];
-    candParOrder = wrap(arma::find(numConfs.row(kidOrder[i]) < assignMax));
-    candParUse = as<arma::uvec>(setdiff(candParOrder, candKidOrder));
-    numCand = candParUse.size();
-    if (numCand == 0) { continue;  }
-    subNumConfs = numConfs.rows(candParUse);
-    subNumConfs = subNumConfs.cols(candParUse);
-
-    arma::uvec sortIdx = sort_index(subNumConfs);
+    // candKid.fill(kidID[i]);
+    // kidFlag = (sirID == candKid | damID == candKid) & !naKid;
+    // if (birthDate.isNotNull()) {  kidFlag = kidFlag |  birdate > birdate[i]; }
+    // candKidOrder = kidOrder[kidFlag];
+    // candParOrder = wrap(arma::find(numConfs.row(kidOrder[i]) < assignMax));
+    // candParUse = as<arma::uvec>(setdiff(candParOrder, candKidOrder));
+    // numCand = candParUse.size();
+    // if (numCand == 0) { continue;  }
+    // subNumConfs = numConfs.rows(candParUse);
+    // subNumConfs = subNumConfs.cols(candParUse);
+    // 
+    // arma::uvec sortIdx = sort_index(subNumConfs);
 
     // for (j = sortIdx.max(); j > 0; j--) {
     //   arma::uvec findPos;
