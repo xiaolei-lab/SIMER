@@ -49,7 +49,7 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
   size_t m = pMat->nrow();
   size_t n = pMat->ncol();
   size_t i, j, k;
-  
+  Rcout << "m: " << m << " n:" << n << endl;
   arma::mat numConfs(n, n, fill::zeros);
   arma::vec coli(m), colj(m);
   
@@ -71,7 +71,7 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
     }
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
-  
+  Rcout << "max: " << numConfs.max() << endl;
   return numConfs;
 }
 
@@ -221,8 +221,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     subNumConfs = subNumConfs.cols(candParUse);
 
     arma::uvec sortIdx = sort_index(subNumConfs);
-
     for (j = sortIdx.max(); j > 0; j--) {
+      Rcout << "ncol: " << subNumConfs.n_cols << endl;
       Rcout << "i: " << i << endl;
       Rcout << "j: " << j << endl;
       arma::uvec findPos;
