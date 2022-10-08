@@ -165,12 +165,12 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   StringVector candSir, candDam;
   if (candSirID.isNotNull()) {
     StringVector candSirIDUse = as<StringVector>(candSirID);
-    for (int i = 0; i < candSirIDUse.size(); i++)
+    for (size_t i = 0; i < candSirIDUse.size(); i++)
       fullSirID.insert(fullSirID.end(), candSirIDUse[i]);
   }
   if (candDamID.isNotNull()) {
     StringVector candDamIDUse = as<StringVector>(candDamID);
-    for (int i = 0; i < candDamIDUse.size(); i++)
+    for (size_t i = 0; i < candDamIDUse.size(); i++)
       fullSirID.insert(fullSirID.end(), candDamIDUse[i]);
   }
   NumericVector birdate;
@@ -189,16 +189,15 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   LogicalVector kidFlag;
   string candPar1, candPar2;
   StringVector candKid(n);
-  int numCand;
-  int i;
-  double j;
+  size_t numCand;
+  size_t i, j;
 
   MinimalProgressBar pb;
   Progress p(n, verbose, pb);
 
   // ******* 04 seek parents of NotMatch in the rawPed *******
   if(verbose) { Rcout << " Seeking Parents..." << endl; }
-  //#pragma omp parallel for schedule(dynamic) private(i, j)
+  #pragma omp parallel for schedule(dynamic) private(i, j)
   for (i = 0; i < n; i++) {
 
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
