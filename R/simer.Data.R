@@ -606,6 +606,10 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     if (hasGeno) {
       birthDate = NULL
       pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
+      cat("ok1\n")
+      print(dim(pedx))
+      print(head(pedx))
+      cat("ok2\n")
     }
     
     # print("Making needed files")

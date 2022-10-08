@@ -259,14 +259,18 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
   
+  // DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
+  //                                           _["sir"] = sirID, 
+  //                                           _["dam"] = damID);
+  
   DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
-                                                _["sir"] = sirID, 
-                                                _["dam"] = damID, 
-                                                _["sirState"] = sirState, 
-                                                _["damState"] = damState, 
-                                                _["sirNumConfs"] = sirNumConfs, 
-                                                _["damNumConfs"] = damNumConfs, 
-                                                _["sirRatioConfs"] = sirNumConfs * 100 / m, 
+                                                _["sir"] = sirID,
+                                                _["dam"] = damID,
+                                                _["sirState"] = sirState,
+                                                _["damState"] = damState,
+                                                _["sirNumConfs"] = sirNumConfs,
+                                                _["damNumConfs"] = damNumConfs,
+                                                _["sirRatioConfs"] = sirNumConfs * 100 / m,
                                                 _["damRatioConfs"] = damNumConfs * 100 / m);
   return parConflict;
 }
