@@ -159,28 +159,28 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   } // for (int i = 0; i < n; i++) {
 
   // ******* 03 prepare data for seeking parents *******
-  StringVector fullSirID, fullDamID;
-  copy(sirID.begin(), sirID.end(), back_inserter(fullSirID));
-  copy(damID.begin(), damID.end(), back_inserter(fullDamID));
-  
-  StringVector candSir, candDam;
-  if (candSirID.isNotNull()) {
-    StringVector candSirIDUse = as<StringVector>(candSirID);
-    for (int i = 0; i < candSirIDUse.size(); i++)
-      fullSirID.insert(fullSirID.end(), candSirIDUse[i]);
-  }
-  if (candDamID.isNotNull()) {
-    StringVector candDamIDUse = as<StringVector>(candDamID);
-    for (int i = 0; i < candDamIDUse.size(); i++)
-      fullSirID.insert(fullSirID.end(), candDamIDUse[i]);
-  }
-  NumericVector birdate;
-  if (birthDate.isNotNull()) {
-    birdate = as<NumericVector>(birthDate);
-  }
-
-  fullSirID = sort_unique(fullSirID);
-  fullDamID = sort_unique(fullDamID);
+  // StringVector fullSirID, fullDamID;
+  // copy(sirID.begin(), sirID.end(), back_inserter(fullSirID));
+  // copy(damID.begin(), damID.end(), back_inserter(fullDamID));
+  // 
+  // StringVector candSir, candDam;
+  // if (candSirID.isNotNull()) {
+  //   StringVector candSirIDUse = as<StringVector>(candSirID);
+  //   for (int i = 0; i < candSirIDUse.size(); i++)
+  //     fullSirID.insert(fullSirID.end(), candSirIDUse[i]);
+  // }
+  // if (candDamID.isNotNull()) {
+  //   StringVector candDamIDUse = as<StringVector>(candDamID);
+  //   for (int i = 0; i < candDamIDUse.size(); i++)
+  //     fullSirID.insert(fullSirID.end(), candDamIDUse[i]);
+  // }
+  // NumericVector birdate;
+  // if (birthDate.isNotNull()) {
+  //   birdate = as<NumericVector>(birthDate);
+  // }
+  // 
+  // fullSirID = sort_unique(fullSirID);
+  // fullDamID = sort_unique(fullDamID);
   // IntegerVector candKidOrder, candParOrder;
 
   // arma::mat subNumConfs;
