@@ -49,7 +49,7 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
   size_t m = pMat->nrow();
   size_t n = pMat->ncol();
   size_t i, j, k;
-  Rcout << "m: " << m << " n:" << n << endl;
+  
   arma::mat numConfs(n, n, fill::zeros);
   arma::vec coli(m), colj(m);
   
@@ -72,7 +72,7 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
     }
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
-  Rcout << "max: " << numConfs.max() << endl;
+  
   return numConfs;
 }
 
@@ -131,11 +131,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     if (naKid[i]) { continue; }
 
     if (!naSir[i]) {
-      if (kidOrder[i] < sirOrder[i]) {
-        sirNumConfs[i] = numConfs(kidOrder[i], sirOrder[i]);
-      } else {
-        sirNumConfs[i] = numConfs(sirOrder[i], kidOrder[i]);
-      }
+      sirNumConfs[i] = numConfs(kidOrder[i], sirOrder[i]);
       if (sirNumConfs[i] <= exclMax) {
         sirState[i] = "Match";
       } else {
@@ -144,11 +140,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     } // if (!isnan(sirOrder[i])) {
 
     if (!naDam[i]) {
-      if (kidOrder[i] < damOrder[i]) {
-        damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
-      } else {
-        damNumConfs[i] = numConfs(damOrder[i], kidOrder[i]);
-      }
+      damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
       if (damNumConfs[i] <= exclMax) {
         damState[i] = "Match";
       } else {
@@ -198,7 +190,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   // ******* 04 seek parents of NotMatch in the rawPed *******
   if(verbose) { Rcout << " Seeking Parents..." << endl; }
-  // #pragma omp parallel for schedule(dynamic) private(i, j)
+  #pragma omp parallel for schedule(dynamic) private(i, j)
   for (i = 0; i < n; i++) {
 
     if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
@@ -223,9 +215,6 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
     arma::uvec sortIdx = sort_index(subNumConfs);
     for (j = sortIdx.max(); j > 0; j--) {
-      Rcout << "ncol: " << subNumConfs.n_cols << endl;
-      Rcout << "i: " << i << endl;
-      Rcout << "j: " << j << endl;
       arma::uvec findPos;
       arma::uword maxPos, rowPos, colPos;
       string candPar1, candPar2;
