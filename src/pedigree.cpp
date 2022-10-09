@@ -259,10 +259,6 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
   
-  // DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
-  //                                           _["sir"] = sirID, 
-  //                                           _["dam"] = damID);
-  
   DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
                                                 _["sir"] = sirID,
                                                 _["dam"] = damID,
