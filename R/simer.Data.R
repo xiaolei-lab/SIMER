@@ -608,7 +608,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     if (hasGeno) {
       birthDate = NULL
       pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
-      names(ped)[1:3] <- pedName
+      names(pedx)[1:3] <- pedName
       cat("ok1\n")
       print(dim(pedx))
       print(head(pedx))
