@@ -579,7 +579,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   pedx <- pedx[pedx[, 1] != "0", ]
   pedError <- pedx[duplicated(pedx[, 1]), ]
   pedx <- pedx[!duplicated(pedx[, 1]), ]
-  pedName <- names(pedx)
+  pedName <- colnames(pedx)
   
   if (length(fileMVP) == 0) { fileMVP <- NULL }
   if (!is.null(fileMVP)) {
@@ -601,18 +601,14 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     rm(pedx); gc()
     if (hasGeno) {
       ped <- PedigreeCorrector(geno@address, genoID, ped, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
-      names(ped)[1:3] <- pedName
+      colnames(ped)[1:3] <- pedName
     }
     
   }else{
     if (hasGeno) {
       birthDate = NULL
       pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
-      names(pedx)[1:3] <- pedName
-      cat("ok1\n")
-      print(dim(pedx))
-      print(head(pedx))
-      cat("ok2\n")
+      colnames(pedx)[1:3] <- pedName
     }
     
     # print("Making needed files")
