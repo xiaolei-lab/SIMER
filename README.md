@@ -1872,7 +1872,7 @@ SP <- param.annot(
   pop.marker = 1e4, 
   qtn.num = list(tr1 = c(2, 8)), # Group1: 2 QTNs; Group 2: 8 QTNs
   qtn.dist = list(tr1 = c("norm", "norm")),
-  qtn.var = list(tr1 = c(1, 1)), # Group1: genetic variance of QTNs = 1; # Group2: genetic variance of QTNs = 1
+  qtn.var = list(tr1 = c(1, 1)), # Group1: genetic variance of QTNs = 1; Group2: genetic variance of QTNs = 1
   qtn.model = "A"
 )
 # Generate genotype simulation parameters
