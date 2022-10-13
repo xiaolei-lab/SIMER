@@ -23,7 +23,7 @@ the function returns a list containing
 \item{$map$qtn.index}{the QTN index for each trait.}
 \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
 \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
-\item{$map$qtn.sd}{the standard deviations for normal distribution.}
+\item{$map$qtn.var}{the variances for normal distribution.}
 \item{$map$qtn.prob}{the probability of success for geometric distribution.}
 \item{$map$qtn.shape}{the shape parameter for gamma distribution.}
 \item{$map$qtn.scale}{the scale parameter for gamma distribution.}

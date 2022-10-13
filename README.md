@@ -751,10 +751,10 @@ SP <- genotype(SP)
 <td>the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.</td>
 </tr>
 <tr>
-<td><b>qtn.sd</b></td>
+<td><b>qtn.var</b></td>
 <td>list(tr1 = 1)</td>
 <td>list</td>
-<td>the standard deviations for normal distribution.</td>
+<td>the variances for normal distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.prob</b></td>
@@ -1299,7 +1299,7 @@ SP <- param.annot(
   qtn.num = list(tr1 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm"),
-  qtn.sd = list(tr1 = 1)
+  qtn.var = list(tr1 = 1)
 )
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
@@ -1329,7 +1329,7 @@ SP <- param.annot(
   qtn.num = list(tr1 = 10, tr2 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm", tr2 = "norm"),
-  qtn.sd = list(tr1 = 1, tr2 = 1)
+  qtn.var = list(tr1 = 1, tr2 = 1)
 )
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
@@ -1872,6 +1872,7 @@ SP <- param.annot(
   pop.marker = 1e4, 
   qtn.num = list(tr1 = c(2, 8)), # Group1: 2 QTNs; Group 2: 8 QTNs
   qtn.dist = list(tr1 = c("norm", "norm")),
+  qtn.var = list(tr1 = c(1, 1)), # Group1: genetic variance of QTNs = 1; # Group2: genetic variance of QTNs = 1
   qtn.model = "A"
 )
 # Generate genotype simulation parameters

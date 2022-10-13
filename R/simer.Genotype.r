@@ -207,7 +207,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 #' \item{$map$qtn.index}{the QTN index for each trait.}
 #' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
 #' \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
-#' \item{$map$qtn.sd}{the standard deviations for normal distribution.}
+#' \item{$map$qtn.var}{the variances for normal distribution.}
 #' \item{$map$qtn.prob}{the probability of success for geometric distribution.}
 #' \item{$map$qtn.shape}{the shape parameter for gamma distribution.}
 #' \item{$map$qtn.scale}{the scale parameter for gamma distribution.}
@@ -245,7 +245,7 @@ annotation <- function(SP, verbose = TRUE) {
   qtn.index <- SP$map$qtn.index
   qtn.num <- SP$map$qtn.num
   qtn.dist <- SP$map$qtn.dist
-  qtn.sd <- SP$map$qtn.sd
+  qtn.var <- SP$map$qtn.var
   qtn.prob <- SP$map$qtn.prob
   qtn.shape <- SP$map$qtn.shape
   qtn.scale <- SP$map$qtn.scale
@@ -369,7 +369,7 @@ annotation <- function(SP, verbose = TRUE) {
   names(qtn.trn.eff) <- paste0(qtn.eff.name[, 2], "_", qtn.eff.name[, 1])
   for (i in 1:nTrait) {
     for (j in 1:nAD) {
-      qtn.trn.eff[qtn.trn[[i]], nAD*(i-1) + j] <- cal.eff(qtn.num[[i]], qtn.dist[[i]], qtn.sd[[i]], qtn.prob[[i]], qtn.shape[[i]], qtn.scale[[i]], qtn.shape1[[i]], qtn.shape2[[i]], qtn.ncp[[i]])
+      qtn.trn.eff[qtn.trn[[i]], nAD*(i-1) + j] <- cal.eff(qtn.num[[i]], qtn.dist[[i]], qtn.var[[i]], qtn.prob[[i]], qtn.shape[[i]], qtn.scale[[i]], qtn.shape1[[i]], qtn.shape2[[i]], qtn.ncp[[i]])
     }
   }
   pop.map <- cbind(pop.map, qtn.trn.eff)
@@ -380,7 +380,7 @@ annotation <- function(SP, verbose = TRUE) {
     qtn.trn.inteff <- rep(list(NULL), nTrait)
     for (i in 1:nTrait) {
       GxG.tmp <- GxG.network(pop.map, qtn.trn[[i]], qtn.model)
-      GxG.tmp.eff <- cal.eff(length(GxG.tmp), qtn.dist[[i]], qtn.sd[[i]], qtn.prob[[i]], qtn.shape[[i]], qtn.scale[[i]], qtn.shape1[[i]], qtn.shape2[[i]], qtn.ncp[[i]])
+      GxG.tmp.eff <- cal.eff(length(GxG.tmp), qtn.dist[[i]], qtn.var[[i]], qtn.prob[[i]], qtn.shape[[i]], qtn.scale[[i]], qtn.shape1[[i]], qtn.shape2[[i]], qtn.ncp[[i]])
       GxG.tmp <- data.frame(GxG.tmp, GxG.tmp.eff)
       names(GxG.tmp) <- c("GxG_name", paste0("GxG_eff", i))
       qtn.trn.inteff[[i]] <- GxG.tmp
@@ -407,7 +407,7 @@ annotation <- function(SP, verbose = TRUE) {
 #'
 #' @param qtn.num integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.
 #' @param qtn.dist the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.
-#' @param qtn.sd the standard deviations for normal distribution.
+#' @param qtn.var the standard deviations for normal distribution.
 #' @param qtn.prob the probability of success for geometric distribution.
 #' @param qtn.shape the shape parameter for gamma distribution.
 #' @param qtn.scale the scale parameter for gamma distribution.
@@ -422,14 +422,14 @@ annotation <- function(SP, verbose = TRUE) {
 #' @examples
 #' eff <- cal.eff(qtn.num = 10)
 #' str(eff)
-cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.sd = 1, qtn.prob = 0.5, qtn.shape = 1, qtn.scale = 1, qtn.shape1 = 1, qtn.shape2 = 1, qtn.ncp = 0) {
+cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.var = 1, qtn.prob = 0.5, qtn.shape = 1, qtn.scale = 1, qtn.shape1 = 1, qtn.shape2 = 1, qtn.ncp = 0) {
 
   if (sum(qtn.num) == 0) return(0)
   
   qtn.eff <- NULL
   for (nq in 1:length(qtn.num)) {
     if (qtn.dist[nq] == "norm") {
-      qtn.eff <- c(qtn.eff, rnorm(qtn.num[nq], 0, qtn.sd[nq]))
+      qtn.eff <- c(qtn.eff, rnorm(qtn.num[nq], 0, sqrt(qtn.var[nq])))
     } else if (qtn.dist[nq] == "geom") {
       qtn.eff <- c(qtn.eff, rgeom(qtn.num[nq], qtn.prob[nq]))
     } else if (qtn.dist[nq] == "gamma") {

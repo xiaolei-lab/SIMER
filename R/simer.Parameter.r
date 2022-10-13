@@ -35,7 +35,7 @@
 #' \item{$map$qtn.index}{the QTN index for each trait.}
 #' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
 #' \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
-#' \item{$map$qtn.sd}{the standard deviations for normal distribution.}
+#' \item{$map$qtn.var}{the standard deviations for normal distribution.}
 #' \item{$map$qtn.prob}{the probability of success for geometric distribution.}
 #' \item{$map$qtn.shape}{the shape parameter for gamma distribution.}
 #' \item{$map$qtn.scale}{the scale parameter for gamma distribution.}
@@ -70,7 +70,7 @@ param.annot <- function(SP = NULL, ...) {
       qtn.index = NULL,
       qtn.num = list(tr1 = 10),
       qtn.dist = list(tr1 = "norm"),
-      qtn.sd = list(tr1 = NA),
+      qtn.var = list(tr1 = NA),
       qtn.prob = list(tr1 = NA),
       qtn.shape = list(tr1 = NA),
       qtn.scale = list(tr1 = NA),
@@ -86,7 +86,7 @@ param.annot <- function(SP = NULL, ...) {
     )
     
     group1 <- c("pop.map", "species", "pop.marker", "num.chr", "len.chr", "qtn.model", "qtn.index")
-    group2 <- c("qtn.num", "qtn.dist", "qtn.sd", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
+    group2 <- c("qtn.num", "qtn.dist", "qtn.var", "qtn.prob", "qtn.shape", "qtn.scale", "qtn.shape1", "qtn.shape2", "qtn.ncp")
     group3 <- c("qtn.spot", "len.block", "maf", "recom.spot", "range.hot", "range.cold")
     
     for (x in names(SP.tmp)) {
@@ -115,7 +115,7 @@ param.annot <- function(SP = NULL, ...) {
       }
       for (j in 1:nGroup) {
         if (SP.map$qtn.dist[[i]][j] == "norm") {
-          SP.map$qtn.sd[[i]][j] <- 1
+          SP.map$qtn.var[[i]][j] <- 1
         } else if (SP.map$qtn.dist[[i]][j] == "geom") {
           SP.map$qtn.prob[[i]][j] <- 0.5
         } else if (SP.map$qtn.dist[[i]][j] == "gamma") {

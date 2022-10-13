@@ -7,7 +7,7 @@
 cal.eff(
   qtn.num = 10,
   qtn.dist = "norm",
-  qtn.sd = 1,
+  qtn.var = 1,
   qtn.prob = 0.5,
   qtn.shape = 1,
   qtn.scale = 1,
@@ -21,7 +21,7 @@ cal.eff(
 
 \item{qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
 
-\item{qtn.sd}{the standard deviations for normal distribution.}
+\item{qtn.var}{the standard deviations for normal distribution.}
 
 \item{qtn.prob}{the probability of success for geometric distribution.}
 

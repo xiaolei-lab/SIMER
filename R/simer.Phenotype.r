@@ -72,7 +72,7 @@
 #' )
 #' 
 #' # Generate genotype simulation parameters
-#' SP <- param.annot(qtn.num = list(tr1 = 10, tr2 = 10),
+#' SP <- param.annot(qtn.num = list(tr1 = c(2, 8), tr2 = 10),
 #'                   qtn.model = "A + D + A:D")
 #' # Generate annotation simulation parameters
 #' SP <- param.geno(SP = SP, pop.marker = 1e4, pop.ind = 1e2)
@@ -133,6 +133,8 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   pop.rep <- SP$pheno$pop.rep
   pop.rep.bal <- SP$pheno$pop.rep.bal
   pop.map <- SP$map$pop.map
+  qtn.num <- SP$map$qtn.num
+  qtn.var <- SP$map$qtn.var
   pop.map.GxG <- SP$map$pop.map.GxG
   pop.geno <- SP$geno$pop.geno
   incols <- SP$geno$incols
@@ -228,10 +230,20 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         }
         # (0, 1, 2) -> (-1, 0, 1)
         pop.qtn.add[[i]] <- pop.qtn.add[[i]] - 1
-        phe.add <- crossprod(pop.qtn.add[[i]], qtn.eff)
+        phe.add <- matrix(0, pop.ind, 1)
+        qtn.num.cum <- cumsum(qtn.num[[i]])
+        for (k in 1:length(qtn.num[[i]])) {
+          pop.qtn.add.tmp <- pop.qtn.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), , drop = FALSE]
+          qtn.eff.tmp <- qtn.eff[(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]
+          phe.add.tmp <- crossprod(pop.qtn.add.tmp, qtn.eff.tmp)
+          scale <- as.numeric(sqrt(qtn.var[[i]][k] / var(phe.add.tmp)))
+          SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] <- SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] * scale
+          phe.add.tmp <- phe.add.tmp * scale
+          phe.add <- phe.add + phe.add.tmp
+        }
         if (length(phe.var) < i) {
           phe.var[[i]] <- var(phe.add) / phe.h2A[[i]]
-        } 
+        }
         scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2A[[i]] / var(phe.add)))
         SP$map$pop.map[[paste0("QTN", i, "_A")]] <- SP$map$pop.map[[paste0("QTN", i, "_A")]] * scale
         phe.add <- phe.add * scale
@@ -264,7 +276,17 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         # (0, 1, 2) -> (-0.5, 0.5, -0.5)
         pop.qtn.dom[[i]][pop.qtn.dom[[i]] == 2] <- 0
         pop.qtn.dom[[i]] <- pop.qtn.dom[[i]] - 0.5
-        phe.dom <- crossprod(pop.qtn.dom[[i]], qtn.eff)
+        phe.dom <- matrix(0, pop.ind, 1)
+        qtn.num.cum <- cumsum(qtn.num[[i]])
+        for (k in 1:length(qtn.num[[i]])) {
+          pop.qtn.dom.tmp <- pop.qtn.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), , drop = FALSE]
+          qtn.eff.tmp <- qtn.eff[(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]
+          phe.dom.tmp <- crossprod(pop.qtn.dom.tmp, qtn.eff.tmp)
+          scale <- as.numeric(sqrt(qtn.var[[i]][k] / var(phe.dom.tmp)))
+          SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] * scale
+          phe.dom.tmp <- phe.dom.tmp * scale
+          phe.dom <- phe.dom + phe.dom.tmp
+        }
         scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2D[[i]] / var(phe.dom)))
         SP$map$pop.map[[paste0("QTN", i, "_D")]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]] * scale
         phe.dom <- phe.dom * scale

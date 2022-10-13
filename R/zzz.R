@@ -6,7 +6,7 @@ allparam <- c(
   "useAllGeno" ,   "ncpus"     ,    "verbose"     ,  "pop.map"      ,
   "species"    ,   "pop.marker",    "num.chr"     ,  "len.chr"      ,
   "qtn.model"  ,   "qtn.index" ,    "qtn.num"     ,  "qtn.dist"     ,
-  "qtn.sd"     ,   "qtn.prob"  ,    "qtn.shape"   ,  "qtn.scale"    ,
+  "qtn.var"    ,   "qtn.prob"  ,    "qtn.shape"   ,  "qtn.scale"    ,
   "qtn.shape1" ,   "qtn.shape2",    "qtn.ncp"     ,  "qtn.spot"     ,
   "len.block"  ,   "maf"       ,    "recom.spot"  ,  "range.hot"    ,
   "range.cold" ,   "pop.geno"  ,    "incols"      ,  "pop.marker"   ,
