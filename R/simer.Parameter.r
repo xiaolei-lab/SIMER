@@ -555,7 +555,7 @@ param.global <- function(SP = NULL, ...) {
   if (is.null(SP$global)) {
     SP.global <- list(
       replication = 1,
-      seed.sim = runif(1, 0, 100),
+      seed.sim = runif(1, 0, 1e6),
       out = "simer", 
       outpath = NULL,
       out.format = "numeric",
