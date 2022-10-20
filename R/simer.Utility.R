@@ -33,7 +33,7 @@ simer.Version <- function(width = 60, verbose = TRUE) {
   welcome <- "Welcome to SIMER"
   title   <- "Data Simulation for Life Science and Breeding"
   authors <- c("Designed and Maintained by Dong Yin, Xuanning Zhang, Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
-               "Contributors: Zhenshuang Tang, Jingya Xu, Xinyun Li, Mengjin Zhu, Xiaohui Yuan, and Shuhong Zhao")
+               "Contributors: Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xiang Zhou, Xinyun Li,and Shuhong Zhao")
   contact <- "Contact: xiaoleiliu@mail.hzau.edu.cn"
   logo_s  <- c(" ____ ___ __  __ _____ ____  ", 
                "/ ___|_ _|  \\/  | ____|  _ \\ ", 
