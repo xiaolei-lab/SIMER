@@ -114,8 +114,9 @@ param.annot <- function(SP = NULL, ...) {
         SP.map$qtn.dist[[i]] <- rep(SP.map$qtn.dist[[i]], nGroup)
       }
       for (j in 1:nGroup) {
+        SP.map$qtn.var[[i]][j] <- 0.01
         if (SP.map$qtn.dist[[i]][j] == "norm") {
-          SP.map$qtn.var[[i]][j] <- 1
+          # SP.map$qtn.var[[i]][j] <- 0.01
         } else if (SP.map$qtn.dist[[i]][j] == "geom") {
           SP.map$qtn.prob[[i]][j] <- 0.5
         } else if (SP.map$qtn.dist[[i]][j] == "gamma") {
