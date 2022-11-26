@@ -1,0 +1,56 @@
+{
+    "genotype": ["../PICData/"],
+    "pedigree": [],
+    "selection_index": ["0.8 * T1"],
+    "breeding_value_index": "1.0 * T1",
+    "auto_optimization": true,
+    "quality_control_plan": {
+        "genotype_quality_control":{
+            "filter": ["gen >= 6"],
+            "filter_geno": [],
+            "filter_mind": [],
+            "filter_maf": [],
+            "filter_hwe": []
+        },
+        "pedigree_quality_control":{
+            "standard_ID": false,
+            "candidate_sire_file": [],
+            "candidate_dam_file": [],
+            "exclude_threshold": 0.01, 
+            "assign_threshold": 0.005
+        },
+        "phenotype_quality_control":[
+            {
+                "job_name": "Data Quality Control Demo",
+                "sample_info": "Simer_breeding_program.phe",
+                "repeated_records": false,
+                "multi_trait": false,
+                "filter": [],
+                "job_traits": [
+                    {
+                        "traits": "T1",
+                        "definition": "T1",
+                        "range": []
+                    }
+                ]
+            }
+        ]
+    },
+    "analysis_plan":[
+        {
+            "job_name": "EBV Model Demo",
+            "sample_info": "./plan2/Simer_breeding_program_plan2.phe",
+            "repeated_records": false,
+            "multi_trait": false,
+            "random_ratio": 0.05,
+            "job_traits": [
+                {
+                    "traits": "T1",
+                    "covariates": [],
+                    "fixed_effects": [],
+                    "random_effects": []
+                }
+            ]
+        }
+    ]
+}
