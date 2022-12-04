@@ -181,13 +181,14 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         env.order <- sample(1:length(new.env$level), pop.ind, replace = T)
         env.list[[i]] <- cbind(env.list[[i]], new.env$level[env.order])
         colnames(env.list[[i]])[ncol(env.list[[i]])] <- env.name[i]
+        pop <- cbind(pop, as.data.frame(do.call(cbind, env.list)))
+        
       } else {
         if (any(sort(new.env$level) != sort(unique(old.env)))) {
           stop(paste0("The levels of ", env.name[[i]], " should be ", paste(sort(unique(old.env)), collapse = ', '), "!"))
         }
       }
     }
-    pop <- cbind(pop, as.data.frame(do.call(cbind, env.list)))
   }
   
   nTrait <- length(phe.model)

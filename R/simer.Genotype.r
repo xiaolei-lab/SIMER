@@ -236,6 +236,7 @@ annotation <- function(SP, verbose = TRUE) {
   
   # annotation parameters
   pop.map <- SP$map$pop.map
+  SP$map$pop.map <- NULL
   species <- SP$map$species
   pop.marker <- SP$map$pop.marker
   num.chr <- SP$map$num.chr
