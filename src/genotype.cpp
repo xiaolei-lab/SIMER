@@ -409,17 +409,17 @@ void Mat2BigMat(const SEXP pBigMat, IntegerMatrix mat, Nullable<IntegerVector> c
 }
 
 template<typename T>
-void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
+void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<NumericVector> colIdx=R_NilValue, int op=1, int threads=0) {
   omp_setup(threads);
   
   MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);
   MatrixAccessor<T> bigm = MatrixAccessor<T>(*pmat);
   
-  IntegerVector ci;
+  NumericVector ci;
   if (colIdx.isNull()) {
     ci = seq(0, pmat->ncol() - 1);
   } else {
-    ci = as<IntegerVector>(colIdx);
+    ci = as<NumericVector>(colIdx);
     ci = ci - 1;
   }
   
@@ -453,7 +453,7 @@ void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerV
 }
 
 // [[Rcpp::export]]
-void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
+void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<NumericVector> colIdx=R_NilValue, int op=1, int threads=0) {
   XPtr<BigMatrix> xpMat(pBigMat);
   XPtr<BigMatrix> xpmat(pBigmat);
   
