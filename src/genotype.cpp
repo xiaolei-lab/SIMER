@@ -423,7 +423,7 @@ void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<NumericV
     ci = ci - 1;
   }
   
-  size_t i, j, m = pmat->nrow(), n = ci.length();
+  unsigned long long i, j, m = pmat->nrow(), n = ci.length();
   op = op - 1;
   if (m != pMat->nrow()) {
     Rcpp::stop("'bigmat' and 'pmat' should have the same marker number!");
