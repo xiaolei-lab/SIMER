@@ -409,21 +409,21 @@ void Mat2BigMat(const SEXP pBigMat, IntegerMatrix mat, Nullable<IntegerVector> c
 }
 
 template<typename T>
-void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<NumericVector> colIdx=R_NilValue, int op=1, int threads=0) {
+void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
   omp_setup(threads);
   
   MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);
   MatrixAccessor<T> bigm = MatrixAccessor<T>(*pmat);
   
-  NumericVector ci;
+  IntegerVector ci;
   if (colIdx.isNull()) {
     ci = seq(0, pmat->ncol() - 1);
   } else {
-    ci = as<NumericVector>(colIdx);
+    ci = as<IntegerVector>(colIdx);
     ci = ci - 1;
   }
   
-  unsigned long long i, j, m = pmat->nrow(), n = ci.length();
+  size_t i, j, m = pmat->nrow(), n = ci.length();
   op = op - 1;
   if (m != pMat->nrow()) {
     Rcpp::stop("'bigmat' and 'pmat' should have the same marker number!");
@@ -453,7 +453,7 @@ void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<NumericV
 }
 
 // [[Rcpp::export]]
-void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<NumericVector> colIdx=R_NilValue, int op=1, int threads=0) {
+void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> colIdx=R_NilValue, int op=1, int threads=0) {
   XPtr<BigMatrix> xpMat(pBigMat);
   XPtr<BigMatrix> xpmat(pBigmat);
   

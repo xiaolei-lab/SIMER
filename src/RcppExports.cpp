@@ -71,13 +71,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // BigMat2BigMat
-void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<NumericVector> colIdx, int op, int threads);
+void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> colIdx, int op, int threads);
 RcppExport SEXP _simer_BigMat2BigMat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP colIdxSEXP, SEXP opSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
-    Rcpp::traits::input_parameter< Nullable<NumericVector> >::type colIdx(colIdxSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type colIdx(colIdxSEXP);
     Rcpp::traits::input_parameter< int >::type op(opSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
     BigMat2BigMat(pBigMat, pBigmat, colIdx, op, threads);
