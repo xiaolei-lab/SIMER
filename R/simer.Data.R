@@ -1441,6 +1441,37 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
   
   jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
   if (length(jsonList$threads) != 0) { ncpus <- jsonList$threads  }
+  dataPath <- dirname(jsonFile)
+  
+  # path check
+  if (!dir.exists(jsonList$genotype)) { 
+    jsonList$genotype <- file.path(dataPath, jsonList$genotype)
+    if (!dir.exists(jsonList$genotype)) {
+      stop("Please check the genotype path!")
+    }
+  }
+  if (!file.exists(jsonList$pedigree)) { 
+    jsonList$pedigree <- file.path(dataPath, jsonList$pedigree)
+    if (!file.exists(jsonList$pedigree)) {
+      stop("Please check the pedigree path!")
+    }
+  }
+  for (i in 1:length(jsonList$quality_control_plan$phenotype_quality_control)) {
+    if(!file.exists(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)) {
+      jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info <- file.path(dataPath, jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)
+      if (!file.exists(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)) {
+        stop("Please check the phenotype path!")
+      }
+    }
+  }
+  for (i in 1:length(jsonList$breeding_plan)) {
+    if(!file.exists(jsonList$breeding_plan[[i]]$sample_info)) {
+      jsonList$breeding_plan[[i]]$sample_info <- file.path(dataPath, jsonList$breeding_plan[[i]]$sample_info)
+      if (!file.exists(jsonList$breeding_plan[[i]]$sample_info)) {
+        stop("Please check the phenotype path!")
+      }
+    }
+  }
   
   ## step 1. data quality control
   if (dataQC) {
