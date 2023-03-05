@@ -33,7 +33,7 @@ simer.Version <- function(width = 60, verbose = TRUE) {
   welcome <- "Welcome to SIMER"
   title   <- "Data Simulation for Life Science and Breeding"
   authors <- c("Designed and Maintained by Dong Yin, Xuanning Zhang, Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
-               "Contributors: Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xiang Zhou, Xinyun Li,and Shuhong Zhao")
+               "Contributors: Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xiang Zhou, Xinyun Li, and Shuhong Zhao")
   contact <- "Contact: xiaoleiliu@mail.hzau.edu.cn"
   logo_s  <- c(" ____ ___ __  __ _____ ____  ", 
                "/ ___|_ _|  \\/  | ____|  _ \\ ", 
@@ -653,7 +653,8 @@ write.file <- function(SP) {
     pheno.geno <- do.call(rbind, lapply(out.geno.gen, function(i) {
       return(SP$pheno$pop[[i]])
     }))
-    simer.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno, out = file.path(directory.rep, out), threads = ncpus, verbose = verbose)
+    phe.name <- unlist(strsplit(SP$pheno$phe.model[[1]], split = "\\s*\\=\\s*"))[1]
+    simer.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno[, c(1, 5, 6, 7, match(phe.name, names(pheno.geno)))], out = file.path(directory.rep, out), threads = ncpus, verbose = verbose)
     remove_bigmatrix(file.path(directory.rep, out))
     geno.total <- 0
   }

@@ -1575,10 +1575,10 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
       message("Only the first phenotype is written to the fam file, and the remaining phenotypes are ignored.")
     }
     ind <- pheno[, 1]
-    sir <- pheno[, 5]
-    dam <- pheno[, 6]
-    sex <- pheno[, 7]
-    pheno <- pheno[, 8]
+    sir <- pheno[, 2]
+    dam <- pheno[, 3]
+    sex <- pheno[, 4]
+    pheno <- pheno[, 5]
   }
   
   fam <- cbind(ind, ind, sir, dam, sex, pheno)

@@ -112,7 +112,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   pop <- SP$pheno$pop
   pop.ind <- SP$pheno$pop.ind
   if (!is.null(SP$geno$pop.geno)) {
-    pop.ind <- ncol(SP$geno$pop.geno[[length(SP$geno$pop.geno)]]) / SP$geno$incols
+    SP$pheno$pop.ind <- pop.ind <- ncol(SP$geno$pop.geno[[length(SP$geno$pop.geno)]]) / SP$geno$incols
   }
   if (is.null(pop) & !is.null(pop.ind)) {
     pop <- generate.pop(pop.ind = pop.ind)
@@ -168,20 +168,19 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   if (!is.null(pop.env)) {
     env.name <- names(pop.env)
     env.list <- rep(list(NULL), length(env.name))
+    names(env.list) <- env.name
     for (i in 1:length(env.name)) {
       new.env <- pop.env[[env.name[i]]]
       old.env <- pop[[env.name[i]]]
       if (!(env.name[i] %in% names(pop))) {
-        logging.log(" Add", env.name[i], "to population...\n", verbose = verbose)
+        # logging.log(" Add", env.name[i], "to population...\n", verbose = verbose)
         if (!is.null(new.env$slope)) {
           if (!is.numeric(new.env$level)) {
             stop("The levels of covariates should be numeric!")
           }
         }
-        env.order <- sample(1:length(new.env$level), pop.ind, replace = T)
-        env.list[[i]] <- cbind(env.list[[i]], new.env$level[env.order])
-        colnames(env.list[[i]])[ncol(env.list[[i]])] <- env.name[i]
-        pop <- cbind(pop, as.data.frame(do.call(cbind, env.list)))
+        env.order <- sample(1:length(new.env$level), pop.ind, replace = TRUE)
+        env.list[[i]] <- new.env$level[env.order]
         
       } else {
         if (any(sort(new.env$level) != sort(unique(old.env)))) {
@@ -189,6 +188,8 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         }
       }
     }
+    
+    pop <- cbind(pop, as.data.frame(do.call(cbind, env.list)))
   }
   
   nTrait <- length(phe.model)
