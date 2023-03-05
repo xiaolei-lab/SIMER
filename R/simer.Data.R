@@ -1556,7 +1556,7 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
   #  6. Phenotype value ('1' = control, '2' = case, '-9'/'0'/non-numeric = missing data if case/control)
   
   if (is.null(pheno)) {
-    ind <- paste0("ind", 1:ncol(bigmat))
+    ind <- 1:ncol(bigmat)
     sir <- rep(0, ncol(bigmat))
     dam <- rep(0, ncol(bigmat))
     sex <- rep(0, ncol(bigmat))

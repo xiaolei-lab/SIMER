@@ -656,7 +656,7 @@ write.file <- function(SP) {
     phe.name <- unlist(strsplit(SP$pheno$phe.model[[1]], split = "\\s*\\=\\s*"))[1]
     pheno.geno <- pheno.geno[, c(1, 5, 6, 7, match(phe.name, names(pheno.geno)))]
     pheno.geno <- pheno.geno[!duplicated(pheno.geno[, 1]), ]
-    simer.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = , out = file.path(directory.rep, out), threads = ncpus, verbose = verbose)
+    simer.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno, out = file.path(directory.rep, out), threads = ncpus, verbose = verbose)
     remove_bigmatrix(file.path(directory.rep, out))
     geno.total <- 0
   }
