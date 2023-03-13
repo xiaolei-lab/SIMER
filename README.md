@@ -2676,8 +2676,8 @@ After generating a population, further work can be done. Breeders wish to evalua
 
 ***Breeding program design*** should be stored on a ***JSON*** file. 
 > ***plan1.json***  
->> ***genotype***: the path of genotype data  
->> ***pedigree***: the filename of pedigree data  
+>> ***genotype***: the absolute path or relative path to JSON file of genotype data  
+>> ***pedigree***: the filename with absolute path or relative path to JSON file of pedigree data  
 >> ***selection_index***: the economic weight of phenotype for each trait  
 >> ***threads***: the threads number used in multiple threads computation  
 >> ***genetic_progress***: the genetic progress of a breeding plan  
@@ -2701,7 +2701,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 
 >>> ***phenotype_quality_control***: the quality control plan for phenotype  
 >>>> ***job_name***: the name of phenotype quality control job  
->>>> ***sample_info***: the filename of phenotype data   
+>>>> ***sample_info***: the filename with absolute path or relative path to JSON file of phenotype data   
 >>>> ***repeated_records***: whether phenotype data contains repeated records  
 >>>> ***multi_trait***: whether phenotype data contains multiple traits  
 >>>> ***filter***: the 'filter' (individual) condition for phenotyped individual  
@@ -2711,7 +2711,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 
 >> ***breeding_plan***: the genetic evaluation plan  
 >>> ***job_name***: the name of phenotype quality control job  
->>> ***sample_info***: the filename of phenotype data   
+>>> ***sample_info***: the filename with absolute path or relative path to JSON file of phenotype data   
 >>> ***repeated_records***: whether phenotype data contains repeated records  
 >>> ***multi_trait***: whether phenotype data contains multiple traits  
 >>> ***vc_vars***: the filename of variance component data  
@@ -2721,8 +2721,8 @@ After generating a population, further work can be done. Breeders wish to evalua
 
 ```json
 {
-    "genotype": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/02plinkb",
-    "pedigree": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/pedigree.txt",
+    "genotype": "../02plinkb",
+    "pedigree": "../05others/pedigree.txt",
     "selection_index": "100 - 0.2 * T1 + 0.8 * T2",
     "threads": 16,
     "genetic_progress": [],
@@ -2746,7 +2746,7 @@ After generating a population, further work can be done. Breeders wish to evalua
         "phenotype_quality_control":[
             {
                 "job_name": "Data_Quality_Control_Demo",
-                "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt",
+                "sample_info": "../05others/phenotype.txt",
                 "repeated_records": false,
                 "multi_trait": true,
                 "filter": "F1 == 'Male'",
@@ -2768,7 +2768,7 @@ After generating a population, further work can be done. Breeders wish to evalua
     "breeding_plan":[
         {
             "job_name": "EBV_Model_Demo",
-            "sample_info": "/home/yindong/R/x86_64-pc-linux-gnu-library/4.2/simer/extdata/05others/phenotype.txt",
+            "sample_info": "../05others/phenotype.txt",
             "repeated_records": false,
             "multi_trait": true,
             "vc_vars": [],
