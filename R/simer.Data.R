@@ -1444,39 +1444,48 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
   dataPath <- dirname(jsonFile)
   
   # path check
-  if (length(jsonList$genotype) != 0) {
-    if (!dir.exists(jsonList$genotype)) { 
-      jsonList$genotype <- file.path(dataPath, jsonList$genotype)
-      if (!dir.exists(jsonList$genotype)) {
+  genoPath <- unlist(jsonList$genotype)
+  if (length(genoPath) != 0) {
+    if (!dir.exists(genoPath)) { 
+      genoPath <- file.path(dataPath, genoPath)
+      if (!dir.exists(genoPath)) {
         stop("Please check the genotype path!")
       }
+      jsonList$genotype[[1]] <- genoPath
     }
   }
-  if (length(jsonList$pedigree) != 0) {
-    if (!file.exists(jsonList$pedigree)) { 
-      jsonList$pedigree <- file.path(dataPath, jsonList$pedigree)
-      if (!file.exists(jsonList$pedigree)) {
+  filePed <- unlist(jsonList$pedigree)
+  if (length(filePed) != 0) {
+    if (!file.exists(filePed)) { 
+      filePed <- file.path(dataPath, filePed)
+      if (!file.exists(filePed)) {
         stop("Please check the pedigree path!")
       }
+      jsonList$pedigree[[1]] <- filePed
     }
   }
+  
   for (i in 1:length(jsonList$quality_control_plan$phenotype_quality_control)) {
-    if (length(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info) != 0) {
-      if(!file.exists(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)) {
-        jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info <- file.path(dataPath, jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)
-        if (!file.exists(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)) {
+    filePhe <- unlist(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)
+    if (length(filePhe) != 0) {
+      if(!file.exists(filePhe)) {
+        filePhe <- file.path(dataPath, filePhe)
+        if (!file.exists(filePhe)) {
           stop("Please check the phenotype path!")
         }
+        jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info[[1]] <- filePhe
       }
     }
   }
   for (i in 1:length(jsonList$breeding_plan)) {
-    if (length(jsonList$breeding_plan[[i]]$sample_info) != 0) {
-      if(!file.exists(jsonList$breeding_plan[[i]]$sample_info)) {
-        jsonList$breeding_plan[[i]]$sample_info <- file.path(dataPath, jsonList$breeding_plan[[i]]$sample_info)
-        if (!file.exists(jsonList$breeding_plan[[i]]$sample_info)) {
+    filePhe <- unlist(jsonList$breeding_plan[[i]]$sample_info)
+    if (length(filePhe) != 0) {
+      if(!file.exists(filePhe)) {
+        filePhe <- file.path(dataPath, filePhe)
+        if (!file.exists(filePhe)) {
           stop("Please check the phenotype path!")
         }
+        jsonList$breeding_plan[[i]]$sample_info[[1]] <- filePhe
       }
     }
   }
