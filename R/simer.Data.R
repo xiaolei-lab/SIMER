@@ -294,7 +294,8 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
       return()
     } else {
       if (is.null(out)) { out <- paste0(fileBed, ".imp") }
-      system(paste('plink --bfile', tmpout, "--recode vcf-iid --out", tmpout))
+      tmpout <- tempfile()
+      system(paste('plink --bfile', fileBed, "--recode vcf-iid --out", tmpout))
     }
   }
   
