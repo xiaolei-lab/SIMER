@@ -566,7 +566,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
       cbind(pedigree[, 14], 0, 0),
       cbind(pedigree[, 15], 0, 0)
     )
-    pedx <- pedx[!duplicated(pedx[, 1]), ]
+    
   }else{
     pedx <- pedigree
     pedx0 <- setdiff(pedx[,c(2:3)], pedx[, 1])
