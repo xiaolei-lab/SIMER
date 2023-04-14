@@ -75,9 +75,15 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   if (is.null(pop.geno) & is.null(pop.marker) & is.null(pop.ind)) {
     stop("Please input information of genotype!")
   }
-
+  if (!(incols == 1 | incols == 2)) {
+    stop("'incols' should only be 1 or 2!")
+  }
+  
   if (!is.null(pop.geno)) {
     logging.log(" Input outer genotype matrix...\n", verbose = verbose)
+    if (incols == 1) {
+      pop.geno <- geno.cvt2(pop.geno[])
+    } 
     if (is.big.matrix(pop.geno)) {
       bigmat <- pop.geno
     } else {
@@ -91,25 +97,18 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 
   } else if (!is.null(pop.marker) & !is.null(pop.ind)) {
     logging.log(" Establish genotype matrix of base-population...\n", verbose = verbose)
-    if (incols == 2) {
-      codes <- c(0, 1)
-      if (!is.null(prob) & length(prob) != 2) {
-        stop("The length of prob should be 2!")
-      }
-    } else if (incols == 1) {
-      codes <- c(0, 1, 2)
-      if (!is.null(prob) & length(prob) != 3) {
-        stop("The length of prob should be 3!")
-      }
-    } else {
-      stop("'incols' should only be 1 or 2!")
+    if (!is.null(prob) & length(prob) != 2) {
+      stop("The length of prob should be 2!")
+    }
+    if (incols == 1) {
+      SP$geno$incols <- incols <- 2
     }
     if (incols == 2 & cld) {
       pop.geno <- matrix(0, pop.marker, incols*pop.ind)
       if (is.null(prob)) {  prob <- c(0.5, 0.5) }
       pop.geno[, sample(1:ncol(pop.geno), prob[2] * ncol(pop.geno))] <- 1
     } else {
-      pop.geno <- matrix(sample(codes, pop.marker*pop.ind*incols, prob = prob, replace = TRUE), pop.marker, incols*pop.ind)
+      pop.geno <- matrix(sample(c(0, 1), pop.marker*pop.ind*incols, prob = prob, replace = TRUE), pop.marker, incols*pop.ind)
     }
     bigmat <- big.matrix(
       nrow = nrow(pop.geno),
