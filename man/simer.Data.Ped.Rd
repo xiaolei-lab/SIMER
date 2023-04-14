@@ -47,8 +47,8 @@ simer.Data.Ped(
 \value{
 the function returns files
 \describe{
-\item{<out>.report.ped}{the report file containing correction condition.}
-\item{<out>.error.ped}{the file containing pedigree error.}
+\item{<out>.ped.report}{the report file containing correction condition.}
+\item{<out>.ped.error}{the file containing pedigree error.}
 \item{<out>.ped}{the pedigree file after correction.}
 }
 }

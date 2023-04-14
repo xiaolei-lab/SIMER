@@ -467,8 +467,8 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' @return 
 #' the function returns files
 #' \describe{
-#' \item{<out>.report.ped}{the report file containing correction condition.}
-#' \item{<out>.error.ped}{the file containing pedigree error.}
+#' \item{<out>.ped.report}{the report file containing correction condition.}
+#' \item{<out>.ped.error}{the file containing pedigree error.}
 #' \item{<out>.ped}{the pedigree file after correction.}
 #' }
 #' 
@@ -670,8 +670,8 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   if (is.null(out)) {
     out <- unlist(strsplit(filePed, split = '.', fixed = TRUE))[1]
   }
-  write.table(ped, paste0(out, ".report.ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
-  write.table(pedError, paste0(out, ".error.ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
+  write.table(ped, paste0(out, ".ped.report"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
+  write.table(pedError, paste0(out, ".ped.error"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   write.table(pedUse, paste0(out, ".ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   
   t2 <- as.numeric(Sys.time())
