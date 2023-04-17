@@ -137,7 +137,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       } else {
         sirState[i] = "NotFound";
       }
-    } // if (!isnan(sirOrder[i])) {
+    }
 
     if (!naDam[i]) {
       damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
@@ -146,9 +146,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       } else {
         damState[i] = "NotFound";
       }
-    } // if (!isnan(damOrder[i])) {
+    }
 
-  } // for (int i = 0; i < n; i++) {
+  }
 
   // ******* 03 prepare data for seeking parents *******
   StringVector fullSirID, fullDamID;
@@ -207,7 +207,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     if (numCand == 0) { continue;  }
     subNumConfs = numConfs.rows(candParUse);
     subNumConfs = subNumConfs.cols(candParUse);
-
+    
     arma::uvec sortIdx = sort_index(subNumConfs);
     for (j = sortIdx.max(); j > 0; j--) {
       

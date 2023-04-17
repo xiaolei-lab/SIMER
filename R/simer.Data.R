@@ -525,8 +525,9 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
       stop("Please check your data! pegigree information in 15 columns which contain 3 generations' information are needed!")
     if (standardID) {
       id <- unique(c(pedigree))
-      if (sum(nchar(id) != 15) > 0)
+      if (sum(nchar(id) != 15) > 0) {
         stop(paste("The format of below individuals don't meet the requirements:","\n", id[nchar(id) != 15], sep = ""))
+      }
     }
     # Ind Sir  SS  SD SSS SSD SDS SDD Dam  DS  DD DSS DSD DDS DDD
     #   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
@@ -566,12 +567,11 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
       cbind(pedigree[, 14], 0, 0),
       cbind(pedigree[, 15], 0, 0)
     )
-    
-  }else{
+  } else {
     pedx <- pedigree
     pedx0 <- setdiff(pedx[,c(2:3)], pedx[, 1])
     pedx0 <- pedx0[pedx0 != "0"]
-    if(length(pedx0) > 0){
+    if (length(pedx0) > 0) {
       pedx0 <- cbind(pedx0, "0", "0")
       colnames(pedx0) <- colnames(pedx)
       pedx <- rbind(pedx0, pedx)
@@ -593,86 +593,77 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     hasGeno <- FALSE
   }
   
-  if (standardID == TRUE) {
-    pedx <- cbind(pedx, substr(pedx[, 1], 8, nchar(pedx[, 1])))
-    index.born <- order(as.numeric(pedx[, 4]))
-    pedx <- pedx[index.born, ]
-    ped <- pedx[, 1:3]
-    birthDate <- as.numeric(pedx[, 4])
-    rm(pedx); gc()
-    if (hasGeno) {
-      ped <- PedigreeCorrector(geno@address, genoID, ped, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
-      colnames(ped)[1:3] <- pedName
-    }
-    
-  }else{
-    if (hasGeno) {
-      birthDate = NULL
-      pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
-      colnames(pedx)[1:3] <- pedName
-    }
-    
-    # print("Making needed files")
-    pedx1 <- pedx[pedx[, 2] == "0" & pedx[, 3] == "0", ]
-    pedx2 <- pedx[!(pedx[, 2] == "0" & pedx[, 3] == "0"), ]
-    go = TRUE
-    while(go == TRUE) {
-      Cpedx <- pedx1[, 1]
-      index <- (pedx2[, 2] %in% Cpedx) & (pedx2[, 3] %in% Cpedx)
-      if (sum(index) == 0) {
-        index.sir <- pedx2[, 2] %in% Cpedx
-        index.dam <- pedx2[, 3] %in% Cpedx
-        if (sum(index.sir) != 0 | sum(index.dam) != 0) {
-          # only one parent can be found
-          pedError <- rbind(pedError, pedx2[index.sir | index.dam, 1:3])
-          pedx2[index.sir, 3] <- "0"
-          pedx2[index.dam, 2] <- "0"
-          pedx1 <- rbind(pedx1, pedx2[index.sir | index.dam, ])
-          pedx2 <- pedx2[!(index.sir | index.dam), ]
-        } else {
-          # no parent can be found
-          pedx02 <- setdiff(pedx2[,c(2:3)], pedx2[, 1])
-          pedx02 <- pedx02[pedx02 != "0"]
-          if(length(pedx02) > 0){
-            pedx02 <- cbind(pedx02, "0", "0")
-            colnames(pedx02) <- colnames(pedx2)
-            pedx1 <- rbind(pedx1, pedx02)
-          } else {
-            pedError <- rbind(pedError, pedx2[, 1:3])
-            pedx2[, 2:3] <- "0"
-            pedx1 <- rbind(pedx1, pedx2)
-            pedx2 <- pedx2[-(1:nrow(pedx2)), ]
-          }
-        }
-      } else {
-        pedx1 <- rbind(pedx1, pedx2[index, ])
-        pedx2 <- pedx2[!index, ]
-      }
-      if ("character" %in% class(pedx2)) pedx2 <- matrix(pedx2, 1)
-      if (nrow(pedx2) == 0) go = FALSE
-    }
-    ped <- pedx1
-    rm(pedx1);rm(pedx2);gc()
+  if (standardID) {
+    birthDate <- as.numeric(substr(pedx[, 1], 8, nchar(pedx[, 1])))
+  } else {
+    birthDate <- NULL
   }
   
   if (hasGeno) {
-    pedError <- rbind(pedError, ped[ped$sirState=="NotFound" | ped$damState=="NotFound", 1:3])
-    pedUse <- ped[, 1:3]
-    pedUse$sir[ped$sirState == "NotFound"] <- "0"
-    pedUse$dam[ped$damState == "NotFound"] <- "0"
-  } else {
-    pedError <- rbind(pedError, ped[ped[, 1]==ped[, 2] | ped[, 1] == ped[, 3], 1:3])
-    pedUse <- ped[, 1:3]
-    pedUse[pedUse[, 1] == pedUse[, 2], 2] <- "0"
-    pedUse[pedUse[, 1] == pedUse[, 3], 3] <- "0"
+    pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
+    colnames(pedx)[1:3] <- pedName
   }
+  
+  # if (hasGeno) {
+  #   pedError <- rbind(pedError, ped[ped$sirState=="NotFound" | ped$damState=="NotFound", 1:3])
+  #   pedUse <- ped[, 1:3]
+  #   pedUse$sir[ped$sirState == "NotFound"] <- "0"
+  #   pedUse$dam[ped$damState == "NotFound"] <- "0"
+  # } else {
+  #   pedError <- rbind(pedError, ped[ped[, 1] == ped[, 2] | ped[, 1] == ped[, 3], 1:3])
+  #   pedUse <- ped[, 1:3]
+  #   pedUse[pedUse[, 1] == pedUse[, 2], 2] <- "0"
+  #   pedUse[pedUse[, 1] == pedUse[, 3], 3] <- "0"
+  # }
+
+  # print("Making needed files")
+  pedx1 <- pedx[pedx[, 2] == "0" & pedx[, 3] == "0", ]
+  pedx2 <- pedx[!(pedx[, 2] == "0" & pedx[, 3] == "0"), ]
+  go <- TRUE
+  while (go) {
+    Cpedx <- pedx1[, 1]
+    index <- (pedx2[, 2] %in% Cpedx) & (pedx2[, 3] %in% Cpedx)
+    if (sum(index) == 0) {
+      index.sir <- pedx2[, 2] %in% Cpedx
+      index.dam <- pedx2[, 3] %in% Cpedx
+      if (sum(index.sir) != 0 | sum(index.dam) != 0) {
+        # only one parent can be found
+        pedError <- rbind(pedError, pedx2[index.sir | index.dam, 1:3])
+        pedx2[index.sir, 3] <- "0"
+        pedx2[index.dam, 2] <- "0"
+        pedx1 <- rbind(pedx1, pedx2[index.sir | index.dam, ])
+        pedx2 <- pedx2[!(index.sir | index.dam), ]
+      } else {
+        # no parent can be found
+        pedx02 <- setdiff(pedx2[,c(2:3)], pedx2[, 1])
+        pedx02 <- pedx02[pedx02 != "0"]
+        if(length(pedx02) > 0){
+          pedx02 <- cbind(pedx02, "0", "0")
+          colnames(pedx02) <- colnames(pedx2)
+          pedx1 <- rbind(pedx1, pedx02)
+        } else {
+          pedError <- rbind(pedError, pedx2[, 1:3])
+          pedx2[, 2:3] <- "0"
+          pedx1 <- rbind(pedx1, pedx2)
+          pedx2 <- pedx2[-(1:nrow(pedx2)), ]
+        }
+      }
+    } else {
+      pedx1 <- rbind(pedx1, pedx2[index, ])
+      pedx2 <- pedx2[!index, ]
+    }
+    if ("character" %in% class(pedx2)) { pedx2 <- matrix(pedx2, 1) }
+    if (nrow(pedx2) == 0) { go <- FALSE }
+  }
+  ped <- pedx1
+  rm(pedx1); rm(pedx2); gc()
   
   if (is.null(out)) {
     out <- unlist(strsplit(filePed, split = '.', fixed = TRUE))[1]
   }
   write.table(ped, paste0(out, ".ped.report"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   write.table(pedError, paste0(out, ".ped.error"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
-  write.table(pedUse, paste0(out, ".ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
+  write.table(ped[, 1:3], paste0(out, ".ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   
   t2 <- as.numeric(Sys.time())
   logging.log(" Preparation for PEDIGREE data is done within", format_time(t2 - t1), "\n\n", verbose = verbose)
