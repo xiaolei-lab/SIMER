@@ -4,7 +4,7 @@
 \alias{mate}
 \title{Mate}
 \usage{
-mate(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0)
+mate(pop.geno, index.sir, index.dam, ncpus = 0)
 }
 \arguments{
 \item{pop.geno}{the genotype data.}
@@ -13,9 +13,9 @@ mate(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0)
 
 \item{index.dam}{the indice of dams.}
 
-\item{incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
-
 \item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
+
+\item{incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
 }
 \value{
 a genotype matrix after mating

@@ -143,7 +143,7 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 #' geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
 #'                   index.dam = index.dam)
 #' geno.curr[1:5, 1:5]
-mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
+mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
   
   pop.marker <- nrow(pop.geno)
   pop.geno.curr <- big.matrix(
@@ -153,21 +153,15 @@ mate <- function(pop.geno, index.sir, index.dam, incols = 1, ncpus = 0) {
       type = "char"
   )
 
-  if (incols == 2) {
-    s1 <- sample(c(0, 1), size = length(index.dam), replace = TRUE)
-    s2 <- sample(c(0, 1), size = length(index.dam), replace = TRUE)
-    gmt.sir <- index.sir * 2 - s1
-    gmt.dam <- index.dam * 2 - s2
-    gmt.comb <- c(gmt.sir, gmt.dam)
-    gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
-    gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
-    
-    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
-    
-  } else {
-    # mix parent genotype to generate progeny genotype
-    GenoMixer(pop.geno.curr@address, pop.geno@address, index.sir, index.dam, threads = ncpus)
-  }
+  s1 <- sample(c(0, 1), size = length(index.dam), replace = TRUE)
+  s2 <- sample(c(0, 1), size = length(index.dam), replace = TRUE)
+  gmt.sir <- index.sir * 2 - s1
+  gmt.dam <- index.dam * 2 - s2
+  gmt.comb <- c(gmt.sir, gmt.dam)
+  gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
+  gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
+  
+  BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
   
   return(pop.geno.curr)
 }
@@ -501,7 +495,7 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
     index.sir <- match(ped.dam, pop.geno.id)
     index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus=  ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus=  ncpus)
     
     sex <- rep(0, length(index.dam))
     index <- seq(pop$index[length(pop$index)]+1, length.out = length(ped.dam))
@@ -605,7 +599,7 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
     index.sir <- match(ped.sir, pop.geno.id)
     index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
     
     if (all(pop$sex == 0)) {
       sex <- rep(0, length(ped.dam))
@@ -725,7 +719,7 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
     index.sir <- match(ped.sir, pop.geno.id)
     index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
     
     if (all(pop$sex == 0)) {
       sex <- rep(0, length(ped.dam))
@@ -836,7 +830,7 @@ mate.assort <- function(SP, ncpus = 0, verbose = TRUE) {
     index.sir <- match(ped.sir, pop.geno.id)
     index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
     
     if (all(pop$sex == 0)) {
       sex <- rep(0, length(ped.dam))
@@ -947,7 +941,7 @@ mate.disassort <- function(SP, ncpus = 0, verbose = TRUE) {
     index.sir <- match(ped.sir, pop.geno.id)
     index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
     
     if (all(pop$sex == 0)) {
       sex <- rep(0, length(ped.dam))
@@ -1059,7 +1053,7 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   index.sir <- match(ped.sir, pop.geno.id)
   index.dam <- match(ped.dam, pop.geno.id)
   
-  pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+  pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
   
   sex <- rep(2, pop.ind)
   sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
@@ -1175,7 +1169,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   index.sir1 <- match(ped.sir1, pop.geno.id)
   index.dam1 <- match(ped.dam1, pop.geno.id)
   
-  pop.geno.dam2 <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
+  pop.geno.dam2 <- mate(pop.geno = pop.geno, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
   
   sex <- rep(2, pop.ind)
   sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
@@ -1218,7 +1212,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   index.sir2 <- match(ped.sir2, pop.geno.id)
   index.dam2 <- match(ped.dam2, pop.geno.id)
   
-  pop.geno.curr <- mate(pop.geno = pop.geno.curr, incols = incols, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
+  pop.geno.curr <- mate(pop.geno = pop.geno.curr, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
   
   sex <- rep(2, pop.ind)
   sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
@@ -1341,8 +1335,8 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   index.sir2 <- match(ped.sir2, pop.geno.id)
   index.dam2 <- match(ped.dam2, pop.geno.id)
   
-  pop.geno.sir11 <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
-  pop.geno.dam22 <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
+  pop.geno.sir11 <- mate(pop.geno = pop.geno, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
+  pop.geno.dam22 <- mate(pop.geno = pop.geno, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
   pop.geno.curr <- big.matrix(
     nrow = nrow(pop.geno),
     ncol = ncol(pop.geno.sir11) + ncol(pop.geno.dam22),
@@ -1386,7 +1380,7 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   index.sir11 <- match(ped.sir11, pop.geno.id)
   index.dam22 <- match(ped.dam22, pop.geno.id)
   
-  pop.geno.curr <- mate(pop.geno = pop.geno.curr, incols = incols, index.sir = index.sir11, index.dam = index.dam22, ncpus = ncpus)
+  pop.geno.curr <- mate(pop.geno = pop.geno.curr, index.sir = index.sir11, index.dam = index.dam22, ncpus = ncpus)
   
   sex <- rep(2, pop.ind)
   sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
@@ -1498,7 +1492,7 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
     index.sir <- match(ped.sir, pop.geno.id)
     index.dam <- match(ped.dam, pop.geno.id)
     
-    pop.geno.curr <- mate(pop.geno = pop.geno, incols = incols, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
+    pop.geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir, index.dam = index.dam, ncpus = ncpus)
     
     sex <- rep(2, pop.ind)
     sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1

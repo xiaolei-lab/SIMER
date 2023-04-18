@@ -1,49 +1,21 @@
 #include <RcppArmadillo.h>
-#include "simer_omp.h"
-#include <iostream>
 #include <bigmemory/BigMatrix.h>
 #include <bigmemory/MatrixAccessor.hpp>
-#include <R_ext/Print.h>
-#include <progress.hpp>
-#include "progress_bar.hpp"
+#include "simer_omp.h"
+#include "MinimalProgressBar.h"
 
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(bigmemory, BH)]]
-// [[Rcpp::depends(RcppProgress)]]
 using namespace std;
 using namespace Rcpp;
 using namespace arma;
-
-class MinimalProgressBar: public ProgressBar{
-  public:
-  MinimalProgressBar()  {
-    _finalized = false;
-  }
-  ~MinimalProgressBar() {}
-  void display() {}
-  void update(float progress) {
-    if (_finalized) return;
-    REprintf("\r");
-    REprintf(" Calculating in process...(finished %.2f%)", progress * 100);
-  }
-  void end_display() {
-    if (_finalized) return;
-    REprintf("\r");
-    
-    REprintf(" Calculating in process...(finished 100.00%)");
-    REprintf("\n");
-    _finalized = true;
-  }
-  private:
-  bool _finalized;
-};
 
 template<typename T>
 arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
   omp_setup(threads);
   
-  if(verbose) { Rcout << " Computing Mendel Conflict Matrix..." << endl; }
+  if (verbose) { Rcout << " Computing Mendel Conflict Matrix..." << endl; }
   
   MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
   size_t m = pMat->nrow();

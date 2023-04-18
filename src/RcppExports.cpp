@@ -38,6 +38,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// emma_kinship
+arma::mat emma_kinship(SEXP pBigMat, int threads, bool verbose);
+RcppExport SEXP _simer_emma_kinship(SEXP pBigMatSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(emma_kinship(pBigMat, threads, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // GenoFilter
 List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepInds, Nullable<double> filterGeno, Nullable<double> filterHWE, Nullable<double> filterMind, Nullable<double> filterMAF, int threads, bool verbose);
 RcppExport SEXP _simer_GenoFilter(SEXP pBigMatSEXP, SEXP keepIndsSEXP, SEXP filterGenoSEXP, SEXP filterHWESEXP, SEXP filterMindSEXP, SEXP filterMAFSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
@@ -151,6 +164,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_simer_write_bfile", (DL_FUNC) &_simer_write_bfile, 4},
     {"_simer_read_bfile", (DL_FUNC) &_simer_read_bfile, 5},
+    {"_simer_emma_kinship", (DL_FUNC) &_simer_emma_kinship, 3},
     {"_simer_GenoFilter", (DL_FUNC) &_simer_GenoFilter, 8},
     {"_simer_Mat2BigMat", (DL_FUNC) &_simer_Mat2BigMat, 5},
     {"_simer_BigMat2BigMat", (DL_FUNC) &_simer_BigMat2BigMat, 5},
