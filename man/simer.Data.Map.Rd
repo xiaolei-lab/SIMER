@@ -14,15 +14,15 @@ simer.Data.Map(
 )
 }
 \arguments{
-\item{map}{the name of map file or map object(data.frame or matrix)}
+\item{map}{the name of map file or map object(data.frame or matrix).}
 
-\item{out}{the name of output file}
+\item{out}{the name of output file.}
 
-\item{cols}{selected columns}
+\item{cols}{selected columns.}
 
-\item{header}{whether the file contains header}
+\item{header}{whether the file contains header.}
 
-\item{sep}{seperator of the file}
+\item{sep}{seperator of the file.}
 
 \item{verbose}{whether to print detail.}
 }
