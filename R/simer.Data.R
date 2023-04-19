@@ -1716,11 +1716,11 @@ simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority =
 #'
 #' @author Haohao Zhang and Dong Yin
 #' 
-#' @param map the name of map file or map object(data.frame or matrix)
-#' @param out the name of output file
-#' @param cols selected columns
-#' @param header whether the file contains header
-#' @param sep seperator of the file
+#' @param map the name of map file or map object(data.frame or matrix).
+#' @param out the name of output file.
+#' @param cols selected columns.
+#' @param header whether the file contains header.
+#' @param sep seperator of the file.
 #' @param verbose whether to print detail.
 #' 
 #' @return 
@@ -1754,4 +1754,73 @@ simer.Data.Map <- function(map, out = 'simer', cols = 1:5, header = TRUE, sep = 
   t2 <- as.numeric(Sys.time())
   logging.log("Preparation for MAP data is done within", format_time(t2 - t1), "\n", verbose = verbose)
   return(nrow(map))
+}
+
+#' simer.Data.EMMA: To construct EMMA kinship matrix
+#' 
+#' constructing EMMA kinship matrix.
+#' 
+#' Build date: Apr 19, 2023
+#' Last update: Apr 19, 2023
+#'
+#' @author Haohao Zhang and Dong Yin
+#' 
+#' @param fileKin kinship that represents relationship among individuals, n * n matrix, n is sample size.
+#' @param fileMVP prefix for mvp format files.
+#' @param out prefix of output file name.
+#' @param method only"EMMA" method for now.
+#' @param sep seperator for Kinship file.
+#' @param threads the number of cpu.
+#' @param verbose whether to print detail.
+#' 
+#' @return 
+#' Output file:
+#' <out>.kin.bin
+#' <out>.kin.desc
+#' 
+#' @export
+#' 
+#' @examples
+#' # Get the prefix of genotype data
+#' fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
+#' 
+#' # Check map data
+#' simer.Data.Kin(fileKin = TRUE, fileMVP = fileMVP, out = tempfile("outfile"))
+simer.Data.Kin <- function(fileKin = TRUE, fileMVP = 'simer', out = NULL, method = 'EMMA', sep = '\t', threads = 10, verbose = TRUE) {
+  if (is.null(out)) out <- fileMVP
+  
+  # check old file
+  backingfile <- paste0(basename(out), ".kin.bin")
+  descriptorfile <- paste0(basename(out), ".kin.desc")
+  remove_bigmatrix(out, desc_suffix = ".kin.desc", bin_suffix = ".kin.bin")
+  
+  if (is.character(fileKin)) {
+    myKin <- read.big.matrix(fileKin, header = FALSE, type = 'double', sep = sep)
+  } else if (fileKin == TRUE) {
+    geno <- attach.big.matrix(paste0(fileMVP, ".geno.desc"))
+    if (method == "EMMA") {
+      logging.log("Calculate KINSHIP using EMMA method...", "\n", verbose = verbose)
+      myKin <- emma_kinship(geno@address, threads, verbose)
+    } else {
+      stop("Please input a correct method!")
+    }
+  } else {
+    stop("ERROR: The value of fileKin is invalid.")
+  }
+  
+  # define bigmat
+  Kinship <- filebacked.big.matrix(
+    nrow = nrow(myKin),
+    ncol = ncol(myKin),
+    type = 'double',
+    backingfile = backingfile,
+    backingpath = dirname(out),
+    descriptorfile = descriptorfile,
+    dimnames = c(NULL, NULL)
+  )
+  
+  Kinship[, ] <- myKin[, ]
+  flush(Kinship)
+  logging.log("Preparation for Kinship matrix is done!", "\n", verbose = verbose)
+  return(Kinship)
 }
