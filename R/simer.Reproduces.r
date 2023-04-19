@@ -1678,6 +1678,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
     uni.sir <- unique(sir)
     for (i in 1:length(uni.sir)) {
       flag <- sir == uni.sir[i]
+      flag[is.na(flag)] <- FALSE
       fam[flag] <- fam.op + i - 1
       infam[flag] <- 1:sum(flag)
     }
@@ -1685,6 +1686,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
     uni.dam <- unique(dam)
     for (i in 1:length(uni.dam)) {
       flag <- dam == uni.dam[i]
+      flag[is.na(flag)] <- FALSE
       fam[flag] <- fam.op + i - 1
       infam[flag] <- 1:sum(flag)
     }
@@ -1694,6 +1696,7 @@ getfam <- function(sir, dam, fam.op, mode = c("pat", "mat", "pm")) {
       flag1 <- sir == uni.sd[i, 1]
       flag2 <- dam == uni.sd[i, 2]
       flag <- flag1 & flag2
+      flag[is.na(flag)] <- FALSE
       fam[flag] <- fam.op + i - 1
       infam[flag] <- 1:sum(flag)
     }
