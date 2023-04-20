@@ -84,15 +84,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   int exclMax = exclThres * m, assignMax = assignThres * m;
   
   // ******* 02 check rawPed *******
-  StringVector zero(n, "0");
-  sirState[naSir] = "NotFound"; damState[naDam] = "NotFound";
-  sirState[naKid] = "NoGeno"; damState[naKid] = "NoGeno";
-  sirState[(sirID == zero) & (damID == zero)] = "NoGeno"; 
-  damState[(sirID == zero) & (damID == zero)] = "NoGeno"; 
-
-  // kids should not be same as parents
-  sirState[kidID == sirID] = "NotFound";
-  damState[kidID == damID] = "NotFound";
+  sirState[naSir || naKid] = "NoGeno";
+  damState[naDam || naKid] = "NoGeno";
 
   // calculate conflict of pedigree in the rawPed
   arma::mat numConfs = calConf(pMat, threads, verbose);
@@ -108,6 +101,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
         sirState[i] = "Match";
       } else {
         sirState[i] = "NotFound";
+        sirID[i] = "0";
       }
     }
 
@@ -117,6 +111,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
         damState[i] = "Match";
       } else {
         damState[i] = "NotFound";
+        damID[i] = "0";
       }
     }
 
@@ -195,32 +190,28 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       candPar1 = as<string>(genoID[candParUse[rowPos]]);
       candPar2 = as<string>(genoID[candParUse[colPos]]);
 
+      if ((sirState[i].compare("Match") == 0)) {
+        if (candPar1.compare(sirID[i]) != 0) {
+          continue;
+        } 
+      }
+      if ((damState[i].compare("Match") == 0)) {
+        if (candPar2.compare(damID[i]) != 0) {
+          continue;
+        } 
+      }
+
       if (find(fullSirID.begin(), fullSirID.end(), candPar1) != fullSirID.end()) {
         if (find(fullDamID.begin(), fullDamID.end(), candPar2) != fullDamID.end()) {
-          if (candPar1.compare(sirID[i])) {
+          if (sirState[i].compare("NotFound") == 0) {
             sirID[i] = candPar1;
             sirState[i] = "Found";
             sirNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
           }
-          if (candPar2.compare(damID[i])) {
+          if (damState[i].compare("NotFound") == 0) {
             damID[i] = candPar2;
             damState[i] = "Found";
             damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
-          }
-          break;
-        }
-
-      } else if (find(fullSirID.begin(), fullSirID.end(), candPar2) != fullSirID.end()) {
-        if (find(fullDamID.begin(), fullDamID.end(), candPar1) != fullDamID.end()) {
-          if (candPar2.compare(sirID[i])) {
-            sirID[i] = candPar2;
-            sirState[i] = "Found";
-            sirNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
-          }
-          if (candPar1.compare(damID[i])) {
-            damID[i] = candPar1;
-            damState[i] = "Found";
-            damNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
           }
           break;
         }
