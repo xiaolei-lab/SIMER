@@ -583,7 +583,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   pedx <- pedx[pedx[, 1] != "0", ]
   pedError <- pedx[duplicated(pedx[, 1]), ]
   pedx <- pedx[!duplicated(pedx[, 1]), ]
-  pedError <- rbind(pedError, ped[ped[, 1] == ped[, 2] | ped[, 1] == ped[, 3], 1:3])
+  pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 2] | pedx[, 1] == pedx[, 3], ])
   pedx[pedx[, 1] == pedx[, 2], 2] <- "0"
   pedx[pedx[, 1] == pedx[, 3], 3] <- "0"
 
