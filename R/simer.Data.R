@@ -607,7 +607,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   if (hasGeno) {
     pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
     colnames(pedx)[1:3] <- pedName
-    pedError <- rbind(pedError, ped[ped$sirState=="NotFound" | ped$damState=="NotFound", 1:3])
+    pedError <- rbind(pedError, pedx[pedx$sirState=="NotFound" | pedx$damState=="NotFound", 1:3])
   }
 
   # print("Making needed files")
