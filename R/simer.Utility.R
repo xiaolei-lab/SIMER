@@ -650,6 +650,7 @@ write.file <- function(SP) {
     if (!is.null(SP$map$pop.map.GxG)) {
       write.table(SP$map$pop.map.GxG, file = file.path(directory.rep, paste0(out, ".GxG.geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
     }
+    rm(geno.total); gc();
   
   } else if (out.format == "plink") {
     pheno.geno <- do.call(rbind, lapply(out.geno.gen, function(i) {
@@ -659,15 +660,15 @@ write.file <- function(SP) {
     pheno.geno <- pheno.geno[, c(1, 5, 6, 7, match(phe.name, names(pheno.geno)))]
     pheno.geno <- pheno.geno[!duplicated(pheno.geno[, 1]), ]
     simer.Data.MVP2Bfile(bigmat = geno.total, map = SP$map$pop.map, pheno = pheno.geno, out = file.path(directory.rep, out), threads = ncpus, verbose = verbose)
+    rm(geno.total); gc();
     remove_bigmatrix(file.path(directory.rep, out))
-    geno.total <- 0
   }
   write.table(pheno.total[, c(1, 5, 6)], file = file.path(directory.rep, paste0(out, ".ped")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
   write.table(pheno.total, file = file.path(directory.rep, paste0(out, ".phe")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
   
   logging.log(" All files have been saved successfully!\n", verbose = verbose)
   
-  rm(geno.total); rm(pheno.total); rm(pheno.geno); gc();
+  rm(pheno.total); rm(pheno.geno); gc();
   
   return(SP)
 }
