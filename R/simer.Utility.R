@@ -273,7 +273,7 @@ print_info <- function(welcome = NULL, title = NULL, short_title = NULL, logo = 
   
   # align logo
   logo_width <- max(sapply(logo, nchar))
-  for (i in 1:length(logo)) {
+  for (i in seq_along(logo)) {
     l <- paste0(logo[i], paste(rep(" ", logo_width - nchar(logo[i])), collapse = ""))
     l <- make_line(l, width)
     msg <- c(msg, l)
@@ -370,7 +370,7 @@ rule_wrap <- function(string, width, align = "center", linechar = " ") {
   lines <- strwrap(string, width = width - 4)
   
   # wrap
-  for (i in 1:length(lines)) {
+  for (i in seq_along(lines)) {
     l <- make_line(lines[i], width = width, linechar = linechar, align = align)
     msg <- c(msg, l)
   }
@@ -480,10 +480,11 @@ mkl_env <- function(exprs, threads = 1) {
   if (load_if_installed("RevoUtilsMath")) {
     math.cores <- eval(parse(text = "getMKLthreads()"))
     eval(parse(text = "setMKLthreads(threads)"))
+    threads <- math.cores
   }
   result <- exprs
   if (load_if_installed("RevoUtilsMath")) {
-    eval(parse(text = "setMKLthreads(math.cores)"))
+    eval(parse(text = "setMKLthreads(threads)"))
   }
   return(result)
 }
@@ -518,17 +519,17 @@ mkl_env <- function(exprs, threads = 1) {
 #'
 #' remove_bigmatrix(x = "simer")
 remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.bin") {
-  name <- basename(x)
-  path <- dirname(x)
+  filename <- paste0(basename(x), bin_suffix)
+  dirname <- paste0(dirname(x), "/")
   
   descfile <- paste0(x, desc_suffix)
   binfile  <- paste0(x, bin_suffix)
   
-  remove_var <- function(binfile, envir) {
+  remove_var <- function(filename, dirname, envir) {
     for (v in ls(envir = envir)) {
       if (any(class(get(v, envir = envir)) == "big.matrix")) {
         desc <- describe(get(v, envir = envir))@description
-        if (desc$filename == binfile) {
+        if ((desc$filename == filename) & (desc$dirname == dirname)) {
           rm(list = v, envir = envir)
           gc()
         }
@@ -537,8 +538,9 @@ remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.
   }
   
   # delete objects that occupy binfile in the global environment
-  remove_var(binfile, as.environment(-1L))
-  remove_var(binfile, globalenv())
+  remove_var(filename, dirname, parent.env(as.environment(-1L)))
+  remove_var(filename, dirname, globalenv())
+  
   gc()
   
   if (file.exists(descfile)) {
@@ -665,7 +667,7 @@ write.file <- function(SP) {
   
   logging.log(" All files have been saved successfully!\n", verbose = verbose)
   
-  rm(geno.total); rm(pheno.total); rm(pheno.geno); gc()
+  rm(geno.total); rm(pheno.total); rm(pheno.geno); gc();
   
   return(SP)
 }

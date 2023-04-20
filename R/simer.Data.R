@@ -218,12 +218,13 @@ simer.Data.MVP2MVP <- function(fileMVP, genoType = 'char', out = 'simer', verbos
            backingpath =dirname(out),
            descriptorfile = descriptorfile,
   )
+  rm(bigmat); gc();
   file.copy(fileInd, paste0(out, ".geno.ind"))
   file.copy(fileMap, paste0(out, ".geno.map"))
   
   t2 <- as.numeric(Sys.time())
   logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n\n", verbose = verbose)
-  return(invisible(dim(bigmat)))
+  return(invisible(descriptorfile))
 }
 
 #' Genotype data imputation
@@ -411,6 +412,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
              backingpath =dirname(out),
              descriptorfile = descriptorfile,
     )
+    rm(bigmat); gc();
     
     genoInd <- genoInd[keepCols]
     genoMap <- genoMap[keepRows, ]
@@ -1596,7 +1598,7 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
   #  6. Phenotype value ('1' = control, '2' = case, '-9'/'0'/non-numeric = missing data if case/control)
   
   if (is.null(pheno)) {
-    ind <- 1:ncol(bigmat)
+    ind <- seq_len(ncol(bigmat))
     sir <- rep(0, ncol(bigmat))
     dam <- rep(0, ncol(bigmat))
     sex <- rep(0, ncol(bigmat))
@@ -1702,6 +1704,7 @@ simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority =
   
   if (priority == "speed") { maxLine <- -1 }
   read_bfile(bed_file = bed_file, pBigMat = bigmat@address, maxLine = maxLine, threads = threads, verbose = verbose)
+  rm(bigmat); gc();
   t2 <- as.numeric(Sys.time())
   logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n", verbose = verbose)
   return(invisible(c(m, n)))
