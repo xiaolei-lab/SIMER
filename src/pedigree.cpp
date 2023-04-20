@@ -181,9 +181,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     subNumConfs = subNumConfs.cols(candParUse);
     
     arma::uvec sortIdx = sort_index(subNumConfs);
-    for (j = sortIdx.max(); j > 0; j--) {
+    for (j = 0; j < sortIdx.n_elem; j++) {
       
-      findPos = arma::find(sortIdx == j);
+      findPos = arma::find(sortIdx == (sortIdx.n_elem-1-j));
       maxPos = findPos[0];
       rowPos = (maxPos + 1) % numCand;
       colPos = (maxPos + 1) / numCand;
