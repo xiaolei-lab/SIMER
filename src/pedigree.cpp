@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include <boost/algorithm/string.hpp>
 #include <bigmemory/BigMatrix.h>
 #include <bigmemory/MatrixAccessor.hpp>
 #include "simer_omp.h"
@@ -190,12 +191,12 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       candPar1 = as<string>(genoID[candParUse[rowPos]]);
       candPar2 = as<string>(genoID[candParUse[colPos]]);
 
-      if ((sirState[i].compare("Match") == 0)) {
+      if (sirState[i] == "Match") {
         if (candPar1.compare(sirID[i]) != 0) {
           continue;
         } 
       }
-      if ((damState[i].compare("Match") == 0)) {
+      if (damState[i] == "Match") {
         if (candPar2.compare(damID[i]) != 0) {
           continue;
         } 
@@ -203,12 +204,12 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
       if (find(fullSirID.begin(), fullSirID.end(), candPar1) != fullSirID.end()) {
         if (find(fullDamID.begin(), fullDamID.end(), candPar2) != fullDamID.end()) {
-          if (sirState[i].compare("NotFound") == 0) {
+          if (sirState[i] == "NotFound") {
             sirID[i] = candPar1;
             sirState[i] = "Found";
             sirNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
           }
-          if (damState[i].compare("NotFound") == 0) {
+          if (damState[i] == "NotFound") {
             damID[i] = candPar2;
             damState[i] = "Found";
             damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
