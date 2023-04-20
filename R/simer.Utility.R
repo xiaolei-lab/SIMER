@@ -529,7 +529,7 @@ remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.
     for (v in ls(envir = envir)) {
       if (any(class(get(v, envir = envir)) == "big.matrix")) {
         desc <- describe(get(v, envir = envir))@description
-        if ((desc$filename == filename) & (desc$dirname == dirname)) {
+        if ((desc$filename == filename) && (desc$dirname == dirname)) {
           rm(list = v, envir = envir)
           gc()
         }
@@ -631,7 +631,7 @@ write.file <- function(SP) {
   
   pop.inds <- Reduce("+", pop.inds, accumulate = TRUE)
   pop.inds <- c(0, pop.inds[-length(pop.inds)]) + 1
-  for (i in 1:length(out.geno.gen)) {
+  for (i in seq_along(out.geno.gen)) {
     if (incols == 1) {
       BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i], threads = ncpus)
     } else {
