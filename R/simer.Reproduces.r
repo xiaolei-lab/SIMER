@@ -148,7 +148,7 @@ mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
   pop.marker <- nrow(pop.geno)
   pop.geno.curr <- big.matrix(
       nrow = pop.marker,
-      ncol = length(index.dam) * incols,
+      ncol = length(index.dam) * 2,
       init = 3,
       type = "char"
   )
