@@ -75,7 +75,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   size_t n = kidID.size(), m = pMat->nrow();
   NumericVector kidOrder, sirOrder, damOrder;
   kidOrder = match(kidID, genoID); kidOrder = kidOrder - 1;
-  sirOrder = match(sirID, genoID); sirOrder = sirOrder - 1; 
+  sirOrder = match(sirID, genoID); sirOrder = sirOrder - 1;
   damOrder = match(damID, genoID); damOrder = damOrder - 1;
   LogicalVector naKid, naSir, naDam;
   naKid = is_na(kidOrder); naSir = is_na(sirOrder); naDam = is_na(damOrder);
@@ -85,8 +85,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   int exclMax = exclThres * m, assignMax = assignThres * m;
   
   // ******* 02 check rawPed *******
-  sirState[naSir || naKid] = "NoGeno";
-  damState[naDam || naKid] = "NoGeno";
+  sirState[naKid] = "NoGeno"; sirState[naSir] = "NoGeno";
+  damState[naKid] = "NoGeno"; damState[naDam] = "NoGeno";
 
   // calculate conflict of pedigree in the rawPed
   arma::mat numConfs = calConf(pMat, threads, verbose);
