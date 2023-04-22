@@ -73,6 +73,33 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   // ******* 01 prepare data for checking rawPed *******
   StringVector kidID = rawPed[0], sirID = rawPed[1], damID = rawPed[2];
   size_t n = kidID.size(), m = pMat->nrow();
+  LogicalVector kidEqSir = (kidID == sirID);
+  LogicalVector kidEqDam = (kidID == damID);
+
+  StringVector fullSirID, fullDamID;
+  copy(sirID.begin(), sirID.end(), back_inserter(fullSirID));
+  copy(damID.begin(), damID.end(), back_inserter(fullDamID));
+
+  StringVector candSir, candDam;
+  if (candSirID.isNotNull()) {
+    StringVector candSirIDUse = as<StringVector>(candSirID);
+    for (size_t i = 0; i < candSirIDUse.size(); i++)
+      fullSirID.insert(fullSirID.end(), candSirIDUse[i]);
+  }
+  if (candDamID.isNotNull()) {
+    StringVector candDamIDUse = as<StringVector>(candDamID);
+    for (size_t i = 0; i < candDamIDUse.size(); i++)
+      fullSirID.insert(fullSirID.end(), candDamIDUse[i]);
+  }
+  NumericVector birdate;
+  if (birthDate.isNotNull()) {
+    birdate = as<NumericVector>(birthDate);
+  }
+  fullSirID = sort_unique(fullSirID); fullSirID.erase(0);
+  fullDamID = sort_unique(fullDamID); fullDamID.erase(0);
+  
+  // kids should not be same as parents
+  sirID[kidEqSir] = "0"; damID[kidEqDam] = "0";
   NumericVector kidOrder, sirOrder, damOrder;
   kidOrder = match(kidID, genoID); kidOrder = kidOrder - 1;
   sirOrder = match(sirID, genoID); sirOrder = sirOrder - 1;
@@ -85,9 +112,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   int exclMax = exclThres * m, assignMax = assignThres * m;
   
   // ******* 02 check rawPed *******
-  sirState[naKid] = "NoGeno"; sirState[naSir] = "NoGeno";
-  damState[naKid] = "NoGeno"; damState[naDam] = "NoGeno";
-
+  sirState[naKid | naSir] = "NoGeno"; sirState[kidEqSir] = "NotFound"; 
+  damState[naKid | naDam] = "NoGeno"; damState[kidEqDam] = "NotFound"; 
+  
   // calculate conflict of pedigree in the rawPed
   arma::mat numConfs = calConf(pMat, threads, verbose);
   // arma::mat numConfs(pMat->ncol(), pMat->ncol(), fill::zeros);
@@ -118,30 +145,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
   }
 
-  // ******* 03 prepare data for seeking parents *******
-  StringVector fullSirID, fullDamID;
-  copy(sirID.begin(), sirID.end(), back_inserter(fullSirID));
-  copy(damID.begin(), damID.end(), back_inserter(fullDamID));
-
-  StringVector candSir, candDam;
-  if (candSirID.isNotNull()) {
-    StringVector candSirIDUse = as<StringVector>(candSirID);
-    for (size_t i = 0; i < candSirIDUse.size(); i++)
-      fullSirID.insert(fullSirID.end(), candSirIDUse[i]);
-  }
-  if (candDamID.isNotNull()) {
-    StringVector candDamIDUse = as<StringVector>(candDamID);
-    for (size_t i = 0; i < candDamIDUse.size(); i++)
-      fullSirID.insert(fullSirID.end(), candDamIDUse[i]);
-  }
-  NumericVector birdate;
-  if (birthDate.isNotNull()) {
-    birdate = as<NumericVector>(birthDate);
-  }
-
-  fullSirID = sort_unique(fullSirID);
-  fullDamID = sort_unique(fullDamID);
-  
+  // ******* 03 seek parents of NotMatch in the rawPed *******
   StringVector candKid(n);
   LogicalVector kidFlag;
   NumericVector candKidOrder, candParOrder;
@@ -149,16 +153,14 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   size_t numCand;
   arma::mat subNumConfs;
 
-  arma::uvec findPos;
   arma::uword maxPos, rowPos, colPos;
-  string candPar1, candPar2;
+  StringVector candPar1(1), candPar2(1);
   
   size_t i, j;
 
   MinimalProgressBar pb;
   Progress p(n, verbose, pb);
 
-  // ******* 04 seek parents of NotMatch in the rawPed *******
   if(verbose) { Rcout << " Seeking Parents..." << endl; }
   // #pragma omp parallel for schedule(dynamic) private(i, j)
   for (i = 0; i < n; i++) {
@@ -172,15 +174,14 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     candParOrder = wrap(arma::find(numConfs.row(kidOrder[i]) < assignMax));
     candParUse = as<arma::uvec>(setdiff(candParOrder, candKidOrder));
     numCand = candParUse.size();
-    if (numCand == 0) { continue;  }
+    if (numCand == 0) { continue; }
     subNumConfs = numConfs.rows(candParUse);
     subNumConfs = subNumConfs.cols(candParUse);
     
     arma::uvec sortIdx = sort_index(subNumConfs);
     for (j = 0; j < sortIdx.n_elem; j++) {
       
-      findPos = arma::find(sortIdx == (sortIdx.n_elem-1-j));
-      maxPos = findPos[0];
+      maxPos = sortIdx[sortIdx.n_elem-1-j];;
       rowPos = (maxPos + 1) % numCand;
       colPos = (maxPos + 1) / numCand;
       if (rowPos == 0) {
@@ -188,33 +189,35 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
         colPos = colPos - 1;
       }
       rowPos = rowPos - 1;
-      candPar1 = as<string>(genoID[candParUse[rowPos]]);
-      candPar2 = as<string>(genoID[candParUse[colPos]]);
+      candPar1[0] = genoID[candParUse[rowPos]];
+      candPar2[0] = genoID[candParUse[colPos]];
 
-      if (sirState[i] == "Match") {
-        if (candPar1.compare(sirID[i]) != 0) {
+      if ((sirState[i] == "Match") | (sirState[i] == "Found")) {
+        if (candPar1[0] != sirID[i]) {
           continue;
         } 
       }
-      if (damState[i] == "Match") {
-        if (candPar2.compare(damID[i]) != 0) {
+      if ((damState[i] == "Match") | (damState[i] == "Found")) {
+        if (candPar2[0] != damID[i]) {
           continue;
         } 
       }
-
-      if (find(fullSirID.begin(), fullSirID.end(), candPar1) != fullSirID.end()) {
-        if (find(fullDamID.begin(), fullDamID.end(), candPar2) != fullDamID.end()) {
+      
+      if (find(fullSirID.begin(), fullSirID.end(), candPar1[0]) != fullSirID.end()) {
+        if (find(fullDamID.begin(), fullDamID.end(), candPar2[0]) != fullDamID.end()) {
           if (sirState[i] == "NotFound") {
-            sirID[i] = candPar1;
+            sirID[i] = candPar1[0];
             sirState[i] = "Found";
             sirNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
           }
           if (damState[i] == "NotFound") {
-            damID[i] = candPar2;
+            damID[i] = candPar2[0];
             damState[i] = "Found";
             damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
           }
-          break;
+          if (((sirState[i] == "Match") | (sirState[i] == "Found")) & ((damState[i] == "Match") | (damState[i] == "Found"))) {
+            break;
+          }
         }
       }
       

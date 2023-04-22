@@ -583,10 +583,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   pedx <- pedx[pedx[, 1] != "0", ]
   pedError <- pedx[duplicated(pedx[, 1]), ]
   pedx <- pedx[!duplicated(pedx[, 1]), ]
-  pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 2] | pedx[, 1] == pedx[, 3], ])
-  pedx[pedx[, 1] == pedx[, 2], 2] <- "0"
-  pedx[pedx[, 1] == pedx[, 3], 3] <- "0"
-
+  
   if (length(fileMVP) == 0) { fileMVP <- NULL }
   if (!is.null(fileMVP)) {
     hasGeno <- TRUE
@@ -608,6 +605,10 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
     colnames(pedx)[1:3] <- pedName
     pedError <- rbind(pedError, pedx[pedx$sirState=="NotFound" | pedx$damState=="NotFound", 1:3])
+  } else {
+    pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 2] | pedx[, 1] == pedx[, 3], ])
+    pedx[pedx[, 1] == pedx[, 2], 2] <- "0"
+    pedx[pedx[, 1] == pedx[, 3], 3] <- "0"
   }
 
   # print("Making needed files")
@@ -625,6 +626,10 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
         pedError <- rbind(pedError, pedx2[index.sir | index.dam, 1:3])
         pedx2[index.sir, 3] <- "0"
         pedx2[index.dam, 2] <- "0"
+        if (hasGeno) {
+          pedx2[index.sir, 5] <- "NotFound"
+          pedx2[index.dam, 4] <- "NotFound"
+        }
         pedx1 <- rbind(pedx1, pedx2[index.sir | index.dam, ])
         pedx2 <- pedx2[!(index.sir | index.dam), ]
       } else {
@@ -638,6 +643,9 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
         } else {
           pedError <- rbind(pedError, pedx2[, 1:3])
           pedx2[, 2:3] <- "0"
+          if (hasGeno) {
+            pedx2[, 4:5] <- "NotFound"
+          }
           pedx1 <- rbind(pedx1, pedx2)
           pedx2 <- pedx2[-(1:nrow(pedx2)), ]
         }
