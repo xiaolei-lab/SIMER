@@ -1486,11 +1486,9 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     }
   }
   
-  
-
   ## step 1. data quality control
   if (dataQC) {
-    jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
+    jsonList <- simer.Data(jsonList = jsonList, out = NULL, ncpus = ncpus, verbose = verbose)
   }
   newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
   if (verbose) {
