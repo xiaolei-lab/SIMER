@@ -204,9 +204,9 @@ simer.Data.MVP2MVP <- function(fileMVP, genoType = 'char', out = 'simer', verbos
   t1 <- as.numeric(Sys.time())
   
   if (fileMVP != out) { remove_bigmatrix(out) }
-  fileDesc <- normalizePath(paste0(fileMVP, '.geno.desc'), mustWork = TRUE)
-  fileInd <- normalizePath(paste0(fileMVP, '.geno.ind'), mustWork = TRUE)
-  fileMap <- normalizePath(paste0(fileMVP, '.geno.map'), mustWork = TRUE)
+  fileDesc <- normalizePath(paste0(fileMVP, '.geno.desc'), winslash = "/", mustWork = TRUE)
+  fileInd <- normalizePath(paste0(fileMVP, '.geno.ind'), winslash = "/", mustWork = TRUE)
+  fileMap <- normalizePath(paste0(fileMVP, '.geno.map'), winslash = "/", mustWork = TRUE)
   
   backingfile <- paste0(basename(out), ".geno.bin")
   descriptorfile <- paste0(basename(out), ".geno.desc")
@@ -269,14 +269,14 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
   }
   
   if (!is.null(fileMVP)) {
-    descFile <- normalizePath(paste0(fileMVP, ".geno.desc"), mustWork = TRUE)
+    descFile <- normalizePath(paste0(fileMVP, ".geno.desc"), winslash = "/", mustWork = TRUE)
     bigmat <- attach.big.matrix(descFile)
     if (!hasNA(bigmat@address)) {
       message("No NA in genotype, imputation has been skipped.")
       return()
     } else {
       if (is.null(out)) { out <- paste0(fileMVP, ".imp") }
-      mapFile <- normalizePath(paste0(fileMVP, ".geno.map"), mustWork = TRUE)
+      mapFile <- normalizePath(paste0(fileMVP, ".geno.map"), winslash = "/", mustWork = TRUE)
       map <- read.table(mapFile, header = TRUE)
       tmpout <- tempfile()
       simer.Data.MVP2Bfile(bigmat = bigmat, map = map, out = tmpout, threads = ncpus, verbose = verbose)
@@ -285,8 +285,8 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
   }
   
   if (!is.null(fileBed)) {
-    famFile <- normalizePath(paste0(fileBed, '.fam'), mustWork = TRUE)
-    bedFile <- normalizePath(paste0(fileBed, '.bed'), mustWork = TRUE)
+    famFile <- normalizePath(paste0(fileBed, '.fam'), winslash = "/", mustWork = TRUE)
+    bedFile <- normalizePath(paste0(fileBed, '.bed'), winslash = "/", mustWork = TRUE)
     fam <- read.table(famFile, header = FALSE)
     n <- nrow(fam)
     hasNA <- hasNABed(bedFile, n, maxLine, ncpus, verbose)
@@ -389,9 +389,9 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
     if (is.null(out)) { out <- paste0(fileMVP, ".qc") }
     if (fileMVP != out) { remove_bigmatrix(out) }
     
-    fileDesc <- normalizePath(paste0(fileMVP, '.geno.desc'), mustWork = TRUE)
-    fileInd <- normalizePath(paste0(fileMVP, '.geno.ind'), mustWork = TRUE)
-    fileMap <- normalizePath(paste0(fileMVP, '.geno.map'), mustWork = TRUE)
+    fileDesc <- normalizePath(paste0(fileMVP, '.geno.desc'), winslash = "/", mustWork = TRUE)
+    fileInd <- normalizePath(paste0(fileMVP, '.geno.ind'), winslash = "/", mustWork = TRUE)
+    fileMap <- normalizePath(paste0(fileMVP, '.geno.map'), winslash = "/", mustWork = TRUE)
     
     genoInd <- read.table(fileInd, sep = '\t', header = FALSE)[, 1]
     genoMap <- read.table(fileMap, sep = '\t', header = TRUE)
@@ -587,8 +587,8 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   if (length(fileMVP) == 0) { fileMVP <- NULL }
   if (!is.null(fileMVP)) {
     hasGeno <- TRUE
-    genoFile <- normalizePath(paste0(fileMVP, ".geno.desc"), mustWork = TRUE)
-    genoIDFile <- normalizePath(paste0(fileMVP, ".geno.ind"), mustWork = TRUE)
+    genoFile <- normalizePath(paste0(fileMVP, ".geno.desc"), winslash = "/", mustWork = TRUE)
+    genoIDFile <- normalizePath(paste0(fileMVP, ".geno.ind"), winslash = "/", mustWork = TRUE)
     genoID <- as.character(unlist(read.table(genoIDFile, header = FALSE)))
     geno <- attach.big.matrix(genoFile)
   } else {
@@ -1681,9 +1681,9 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
 #' simer.Data.Bfile2MVP(bfilePath, tempfile("outfile"))
 simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority = 'speed', type.geno = 'char', threads = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
-  bim_file <- normalizePath(paste0(bfile, '.bim'), mustWork = TRUE)
-  fam_file <- normalizePath(paste0(bfile, '.fam'), mustWork = TRUE)
-  bed_file <- normalizePath(paste0(bfile, '.bed'), mustWork = TRUE)
+  bim_file <- normalizePath(paste0(bfile, '.bim'), winslash = "/", mustWork = TRUE)
+  fam_file <- normalizePath(paste0(bfile, '.fam'), winslash = "/", mustWork = TRUE)
+  bed_file <- normalizePath(paste0(bfile, '.bed'), winslash = "/", mustWork = TRUE)
   # check old file
   backingfile <- paste0(basename(out), ".geno.bin")
   descriptorfile <- paste0(basename(out), ".geno.desc")
