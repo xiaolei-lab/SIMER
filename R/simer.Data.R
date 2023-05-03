@@ -484,7 +484,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' # Run pedigree correction
 #' simer.Data.Ped(filePed = filePed, fileMVP = fileMVP, out = tempfile("outfile"))
 simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FALSE, fileSir = NULL, fileDam = NULL, 
-                           exclThres = 0.01, assignThres = 0.005, header = TRUE, sep = '\t', ncpus = 0, verbose = TRUE) {
+                           exclThres = 0.1, assignThres = 0.05, header = TRUE, sep = '\t', ncpus = 0, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   logging.log(" Start Checking Pedigree Data.\n", verbose = verbose)
   
@@ -1317,7 +1317,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     if (is.null(usePhes)) {
       usePhes <- usePhe
     } else {
-      usePhes <- merge(x = usePhes, y = usePhe, by = names(pheno)[1], all = TRUE)
+      usePhes <- merge(x = usePhes, y = usePhe, by = 1, all = TRUE)
     }
     usePhe <- usePhe[, -1, drop = FALSE]
     covP <- var(usePhe, na.rm = TRUE)

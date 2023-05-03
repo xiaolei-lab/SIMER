@@ -18,8 +18,8 @@
             "standard_ID": false,
             "candidate_sire_file": [],
             "candidate_dam_file": [],
-            "exclude_threshold": 0.01, 
-            "assign_threshold": 0.005
+            "exclude_threshold": 0.1, 
+            "assign_threshold": 0.05
         },
         "phenotype_quality_control":[
             {
