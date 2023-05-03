@@ -1492,6 +1492,7 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
   if (dataQC) {
     jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
   }
+  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
   if (verbose) {
     cat(newJson, file = newJsonFile)
   }
@@ -1500,7 +1501,6 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
   if (buildModel) {
     jsonList <- simer.Data.Env(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
-  newJsonFile <- paste0(out, ".model.json")
   newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
   if (verbose) {
     cat(newJson, file = newJsonFile)
