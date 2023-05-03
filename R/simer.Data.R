@@ -952,6 +952,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
     if (multrait) {
       planPheN <- lapply(1:nTrait, function(j) { return(planPhe[[i]]) })
       for (j in 1:nTrait) {
+        planPheN[[j]]$job_name <- paste0(planPheN[[j]]$job_name, "_T", j)
         planPheN[[j]]$multi_trait <- FALSE
         planPheN[[j]]$job_traits <- planPheN[[j]]$job_traits[j]
       }
@@ -1433,6 +1434,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
 #' }
 simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
+  newJsonFile <- paste0(out, ".model.json")
   jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
   if (length(jsonList$threads) != 0) { ncpus <- jsonList$threads  }
   dataPath <- dirname(jsonFile)
@@ -1484,9 +1486,14 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     }
   }
   
+  
+
   ## step 1. data quality control
   if (dataQC) {
     jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
+  }
+  if (verbose) {
+    cat(newJson, file = newJsonFile)
   }
   
   ## step 2. find the best environmental factors for EBV model
@@ -1495,13 +1502,15 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
   }
   newJsonFile <- paste0(out, ".model.json")
   newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
-  
+  if (verbose) {
+    cat(newJson, file = newJsonFile)
+  }
+
   ## step 3. construct selection index
   if (buildIndex) {
     jsonList <- simer.Data.SELIND(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
   }
   newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
-  
   if (verbose) {
     cat(newJson, file = newJsonFile)
   }
