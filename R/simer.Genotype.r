@@ -83,6 +83,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     logging.log(" Input outer genotype matrix...\n", verbose = verbose)
     if (incols == 1) {
       pop.geno <- geno.cvt2(pop.geno[])
+      SP$geno$incols <- incols <- 2
     } 
     if (is.big.matrix(pop.geno)) {
       bigmat <- pop.geno

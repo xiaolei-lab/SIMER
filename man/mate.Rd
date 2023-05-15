@@ -14,8 +14,6 @@ mate(pop.geno, index.sir, index.dam, ncpus = 0)
 \item{index.dam}{the indice of dams.}
 
 \item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
-
-\item{incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
 }
 \value{
 a genotype matrix after mating

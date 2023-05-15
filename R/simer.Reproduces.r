@@ -123,7 +123,6 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @param pop.geno the genotype data.
 #' @param index.sir the indice of sires.
 #' @param index.dam the indice of dams.
-#' @param incols '1':one-column genotype represents an individual; '2': two-column genotype represents an individual.
 #' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #'
 #' @return a genotype matrix after mating
@@ -476,7 +475,6 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -578,7 +576,6 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -688,7 +685,6 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -808,7 +804,6 @@ mate.assort <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -919,7 +914,6 @@ mate.disassort <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -1029,7 +1023,6 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-  incols <- SP$geno$incols
   pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
   if (is.null(pop.sel)) {
     ind.sir <- pop$index[pop$sex == 1]
@@ -1136,7 +1129,6 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-  incols <- SP$geno$incols
   pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
   if (is.null(pop.sel)) {
     ind.sir <- pop$index[pop$sex == 1]
@@ -1191,7 +1183,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop.geno.id <- c(pop.geno.id, pop[, 1])
   pop.geno.curr <- big.matrix(
     nrow = nrow(pop.geno),
-    ncol = length(pop.geno.id),
+    ncol = ncol(pop.geno) + ncol(pop.geno.dam2),
     init = 3,
     type = "char")
   BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = 1:ncol(pop.geno), threads = ncpus)
@@ -1295,7 +1287,6 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-  incols <- SP$geno$incols
   pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
   if (is.null(pop.sel)) {
     ind.sir <- pop$index[pop$sex == 1]
@@ -1465,7 +1456,6 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-  incols <- SP$geno$incols
   pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
   if (is.null(pop.sel)) {
     ind.sir <- pop$index[pop$sex == 1]
@@ -1578,7 +1568,6 @@ mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- pop[, 1]
   pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-  incols <- SP$geno$incols
   userped <- SP$reprod$userped
   
   # thanks to YinLL for sharing codes of pedigree sorting
