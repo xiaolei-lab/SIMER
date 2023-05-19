@@ -1485,15 +1485,6 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     }
   }
   
-  ## step 1. data quality control
-  if (dataQC) {
-    jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
-  }
-  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
-  if (verbose) {
-    cat(newJson, file = newJsonFile)
-  }
-  
   # breeding plan path check
   for (i in 1:length(jsonList$breeding_plan)) {
     filePhe <- unlist(jsonList$breeding_plan[[i]]$sample_info)
@@ -1508,6 +1499,15 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     }
   }
 
+  ## step 1. data quality control
+  if (dataQC) {
+    jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
+  }
+  newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
+  if (verbose) {
+    cat(newJson, file = newJsonFile)
+  }
+  
   ## step 2. find the best environmental factors for EBV model
   if (buildModel) {
     jsonList <- simer.Data.Env(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
