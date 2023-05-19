@@ -1484,7 +1484,7 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
       }
     }
   }
-  
+
   # breeding plan path check
   for (i in 1:length(jsonList$breeding_plan)) {
     filePhe <- unlist(jsonList$breeding_plan[[i]]$sample_info)
