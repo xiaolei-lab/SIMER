@@ -1439,7 +1439,7 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
   if (length(jsonList$threads) != 0) { ncpus <- jsonList$threads  }
   dataPath <- dirname(jsonFile)
   
-  # path check
+  # genotype path check
   genoPath <- unlist(jsonList$genotype)
   if (length(genoPath) != 0) {
     if (!dir.exists(genoPath)) { 
@@ -1450,6 +1450,8 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
       jsonList$genotype[[1]] <- genoPath
     }
   }
+
+  # pedigree path check
   filePed <- unlist(jsonList$pedigree)
   if (length(filePed) != 0) {
     if (!file.exists(filePed)) { 
@@ -1460,7 +1462,8 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
       jsonList$pedigree[[1]] <- filePed
     }
   }
-  
+
+  # phenotype path check
   for (i in 1:length(jsonList$quality_control_plan$phenotype_quality_control)) {
     filePhe <- unlist(jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info)
     if (length(filePhe) != 0) {
@@ -1470,18 +1473,6 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
           stop("Please check the phenotype path!")
         }
         jsonList$quality_control_plan$phenotype_quality_control[[i]]$sample_info[[1]] <- filePhe
-      }
-    }
-  }
-  for (i in 1:length(jsonList$breeding_plan)) {
-    filePhe <- unlist(jsonList$breeding_plan[[i]]$sample_info)
-    if (length(filePhe) != 0) {
-      if(!file.exists(filePhe)) {
-        filePhe <- file.path(dataPath, filePhe)
-        if (!file.exists(filePhe)) {
-          stop("Please check the phenotype path!")
-        }
-        jsonList$breeding_plan[[i]]$sample_info[[1]] <- filePhe
       }
     }
   }
@@ -1495,6 +1486,20 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
     cat(newJson, file = newJsonFile)
   }
   
+  # breeding plan path check
+  for (i in 1:length(jsonList$breeding_plan)) {
+    filePhe <- unlist(jsonList$breeding_plan[[i]]$sample_info)
+    if (length(filePhe) != 0) {
+      if(!file.exists(filePhe)) {
+        filePhe <- file.path(dataPath, filePhe)
+        if (!file.exists(filePhe)) {
+          stop("Please check the phenotype path!")
+        }
+        jsonList$breeding_plan[[i]]$sample_info[[1]] <- filePhe
+      }
+    }
+  }
+
   ## step 2. find the best environmental factors for EBV model
   if (buildModel) {
     jsonList <- simer.Data.Env(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
