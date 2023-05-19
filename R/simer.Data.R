@@ -426,12 +426,15 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
   }
   
   if (!is.null(fileBed) | !is.null(filePlinkPed)) {
+    if (is.null(out)) {
+      out <- ifelse(is.null(fileBed), paste0(filePlinkPed, ".qc"), paste0(fileBed, ".qc"))
+    }
     if (!is.null(keepInds)) {
       keepInds <- cbind(keepInds, keepInds)
       write.table(keepInds, "simer.geno.ind", quote = FALSE, sep = ' ', row.names = FALSE, col.names = FALSE)
     }
     completeCmd <- 
-      paste("plink", ifelse(is.null(fileBed), " --file", "--bfile"), fileBed,
+      paste("plink", ifelse(is.null(fileBed), paste("--file", filePlinkPed), paste("--bfile", fileBed)),
             ifelse(length(keepInds) == 0, "", paste("--keep simer.geno.ind")),
             ifelse(length(filterGeno) == 0, "", paste("--geno", filterGeno)),
             ifelse(length(filterHWE) == 0, "", paste("--hwe", filterHWE)),
