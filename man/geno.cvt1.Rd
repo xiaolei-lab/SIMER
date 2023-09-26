@@ -20,12 +20,14 @@ Build date: Nov 14, 2018
 Last update: Apr 28, 2022
 }
 \examples{
+\donttest{
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 2)
 SP <- genotype(SP)
 geno1 <- SP$geno$pop.geno$gen1
 geno2 <- geno.cvt1(geno1)
 geno1[1:6, 1:4]
 geno2[1:6, 1:2]
+}
 }
 \author{
 Dong Yin

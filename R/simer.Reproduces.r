@@ -38,6 +38,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -59,6 +60,7 @@
 #' SP <- selects(SP)
 #' # Run reproduction
 #' SP <- reproduces(SP)
+#' }
 reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 
 ### Start reproduction
@@ -129,6 +131,7 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate the genotype data
 #' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 #' SP <- genotype(SP)
@@ -142,6 +145,7 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 #' geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
 #'                   index.dam = index.dam)
 #' geno.curr[1:5, 1:5]
+#' }
 mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
   
   pop.marker <- nrow(pop.geno)
@@ -192,6 +196,7 @@ mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -213,6 +218,7 @@ mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
 #' SP <- selects(SP)
 #' # Run clone
 #' SP <- mate.clone(SP)
+#' }
 mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters
@@ -315,6 +321,7 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -336,6 +343,7 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run doubled haploid
 #' SP <- mate.dh(SP)
+#' }
 mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 
   # reproduction parameters
@@ -442,6 +450,7 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -463,6 +472,7 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run self-pollination
 #' SP <- mate.selfpol(SP)
+#' }
 mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 
   # reproduction parameters
@@ -543,6 +553,7 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -564,6 +575,7 @@ mate.selfpol <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run random mating
 #' SP <- mate.randmate(SP)
+#' }
 mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters
@@ -652,6 +664,7 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -673,6 +686,7 @@ mate.randmate <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run random mating excluding self-pollination
 #' SP <- mate.randexself(SP)
+#' }
 mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters
@@ -771,6 +785,7 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -792,6 +807,7 @@ mate.randexself <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run random mating
 #' SP <- mate.assort(SP)
+#' }
 mate.assort <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters
@@ -881,6 +897,7 @@ mate.assort <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -902,6 +919,7 @@ mate.assort <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run random mating
 #' SP <- mate.assort(SP)
+#' }
 mate.disassort <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters
@@ -991,6 +1009,7 @@ mate.disassort <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -1014,6 +1033,7 @@ mate.disassort <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run two-way cross
 #' SP <- mate.2waycro(SP)
+#' }
 mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
@@ -1097,6 +1117,7 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -1120,6 +1141,7 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run three-way cross
 #' SP <- mate.3waycro(SP)
+#' }
 mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
@@ -1255,6 +1277,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -1278,6 +1301,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run four-way cross
 #' SP <- mate.4waycro(SP)
+#' }
 mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   count.ind <- NULL
@@ -1422,6 +1446,7 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -1445,6 +1470,7 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- selects(SP)
 #' # Run back cross
 #' SP <- mate.backcro(SP)
+#' }
 mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters
@@ -1545,6 +1571,7 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -1562,6 +1589,7 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' SP <- phenotype(SP)
 #' # Run user-specified pedigree mating
 #' SP <- mate.userped(SP)
+#' }
 mate.userped <- function(SP, ncpus = 0, verbose = TRUE) {
   
   # reproduction parameters

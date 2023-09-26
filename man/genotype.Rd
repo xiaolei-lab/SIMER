@@ -33,11 +33,13 @@ Build date: Nov 14, 2018
 Last update: Apr 28, 2022
 }
 \examples{
+\donttest{
 # Generate genotype simulation parameters
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 
 # Run genotype simulation
 SP <- genotype(SP)
+}
 }
 \author{
 Dong Yin

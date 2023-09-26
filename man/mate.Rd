@@ -26,6 +26,7 @@ Build date: Nov 14, 2018
 Last update: Apr 30, 2022
 }
 \examples{
+\donttest{
 # Generate the genotype data
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 SP <- genotype(SP)
@@ -39,6 +40,7 @@ index.dam <- rep(51:100, each = 2)
 geno.curr <- mate(pop.geno = pop.geno, index.sir = index.sir,
                   index.dam = index.dam)
 geno.curr[1:5, 1:5]
+}
 }
 \author{
 Dong Yin

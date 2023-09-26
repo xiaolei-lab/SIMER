@@ -32,6 +32,7 @@ Build date: Nov 14, 2018
 Last update: Apr 30, 2022
 }
 \examples{
+\donttest{
 # Generate annotation simulation parameters
 SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
@@ -55,6 +56,7 @@ SP$pheno$pop$gen1$sex <- rep(c(1, 2), c(50, 50))
 SP <- selects(SP)
 # Run two-way cross
 SP <- mate.2waycro(SP)
+}
 }
 \author{
 Dong Yin

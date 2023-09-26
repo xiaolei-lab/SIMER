@@ -41,6 +41,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate annotation simulation parameters
 #' SP <- param.annot(qtn.num = list(tr1 = 10))
 #' # Generate genotype simulation parameters
@@ -58,6 +59,7 @@
 #' SP <- phenotype(SP)
 #' # Run selection
 #' SP <- selects(SP)
+#' }
 selects <- function(SP = NULL, verbose = TRUE) {
 
 ### Start selection

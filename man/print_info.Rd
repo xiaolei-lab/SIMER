@@ -32,11 +32,11 @@ print_info(
 
 \item{contact}{email or website.}
 
+\item{linechar}{1, 2, or char.}
+
 \item{width}{banner width.}
 
 \item{verbose}{whether to print detail.}
-
-\item{line}{1, 2, or char.}
 }
 \value{
 welcome information.

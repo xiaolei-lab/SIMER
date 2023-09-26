@@ -36,11 +36,13 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate all simulation parameters
 #' SP <- param.simer(out = "simer")
 #' 
 #' # Run Simer
 #' SP <- simer(SP)
+#' }
 simer <- function(SP) {
 
 ### Start simer

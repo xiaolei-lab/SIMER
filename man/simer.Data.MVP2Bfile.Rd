@@ -39,12 +39,14 @@ Build date: Sep 12, 2018
 Last update: July 20, 2022
 }
 \examples{
+\donttest{
 # Generate bigmat and map
 bigmat <- as.big.matrix(matrix(1:6, 3, 2))
 map <- generate.map(pop.marker = 3)
 
 # Data converting
 simer.Data.MVP2Bfile(bigmat, map, out=tempfile("outfile"))
+}
 }
 \author{
 Haohao Zhang and Dong Yin

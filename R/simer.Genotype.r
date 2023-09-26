@@ -39,11 +39,13 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Generate genotype simulation parameters
 #' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)
 #' 
 #' # Run genotype simulation
 #' SP <- genotype(SP)
+#' }
 genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 
 ### Start genotype simulation
@@ -578,12 +580,14 @@ generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.ch
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 2)
 #' SP <- genotype(SP)
 #' geno1 <- SP$geno$pop.geno$gen1
 #' geno2 <- geno.cvt1(geno1)
 #' geno1[1:6, 1:4]
 #' geno2[1:6, 1:2]
+#' }
 geno.cvt1 <- function(pop.geno) {
   if (is.null(pop.geno)) return(NULL)
   num.ind <- ncol(pop.geno) / 2
@@ -609,12 +613,14 @@ geno.cvt1 <- function(pop.geno) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 1)
 #' SP <- genotype(SP)
 #' geno1 <- SP$geno$pop.geno$gen1
 #' geno2 <- geno.cvt2(geno1)
 #' geno1[1:6, 1:2]
 #' geno2[1:6, 1:4]
+#' }
 geno.cvt2 <- function(pop.geno) {
   if (is.null(pop.geno)) return(NULL)
   nind <- ncol(pop.geno)

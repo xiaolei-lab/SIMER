@@ -51,6 +51,7 @@
 #' @references Kao C and Zeng Z (2002) <https://www.genetics.org/content/160/3/1243.long>
 #'
 #' @examples
+#' \donttest{
 #' # Prepare environmental factor list
 #' pop.env <- list(
 #'   F1 = list( # fixed effect 1
@@ -100,6 +101,7 @@
 #' SP <- genotype(SP)
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
+#' }
 phenotype <- function(SP = NULL, verbose = TRUE) {
 
 ### Start phenotype simlulation

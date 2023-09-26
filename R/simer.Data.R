@@ -200,11 +200,13 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
 #' }
 #' 
 #' @examples
+#' \donttest{
 #' # Get the prefix of genotype data
 #' fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 #' 
 #' # Convert genotype data from MVP to MVP
 #' simer.Data.MVP2MVP(fileMVP, out = tempfile("outfile"))
+#' }
 simer.Data.MVP2MVP <- function(fileMVP, genoType = 'char', out = 'simer', verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
@@ -483,6 +485,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' }
 #' 
 #' @examples
+#' \donttest{
 #' # Get the filename of pedigree data
 #' filePed <- system.file("extdata", "05others", "pedigree.txt", package = "simer")
 #' 
@@ -491,6 +494,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' 
 #' # Run pedigree correction
 #' simer.Data.Ped(filePed = filePed, fileMVP = fileMVP, out = tempfile("outfile"))
+#' }
 simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FALSE, fileSir = NULL, fileDam = NULL, 
                            exclThres = 0.1, assignThres = 0.05, header = TRUE, sep = '\t', ncpus = 0, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
@@ -1595,12 +1599,14 @@ checkEnv <- function(data, envName, verbose = TRUE) {
 #' @export
 #' 
 #' @examples
+#' \donttest{
 #' # Generate bigmat and map
 #' bigmat <- as.big.matrix(matrix(1:6, 3, 2))
 #' map <- generate.map(pop.marker = 3)
 #' 
 #' # Data converting
 #' simer.Data.MVP2Bfile(bigmat, map, out=tempfile("outfile"))
+#' }
 simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threads = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
@@ -1685,11 +1691,13 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
 #' @export
 #' 
 #' @examples
+#' \donttest{
 #' # Get bfile path
 #' bfilePath <- file.path(system.file("extdata", "02plinkb", package = "simer"), "demo")
 #' 
 #' # Data converting
 #' simer.Data.Bfile2MVP(bfilePath, tempfile("outfile"))
+#' }
 simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority = 'speed', type.geno = 'char', threads = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   bim_file <- normalizePath(paste0(bfile, '.bim'), winslash = "/", mustWork = TRUE)

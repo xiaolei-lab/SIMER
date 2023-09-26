@@ -32,11 +32,13 @@ Build date: May 26, 2021
 Last update: Apr 28, 2022
 }
 \examples{
+\donttest{
 # Get the prefix of genotype data
 fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 
 # Convert genotype data from MVP to MVP
 simer.Data.MVP2MVP(fileMVP, out = tempfile("outfile"))
+}
 }
 \author{
 Dong Yin

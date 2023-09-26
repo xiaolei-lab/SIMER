@@ -42,6 +42,7 @@ Build date: Nov 14, 2018
 Last update: Apr 28, 2022
 }
 \examples{
+\donttest{
 # Prepare environmental factor list
 pop.env <- list(
   F1 = list( # fixed effect 1
@@ -91,6 +92,7 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
+}
 }
 \references{
 Kao C and Zeng Z (2002) <https://www.genetics.org/content/160/3/1243.long>

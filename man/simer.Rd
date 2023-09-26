@@ -28,11 +28,13 @@ Build date: Jan 7, 2019
 Last update: Apr 29, 2022
 }
 \examples{
+\donttest{
 # Generate all simulation parameters
 SP <- param.simer(out = "simer")
 
 # Run Simer
 SP <- simer(SP)
+}
 }
 \author{
 Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu

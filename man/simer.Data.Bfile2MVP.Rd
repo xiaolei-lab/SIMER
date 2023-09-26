@@ -44,11 +44,13 @@ Build date: Sep 12, 2018
 Last update: July 25, 2022
 }
 \examples{
+\donttest{
 # Get bfile path
 bfilePath <- file.path(system.file("extdata", "02plinkb", package = "simer"), "demo")
 
 # Data converting
 simer.Data.Bfile2MVP(bfilePath, tempfile("outfile"))
+}
 }
 \author{
 Haohao Zhang and Dong Yin

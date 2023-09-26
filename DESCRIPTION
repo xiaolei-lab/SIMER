@@ -28,6 +28,5 @@ Depends: R (>= 3.5.0), bigmemory
 Suggests: knitr
 RoxygenNote: 7.2.3
 Encoding: UTF-8
-SystemRequirements: C++11
 NeedsCompilation: yes
 Maintainer: Xiaolei Liu <xll198708@gmail.com>

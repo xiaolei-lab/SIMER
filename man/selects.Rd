@@ -34,6 +34,7 @@ Build date: Sep 8, 2018
 Last update: Apr 30, 2022
 }
 \examples{
+\donttest{
 # Generate annotation simulation parameters
 SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
@@ -51,6 +52,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Run selection
 SP <- selects(SP)
+}
 }
 \author{
 Dong Yin

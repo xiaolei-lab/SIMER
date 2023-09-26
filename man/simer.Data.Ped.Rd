@@ -60,6 +60,7 @@ Build date: May 6, 2021
 Last update: Apr 28, 2022
 }
 \examples{
+\donttest{
 # Get the filename of pedigree data
 filePed <- system.file("extdata", "05others", "pedigree.txt", package = "simer")
 
@@ -68,6 +69,7 @@ fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 
 # Run pedigree correction
 simer.Data.Ped(filePed = filePed, fileMVP = fileMVP, out = tempfile("outfile"))
+}
 }
 \author{
 Lilin Yin and Dong Yin

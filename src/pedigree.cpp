@@ -192,12 +192,12 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       candPar1[0] = genoID[candParUse[rowPos]];
       candPar2[0] = genoID[candParUse[colPos]];
 
-      if ((sirState[i] == "Match") | (sirState[i] == "Found")) {
+      if ((sirState[i] == "Match") || (sirState[i] == "Found")) {
         if (candPar1[0] != sirID[i]) {
           continue;
         } 
       }
-      if ((damState[i] == "Match") | (damState[i] == "Found")) {
+      if ((damState[i] == "Match") || (damState[i] == "Found")) {
         if (candPar2[0] != damID[i]) {
           continue;
         } 
@@ -215,7 +215,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
             damState[i] = "Found";
             damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
           }
-          if (((sirState[i] == "Match") | (sirState[i] == "Found")) & ((damState[i] == "Match") | (damState[i] == "Found"))) {
+          if (((sirState[i] == "Match") || (sirState[i] == "Found")) && ((damState[i] == "Match") || (damState[i] == "Found"))) {
             break;
           }
         }

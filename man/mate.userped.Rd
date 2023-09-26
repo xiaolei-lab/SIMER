@@ -32,6 +32,7 @@ Build date: Apr 12, 2022
 Last update: Apr 30, 2022
 }
 \examples{
+\donttest{
 # Generate annotation simulation parameters
 SP <- param.annot(qtn.num = list(tr1 = 10))
 # Generate genotype simulation parameters
@@ -49,6 +50,7 @@ SP <- genotype(SP)
 SP <- phenotype(SP)
 # Run user-specified pedigree mating
 SP <- mate.userped(SP)
+}
 }
 \author{
 Dong Yin

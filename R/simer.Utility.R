@@ -220,7 +220,7 @@ print_accomplished <- function(width = 60, verbose = TRUE) {
 #' @param version short label, bottom-right of logo.
 #' @param authors authors of software.
 #' @param contact email or website.
-#' @param line 1, 2, or char.
+#' @param linechar 1, 2, or char.
 #' @param width banner width.
 #' @param verbose whether to print detail.
 #'
@@ -567,12 +567,14 @@ remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' outpath <- tempdir()
 #' SP <- param.simer(out = "simer")
 #' SP <- simer(SP)
 #' SP$global$outpath <- outpath
 #' write.file(SP)
 #' unlink(file.path(outpath, "180_Simer_Data_numeric"), recursive = TRUE)
+#' }
 write.file <- function(SP) {
   
   # global parameters
