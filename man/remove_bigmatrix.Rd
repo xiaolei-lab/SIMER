@@ -24,6 +24,7 @@ Build date: Aug 8, 2019
 Last update: Apr 30, 2022
 }
 \examples{
+\donttest{
 library(bigmemory)
 mat <- filebacked.big.matrix(
      nrow = 10,
@@ -35,6 +36,7 @@ mat <- filebacked.big.matrix(
      descriptorfile = 'simer.geno.desc')
 
 remove_bigmatrix(x = "simer")
+}
 }
 \author{
 Haohao Zhang and Dong Yin

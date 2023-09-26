@@ -507,6 +507,7 @@ mkl_env <- function(exprs, threads = 1) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' library(bigmemory)
 #' mat <- filebacked.big.matrix(
 #'      nrow = 10,
@@ -518,6 +519,7 @@ mkl_env <- function(exprs, threads = 1) {
 #'      descriptorfile = 'simer.geno.desc')
 #'
 #' remove_bigmatrix(x = "simer")
+#' }
 remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.bin") {
   filename <- paste0(basename(x), bin_suffix)
   dirname <- paste0(dirname(x), "/")
