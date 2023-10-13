@@ -1812,11 +1812,13 @@ simer.Data.Map <- function(map, out = 'simer', cols = 1:5, header = TRUE, sep = 
 #' @export
 #' 
 #' @examples
+#' \donttest{
 #' # Get the prefix of genotype data
 #' fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 #' 
 #' # Check map data
 #' simer.Data.Kin(fileKin = TRUE, fileMVP = fileMVP, out = tempfile("outfile"))
+#' }
 simer.Data.Kin <- function(fileKin = TRUE, fileMVP = 'simer', out = NULL, method = 'EMMA', sep = '\t', threads = 10, verbose = TRUE) {
   if (is.null(out)) out <- fileMVP
   

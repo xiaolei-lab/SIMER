@@ -42,11 +42,13 @@ Build date: Apr 19, 2023
 Last update: Apr 19, 2023
 }
 \examples{
+\donttest{
 # Get the prefix of genotype data
 fileMVP <- system.file("extdata", "01bigmemory", "demo", package = "simer")
 
 # Check map data
 simer.Data.Kin(fileKin = TRUE, fileMVP = fileMVP, out = tempfile("outfile"))
+}
 }
 \author{
 Haohao Zhang and Dong Yin
