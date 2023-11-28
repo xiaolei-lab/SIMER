@@ -595,6 +595,10 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   pedx <- pedx[pedx[, 1] != "0", ]
   pedError <- pedx[duplicated(pedx[, 1]), ]
   pedx <- pedx[!duplicated(pedx[, 1]), ]
+
+  # keep original sires and dams
+  pedx <- cbind(pedx, pedx[, 2:3])
+  colnames(pedx) <- c("index", "sirOrigin", "damOrigin", "sirFound", "damFound")
   
   if (length(fileMVP) == 0) { fileMVP <- NULL }
   if (!is.null(fileMVP)) {
@@ -615,48 +619,48 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   
   if (hasGeno) {
     pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
-    colnames(pedx)[1:3] <- pedName
-    pedError <- rbind(pedError, pedx[pedx$sirState=="NotFound" | pedx$damState=="NotFound", 1:3])
+    pedError <- rbind(pedError, pedx[pedx$sirState=="NotFound" | pedx$damState=="NotFound", c(1, 4:5)])
   } else {
-    pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 2] | pedx[, 1] == pedx[, 3], ])
-    pedx[pedx[, 1] == pedx[, 2], 2] <- "0"
-    pedx[pedx[, 1] == pedx[, 3], 3] <- "0"
+    pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 4] | pedx[, 1] == pedx[, 5], ])
+    pedx[pedx[, 1] == pedx[, 4], 4] <- "0"
+    pedx[pedx[, 1] == pedx[, 5], 5] <- "0"
   }
 
   # print("Making needed files")
-  pedx1 <- pedx[pedx[, 2] == "0" & pedx[, 3] == "0", ]
-  pedx2 <- pedx[!(pedx[, 2] == "0" & pedx[, 3] == "0"), ]
+  pedx1 <- pedx[pedx[, 4] == "0" & pedx[, 5] == "0", ]
+  pedx2 <- pedx[!(pedx[, 4] == "0" & pedx[, 5] == "0"), ]
   go <- TRUE
   while (go) {
     Cpedx <- pedx1[, 1]
-    index <- (pedx2[, 2] %in% Cpedx) & (pedx2[, 3] %in% Cpedx)
+    index <- (pedx2[, 4] %in% Cpedx) & (pedx2[, 5] %in% Cpedx)
     if (sum(index) == 0) {
-      index.sir <- pedx2[, 2] %in% Cpedx
-      index.dam <- pedx2[, 3] %in% Cpedx
+      index.sir <- pedx2[, 4] %in% Cpedx
+      index.dam <- pedx2[, 5] %in% Cpedx
       if (sum(index.sir) != 0 | sum(index.dam) != 0) {
         # only one parent can be found
-        pedError <- rbind(pedError, pedx2[index.sir | index.dam, 1:3])
-        pedx2[index.sir, 3] <- "0"
-        pedx2[index.dam, 2] <- "0"
+        pedError <- rbind(pedError, pedx2[index.sir | index.dam, c(1, 4:5)])
+        pedx2[index.sir, 5] <- "0"
+        pedx2[index.dam, 4] <- "0"
         if (hasGeno) {
-          pedx2[index.sir, 5] <- "NotFound"
-          pedx2[index.dam, 4] <- "NotFound"
+          pedx2$damState[index.sir] <- "NotFound"
+          pedx2$sirState[index.dam] <- "NotFound"
         }
         pedx1 <- rbind(pedx1, pedx2[index.sir | index.dam, ])
         pedx2 <- pedx2[!(index.sir | index.dam), ]
       } else {
         # no parent can be found
-        pedx02 <- setdiff(pedx2[,c(2:3)], pedx2[, 1])
+        pedx02 <- setdiff(pedx2[, c(4:5)], pedx2[, 1])
         pedx02 <- pedx02[pedx02 != "0"]
         if(length(pedx02) > 0){
-          pedx02 <- cbind(pedx02, "0", "0")
+          pedx02 <- cbind(pedx02, "0", "0", "0", "0")
           colnames(pedx02) <- colnames(pedx2)
           pedx1 <- rbind(pedx1, pedx02)
         } else {
-          pedError <- rbind(pedError, pedx2[, 1:3])
-          pedx2[, 2:3] <- "0"
+          pedError <- rbind(pedError, pedx2[, c(1, 4:5)])
+          pedx2[, 4:5] <- "0"
           if (hasGeno) {
-            pedx2[, 4:5] <- "NotFound"
+            pedx2$sirState <- "NotFound"
+            pedx2$damState <- "NotFound"
           }
           pedx1 <- rbind(pedx1, pedx2)
           pedx2 <- pedx2[-(1:nrow(pedx2)), ]
@@ -670,6 +674,8 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     if (nrow(pedx2) == 0) { go <- FALSE }
   }
   ped <- pedx1
+  pedout <- ped[, c(1, 4:5)]
+  colnames(pedout) <- pedName
   rm(pedx1); rm(pedx2); gc()
   
   if (is.null(out)) {
@@ -677,7 +683,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   }
   write.table(ped, paste0(out, ".ped.report"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   write.table(pedError, paste0(out, ".ped.error"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
-  write.table(ped[, 1:3], paste0(out, ".ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
+  write.table(pedout, paste0(out, ".ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   
   t2 <- as.numeric(Sys.time())
   logging.log(" Preparation for PEDIGREE data is done within", format_time(t2 - t1), "\n\n", verbose = verbose)

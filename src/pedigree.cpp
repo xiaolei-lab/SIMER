@@ -71,7 +71,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   omp_setup(threads);
   
   // ******* 01 prepare data for checking rawPed *******
-  StringVector kidID = rawPed[0], sirID = rawPed[1], damID = rawPed[2];
+  StringVector kidID = rawPed[0], sirOriID = rawPed[1], damOriID = rawPed[2], sirID = rawPed[3], damID = rawPed[4];
   size_t n = kidID.size(), m = pMat->nrow();
   LogicalVector kidEqSir = (kidID == sirID);
   LogicalVector kidEqDam = (kidID == damID);
@@ -226,15 +226,19 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
   
-  DataFrame parConflict = DataFrame::create(Named("kid") = kidID,
-                                                _["sir"] = sirID,
-                                                _["dam"] = damID,
-                                                _["sirState"] = sirState,
-                                                _["damState"] = damState,
-                                                _["sirNumConfs"] = sirNumConfs,
-                                                _["damNumConfs"] = damNumConfs,
-                                                _["sirRatioConfs"] = sirNumConfs * 100 / m,
-                                                _["damRatioConfs"] = damNumConfs * 100 / m);
+  DataFrame parConflict = DataFrame::create(
+    Named("kid")        = kidID,
+    _["sirOrigin"]      = sirOriID,
+    _["damOrigin"]      = damOriID,
+    _["sirFound"]       = sirID,
+    _["damFound"]       = damID,
+    _["sirState"]       = sirState,
+    _["damState"]       = damState,
+    _["sirNumConfs"]    = sirNumConfs,
+    _["damNumConfs"]    = damNumConfs,
+    _["sirRatioConfs"]  = sirNumConfs * 100 / m,
+    _["damRatioConfs"]  = damNumConfs * 100 / m
+  );
   return parConflict;
 }
 
