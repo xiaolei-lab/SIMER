@@ -1,7 +1,7 @@
 Package: simer
 Title: Data Simulation for Life Science and Breeding
-Version: 0.9.0.3
-Date: 2023-10-10
+Version: 0.9.0.4
+Date: 2023-11-27
 Authors@R: c( person("Dong", "Yin", role = "aut"),
               person("Xuanning", "Zhang", role = "aut"), 
               person("Lilin", "Yin", role = "aut"), 
