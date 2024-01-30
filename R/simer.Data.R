@@ -977,7 +977,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
     } else {
       planPheN <- planPhe[i]
     }
-    for (j in 1:nTrait) {
+    for (j in 1:length(planPhe)) {
       traits <- unlist(planPheN[[j]]$job_traits[[1]]$traits)
       covariates <- unlist(planPheN[[j]]$job_traits[[1]]$covariates)
       fixedEffects <- unlist(planPheN[[j]]$job_traits[[1]]$fixed_effects)
@@ -1020,14 +1020,17 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
         }
         
         jsonListN$breeding_plan <- list(planPheN[[j]])
-        # select random effect which ratio less than threshold
+        # select random effect which ratio more than threshold
         gebv <- simer.Data.cHIBLUP(jsonList = jsonListN, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
-        vc <- gebv[[1]]$varList[[1]]
+        out <- planPheN[[j]]$job_name
+        varFile <- paste0(out, ".vars")
+        vars <- read.table(varFile, header = TRUE)
+        vc <- vars$h2
         randIdx <- 1:length(randomEffects)
         if (unlist(planPhe[[i]]$repeated_records)) {
           randIdx <- randIdx + 1
         }
-        randomEffectRatio <- vc[randIdx] / sum(vc)
+        randomEffectRatio <- vc[randIdx]
         randomEffects <- randomEffects[randomEffectRatio > randomRatio]
         if (length(covariates) == 1) { covariates <- I(covariates)  }
         if (length(fixedEffects) == 1) { fixedEffects <- I(fixedEffects)  }
@@ -1035,26 +1038,29 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
         planPhe[[i]]$job_traits[[j]]$covariates <- covariates
         planPhe[[i]]$job_traits[[j]]$fixed_effects <- fixedEffects
         planPhe[[i]]$job_traits[[j]]$random_effects <- randomEffects
+        file.remove(paste0(out, c(".log", ".vars", ".anova", ".beta", ".rand")))
+
+        envFormula <- c(
+          paste0(planPhe[[i]]$job_traits[[j]]$fixed_effects, "(F)"), 
+          paste0(planPhe[[i]]$job_traits[[j]]$covariates, "(C)"), 
+          paste0(planPhe[[i]]$job_traits[[j]]$random_effects, "(R)"))
+        envFormula <- envFormula[nchar(envFormula) > 3]
+        logging.log(" *********************************************************\n",
+                    "Model optimized by BIC and random variance ratio is:\n", 
+                      paste(c(paste0(traits, "~1"), envFormula), collapse = '+'), "\n",
+                    "*********************************************************\n", verbose = verbose)
       }
-      
-      planPhe[[i]]$vc_vars <- paste0(planPhe[[i]]$job_name, ".vars")
-      if (unlist(planPhe[[i]]$multi_trait)) {
-        planPhe[[i]]$vc_covars <- paste0(planPhe[[i]]$job_name, ".covars")
-      }
-      
-      envFormula <- c(
-        paste0(planPhe[[i]]$job_traits[[j]]$fixed_effects, "(F)"), 
-        paste0(planPhe[[i]]$job_traits[[j]]$covariates, "(C)"), 
-        paste0(planPhe[[i]]$job_traits[[j]]$random_effects, "(R)"))
-      envFormula <- envFormula[nchar(envFormula) > 3]
-      logging.log(" *********************************************************\n",
-                  "Model optimized by BIC and random variance ratio is:\n", 
-                    paste(c(paste0(traits, "~1"), envFormula), collapse = '+'), "\n",
-                  "*********************************************************\n", verbose = verbose)
+    }
+
+    planPhe[[i]]$vc_vars <- paste0(planPhe[[i]]$job_name, ".vars")
+    if (unlist(planPhe[[i]]$multi_trait)) {
+      planPhe[[i]]$vc_covars <- paste0(planPhe[[i]]$job_name, ".covars")
     }
   }
   
   jsonList$breeding_plan <- planPhe
+  gebv <- simer.Data.cHIBLUP(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
+
   t2 <- as.numeric(Sys.time())
   logging.log(" Model optimization is Done within", format_time(t2 - t1), "\n", verbose = verbose)
   return(jsonList)
@@ -1304,60 +1310,57 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   BVWeight <- as.numeric(str1[strIsNA - 1])
   names(BVWeight) <- str1[strIsNA]
   
-  covPList <- NULL
-  covAList <- NULL
   pheNames <- NULL
-  usePhes <- NULL
   for (i in 1:length(planPhe)) {
-    filePhe <- unlist(planPhe[[i]]$sample_info)
-    pheno <- read.table(filePhe, header = TRUE)
-    if (is.null(pheno$gen)) {
-      pheno$gen <- 1
-    }
-    pheno <- pheno[pheno$gen == max(pheno$gen), ]
     pheName <- sapply(planPhe[[i]]$job_traits, function(x) {
       return(unlist(x$traits))
     })
     pheNames <- c(pheNames, pheName)
-    if (!all(pheName %in% names(BVWeight))) {
-      stop(pheName[!(pheName %in% names(BVWeight))], " are not in the 'BVIndex'!")
-    }
-    if (unlist(planPhe[[i]]$repeated_records)) {
-      simer.mean <- function(x) { return(mean(x, na.rm = TRUE)) }
-      usePhe <- sapply(pheName, function(name) {
-        return(tapply(pheno[, name], as.factor(pheno[, 1]), FUN = simer.mean))
-      })
-      usePhe <- data.frame(rownames(usePhe), usePhe)
-      names(usePhe)[1] <- names(pheno)[1]
-    } else {
-      usePhe <- pheno[, c(names(pheno)[1], pheName), drop = FALSE]
-    }
-    if (is.null(usePhes)) {
-      usePhes <- usePhe
-    } else {
-      usePhes <- merge(x = usePhes, y = usePhe, by = 1, all = TRUE)
-    }
-    usePhe <- usePhe[, -1, drop = FALSE]
-    covP <- var(usePhe, na.rm = TRUE)
-    covPList[[i]] <- covP
   }
-  
-  usePhes <- usePhes[, -1]
-  usePhes[is.na(usePhes)] <- 0
-  
+
+  corAList <- NULL
+  useEBV <- NULL
   if (auto_optim) {
-    gebvs <- simer.Data.cHIBLUP(jsonList = jsonList, hiblupPath = hiblupPath, ncpus = ncpus, verbose = verbose)
-    
     for (i in 1:length(planPhe)) {
+      traits <- sapply(planPhe[[i]]$job_traits, function(x) return(unlist(x$trait)))
+      out <- planPhe[[i]]$job_name
+      # estimated breeding values
+      randList <- lapply(traits, function(trait) {
+        if (unlist(planPhe[[i]]$multi_trait)) {
+          randFile <- paste0(out, ".", trait, ".rand")
+        } else {
+          randFile <- paste0(out, ".rand")
+        }
+        rand <- read.table(randFile, header = TRUE)
+        return(rand[, ncol(rand) - 1])
+      })
+      names(randList) <- traits
+      useEBV[[i]] <-  randList
+      # estimated genetic correlation
       if (unlist(planPhe[[i]]$multi_trait)) {
-        covAList[[i]] <- gebvs[[i]]$covA
+        covarFile <- paste0(out, ".covars")
+        covars <- read.table(covarFile, header = TRUE)
+        corA <- matrix(0, length(traits), length(traits))
+        for (j in 1:length(traits)) {
+          for (k in 1:j) {
+            if (j == k) {
+              corA[j, k] <- 1
+            } else {
+              corA[j, k] <- corA[k, j] <- covars[j+k-2, 4]
+            }
+          }
+        }
+        dimnames(corA) <- list(paste0(" ", traits), paste0(" ", traits))
       } else {
-        covAList[[i]] <- gebvs[[i]]$varList[[1]][1]
+        corA <- 1
+        names(corA) <- traits
       }
+      corAList[[i]] <- corA
     }
     
-    P <- as.matrix(Matrix::bdiag(covPList))
-    A <- as.matrix(Matrix::bdiag(covAList))
+    useEBV <- as.data.frame(useEBV)
+    P <- cor(useEBV, use = "pairwise.complete.obs")
+    A <- as.matrix(Matrix::bdiag(corAList))
     iP <- try(solve(P), silent = TRUE)
     if (inherits(iP, "try-error")) {
       iP <- MASS::ginv(P)
@@ -1386,7 +1389,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     if (any(sort(pheNames) != sort(names(b)))) {
       stop("Trait names should be consistent between planPhe and selection_index!")
     }
-    b <- b[match(pheNames, b)]
+    b <- b[match(pheNames, names(b))]
   } 
   
   signSet <- c(" - ", " + ", " + ")
@@ -1396,7 +1399,8 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   selIndex <- paste0("100", selIndex)
   
   # genetic progress
-  scores <- sort(as.matrix(usePhes) %*% b, decreasing = TRUE)
+  scores <- 100 + scale(scale(as.matrix(useEBV)) %*% b) * 25
+  scores <- sort(scores, decreasing = TRUE)
   geneticProgress <- round(mean(scores[1:(0.1*length(scores))]) - mean(scores), digits = 2)
   
   logging.log(" *********************************************************\n",
