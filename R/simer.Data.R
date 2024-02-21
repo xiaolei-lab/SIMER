@@ -621,7 +621,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
     pedError <- rbind(pedError, pedx[pedx$sirState=="NotFound" | pedx$damState=="NotFound", c(1, 4:5)])
   } else {
-    pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 4] | pedx[, 1] == pedx[, 5], ])
+    pedError <- rbind(pedError, pedx[pedx[, 1] == pedx[, 4] | pedx[, 1] == pedx[, 5], c(1, 4:5)])
     pedx[pedx[, 1] == pedx[, 4], 4] <- "0"
     pedx[pedx[, 1] == pedx[, 5], 5] <- "0"
   }
