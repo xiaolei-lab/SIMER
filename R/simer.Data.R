@@ -1392,6 +1392,8 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     b <- b[match(pheNames, names(b))]
   } 
   
+  b <- b / (10 ^ (nchar(as.character(max(abs(round(b))))) - 1))
+
   signSet <- c(" - ", " + ", " + ")
   signUse <- signSet[sign(b) + 2]
   selIndex <- paste(abs(b), names(b), sep = " * ")
