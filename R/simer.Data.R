@@ -977,7 +977,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
     } else {
       planPheN <- planPhe[i]
     }
-    for (j in 1:length(planPhe)) {
+    for (j in 1:length(planPheN)) {
       traits <- unlist(planPheN[[j]]$job_traits[[1]]$traits)
       covariates <- unlist(planPheN[[j]]$job_traits[[1]]$covariates)
       fixedEffects <- unlist(planPheN[[j]]$job_traits[[1]]$fixed_effects)
