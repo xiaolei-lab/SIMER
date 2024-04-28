@@ -1160,7 +1160,11 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
         x$random_effects <- x$random_effects[x$random_effects %in% names(finalPhe)]
         env <- paste0(match(x$random_effects, names(pheno)), collapse=',')
         if (unlist(planPhe[[i]]$repeated_records)) {
-          env <- paste0(c(1, env), collapse = ',')
+          if (env == "") {
+            env <- "1"
+          } else {
+            env <- paste0(c(1, env), collapse = ',')
+          }
         }
         if (env == "") return(0)
         return(env)
@@ -1318,62 +1322,27 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     pheNames <- c(pheNames, pheName)
   }
 
-  corAList <- NULL
   useEBV <- NULL
-  if (auto_optim) {
-    for (i in 1:length(planPhe)) {
-      traits <- sapply(planPhe[[i]]$job_traits, function(x) return(unlist(x$trait)))
-      out <- planPhe[[i]]$job_name
-      # estimated breeding values
-      randList <- lapply(traits, function(trait) {
-        if (unlist(planPhe[[i]]$multi_trait)) {
-          randFile <- paste0(out, ".", trait, ".rand")
-        } else {
-          randFile <- paste0(out, ".rand")
-        }
-        rand <- read.table(randFile, header = TRUE)
-        return(rand[, ncol(rand) - 1])
-      })
-      names(randList) <- traits
-      useEBV[[i]] <-  randList
-      # estimated genetic correlation
+  for (i in 1:length(planPhe)) {
+    traits <- sapply(planPhe[[i]]$job_traits, function(x) return(unlist(x$trait)))
+    out <- planPhe[[i]]$job_name
+    # estimated breeding values
+    randList <- lapply(traits, function(trait) {
       if (unlist(planPhe[[i]]$multi_trait)) {
-        covarFile <- paste0(out, ".covars")
-        covars <- read.table(covarFile, header = TRUE)
-        corA <- matrix(0, length(traits), length(traits))
-        for (j in 1:length(traits)) {
-          for (k in 1:j) {
-            if (j == k) {
-              corA[j, k] <- 1
-            } else {
-              corA[j, k] <- corA[k, j] <- covars[j+k-2, 4]
-            }
-          }
-        }
-        dimnames(corA) <- list(paste0(" ", traits), paste0(" ", traits))
+        randFile <- paste0(out, ".", trait, ".rand")
       } else {
-        corA <- 1
-        names(corA) <- traits
+        randFile <- paste0(out, ".rand")
       }
-      corAList[[i]] <- corA
-    }
-    
-    useEBV <- as.data.frame(useEBV)
-    P <- cor(useEBV, use = "pairwise.complete.obs")
-    A <- as.matrix(Matrix::bdiag(corAList))
-    iP <- try(solve(P), silent = TRUE)
-    if (inherits(iP, "try-error")) {
-      iP <- MASS::ginv(P)
-    }
-    
-    # selection index
-    if (any(sort(pheNames) != sort(names(BVWeight)))) {
-      stop("Trait names should be consistent between planPhe and BVWeight!")
-    }
-    BVWeight <- BVWeight[match(pheNames, names(BVWeight))]
-    b <- iP %*% A %*% BVWeight
-    b <- round(as.vector(b), digits = 2)
-    names(b) <- pheNames
+      rand <- read.table(randFile, header = TRUE)
+      return(rand[!duplicated(rand[, 1]), ncol(rand) - 1])
+    })
+    names(randList) <- traits
+    useEBV[[i]] <-  randList
+  }
+  useEBV <- as.matrix(as.data.frame(useEBV))
+
+  if (auto_optim) {
+    b <- BVWeight
   
   } else {
     if (is.null(unlist(jsonList$selection_index))) {
@@ -1392,7 +1361,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
     b <- b[match(pheNames, names(b))]
   } 
   
-  b <- b / (10 ^ (nchar(as.character(max(abs(round(b))))) - 1))
+  # b <- b / (10 ^ (nchar(as.character(max(abs(round(b))))) - 1))
 
   signSet <- c(" - ", " + ", " + ")
   signUse <- signSet[sign(b) + 2]
@@ -1401,7 +1370,7 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   selIndex <- paste0("100", selIndex)
   
   # genetic progress
-  scores <- 100 + scale(scale(as.matrix(useEBV)) %*% b) * 25
+  scores <- 100 + scale(scale(useEBV) %*% b) * 25
   scores <- sort(scores, decreasing = TRUE)
   geneticProgress <- round(mean(scores[1:(0.1*length(scores))]) - mean(scores), digits = 2)
   
