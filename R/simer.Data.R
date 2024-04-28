@@ -1314,7 +1314,6 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
   BVWeight <- as.numeric(str1[strIsNA - 1])
   names(BVWeight) <- str1[strIsNA]
   
-  covPList <- NULL
   covAList <- NULL
   pheNames <- NULL
   usePhes <- NULL
@@ -1348,11 +1347,10 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
       usePhes <- merge(x = usePhes, y = usePhe, by = names(pheno)[1], all = TRUE)
     }
     usePhe <- usePhe[, -1, drop = FALSE]
-    covP <- var(usePhe, na.rm = TRUE)
-    covPList[[i]] <- covP
   }
   
   usePhes <- usePhes[, -1]
+  P <- as.matrix(var(usePhes, na.rm = TRUE))
   usePhes[is.na(usePhes)] <- 0
   
   if (auto_optim) {
@@ -1366,7 +1364,6 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
       }
     }
     
-    P <- as.matrix(Matrix::bdiag(covPList))
     A <- as.matrix(Matrix::bdiag(covAList))
     iP <- try(solve(P), silent = TRUE)
     if (inherits(iP, "try-error")) {
