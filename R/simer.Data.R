@@ -679,7 +679,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   rm(pedx1); rm(pedx2); gc()
   
   if (is.null(out)) {
-    out <- unlist(strsplit(filePed, split = '.', fixed = TRUE))[1]
+    out <- paste0(unlist(strsplit(filePed, split = '.', fixed = TRUE))[1], ".qc")
   }
   write.table(ped, paste0(out, ".ped.report"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   write.table(pedError, paste0(out, ".ped.error"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
@@ -758,6 +758,9 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
       }
       hasRep <- FALSE
       pheList <- pheno[, pheCols]
+      if (is.null(out)) {
+        out <- paste0(unlist(strsplit(filePhe, split = '.', fixed = TRUE))[1], ".qc")
+      }
       
     } else {
       # logging.log(" JOB NAME:", planPhe$job_name, "\n", verbose = verbose)
@@ -868,6 +871,10 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
       if (!hasRep) {
         pheList <- pheList[!duplicated(pheList[, 1]), ]
       }
+
+      if (is.null(out)) {
+        out <- planPhe$job_name
+      }
       
     }
     
@@ -892,9 +899,6 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
       colnames(finalPhe)[traits] <- paste0('t', traits - 1)
     }
     
-    if (is.null(out)) {
-      out <- unlist(strsplit(filePhe, split = '.', fixed = TRUE))[1]
-    }
     if (hasRep) {
       pheFileName <- paste0(out, ".repeat.phe")
     } else {
@@ -1518,7 +1522,7 @@ simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC 
 
   ## step 1. data quality control
   if (dataQC) {
-    jsonList <- simer.Data(jsonList = jsonList, out = out, ncpus = ncpus, verbose = verbose)
+    jsonList <- simer.Data(jsonList = jsonList, out = NULL, ncpus = ncpus, verbose = verbose)
   }
   newJson <- jsonlite::toJSON(jsonList, pretty = TRUE, auto_unbox = TRUE)
   if (verbose) {
