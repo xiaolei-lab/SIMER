@@ -432,16 +432,18 @@ cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.var = 1, qtn.prob = 0.5
   qtn.eff <- NULL
   for (nq in 1:length(qtn.num)) {
     if (qtn.dist[nq] == "norm") {
-      qtn.eff <- c(qtn.eff, rnorm(qtn.num[nq], 0, sqrt(qtn.var[nq])))
+      qtn.eff.new <- rnorm(qtn.num[nq], 0, sqrt(qtn.var[nq]))
+      qtn.eff.new <- sqrt(qtn.var[nq]) / sd(qtn.eff.new) * qtn.eff.new
     } else if (qtn.dist[nq] == "geom") {
-      qtn.eff <- c(qtn.eff, rgeom(qtn.num[nq], qtn.prob[nq]))
+      qtn.eff.new <- rgeom(qtn.num[nq], qtn.prob[nq])
     } else if (qtn.dist[nq] == "gamma") {
-      qtn.eff <- c(qtn.eff, rgamma(qtn.num[nq], qtn.shape[nq], qtn.scale[nq]))
+      qtn.eff.new <- rgamma(qtn.num[nq], qtn.shape[nq], qtn.scale[nq])
     } else if (qtn.dist[nq] == "beta") {
-      qtn.eff <- c(qtn.eff, rbeta(qtn.num[nq], qtn.shape1[nq], qtn.shape2[nq], qtn.ncp[nq]))
+      qtn.eff.new <- rbeta(qtn.num[nq], qtn.shape1[nq], qtn.shape2[nq], qtn.ncp[nq])
     } else {
       stop("Please input a right QTN effect!")
     }
+    qtn.eff <- c(qtn.eff, qtn.eff.new)
   }
   
   return(qtn.eff)
