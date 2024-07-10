@@ -355,7 +355,7 @@ annotation <- function(SP, verbose = TRUE) {
       if (is.null(pop.map$QTNProb)) {
         qtn.trn[[i]] <- sort(sample(1:nrow(pop.map), sum(qtn.num[[i]])))
       } else {
-        qtn.trn[[i]] <- sort(sample(1:nrow(pop.map), sum(qtn.num[[i]])), prob = pop.map$QTNProb)
+        qtn.trn[[i]] <- sort(sample(1:nrow(pop.map), sum(qtn.num[[i]]), prob = pop.map$QTNProb))
       }
       logging.log(" Number of selected markers of trait", i, ":", qtn.num[[i]], "\n", verbose = verbose)
     }
