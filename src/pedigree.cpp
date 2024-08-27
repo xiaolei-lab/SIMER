@@ -71,10 +71,8 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   omp_setup(threads);
   
   // ******* 01 prepare data for checking rawPed *******
-  StringVector kidID = rawPed[0], sirOriID = rawPed[1], damOriID = rawPed[2], sirID = rawPed[3], damID = rawPed[4];
+  StringVector kidID = rawPed[0], sirOriID = rawPed[1], damOriID = rawPed[2], sirID = rawPed[3], damID = rawPed[4], sirState = rawPed[5], damState = rawPed[6];
   size_t n = kidID.size(), m = pMat->nrow();
-  LogicalVector kidEqSir = (kidID == sirID);
-  LogicalVector kidEqDam = (kidID == damID);
 
   StringVector fullSirID, fullDamID;
   copy(sirID.begin(), sirID.end(), back_inserter(fullSirID));
@@ -106,16 +104,11 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   damOrder = match(damID, genoID); damOrder = damOrder - 1;
   LogicalVector naKid, naSir, naDam;
   naKid = is_na(kidOrder); naSir = is_na(sirOrder); naDam = is_na(damOrder);
-  StringVector sirState(n), damState(n);
   NumericVector sirNumConfs(n), damNumConfs(n);
   
   int exclMax = exclThres * m, assignMax = assignThres * m;
-  
-  // ******* 02 check rawPed *******
-  sirState[naKid | naSir] = "NoGeno"; sirState[kidEqSir] = "NotFound"; 
-  damState[naKid | naDam] = "NoGeno"; damState[kidEqDam] = "NotFound"; 
-  
-  // calculate conflict of pedigree in the rawPed
+
+  // ******* 02 calculate conflict of pedigree in the rawPed *******
   arma::mat numConfs = calConf(pMat, threads, verbose);
   // arma::mat numConfs(pMat->ncol(), pMat->ncol(), fill::zeros);
   
@@ -125,20 +118,16 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
     if (!naSir[i]) {
       sirNumConfs[i] = numConfs(kidOrder[i], sirOrder[i]);
-      if (sirNumConfs[i] <= exclMax) {
-        sirState[i] = "Match";
-      } else {
-        sirState[i] = "NotFound";
+      if (sirNumConfs[i] > exclMax) {
+        sirState[i] = "NotFoundByGeno";
         sirID[i] = "0";
       }
     }
 
     if (!naDam[i]) {
       damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
-      if (damNumConfs[i] <= exclMax) {
-        damState[i] = "Match";
-      } else {
-        damState[i] = "NotFound";
+      if (damNumConfs[i] > exclMax) {
+        damState[i] = "NotFoundByGeno";
         damID[i] = "0";
       }
     }
@@ -165,7 +154,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   // #pragma omp parallel for schedule(dynamic) private(i, j)
   for (i = 0; i < n; i++) {
 
-    if ((sirState[i] != "NotFound") && (damState[i] != "NotFound")) { continue; }
+    if ((sirState[i] != "NotFoundByGeno") && (damState[i] != "NotFoundByGeno")) { continue; }
     
     candKid.fill(kidID[i]);
     kidFlag = (sirID == candKid | damID == candKid) & !naKid;
@@ -192,12 +181,12 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       candPar1[0] = genoID[candParUse[rowPos]];
       candPar2[0] = genoID[candParUse[colPos]];
 
-      if ((sirState[i] == "Match") || (sirState[i] == "Found")) {
+      if ((sirState[i] == "Match") || (sirState[i] == "FoundByGeno")) {
         if (candPar1[0] != sirID[i]) {
           continue;
         } 
       }
-      if ((damState[i] == "Match") || (damState[i] == "Found")) {
+      if ((damState[i] == "Match") || (damState[i] == "FoundByGeno")) {
         if (candPar2[0] != damID[i]) {
           continue;
         } 
@@ -205,17 +194,17 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
       
       if (find(fullSirID.begin(), fullSirID.end(), candPar1[0]) != fullSirID.end()) {
         if (find(fullDamID.begin(), fullDamID.end(), candPar2[0]) != fullDamID.end()) {
-          if (sirState[i] == "NotFound") {
+          if (sirState[i] == "NotFoundByGeno") {
             sirID[i] = candPar1[0];
-            sirState[i] = "Found";
+            sirState[i] = "FoundByGeno";
             sirNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
           }
-          if (damState[i] == "NotFound") {
+          if (damState[i] == "NotFoundByGeno") {
             damID[i] = candPar2[0];
-            damState[i] = "Found";
+            damState[i] = "FoundByGeno";
             damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
           }
-          if (((sirState[i] == "Match") || (sirState[i] == "Found")) && ((damState[i] == "Match") || (damState[i] == "Found"))) {
+          if (((sirState[i] == "Match") || (sirState[i] == "FoundByGeno")) && ((damState[i] == "Match") || (damState[i] == "FoundByGeno"))) {
             break;
           }
         }
