@@ -97,7 +97,6 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   fullDamID = sort_unique(fullDamID); fullDamID.erase(0);
   
   // kids should not be same as parents
-  sirID[kidEqSir] = "0"; damID[kidEqDam] = "0";
   NumericVector kidOrder, sirOrder, damOrder;
   kidOrder = match(kidID, genoID); kidOrder = kidOrder - 1;
   sirOrder = match(sirID, genoID); sirOrder = sirOrder - 1;
