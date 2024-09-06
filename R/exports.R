@@ -7,9 +7,6 @@ NULL
 #' @import jsonlite
 NULL
 
-#' @import igraph
-NULL
-
 #' @importFrom utils write.table read.delim read.table str packageVersion
 NULL
 

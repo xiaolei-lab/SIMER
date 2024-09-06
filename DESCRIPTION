@@ -22,10 +22,10 @@ Description: Data simulator including genotype, phenotype, pedigree,
 License: Apache License 2.0
 URL: https://github.com/xiaolei-lab/SIMER
 BugReports: https://github.com/xiaolei-lab/SIMER/issues
-Imports: utils, stats, Matrix, methods, MASS, Rcpp, jsonlite, igraph
+Imports: utils, stats, Matrix, methods, MASS, Rcpp, jsonlite
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress, BH, bigmemory
 Depends: R (>= 3.5.0), bigmemory
-Suggests: knitr
+Suggests: knitr, igraph
 RoxygenNote: 7.2.3
 Encoding: UTF-8
 NeedsCompilation: yes

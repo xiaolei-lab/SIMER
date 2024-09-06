@@ -476,6 +476,10 @@ cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.var = 1, qtn.prob = 0.5
 #' head(GxG.net)
 GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
   
+  if (!requireNamespace("igraph", quietly = TRUE)) {
+    stopf("To make GxG network, it requires 'igraph' package which cannot be found. Please install 'igraph' using 'install.packages('igraph')'.")
+  }
+  
   if (is.null(pop.map)) {
     stop("'pop.map' is necessary!")
   }
@@ -492,10 +496,10 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
   SNP <- pop.map[, 1]
   paths <- rep(list(NULL), max.lev)
   nQTNs <- length(qtn.pos)
-  g <- ba.game(n = nQTNs, m = 2, directed = FALSE)
+  g <- igraph::ba.game(n = nQTNs, m = 2, directed = FALSE)
   for (i in 1:(nQTNs-1)) {
     for (j in (i+1):nQTNs) {
-      ps <- all_simple_paths(g, from = i, to = j)
+      ps <- igraph::all_simple_paths(g, from = i, to = j)
       for (k in 1:length(ps)) {
         if (length(ps[[k]]) <= max.lev) {
           ps_str <- paste(SNP[qtn.pos[ps[[k]]]], collapse = "-")
