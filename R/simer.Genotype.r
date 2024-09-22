@@ -477,7 +477,7 @@ cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.var = 1, qtn.prob = 0.5
 GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
   
   if (!requireNamespace("igraph", quietly = TRUE)) {
-    stopf("To make GxG network, it requires 'igraph' package which cannot be found. Please install 'igraph' using 'install.packages('igraph')'.")
+    stop("To make GxG network, it requires 'igraph' package which cannot be found. Please install 'igraph' using 'install.packages('igraph')'.")
   }
   
   if (is.null(pop.map)) {
