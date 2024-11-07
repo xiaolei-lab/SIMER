@@ -448,6 +448,7 @@ cal.eff <- function(qtn.num = 10, qtn.dist = "norm", qtn.var = 1, qtn.prob = 0.5
       stop("Please input a right QTN effect!")
     }
     qtn.eff <- c(qtn.eff, qtn.eff.new)
+    qtn.eff <- qtn.eff[sample(length(qtn))]
   }
   
   return(qtn.eff)
