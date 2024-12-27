@@ -17,6 +17,7 @@
 
 #if defined(_OPENMP)
 #include <omp.h>
+// [[Rcpp::plugins(openmp)]]
 #endif
 
 #include <Rcpp.h>
