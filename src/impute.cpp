@@ -1,12 +1,10 @@
-#include "simer_omp.h"
+#include "simer.h"
 #include <boost/algorithm/string.hpp>
-#include <bigmemory/BigMatrix.h>
-#include <bigmemory/MatrixAccessor.hpp>
 
-// [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(bigmemory, BH)]]
 using namespace std;
 using namespace Rcpp;
+
+// [[Rcpp::depends(bigmemory, BH)]]
 
 template <typename T>
 bool hasNA(XPtr<BigMatrix> pMat, double NA_C, const int threads=0) {

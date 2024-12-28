@@ -1,17 +1,12 @@
-#include <RcppArmadillo.h>
-#include "simer_omp.h"
-#include <bigmemory/BigMatrix.h>
-#include <bigmemory/MatrixAccessor.hpp>
-#include <progress.hpp>
-
-// [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::depends(bigmemory, BH)]]
-// [[Rcpp::depends(RcppProgress)]]
+#include "simer.h"
 
 using namespace std;
 using namespace Rcpp;
 using namespace arma;
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(bigmemory, BH)]]
+// [[Rcpp::depends(RcppProgress)]]
 
 template<typename T>
 NumericVector FilterMind(XPtr<BigMatrix> pMat, double NA_C, int threads=0) {

@@ -411,7 +411,7 @@ paste_label <- function(line, label, side = "right", margin = 2) {
 #' Format the time.
 #' 
 #' Build date: Oct 22, 2018
-#' Last update: Apr 30, 2022
+#' Last update: Dec 28, 2024
 #' 
 #' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 #' 
@@ -427,8 +427,10 @@ paste_label <- function(line, label, side = "right", margin = 2) {
 #' format_time(x = 7200)
 format_time <- function(x) {
   h <- x %/% 3600
-  m <- (x %% 3600) %/% 60
-  s <- ((x %% 3600) %% 60)
+  x <- x %% 3600
+  m <- x %/% 60
+  x <- x %% 60
+  s <- x
   index <- which(c(h, m, s) != 0)
   num <- c(h, m, s)[index]
   num <- round(num, 0)

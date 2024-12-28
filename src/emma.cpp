@@ -1,15 +1,11 @@
-#include <RcppArmadillo.h>
-#include <bigmemory/BigMatrix.h>
-#include <bigmemory/MatrixAccessor.hpp>
-#include "simer_omp.h"
-#include "MinimalProgressBar.h"
+#include "simer.h"
 
-// [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::depends(bigmemory, BH)]]
 using namespace std;
 using namespace Rcpp;
 using namespace arma;
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(bigmemory, BH)]]
 
 template <typename T>
 arma::vec BigRowMean(XPtr<BigMatrix> pMat, int threads = 0){

@@ -17,7 +17,7 @@ Format the time.
 }
 \details{
 Build date: Oct 22, 2018
-Last update: Apr 30, 2022
+Last update: Dec 28, 2024
 }
 \examples{
 format_time(x = 7200)

@@ -26,7 +26,7 @@ Imports: utils, stats, Matrix, methods, MASS, Rcpp, jsonlite
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress, BH, bigmemory
 Depends: R (>= 3.5.0), bigmemory
 Suggests: knitr, igraph
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Encoding: UTF-8
 NeedsCompilation: yes
 Maintainer: Xiaolei Liu <xll198708@gmail.com>
