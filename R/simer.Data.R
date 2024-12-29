@@ -1574,7 +1574,7 @@ checkEnv <- function(data, envName, verbose = TRUE) {
 #' transforming MVP data to binary format.
 #' 
 #' Build date: Sep 12, 2018
-#' Last update: July 20, 2022
+#' Last update: Dec 28, 2024
 #'
 #' @author Haohao Zhang and Dong Yin
 #' 
@@ -1600,14 +1600,14 @@ checkEnv <- function(data, envName, verbose = TRUE) {
 #' # Data converting
 #' simer.Data.MVP2Bfile(bigmat, map, out=tempfile("outfile"))
 #' }
-simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threads = 10, verbose = TRUE) {
+simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threads = 1, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
   
-  logging.log(paste0("inds: ", ncol(bigmat), "\tmarkers:", nrow(bigmat), '\n'), verbose = verbose)
-  
+  if(nrow(map) != nrow(bigmat) && nrow(map) != ncol(bigmat))  stop("mismatched number of SNPs between genotype and map.")
+  mrk_bycol <- nrow(map) == ncol(bigmat)
   # write bed file
-  write_bfile(bigmat@address, out, threads = threads, verbose = verbose)
-  
+  write_bfile(bigmat@address, out, mrkbycol = mrk_bycol, threads = threads, verbose = verbose)
+
   # write fam
   #  1. Family ID ('FID')
   #  2. Within-family ID ('IID'; cannot be '0')
@@ -1615,25 +1615,25 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
   #  4. Within-family ID of mother ('0' if mother isn't in dataset)
   #  5. Sex code ('1' = male, '2' = female, '0' = unknown)
   #  6. Phenotype value ('1' = control, '2' = case, '-9'/'0'/non-numeric = missing data if case/control)
-  
+  n <- ifelse(mrk_bycol, nrow(bigmat), ncol(bigmat))
   if (is.null(pheno)) {
-    ind <- seq_len(ncol(bigmat))
-    sir <- rep(0, ncol(bigmat))
-    dam <- rep(0, ncol(bigmat))
-    sex <- rep(0, ncol(bigmat))
-    pheno <- rep(-9, ncol(bigmat))
+    ind <- seq_len(n)
+    sir <- rep(0, n)
+    dam <- rep(0, n)
+    sex <- rep(0, n)
+    pheno <- rep(-9, n)
     message("pheno is NULL, automatically named individuals.")
     
   } else if (ncol(pheno) == 1) {
     ind <- pheno[, 1]
-    sir <- rep(0, ncol(bigmat))
-    dam <- rep(0, ncol(bigmat))
-    sex <- rep(0, ncol(bigmat))
-    pheno <- rep(-9, ncol(bigmat))
+    sir <- rep(0, n)
+    dam <- rep(0, n)
+    sex <- rep(0, n)
+    pheno <- rep(-9, n)
     
   } else {
     if (ncol(pheno) > 2) { 
-      message("Only the first phenotype is written to the fam file, and the remaining phenotypes are ignored.")
+      message("Only the first phenotype is written to the fam file, and the remaining ", ncol(pheno) - 1, " phenotypes are ignored.")
     }
     ind <- pheno[, 1]
     sir <- pheno[, 2]
@@ -1655,7 +1655,7 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
   bim <- cbind(map[, 2], map[, 1], 0, map[, 3], map[, 4], map[, 5])
   write.table(bim, paste0(out, '.bim'), quote = FALSE, row.names = FALSE, col.names = FALSE, sep = '\t')
   t2 <- as.numeric(Sys.time())
-  logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n", verbose = verbose)
+  logging.log("Done within", format_time(t2 - t1), "\n", verbose = verbose)
 }
 
 #' simer.Data.Bfile2MVP: To transform plink binary data to MVP package
@@ -1663,14 +1663,13 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
 #' transforming plink binary data to MVP package.
 #' 
 #' Build date: Sep 12, 2018
-#' Last update: July 25, 2022
+#' Last update: Dec 28, 2024
 #'
 #' @author Haohao Zhang and Dong Yin
 #' 
 #' @param bfile Genotype in binary format (.bed, .bim, .fam).
 #' @param out the name of output file.
 #' @param maxLine the max number of line to write to big matrix for each loop.
-#' @param priority 'memory' or 'speed'.
 #' @param type.geno the type of genotype elements.
 #' @param threads number of thread for transforming.
 #' @param verbose whether to print the reminder.
@@ -1691,11 +1690,11 @@ simer.Data.MVP2Bfile <- function(bigmat, map, pheno = NULL, out = 'simer', threa
 #' # Data converting
 #' simer.Data.Bfile2MVP(bfilePath, tempfile("outfile"))
 #' }
-simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority = 'speed', type.geno = 'char', threads = 10, verbose = TRUE) {
+simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, type.geno = 'char', threads = 10, verbose = TRUE) {
   t1 <- as.numeric(Sys.time())
-  bim_file <- normalizePath(paste0(bfile, '.bim'), winslash = "/", mustWork = TRUE)
-  fam_file <- normalizePath(paste0(bfile, '.fam'), winslash = "/", mustWork = TRUE)
-  bed_file <- normalizePath(paste0(bfile, '.bed'), winslash = "/", mustWork = TRUE)
+  bim_file <- normalizePath(paste0(bfile, '.bim'), mustWork = TRUE)
+  fam_file <- normalizePath(paste0(bfile, '.fam'), mustWork = TRUE)
+  bed_file <- normalizePath(paste0(bfile, '.bed'), mustWork = TRUE)
   # check old file
   backingfile <- paste0(basename(out), ".geno.bin")
   descriptorfile <- paste0(basename(out), ".geno.desc")
@@ -1710,12 +1709,12 @@ simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority =
   n <- nrow(fam)
   write.table(fam[, 2], paste0( out, '.geno.ind'), row.names = FALSE, col.names = FALSE, quote = FALSE)
   
-  logging.log(paste0("inds: ", n, "\tmarkers:", m, '\n'), verbose = verbose)
+  logging.log(paste0("inds: ", n, "\tmarkers: ", m, '\n'), verbose = verbose)
   
   # parse genotype
   bigmat <- filebacked.big.matrix(
-    nrow = m,
-    ncol = n,
+    nrow = n,
+    ncol = m,
     type = type.geno,
     backingfile = backingfile,
     backingpath = dirname(out),
@@ -1723,9 +1722,9 @@ simer.Data.Bfile2MVP <- function(bfile, out = 'simer', maxLine = 1e4, priority =
     dimnames = c(NULL, NULL)
   )
   
-  if (priority == "speed") { maxLine <- -1 }
+  logging.log(paste0("Loading genotype at a step of ", maxLine, '...\n'), verbose = verbose)
   read_bfile(bed_file = bed_file, pBigMat = bigmat@address, maxLine = maxLine, threads = threads, verbose = verbose)
-  rm(bigmat); gc();
+  rm(bigmat); gc()
   t2 <- as.numeric(Sys.time())
   logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n", verbose = verbose)
   return(invisible(c(m, n)))

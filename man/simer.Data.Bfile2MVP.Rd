@@ -8,7 +8,6 @@ simer.Data.Bfile2MVP(
   bfile,
   out = "simer",
   maxLine = 10000,
-  priority = "speed",
   type.geno = "char",
   threads = 10,
   verbose = TRUE
@@ -20,8 +19,6 @@ simer.Data.Bfile2MVP(
 \item{out}{the name of output file.}
 
 \item{maxLine}{the max number of line to write to big matrix for each loop.}
-
-\item{priority}{'memory' or 'speed'.}
 
 \item{type.geno}{the type of genotype elements.}
 
@@ -41,7 +38,7 @@ transforming plink binary data to MVP package.
 }
 \details{
 Build date: Sep 12, 2018
-Last update: July 25, 2022
+Last update: Dec 28, 2024
 }
 \examples{
 \donttest{

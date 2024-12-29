@@ -9,7 +9,7 @@ simer.Data.MVP2Bfile(
   map,
   pheno = NULL,
   out = "simer",
-  threads = 10,
+  threads = 1,
   verbose = TRUE
 )
 }
@@ -36,7 +36,7 @@ transforming MVP data to binary format.
 }
 \details{
 Build date: Sep 12, 2018
-Last update: July 20, 2022
+Last update: Dec 28, 2024
 }
 \examples{
 \donttest{

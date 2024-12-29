@@ -12,15 +12,16 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // write_bfile
-void write_bfile(SEXP pBigMat, std::string bed_file, int threads, bool verbose);
-RcppExport SEXP _simer_write_bfile(SEXP pBigMatSEXP, SEXP bed_fileSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+void write_bfile(SEXP pBigMat, std::string bed_file, bool mrkbycol, int threads, bool verbose);
+RcppExport SEXP _simer_write_bfile(SEXP pBigMatSEXP, SEXP bed_fileSEXP, SEXP mrkbycolSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< std::string >::type bed_file(bed_fileSEXP);
+    Rcpp::traits::input_parameter< bool >::type mrkbycol(mrkbycolSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    write_bfile(pBigMat, bed_file, threads, verbose);
+    write_bfile(pBigMat, bed_file, mrkbycol, threads, verbose);
     return R_NilValue;
 END_RCPP
 }
@@ -162,7 +163,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_simer_write_bfile", (DL_FUNC) &_simer_write_bfile, 4},
+    {"_simer_write_bfile", (DL_FUNC) &_simer_write_bfile, 5},
     {"_simer_read_bfile", (DL_FUNC) &_simer_read_bfile, 5},
     {"_simer_emma_kinship", (DL_FUNC) &_simer_emma_kinship, 3},
     {"_simer_GenoFilter", (DL_FUNC) &_simer_GenoFilter, 8},
