@@ -64,7 +64,7 @@ void write_bfile(XPtr<BigMatrix> pMat, std::string bed_file, double NA_C, bool m
     code[static_cast<T>(NA_C)] = 1;
     
     // write bfile
-    if(mrkbycol){
+    if (mrkbycol) {
         for (int i = 0; i < m; i++) {
             #pragma omp parallel for private(c)
             for (int j = 0; j < n; j++) {

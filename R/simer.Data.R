@@ -1779,12 +1779,12 @@ simer.Data.Map <- function(map, out = 'simer', cols = 1:5, header = TRUE, sep = 
   return(nrow(map))
 }
 
-#' simer.Data.EMMA: To construct EMMA kinship matrix
+#' simer.Data.Kin: To construct kinship matrix
 #' 
-#' constructing EMMA kinship matrix.
+#' constructing kinship matrix.
 #' 
 #' Build date: Apr 19, 2023
-#' Last update: Apr 19, 2023
+#' Last update: Dec 30, 2024
 #'
 #' @author Haohao Zhang and Dong Yin
 #' 

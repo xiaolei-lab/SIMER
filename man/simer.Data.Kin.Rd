@@ -2,7 +2,7 @@
 % Please edit documentation in R/simer.Data.R
 \name{simer.Data.Kin}
 \alias{simer.Data.Kin}
-\title{simer.Data.EMMA: To construct EMMA kinship matrix}
+\title{simer.Data.Kin: To construct kinship matrix}
 \usage{
 simer.Data.Kin(
   fileKin = TRUE,
@@ -35,11 +35,11 @@ Output file:
 <out>.kin.desc
 }
 \description{
-constructing EMMA kinship matrix.
+constructing kinship matrix.
 }
 \details{
 Build date: Apr 19, 2023
-Last update: Apr 19, 2023
+Last update: Dec 30, 2024
 }
 \examples{
 \donttest{

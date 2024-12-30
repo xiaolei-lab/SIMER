@@ -9,10 +9,6 @@ read_bfile <- function(bed_file, pBigMat, maxLine, threads = 0L, verbose = TRUE)
     invisible(.Call('_simer_read_bfile', PACKAGE = 'simer', bed_file, pBigMat, maxLine, threads, verbose))
 }
 
-emma_kinship <- function(pBigMat, threads = 0L, verbose = TRUE) {
-    .Call('_simer_emma_kinship', PACKAGE = 'simer', pBigMat, threads, verbose)
-}
-
 GenoFilter <- function(pBigMat, keepInds = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL, threads = 0L, verbose = TRUE) {
     .Call('_simer_GenoFilter', PACKAGE = 'simer', pBigMat, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose)
 }
@@ -35,6 +31,10 @@ hasNA <- function(pBigMat, threads = 0L) {
 
 hasNABed <- function(bed_file, ind, maxLine, threads = 0L, verbose = TRUE) {
     .Call('_simer_hasNABed', PACKAGE = 'simer', bed_file, ind, maxLine, threads, verbose)
+}
+
+emma_kinship <- function(pBigMat, threads = 0L, verbose = TRUE) {
+    .Call('_simer_emma_kinship', PACKAGE = 'simer', pBigMat, threads, verbose)
 }
 
 PedigreeCorrector <- function(pBigMat, rawGenoID, rawPed, candSirID = NULL, candDamID = NULL, exclThres = 0.005, assignThres = 0.02, birthDate = NULL, threads = 0L, verbose = TRUE) {
