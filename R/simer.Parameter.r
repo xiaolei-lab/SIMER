@@ -564,6 +564,8 @@ param.global <- function(SP = NULL, ...) {
       out.geno.gen = 1,
       out.pheno.gen = 1,
       useAllGeno = FALSE,
+      missing.geno = NULL,
+      missing.phe = NULL,
       ncpus = 0,
       verbose = TRUE
     )

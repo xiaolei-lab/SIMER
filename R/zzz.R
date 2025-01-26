@@ -1,24 +1,25 @@
 package.env <- NULL
 
 allparam <- c(
-  "replication",   "seed.sim"  ,    "out"         ,  "outpath"      ,
-  "out.format" ,   "pop.gen"   ,    "out.geno.gen",  "out.pheno.gen",
-  "useAllGeno" ,   "ncpus"     ,    "verbose"     ,  "pop.map"      ,
-  "species"    ,   "pop.marker",    "num.chr"     ,  "len.chr"      ,
-  "qtn.model"  ,   "qtn.index" ,    "qtn.num"     ,  "qtn.dist"     ,
-  "qtn.var"    ,   "qtn.prob"  ,    "qtn.shape"   ,  "qtn.scale"    ,
-  "qtn.shape1" ,   "qtn.shape2",    "qtn.ncp"     ,  "qtn.spot"     ,
-  "len.block"  ,   "maf"       ,    "recom.spot"  ,  "range.hot"    ,
-  "range.cold" ,   "pop.geno"  ,    "incols"      ,  "pop.marker"   ,
-  "pop.ind"    ,   "prob"      ,    "rate.mut"    ,  "cld"          ,
-  "pop"        ,   "pop.ind"   ,    "pop.rep"     ,  "pop.rep.bal"  ,
-  "pop.env"    ,   "phe.type"  ,    "phe.model"   ,  "phe.h2A"      ,
-  "phe.h2D"    ,   "phe.h2GxG" ,    "phe.h2GxE"   ,  "phe.h2PE"     ,
-  "phe.var"    ,   "phe.corA"  ,    "phe.corD"    ,  "phe.corGxG"   ,
-  "phe.corPE"  ,   "phe.corE"  ,    "pop.sel"     ,  "ps"           ,
-  "decr"       ,   "sel.crit"  ,    "sel.single"  ,  "sel.multi"    ,
-  "index.wt"   ,   "index.tdm" ,    "goal.perc"   ,  "pass.perc"    ,
-  "pop.gen"    ,   "reprod.way",    "sex.rate"    ,  "prog"
+  "replication"  ,    "seed.sim"     ,    "out"          ,    "outpath"      ,
+  "out.format"   ,    "pop.gen"      ,    "out.geno.gen" ,    "out.pheno.gen",
+  "useAllGeno"   ,    "missing.geno" ,    "missing.phe"  ,    "ncpus"        ,
+  "verbose"      ,    "pop.map"      ,    "species"      ,    "pop.marker"   ,
+  "num.chr"      ,    "len.chr"      ,    "qtn.model"    ,    "qtn.index"    ,
+  "qtn.num"      ,    "qtn.dist"     ,    "qtn.var"      ,    "qtn.prob"     ,
+  "qtn.shape"    ,    "qtn.scale"    ,    "qtn.shape1"   ,    "qtn.shape2"   ,
+  "qtn.ncp"      ,    "qtn.spot"     ,    "len.block"    ,    "maf"          ,
+  "recom.spot"   ,    "range.hot"    ,    "range.cold"   ,    "pop.geno"     ,
+  "incols"       ,    "pop.marker"   ,    "pop.ind"      ,    "prob"         ,
+  "rate.mut"     ,    "cld"          ,    "pop"          ,    "pop.ind"      ,
+  "pop.rep"      ,    "pop.rep.bal"  ,    "pop.env"      ,    "phe.type"     ,
+  "phe.model"    ,    "phe.h2A"      ,    "phe.h2D"      ,    "phe.h2GxG"    ,
+  "phe.h2GxE"    ,    "phe.h2PE"     ,    "phe.var"      ,    "phe.corA"     ,
+  "phe.corD"     ,    "phe.corGxG"   ,    "phe.corPE"    ,    "phe.corE"     ,
+  "pop.sel"      ,    "ps"           ,    "decr"         ,    "sel.crit"     ,
+  "sel.single"   ,    "sel.multi"    ,    "index.wt"     ,    "index.tdm"    ,
+  "goal.perc"    ,    "pass.perc"    ,    "pop.gen"      ,    "reprod.way"   ,
+  "sex.rate"     ,    "prog"         
 )
 
 .onLoad <- function(libname, pkgname) {

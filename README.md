@@ -2887,6 +2887,18 @@ Users can use global parameters to control the ***population properties*** , ***
 <td>whether to use all genotype data to simulate phenotype.</td>
 </tr>
 <tr>
+<td><b>missing.geno</b></td>
+<td>NULL</td>
+<td>num</td>
+<td>the ratio of missing values in genotype data.</td>
+</tr>
+<tr>
+<td><b>missing.phe</b></td>
+<td>NULL</td>
+<td>list</td>
+<td>the ratio of missing values in phenotype data.</td>
+</tr>
+<tr>
 <td><b>ncpus</b></td>
 <td>0</td>
 <td>num</td>
@@ -2971,6 +2983,34 @@ SP <- param.simer(
   out = "simer",
   outpath = getwd(),
   out.format = "plink"
+)
+
+# Run Simer
+SP <- simer(SP)
+
+### 03 Numeric Format with missing values in genotype and phenotype ###
+# Generate all simulation parameters
+SP <- param.simer(
+  # SP = SP, # uncomment it when users already have a 'SP'
+  out = "simer",
+  outpath = getwd(),
+  out.format = "numeric",
+  missing.geno = 0.01,
+  missing.phe = list(tr1 = 0.5)
+)
+
+# Run Simer
+SP <- simer(SP)
+
+### 04 PLINK Binary Format with missing values in genotype and phenotype ###
+# Generate all simulation parameters
+SP <- param.simer(
+  # SP = SP, # uncomment it when users already have a 'SP'
+  out = "simer",
+  outpath = getwd(),
+  out.format = "plink",
+  missing.geno = 0.01,
+  missing.phe = list(tr1 = 0.5)
 )
 
 # Run Simer

@@ -588,9 +588,11 @@ write.file <- function(SP) {
   out.format <- SP$global$out.format
   out.geno.gen <- SP$global$out.geno.gen
   out.pheno.gen <- SP$global$out.pheno.gen
-  verbose <- SP$global$verbose
+  missing.geno <- SP$global$missing.geno
+  missing.phe <- SP$global$missing.phe
   incols <- SP$geno$incols
   ncpus <- SP$global$ncpus
+  verbose <- SP$global$verbose
   
   if (is.null(outpath)) return(SP)
   
@@ -644,12 +646,35 @@ write.file <- function(SP) {
       Mat2BigMat(geno.total@address, geno.cvt1(SP$geno$pop.geno[[out.geno.gen[i]]][]), op = pop.inds[i], threads = ncpus)
     }
   }
-  
+  if (!is.null(missing.geno)) {
+    if (missing.geno <= 0 | missing.geno >= 1) {
+      stop("'missing.geno' should be more than 0 and less than 1!")
+    }
+    NA.row <- sample(x = 1:pop.ind, size = pop.ind * sqrt(missing.geno))
+    NA.col <- sample(x = 1:pop.marker, size = pop.marker * sqrt(missing.geno))
+    geno.total[NA.col, NA.row] <- NA
+  }
+
   pheno.geno <- NULL
   pheno.total <- do.call(rbind, lapply(out.pheno.gen, function(i) {
     return(SP$pheno$pop[[i]])
   }))
-  
+  if (!is.null(missing.phe)) {
+    phe.name <- sapply(1:length(SP$pheno$phe.model), function(i) {
+      return(unlist(strsplit(SP$pheno$phe.model[[i]], split = "\\s*\\=\\s*"))[1])
+    })
+    if (length(phe.name) != length(missing.phe)) {
+      stop("Please make sure number of traits of 'phe.model' and 'missing.phe' are same!")
+    }
+    for (i in 1:length(phe.name)) {
+      if (missing.phe[[i]] <= 0 | missing.phe[[i]] >= 1) {
+        stop("'missing.phe' should be more than 0 and less than 1!")
+      }
+      NA.row <- sample(x = 1:pop.ind, size = pop.ind * missing.phe[[i]])
+      pheno.total[NA.row, phe.name[i]] <- NA
+    }
+  }
+
   if (out.format == "numeric") {
     write.table(pheno.total[, 1], file = file.path(directory.rep, paste0(out, ".geno.ind")), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
     write.table(SP$map$pop.map, file = file.path(directory.rep, paste0(out, ".geno.map")), row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
