@@ -158,6 +158,9 @@ void read_bfile(std::string bed_file, XPtr<BigMatrix> pMat, long maxLine, double
     // magic number of bfile
     buffer = new char [3];
     size_t n_bytes_read = static_cast<size_t>(fread(buffer, 1, 3, fin));
+    if (n_bytes_read != 3) {    // new if
+        Rcpp::stop("It is not a normal binary file!");
+    }
     
     // loop file
     size_t cond;

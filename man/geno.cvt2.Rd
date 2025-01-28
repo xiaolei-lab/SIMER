@@ -4,10 +4,12 @@
 \alias{geno.cvt2}
 \title{Genotype code convertor 2}
 \usage{
-geno.cvt2(pop.geno)
+geno.cvt2(pop.geno, ncpus = 0)
 }
 \arguments{
 \item{pop.geno}{genotype matrix of (0, 1, 2).}
+
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 }
 \value{
 genotype matrix of (0, 1).
@@ -17,17 +19,17 @@ Convert genotype matrix from (0, 1, 2) to (0, 1).
 }
 \details{
 Build date: Jul 11, 2020
-Last update: Apr 28, 2022
+Last update: Jan 28, 2025
 }
 \examples{
-\donttest{
-SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 1)
-SP <- genotype(SP)
-geno1 <- SP$geno$pop.geno$gen1
-geno2 <- geno.cvt2(geno1)
-geno1[1:6, 1:2]
-geno2[1:6, 1:4]
-}
+options(bigmemory.typecast.warning=FALSE)
+pop.geno <- matrix(sample(c(0, 1, 2), 8, replace = TRUE), 2, 4)
+pop.geno[]
+bigmat <- geno.cvt2(pop.geno)
+bigmat[]
+pop.geno <- as.big.matrix(pop.geno, type = 'char')
+bigmat <- geno.cvt2(pop.geno)
+bigmat[]
 }
 \author{
 Dong Yin

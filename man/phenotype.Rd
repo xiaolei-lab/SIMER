@@ -4,10 +4,12 @@
 \alias{phenotype}
 \title{Phenotype simulation}
 \usage{
-phenotype(SP = NULL, verbose = TRUE)
+phenotype(SP = NULL, ncpus = 0, verbose = TRUE)
 }
 \arguments{
 \item{SP}{a list of all simulation parameters.}
+
+\item{ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 
 \item{verbose}{whether to print detail.}
 }
@@ -39,7 +41,7 @@ Generate single-trait or multiple-trait phenotype by mixed model.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: Apr 28, 2022
+Last update: Jan 28, 2025
 }
 \examples{
 \donttest{

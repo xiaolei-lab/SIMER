@@ -16,11 +16,12 @@
 #' Generate single-trait or multiple-trait phenotype by mixed model.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 28, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
 #' @param SP a list of all simulation parameters.
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #' @param verbose whether to print detail.
 #'
 #' @return 
@@ -102,7 +103,7 @@
 #' # Run phenotype simulation
 #' SP <- phenotype(SP)
 #' }
-phenotype <- function(SP = NULL, verbose = TRUE) {
+phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
 
 ### Start phenotype simlulation
   
@@ -114,7 +115,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   pop <- SP$pheno$pop
   pop.ind <- SP$pheno$pop.ind
   if (!is.null(SP$geno$pop.geno)) {
-    SP$pheno$pop.ind <- pop.ind <- ncol(SP$geno$pop.geno[[length(SP$geno$pop.geno)]]) / SP$geno$incols
+    SP$pheno$pop.ind <- pop.ind <- nrow(SP$geno$pop.geno[[length(SP$geno$pop.geno)]]) / SP$geno$inrows
   }
   if (is.null(pop) & !is.null(pop.ind)) {
     pop <- generate.pop(pop.ind = pop.ind)
@@ -139,7 +140,7 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
   qtn.var <- SP$map$qtn.var
   pop.map.GxG <- SP$map$pop.map.GxG
   pop.geno <- SP$geno$pop.geno
-  incols <- SP$geno$incols
+  inrows <- SP$geno$inrows
   pop.env <- SP$pheno$pop.env
   phe.type <- SP$pheno$phe.type
   phe.model <- SP$pheno$phe.model
@@ -220,26 +221,26 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         pop.snp.add[[i]] <- pop.map[qtn.pos.add[[i]], 1]
         qtn.eff <- qtn.eff[qtn.pos.add[[i]]]
         if (useAllGeno) {
-          pop.qtn.add[[i]] <- do.call(cbind, lapply(1:length(pop.geno), function(k) {
-            return(pop.geno[[k]][qtn.pos.add[[i]], ])
+          pop.qtn.add[[i]] <- do.call(rbind, lapply(1:length(pop.geno), function(k) {
+            return(pop.geno[[k]][, qtn.pos.add[[i]]])
           }))
         } else {
-          pop.qtn.add[[i]] <- pop.geno[[length(pop.geno)]][qtn.pos.add[[i]], ]
+          pop.qtn.add[[i]] <- pop.geno[[length(pop.geno)]][, qtn.pos.add[[i]]]
         }
-        if (pop.ind != ncol(pop.qtn.add[[i]]) / incols) {
+        if (pop.ind != nrow(pop.qtn.add[[i]]) / inrows) {
           stop("The individual number should be same in both 'pop' and 'pop.qtn.add'!")
         }
-        if (ncol(pop.qtn.add[[i]]) == 2 * pop.ind) {
-          pop.qtn.add[[i]] <- geno.cvt1(pop.qtn.add[[i]])
+        if (nrow(pop.qtn.add[[i]]) == 2 * pop.ind) {
+          pop.qtn.add[[i]] <- geno.cvt1(pop.qtn.add[[i]], ncpus = ncpus)[]
         }
         # (0, 1, 2) -> (-1, 0, 1)
-        pop.qtn.add[[i]] <- pop.qtn.add[[i]] - 1
+        pop.qtn.add[[i]] <- pop.qtn.add[[i]][] - 1
         phe.add <- matrix(0, pop.ind, 1)
         qtn.num.cum <- cumsum(qtn.num[[i]])
         for (k in 1:length(qtn.num[[i]])) {
-          pop.qtn.add.tmp <- pop.qtn.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), , drop = FALSE]
+          pop.qtn.add.tmp <- pop.qtn.add[[i]][, (qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), drop = FALSE]
           qtn.eff.tmp <- qtn.eff[(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]
-          phe.add.tmp <- crossprod(pop.qtn.add.tmp, qtn.eff.tmp)
+          phe.add.tmp <- tcrossprod(pop.qtn.add.tmp, t(qtn.eff.tmp))
           scale <- as.numeric(sqrt(qtn.var[[i]][k] / var(phe.add.tmp)))
           SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] <- SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] * scale
           phe.add.tmp <- phe.add.tmp * scale
@@ -265,27 +266,27 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         pop.snp.dom[[i]] <- pop.map[qtn.pos.dom[[i]], 1]
         qtn.eff <- qtn.eff[qtn.pos.dom[[i]]]
         if (useAllGeno) {
-          pop.qtn.dom[[i]] <- do.call(cbind, lapply(1:length(pop.geno), function(k) {
-            return(pop.geno[[k]][qtn.pos.dom[[i]], ])
+          pop.qtn.dom[[i]] <- do.call(rbind, lapply(1:length(pop.geno), function(k) {
+            return(pop.geno[[k]][, qtn.pos.dom[[i]]])
           }))
         } else {
-          pop.qtn.dom[[i]] <- pop.geno[[length(pop.geno)]][qtn.pos.dom[[i]], ]
+          pop.qtn.dom[[i]] <- pop.geno[[length(pop.geno)]][, qtn.pos.dom[[i]]]
         }
-        if (pop.ind != ncol(pop.qtn.dom[[i]]) / incols) {
+        if (pop.ind != nrow(pop.qtn.dom[[i]]) / inrows) {
           stop("The individual number should be same in both 'pop' and 'pop.qtn.dom'!")
         }
-        if (ncol(pop.qtn.dom[[i]]) == 2 * pop.ind) {
-          pop.qtn.dom[[i]] <- geno.cvt1(pop.qtn.dom[[i]])
+        if (nrow(pop.qtn.dom[[i]]) == 2 * pop.ind) {
+          pop.qtn.dom[[i]] <- geno.cvt1(pop.qtn.dom[[i]], ncpus = ncpus)[]
         }
         # (0, 1, 2) -> (-0.5, 0.5, -0.5)
         pop.qtn.dom[[i]][pop.qtn.dom[[i]] == 2] <- 0
-        pop.qtn.dom[[i]] <- pop.qtn.dom[[i]] - 0.5
+        pop.qtn.dom[[i]] <- pop.qtn.dom[[i]][] - 0.5
         phe.dom <- matrix(0, pop.ind, 1)
         qtn.num.cum <- cumsum(qtn.num[[i]])
         for (k in 1:length(qtn.num[[i]])) {
-          pop.qtn.dom.tmp <- pop.qtn.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), , drop = FALSE]
+          pop.qtn.dom.tmp <- pop.qtn.dom[[i]][, (qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), drop = FALSE]
           qtn.eff.tmp <- qtn.eff[(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]
-          phe.dom.tmp <- crossprod(pop.qtn.dom.tmp, qtn.eff.tmp)
+          phe.dom.tmp <- tcrossprod(pop.qtn.dom.tmp, t(qtn.eff.tmp))
           scale <- as.numeric(sqrt(qtn.var[[i]][k] / var(phe.dom.tmp)))
           SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] * scale
           phe.dom.tmp <- phe.dom.tmp * scale
@@ -330,22 +331,21 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
         if (all(eff.split %in% c("A", "D"))) {
           qtn.pos.GxG[[i]] <- grep(pattern = eff.name[j], x = pop.map.GxG[, 1])
           qtn.pos.GxG[[i]] <- qtn.pos.GxG[[i]][!is.na(pop.map.GxG[, i + 1])]
-          pop.qtn.GxG[[i]] <- matrix(1, length(qtn.pos.GxG[[i]]), pop.ind)
+          pop.qtn.GxG[[i]] <- matrix(1, pop.ind, length(qtn.pos.GxG[[i]]))
           for (pos in qtn.pos.GxG[[i]]) {
             pop.snp.GxG <- unlist(strsplit(pop.map.GxG[pos, 1], split = "_"))[1]
             pop.snp.GxG <- unlist(strsplit(pop.snp.GxG, split = "-"))
-            qtn.GxG <- rep(1, pop.ind)
             for (k in 1:length(pop.snp.GxG)) {
               if (eff.split[k] == "A") {
-                pop.qtn.GxG[[i]][match(pos, qtn.pos.GxG[[i]]), ] <- pop.qtn.GxG[[i]][match(pos, qtn.pos.GxG[[i]]), ] * pop.qtn.add[[i]][match(pop.snp.GxG[k], pop.snp.add[[i]]), ]
+                pop.qtn.GxG[[i]][, match(pos, qtn.pos.GxG[[i]])] <- pop.qtn.GxG[[i]][, match(pos, qtn.pos.GxG[[i]])] * pop.qtn.add[[i]][, match(pop.snp.GxG[k], pop.snp.add[[i]])]
               } else if (eff.split[k] == "D") {
-                pop.qtn.GxG[[i]][match(pos, qtn.pos.GxG[[i]]), ] <- pop.qtn.GxG[[i]][match(pos, qtn.pos.GxG[[i]]), ] * pop.qtn.dom[[i]][match(pop.snp.GxG[k], pop.snp.dom[[i]]), ]
+                pop.qtn.GxG[[i]][, match(pos, qtn.pos.GxG[[i]])] <- pop.qtn.GxG[[i]][, match(pos, qtn.pos.GxG[[i]])] * pop.qtn.dom[[i]][, match(pop.snp.GxG[k], pop.snp.dom[[i]])]
               } else {
                 stop("Only 'A' or 'D' in the GxG!")
               }
             }
           }
-          phe.GxG <- crossprod(pop.qtn.GxG[[i]], pop.map.GxG[qtn.pos.GxG[[i]], i + 1])
+          phe.GxG <- tcrossprod(pop.qtn.GxG[[i]], t(pop.map.GxG[qtn.pos.GxG[[i]], i + 1]))
           scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2GxG[[i]][[eff.name[j]]] / var(phe.GxG)))
           SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] <- SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] * scale
           phe.GxG <- phe.GxG * scale
@@ -359,9 +359,9 @@ phenotype <- function(SP = NULL, verbose = TRUE) {
             phe.GxE <- rep(1, pop.ind)
             for (k in 1:length(eff.GxE)) {
               if (eff.split[k] == "A") {
-                phe.GxE <- phe.GxE * scale(crossprod(pop.qtn.add[[i]], rnorm(nrow(pop.qtn.add[[i]]))))
+                phe.GxE <- phe.GxE * scale(tcrossprod(pop.qtn.add[[i]], t(rnorm(ncol(pop.qtn.add[[i]])))))
               } else if (eff.split[k] == "D") {
-                phe.GxE <- phe.GxE * scale(crossprod(pop.qtn.dom[[i]], rnorm(nrow(pop.qtn.dom[[i]]))))
+                phe.GxE <- phe.GxE * scale(tcrossprod(pop.qtn.dom[[i]], t(rnorm(ncol(pop.qtn.dom[[i]])))))
               } else {
                 phe.GxE <- phe.GxE * scale(phe.eff[[i]][, match(eff.GxE[k], colnames(phe.eff[[i]]))])
               }

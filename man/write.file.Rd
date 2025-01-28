@@ -17,7 +17,7 @@ Write files of Simer.
 }
 \details{
 Build date: Jan 7, 2019
-Last update: Apr 30, 2022
+Last update: Jan 28, 2025
 }
 \examples{
 \donttest{

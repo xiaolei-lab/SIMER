@@ -29,7 +29,7 @@ Produce individuals by doubled haploid.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: Apr 30, 2022
+Last update: Jan 28, 2025
 }
 \examples{
 \donttest{

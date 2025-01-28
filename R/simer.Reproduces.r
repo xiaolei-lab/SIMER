@@ -118,7 +118,7 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 #' Mating according to the indice of sires and dams.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -148,10 +148,10 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 #' }
 mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
   
-  pop.marker <- nrow(pop.geno)
+  pop.marker <- ncol(pop.geno)
   pop.geno.curr <- big.matrix(
-      nrow = pop.marker,
-      ncol = length(index.dam) * 2,
+      nrow = length(index.dam) * 2,
+      ncol = pop.marker,
       init = 3,
       type = "char"
   )
@@ -164,7 +164,7 @@ mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
   gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
   gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
   
-  BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno@address, indIdxNull = gmt.comb, threads = ncpus)
   
   return(pop.geno.curr)
 }
@@ -174,7 +174,7 @@ mate <- function(pop.geno, index.sir, index.dam, ncpus = 0) {
 #' Produce individuals by clone.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -231,7 +231,7 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
+    inrows <- SP$geno$inrows
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -247,29 +247,29 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
       ped.dam <- c(pop.sel$sir, pop.sel$dam)
     }
     gmt.dam <- match(ped.dam, pop.geno.id)
-    num.2ind <- length(ped.dam) * incols
+    num.2ind <- length(ped.dam) * inrows
     
-    # pop.geno.curr <- matrix(3, nrow = pop.marker, ncol = num.2ind*prog)
+    # pop.geno.curr <- matrix(3, nrow = num.2ind*prog, ncol = pop.marker)
     pop.geno.curr <- big.matrix(
-      nrow = pop.marker,
-      ncol = num.2ind*prog,
+      nrow = num.2ind*prog,
+      ncol = pop.marker,
       init = 3,
       type = "char")
     
-    if (incols == 2) {
+    if (inrows == 2) {
       gmt.dam <- gmt.dam * 2
       gmt.sir <- gmt.dam - 1
       gmt.comb <- c(gmt.sir, gmt.dam)
       gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
       gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
-    } else if (incols == 1) {
+    } else if (inrows == 1) {
       gmt.comb <- gmt.dam
     } else {
-      stop("Please input a correct incols!")
+      stop("Please input a correct inrows!")
     }
     
     gmt.comb <- rep(gmt.comb, times = prog)
-    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
+    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, indIdxNull = gmt.comb, threads = ncpus)
     
     ped.sir <- rep(ped.dam, times = prog)
     ped.dam <- rep(ped.dam, times = prog)
@@ -299,7 +299,7 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
 #' Produce individuals by doubled haploid.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -356,7 +356,7 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- pop[, 1]
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
-    incols <- SP$geno$incols
+    inrows <- SP$geno$inrows
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
     if (is.null(pop.sel)) {
       ind.sir <- pop$index[pop$sex == 1 | pop$sex == 0]
@@ -372,33 +372,33 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
       ped.dam <- c(pop.sel$sir, pop.sel$dam)
     }
     gmt.dam <- match(ped.dam, pop.geno.id)
-    num.2ind <- length(ped.dam) * incols
+    num.2ind <- length(ped.dam) * inrows
     if (prog %% 2 != 0) {
       stop("prog should be an even in dh option!")
     }
     
-    # pop.geno.curr <- matrix(3, nrow = pop.marker, ncol = num.2ind*prog)
+    # pop.geno.curr <- matrix(3, nrow = num.2ind*prog, ncol = pop.marker)
     pop.geno.curr <- big.matrix(
-      nrow = pop.marker,
-      ncol = num.2ind*prog,
+      nrow = num.2ind*prog,
+      ncol = pop.marker,
       init = 3,
       type = "char")
     
     gmt.dam <- match(ped.dam, pop.geno.id)
-    if (incols == 2) {
+    if (inrows == 2) {
       gmt.dam <- gmt.dam * 2
       gmt.sir <- gmt.dam - 1
       gmt.comb <- c(gmt.sir, gmt.dam)
       gmt.comb[seq(1, length(gmt.comb), 2)] <- gmt.sir
       gmt.comb[seq(2, length(gmt.comb), 2)] <- gmt.dam
-    } else if (incols == 1) {
+    } else if (inrows == 1) {
       gmt.comb <- gmt.dam
     } else {
-      stop("Please input a correct incols!")
+      stop("Please input a correct inrows!")
     }
     
     gmt.comb <- rep(rep(gmt.comb, each = 2), times = prog/2)
-    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = gmt.comb, threads = ncpus)
+    BigMat2BigMat(pop.geno.curr@address, pop.geno@address, indIdxNull = gmt.comb, threads = ncpus)
     
     ped.sir <- rep(rep(ped.dam, each = 2), times = prog/2)
     ped.dam <- rep(rep(ped.dam, each = 2), times = prog/2)
@@ -1095,7 +1095,7 @@ mate.2waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' Produce individuals by three-way cross.
 #'
 #' Build date: Apr 11, 2022
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -1204,12 +1204,12 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
   pop.geno.id <- c(pop.geno.id, pop[, 1])
   pop.geno.curr <- big.matrix(
-    nrow = nrow(pop.geno),
-    ncol = ncol(pop.geno) + ncol(pop.geno.dam2),
+    nrow = nrow(pop.geno) + nrow(pop.geno.dam2),
+    ncol = ncol(pop.geno),
     init = 3,
     type = "char")
-  BigMat2BigMat(pop.geno.curr@address, pop.geno@address, colIdx = 1:ncol(pop.geno), threads = ncpus)
-  BigMat2BigMat(pop.geno.curr@address, pop.geno.dam2@address, colIdx = 1:ncol(pop.geno.dam2), op = ncol(pop.geno)+1, threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno@address, indIdxNull = 1:nrow(pop.geno), threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno.dam2@address, indIdxNull = 1:nrow(pop.geno.dam2), op = nrow(pop.geno)+1, threads = ncpus)
   pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
   
   count.ind <- c(count.ind, nrow(pop))
@@ -1255,7 +1255,7 @@ mate.3waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' Produce individuals by four-way cross.
 #'
 #' Build date: Apr 11, 2022
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -1353,12 +1353,12 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
   pop.geno.sir11 <- mate(pop.geno = pop.geno, index.sir = index.sir1, index.dam = index.dam1, ncpus = ncpus)
   pop.geno.dam22 <- mate(pop.geno = pop.geno, index.sir = index.sir2, index.dam = index.dam2, ncpus = ncpus)
   pop.geno.curr <- big.matrix(
-    nrow = nrow(pop.geno),
-    ncol = ncol(pop.geno.sir11) + ncol(pop.geno.dam22),
+    nrow = nrow(pop.geno.sir11) + nrow(pop.geno.dam22),
+    ncol = ncol(pop.geno),
     init = 3,
     type = "char")
-  BigMat2BigMat(pop.geno.curr@address, pop.geno.sir11@address, colIdx = 1:ncol(pop.geno.sir11), threads = ncpus)
-  BigMat2BigMat(pop.geno.curr@address, pop.geno.dam22@address, colIdx = 1:ncol(pop.geno.dam22), op = ncol(pop.geno.sir11)+1, threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno.sir11@address, indIdxNull = 1:nrow(pop.geno.sir11), threads = ncpus)
+  BigMat2BigMat(pop.geno.curr@address, pop.geno.dam22@address, indIdxNull = 1:nrow(pop.geno.dam22), op = nrow(pop.geno.sir11)+1, threads = ncpus)
   
   sex <- rep(2, pop.ind)
   sex[sample(1:pop.ind, pop.ind * sex.rate)] <- 1
@@ -1424,7 +1424,7 @@ mate.4waycro <- function(SP, ncpus = 0, verbose = TRUE) {
 #' Produce individuals by back cross.
 #'
 #' Build date: Apr 12, 2022
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -1532,12 +1532,12 @@ mate.backcro <- function(SP, ncpus = 0, verbose = TRUE) {
     pop <- SP$pheno$pop[[length(SP$pheno$pop)]]
     pop.geno.id <- c(pop.geno.id.ori, pop[, 1])
     pop.geno <- big.matrix(
-      nrow = nrow(pop.geno),
-      ncol = ncol(pop.geno.ori) + ncol(pop.geno.curr),
+      nrow = nrow(pop.geno.ori) + nrow(pop.geno.curr),
+      ncol = ncol(pop.geno),
       init = 3,
       type = "char")
-    BigMat2BigMat(pop.geno@address, pop.geno.ori@address, colIdx = 1:ncol(pop.geno.ori), threads = ncpus)
-    BigMat2BigMat(pop.geno@address, pop.geno.curr@address, colIdx = 1:ncol(pop.geno.curr), op = ncol(pop.geno.ori)+1, threads = ncpus)
+    BigMat2BigMat(pop.geno@address, pop.geno.ori@address, indIdxNull = 1:nrow(pop.geno.ori), threads = ncpus)
+    BigMat2BigMat(pop.geno@address, pop.geno.curr@address, indIdxNull = 1:nrow(pop.geno.curr), op = nrow(pop.geno.ori)+1, threads = ncpus)
     pop.sel <- SP$sel$pop.sel[[length(SP$sel$pop.sel)]]
   }
   

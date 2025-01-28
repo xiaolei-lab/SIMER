@@ -23,7 +23,7 @@ Mating according to the indice of sires and dams.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: Apr 30, 2022
+Last update: Jan 28, 2025
 }
 \examples{
 \donttest{

@@ -3,6 +3,7 @@
 export(GxG.network)
 export(IndPerGen)
 export(annotation)
+export(bigt)
 export(build.cov)
 export(cal.eff)
 export(checkEnv)

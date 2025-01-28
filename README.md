@@ -330,14 +330,14 @@ SP <- phenotype(SP)
 <tr>
 <td><b>pop.geno</b></td>
 <td>NULL</td>
-<td>big.matrix or matrix</td>
+<td>big.matrix or matrix (either m * n or n * m is acceptable, m is the number of SNPs, n is the number of individuals)</td>
 <td>the genotype data.</td>
 </tr>
 <tr>
-<td><b>incols</b></td>
+<td><b>inrows</b></td>
 <td>1</td>
 <td>1 or 2</td>
-<td>'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.</td>
+<td>'1': one-row genotype represents an individual; '2': two-row genotype represents an individual.</td>
 </tr>
 <tr>
 <td><b>pop.marker</b></td>
@@ -520,13 +520,13 @@ SP <- genotype(SP)
 ## Generate a genotype matrix with complete linkage disequilibrium
 **[back to top](#contents)** 
 
-Users can generate a genotype matrix with ***complete linkage disequilibrium*** by ```incols = 2``` and ```cld = TRUE```.
+Users can generate a genotype matrix with ***complete linkage disequilibrium*** by ```inrows = 2``` and ```cld = TRUE```.
 
 ```r
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
 # Generate genotype simulation parameters
-SP <- param.geno(SP = SP, pop.ind = 1e2, incols = 2, cld = TRUE)
+SP <- param.geno(SP = SP, pop.ind = 1e2, inrows = 2, cld = TRUE)
 
 # Run annotation simulation
 SP <- annotation(SP)

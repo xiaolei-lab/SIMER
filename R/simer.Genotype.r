@@ -16,7 +16,7 @@
 #' Generating and editing genotype data.
 #' 
 #' Build date: Nov 14, 2018
-#' Last update: Apr 28, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -28,12 +28,12 @@
 #' the function returns a list containing
 #' \describe{
 #' \item{$geno$pop.geno}{the genotype data.}
-#' \item{$geno$incols}{'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+#' \item{$geno$inrows}{'1': one-row genotype represents an individual; '2': two-row genotype represents an individual.}
 #' \item{$geno$pop.marker}{the number of markers.}
 #' \item{$geno$pop.ind}{the number of individuals in the base population.}
 #' \item{$geno$prob}{the genotype code probability.}
 #' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
-#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
+#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'inrows == 2'.}
 #' }
 #' 
 #' @export
@@ -61,7 +61,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     pop.geno <- SP$geno$pop.geno[[length(SP$geno$pop.geno)]]
   }
   pop.map <- SP$map$pop.map
-  incols <- SP$geno$incols
+  inrows <- SP$geno$inrows
   pop.marker <- SP$geno$pop.marker
   if (!is.null(pop.map)) {
     SP$geno$pop.marker <- pop.marker <- nrow(pop.map)
@@ -77,15 +77,18 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   if (is.null(pop.geno) & is.null(pop.marker) & is.null(pop.ind)) {
     stop("Please input information of genotype!")
   }
-  if (!(incols == 1 | incols == 2)) {
-    stop("'incols' should only be 1 or 2!")
+  if (!(inrows == 1 | inrows == 2)) {
+    stop("'inrows' should only be 1 or 2!")
   }
   
   if (!is.null(pop.geno)) {
     logging.log(" Input outer genotype matrix...\n", verbose = verbose)
-    if (incols == 1) {
-      pop.geno <- geno.cvt2(pop.geno[])
-      SP$geno$incols <- incols <- 2
+    if (pop.marker != ncol(pop.geno)) {
+      pop.geno <- bigt(pop.geno, ncpus = ncpus)
+    }
+    if (inrows == 1) {
+      pop.geno <- geno.cvt2(pop.geno, ncpus = ncpus)
+      SP$geno$inrows <- inrows <- 2
     } 
     if (is.big.matrix(pop.geno)) {
       bigmat <- pop.geno
@@ -94,7 +97,8 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         nrow = nrow(pop.geno),
         ncol = ncol(pop.geno),
         init = 3,
-        type = 'char')
+        type = 'char'
+      )
       Mat2BigMat(bigmat@address, mat = pop.geno, threads = ncpus)
     }
 
@@ -103,21 +107,22 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     if (!is.null(prob) & length(prob) != 2) {
       stop("The length of prob should be 2!")
     }
-    if (incols == 1) {
-      SP$geno$incols <- incols <- 2
+    if (inrows == 1) {
+      SP$geno$inrows <- inrows <- 2
     }
-    if (incols == 2 & cld) {
-      pop.geno <- matrix(0, pop.marker, incols*pop.ind)
+    if (inrows == 2 & cld) {
+      pop.geno <- matrix(0, inrows*pop.ind, pop.marker)
       if (is.null(prob)) {  prob <- c(0.5, 0.5) }
-      pop.geno[, sample(1:ncol(pop.geno), prob[2] * ncol(pop.geno))] <- 1
+      pop.geno[, sample(1:nrow(pop.geno), prob[2] * nrow(pop.geno))] <- 1
     } else {
-      pop.geno <- matrix(sample(c(0, 1), pop.marker*pop.ind*incols, prob = prob, replace = TRUE), pop.marker, incols*pop.ind)
+      pop.geno <- matrix(sample(c(0, 1), pop.marker*pop.ind*inrows, prob = prob, replace = TRUE), inrows*pop.ind, pop.marker)
     }
     bigmat <- big.matrix(
       nrow = nrow(pop.geno),
       ncol = ncol(pop.geno),
       init = 3,
-      type = 'char')
+      type = 'char'
+    )
     Mat2BigMat(bigmat@address, mat = pop.geno, threads = ncpus)
     
   } else {
@@ -125,23 +130,23 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   }
   rm(pop.geno); gc()
   
-  SP$geno$pop.marker <- pop.marker <- nrow(bigmat)
-  SP$geno$pop.ind <- pop.ind <- ncol(bigmat) / incols
+  SP$geno$pop.ind <- pop.ind <- nrow(bigmat) / inrows
+  SP$geno$pop.marker <- pop.marker <- ncol(bigmat)
   
   if (!is.null(pop.map)) {
-    if (nrow(bigmat) != nrow(pop.map)) {
+    if (ncol(bigmat) != nrow(pop.map)) {
       stop("Marker number should be same in both 'pop.map' and 'pop.geno'!")
     }
     Recom <- pop.map$Recom
-    if (!is.null(Recom) & incols == 2) {
+    if (!is.null(Recom) & inrows == 2) {
       # logging.log(" Chromosome exchange on genotype matrix...\n", verbose = verbose)
       Recom <- which(Recom %% 2 == 1)
       ind.swap <- sample(c(0, 1), pop.ind, replace = TRUE)
       ind.swap <- which(ind.swap == 1)
       for (ind in ind.swap) {
-        geno.swap <- bigmat[Recom, (2*ind)]
-        bigmat[Recom, (2*ind)] <- bigmat[Recom, (2*ind-1)]
-        bigmat[Recom, (2*ind-1)] <- geno.swap
+        geno.swap <- bigmat[(2*ind), Recom]
+        bigmat[(2*ind), Recom] <- bigmat[(2*ind-1), Recom]
+        bigmat[(2*ind-1), Recom] <- geno.swap
       }
     }
     
@@ -150,21 +155,21 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
       if (length(rate.mut) != 2) {
         stop("Please input the mutation rate of SNP and QTN!")
       }
-      spot.total <- pop.marker * incols * pop.ind
+      spot.total <- pop.ind * inrows * pop.marker
       qtn.index <- sort(unique(unlist((SP$map$qtn.index))))
       snp.index <- (1:pop.marker)[-qtn.index]
       num.mut.qtn <- round(spot.total * rate.mut[[1]])
       num.mut.snp <- round(spot.total * rate.mut[[2]])
       row.mut <- col.mut <- NULL
       if (length(qtn.index) > 0 & num.mut.qtn > 0) {
-        row.mut <- c(row.mut, sample(qtn.index, num.mut.qtn, replace = TRUE))
+        col.mut <- c(col.mut, sample(qtn.index, num.mut.qtn, replace = TRUE))
       }
       if (length(snp.index) > 0 & num.mut.snp > 0) {
-        row.mut <- c(row.mut, sample(snp.index, num.mut.snp, replace = TRUE))
+        col.mut <- c(col.mut, sample(snp.index, num.mut.snp, replace = TRUE))
       }
-      if (length(row.mut) > 0) {
-        col.mut <- sample(1:(incols*pop.ind), length(row.mut), replace = TRUE)
-        for (j in 1:length(row.mut)) {
+      if (length(col.mut) > 0) {
+        row.mut <- sample(1:(inrows*pop.ind), length(col.mut), replace = TRUE)
+        for (j in 1:length(col.mut)) {
           if (bigmat[row.mut[j], col.mut[j]] == 1) {
             bigmat[row.mut[j], col.mut[j]] <- 0
           } else {
@@ -580,32 +585,47 @@ generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.ch
 #' Convert genotype matrix from (0, 1) to (0, 1, 2).
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Apr 28, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #' 
 #' @param pop.geno genotype matrix of (0, 1).
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #'
 #' @return genotype matrix of (0, 1, 2).
 #' 
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 2)
-#' SP <- genotype(SP)
-#' geno1 <- SP$geno$pop.geno$gen1
-#' geno2 <- geno.cvt1(geno1)
-#' geno1[1:6, 1:4]
-#' geno2[1:6, 1:2]
-#' }
-geno.cvt1 <- function(pop.geno) {
+#' options(bigmemory.typecast.warning=FALSE)
+#' pop.geno <- matrix(sample(c(0, 1), 16, replace = TRUE), 4, 4)
+#' pop.geno[]
+#' bigmat <- geno.cvt1(pop.geno)
+#' bigmat[]
+#' pop.geno <- as.big.matrix(pop.geno, type = 'char')
+#' bigmat <- geno.cvt1(pop.geno)
+#' bigmat[]
+geno.cvt1 <- function(pop.geno, ncpus = 0) {
   if (is.null(pop.geno)) return(NULL)
-  num.ind <- ncol(pop.geno) / 2
-  v.odd <- (1:num.ind) * 2 - 1
-  v.even <- (1:num.ind) * 2
-  geno <- pop.geno[, v.odd] + pop.geno[, v.even]
-  return(geno)
+
+  pop.ind <- nrow(pop.geno) / 2
+  pop.marker <- ncol(pop.geno)
+  bigmat <- big.matrix(
+      nrow = pop.ind,
+      ncol = pop.marker,
+      init = 3,
+      type = 'char'
+  )
+
+  if (is.matrix(pop.geno)) {
+    geno_cvt1_mat(bigmat@address, mat = pop.geno, threads = ncpus)
+  } else if (is.big.matrix(pop.geno)) {
+    geno_cvt1_bigmat(bigmat@address, pop.geno@address, threads = ncpus)
+  } else {
+    stop("Genotype data should be in 'matrix' or 'big.matrix'!")
+  }
+
+  return(bigmat)
 }
 
 #' Genotype code convertor 2
@@ -613,42 +633,93 @@ geno.cvt1 <- function(pop.geno) {
 #' Convert genotype matrix from (0, 1, 2) to (0, 1).
 #'
 #' Build date: Jul 11, 2020
-#' Last update: Apr 28, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
 #' @param pop.geno genotype matrix of (0, 1, 2).
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
 #' 
 #' @return genotype matrix of (0, 1).
 #' 
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2, incols = 1)
-#' SP <- genotype(SP)
-#' geno1 <- SP$geno$pop.geno$gen1
-#' geno2 <- geno.cvt2(geno1)
-#' geno1[1:6, 1:2]
-#' geno2[1:6, 1:4]
-#' }
-geno.cvt2 <- function(pop.geno) {
+#' options(bigmemory.typecast.warning=FALSE)
+#' pop.geno <- matrix(sample(c(0, 1, 2), 8, replace = TRUE), 2, 4)
+#' pop.geno[]
+#' bigmat <- geno.cvt2(pop.geno)
+#' bigmat[]
+#' pop.geno <- as.big.matrix(pop.geno, type = 'char')
+#' bigmat <- geno.cvt2(pop.geno)
+#' bigmat[]
+geno.cvt2 <- function(pop.geno, ncpus = 0) {
   if (is.null(pop.geno)) return(NULL)
-  nind <- ncol(pop.geno)
-  nmrk <- nrow(pop.geno)
-  geno <- matrix(3, nmrk, 2*nind)
-  
-  v.odd <- (1:nind) * 2 - 1
-  v.even <- (1:nind) * 2
-  
-  for (i in 1:nind) {
-    tmp1 <- pop.geno[, i]
-    tmp1[tmp1 == 2] <- 1
-    geno[, v.even[i]] <- tmp1
-    tmp2 <- pop.geno[, i] - 1
-    tmp2[tmp2 == -1] <- 0
-    geno[, v.odd[i]] <- tmp2
+
+  pop.ind <- nrow(pop.geno) * 2
+  pop.marker <- ncol(pop.geno)
+  bigmat <- big.matrix(
+      nrow = pop.ind,
+      ncol = pop.marker,
+      init = 3,
+      type = 'char'
+  )
+
+  if (is.matrix(pop.geno)) {
+    geno_cvt2_mat(bigmat@address, mat = pop.geno, threads = ncpus)
+  } else if (is.big.matrix(pop.geno)) {
+    geno_cvt2_bigmat(bigmat@address, pop.geno@address, threads = ncpus)
+  } else {
+    stop("Genotype data should be in 'matrix' or 'big.matrix'!")
   }
-  
-  return(geno)
+
+  return(bigmat)
+}
+
+#' Genotype transportor
+#' 
+#' Transport genotype matrix.
+#'
+#' Build date: Jan 28, 2025
+#' Last update: Jan 28, 2025
+#'
+#' @author Dong Yin
+#' 
+#' @param pop.geno genotype matrix of (0, 1).
+#' @param ncpus the number of threads used, if NULL, (logical core number - 1) is automatically used.
+#'
+#' @return genotype matrix of (0, 1, 2).
+#' 
+#' @export
+#'
+#' @examples
+#' options(bigmemory.typecast.warning=FALSE)
+#' pop.geno <- matrix(sample(c(0, 1), 16, replace = TRUE), 4, 4)
+#' pop.geno[]
+#' bigmat <- bigt(pop.geno)
+#' bigmat[]
+#' pop.geno <- as.big.matrix(pop.geno, type = 'char')
+#' bigmat <- bigt(pop.geno)
+#' bigmat[]
+bigt <- function(pop.geno, ncpus = 0) {
+  if (is.null(pop.geno)) return(NULL)
+
+  pop.ind <- ncol(pop.geno)
+  pop.marker <- nrow(pop.geno)
+  bigmat <- big.matrix(
+      nrow = pop.ind,
+      ncol = pop.marker,
+      init = 3,
+      type = 'char'
+  )
+
+  if (is.matrix(pop.geno)) {
+    bigt_mat(bigmat@address, mat = pop.geno, threads = ncpus)
+  } else if (is.big.matrix(pop.geno)) {
+    bigt_bigmat(bigmat@address, pop.geno@address, threads = ncpus)
+  } else {
+    stop("Genotype data should be in 'matrix' or 'big.matrix'!")
+  }
+
+  return(bigmat)
 }

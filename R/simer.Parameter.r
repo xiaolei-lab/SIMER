@@ -170,7 +170,7 @@ param.annot <- function(SP = NULL, ...) {
 #' Generate parameters for genotype data simulation.
 #' 
 #' Build date: Feb 21, 2022
-#' Last update: Jul 4, 2022
+#' Last update: Jan 27, 2025
 #'
 #' @author Dong Yin
 #'
@@ -181,12 +181,12 @@ param.annot <- function(SP = NULL, ...) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$geno$pop.geno}{the genotype data.}
-#' \item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+#' \item{$geno$inrows}{'1':one-row genotype represents an individual; '2': two-row genotype represents an individual.}
 #' \item{$geno$pop.marker}{the number of markers.}
 #' \item{$geno$pop.ind}{the number of individuals in the base population.}
 #' \item{$geno$prob}{the genotype code probability.}
 #' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
-#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
+#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'inrows == 2'.}
 #' }
 #' 
 #' @export
@@ -201,7 +201,7 @@ param.geno <- function(SP = NULL, ...) {
   if (is.null(SP$geno)) {
     SP.geno <- list(
       pop.geno = NULL,
-      incols = 1, 
+      inrows = 1, 
       pop.marker = 1e4,
       pop.ind = 1e2,
       prob = NULL,

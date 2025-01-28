@@ -15,12 +15,12 @@ param.geno(SP = NULL, ...)
 the function returns a list containing
 \describe{
 \item{$geno$pop.geno}{the genotype data.}
-\item{$geno$incols}{'1':one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+\item{$geno$inrows}{'1':one-row genotype represents an individual; '2': two-row genotype represents an individual.}
 \item{$geno$pop.marker}{the number of markers.}
 \item{$geno$pop.ind}{the number of individuals in the base population.}
 \item{$geno$prob}{the genotype code probability.}
 \item{$geno$rate.mut}{the mutation rate of the genotype data.}
-\item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
+\item{$geno$cld}{whether to generate a complete LD genotype data when 'inrows == 2'.}
 }
 }
 \description{
@@ -28,7 +28,7 @@ Generate parameters for genotype data simulation.
 }
 \details{
 Build date: Feb 21, 2022
-Last update: Jul 4, 2022
+Last update: Jan 27, 2025
 }
 \examples{
 SP <- param.geno(pop.marker = 1e4, pop.ind = 1e2)

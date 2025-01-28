@@ -17,12 +17,12 @@ genotype(SP = NULL, ncpus = 0, verbose = TRUE)
 the function returns a list containing
 \describe{
 \item{$geno$pop.geno}{the genotype data.}
-\item{$geno$incols}{'1': one-column genotype represents an individual; '2': two-column genotype represents an individual.}
+\item{$geno$inrows}{'1': one-row genotype represents an individual; '2': two-row genotype represents an individual.}
 \item{$geno$pop.marker}{the number of markers.}
 \item{$geno$pop.ind}{the number of individuals in the base population.}
 \item{$geno$prob}{the genotype code probability.}
 \item{$geno$rate.mut}{the mutation rate of the genotype data.}
-\item{$geno$cld}{whether to generate a complete LD genotype data when 'incols == 2'.}
+\item{$geno$cld}{whether to generate a complete LD genotype data when 'inrows == 2'.}
 }
 }
 \description{
@@ -30,7 +30,7 @@ Generating and editing genotype data.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: Apr 28, 2022
+Last update: Jan 28, 2025
 }
 \examples{
 \donttest{

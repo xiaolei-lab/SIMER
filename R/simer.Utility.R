@@ -560,7 +560,7 @@ remove_bigmatrix <- function(x, desc_suffix = ".geno.desc", bin_suffix = ".geno.
 #' Write files of Simer.
 #'
 #' Build date: Jan 7, 2019
-#' Last update: Apr 30, 2022
+#' Last update: Jan 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -590,18 +590,18 @@ write.file <- function(SP) {
   out.pheno.gen <- SP$global$out.pheno.gen
   missing.geno <- SP$global$missing.geno
   missing.phe <- SP$global$missing.phe
-  incols <- SP$geno$incols
+  inrows <- SP$geno$inrows
   ncpus <- SP$global$ncpus
   verbose <- SP$global$verbose
   
   if (is.null(outpath)) return(SP)
   
-  pop.marker <- nrow(SP$geno$pop.geno[[1]])
   pop.inds <- sapply(out.geno.gen, function(i) {
-    return(ncol(SP$geno$pop.geno[[i]]) / incols)
+    return(nrow(SP$geno$pop.geno[[i]]) / inrows)
   })
   pop.ind <- sum(pop.inds)
-  
+  pop.marker <- ncol(SP$geno$pop.geno[[1]])
+
   if (max(out.geno.gen) > SP$reprod$pop.gen) {
     stop("'out.geno.gen' should be not more than 'pop.gen'!")
   }
@@ -628,8 +628,8 @@ write.file <- function(SP) {
   geno.back <- paste0(out, ".geno.bin")
   geno.desc <- paste0(out, ".geno.desc")
   geno.total <- filebacked.big.matrix(
-    nrow = pop.marker,
-    ncol = pop.ind,
+    nrow = pop.ind,
+    ncol = pop.marker,
     init = 3,
     type = 'char',
     backingpath = directory.rep,
@@ -640,10 +640,10 @@ write.file <- function(SP) {
   pop.inds <- Reduce("+", pop.inds, accumulate = TRUE)
   pop.inds <- c(0, pop.inds[-length(pop.inds)]) + 1
   for (i in seq_along(out.geno.gen)) {
-    if (incols == 1) {
+    if (inrows == 1) {
       BigMat2BigMat(geno.total@address, SP$geno$pop.geno[[out.geno.gen[i]]]@address, op = pop.inds[i], threads = ncpus)
     } else {
-      Mat2BigMat(geno.total@address, geno.cvt1(SP$geno$pop.geno[[out.geno.gen[i]]][]), op = pop.inds[i], threads = ncpus)
+      BigMat2BigMat(geno.total@address, geno.cvt1(SP$geno$pop.geno[[out.geno.gen[i]]])@address, op = pop.inds[i], threads = ncpus)
     }
   }
   if (!is.null(missing.geno)) {
@@ -652,7 +652,7 @@ write.file <- function(SP) {
     }
     NA.row <- sample(x = 1:pop.ind, size = pop.ind * sqrt(missing.geno))
     NA.col <- sample(x = 1:pop.marker, size = pop.marker * sqrt(missing.geno))
-    geno.total[NA.col, NA.row] <- NA
+    geno.total[NA.row, NA.col] <- NA
   }
 
   pheno.geno <- NULL

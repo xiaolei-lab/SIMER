@@ -88,7 +88,7 @@ simer <- function(SP) {
   ################### DATA SIMULATION ###################
   SP <- annotation(SP = SP, verbose = verbose)
   SP <- genotype(SP = SP, ncpus = ncpus, verbose = verbose)
-  SP <- phenotype(SP = SP, verbose = verbose)
+  SP <- phenotype(SP = SP, ncpus = ncpus, verbose = verbose)
   SP <- selects(SP = SP, verbose = verbose)
   SP <- reproduces(SP = SP, ncpus = ncpus, verbose = verbose)
   

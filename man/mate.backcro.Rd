@@ -29,7 +29,7 @@ Produce individuals by back cross.
 }
 \details{
 Build date: Apr 12, 2022
-Last update: Apr 30, 2022
+Last update: Jan 28, 2025
 }
 \examples{
 \donttest{

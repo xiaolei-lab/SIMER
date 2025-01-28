@@ -9,20 +9,40 @@ read_bfile <- function(bed_file, pBigMat, maxLine, threads = 0L, verbose = TRUE)
     invisible(.Call('_simer_read_bfile', PACKAGE = 'simer', bed_file, pBigMat, maxLine, threads, verbose))
 }
 
-GenoFilter <- function(pBigMat, keepInds = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL, threads = 0L, verbose = TRUE) {
-    .Call('_simer_GenoFilter', PACKAGE = 'simer', pBigMat, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose)
+GenoFilter <- function(pBigMat, keepIndsNull = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL, threads = 0L, verbose = TRUE) {
+    .Call('_simer_GenoFilter', PACKAGE = 'simer', pBigMat, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose)
 }
 
-Mat2BigMat <- function(pBigMat, mat, colIdx = NULL, op = 1L, threads = 0L) {
-    invisible(.Call('_simer_Mat2BigMat', PACKAGE = 'simer', pBigMat, mat, colIdx, op, threads))
+Mat2BigMat <- function(pBigMat, mat, indIdxNull = NULL, op = 1L, threads = 0L) {
+    invisible(.Call('_simer_Mat2BigMat', PACKAGE = 'simer', pBigMat, mat, indIdxNull, op, threads))
 }
 
-BigMat2BigMat <- function(pBigMat, pBigmat, colIdx = NULL, op = 1L, threads = 0L) {
-    invisible(.Call('_simer_BigMat2BigMat', PACKAGE = 'simer', pBigMat, pBigmat, colIdx, op, threads))
+BigMat2BigMat <- function(pBigMat, pBigmat, indIdxNull = NULL, op = 1L, threads = 0L) {
+    invisible(.Call('_simer_BigMat2BigMat', PACKAGE = 'simer', pBigMat, pBigmat, indIdxNull, op, threads))
 }
 
-GenoMixer <- function(pBigMat, pBigmat, sirIdx, damIdx, nBlock = 100L, op = 1L, threads = 0L) {
-    invisible(.Call('_simer_GenoMixer', PACKAGE = 'simer', pBigMat, pBigmat, sirIdx, damIdx, nBlock, op, threads))
+geno_cvt1_mat <- function(pBigMat, mat, threads = 0L) {
+    invisible(.Call('_simer_geno_cvt1_mat', PACKAGE = 'simer', pBigMat, mat, threads))
+}
+
+geno_cvt1_bigmat <- function(pBigMat, pBigmat, threads = 0L) {
+    invisible(.Call('_simer_geno_cvt1_bigmat', PACKAGE = 'simer', pBigMat, pBigmat, threads))
+}
+
+geno_cvt2_mat <- function(pBigMat, mat, threads = 0L) {
+    invisible(.Call('_simer_geno_cvt2_mat', PACKAGE = 'simer', pBigMat, mat, threads))
+}
+
+geno_cvt2_bigmat <- function(pBigMat, pBigmat, threads = 0L) {
+    invisible(.Call('_simer_geno_cvt2_bigmat', PACKAGE = 'simer', pBigMat, pBigmat, threads))
+}
+
+bigt_mat <- function(pBigMat, mat, threads = 0L) {
+    invisible(.Call('_simer_bigt_mat', PACKAGE = 'simer', pBigMat, mat, threads))
+}
+
+bigt_bigmat <- function(pBigMat, pBigmat, threads = 0L) {
+    invisible(.Call('_simer_bigt_bigmat', PACKAGE = 'simer', pBigMat, pBigmat, threads))
 }
 
 hasNA <- function(pBigMat, threads = 0L) {

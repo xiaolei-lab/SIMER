@@ -40,64 +40,120 @@ BEGIN_RCPP
 END_RCPP
 }
 // GenoFilter
-List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepInds, Nullable<double> filterGeno, Nullable<double> filterHWE, Nullable<double> filterMind, Nullable<double> filterMAF, int threads, bool verbose);
-RcppExport SEXP _simer_GenoFilter(SEXP pBigMatSEXP, SEXP keepIndsSEXP, SEXP filterGenoSEXP, SEXP filterHWESEXP, SEXP filterMindSEXP, SEXP filterMAFSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepIndsNull, Nullable<double> filterGeno, Nullable<double> filterHWE, Nullable<double> filterMind, Nullable<double> filterMAF, int threads, bool verbose);
+RcppExport SEXP _simer_GenoFilter(SEXP pBigMatSEXP, SEXP keepIndsNullSEXP, SEXP filterGenoSEXP, SEXP filterHWESEXP, SEXP filterMindSEXP, SEXP filterMAFSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type keepInds(keepIndsSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type keepIndsNull(keepIndsNullSEXP);
     Rcpp::traits::input_parameter< Nullable<double> >::type filterGeno(filterGenoSEXP);
     Rcpp::traits::input_parameter< Nullable<double> >::type filterHWE(filterHWESEXP);
     Rcpp::traits::input_parameter< Nullable<double> >::type filterMind(filterMindSEXP);
     Rcpp::traits::input_parameter< Nullable<double> >::type filterMAF(filterMAFSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(GenoFilter(pBigMat, keepInds, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose));
+    rcpp_result_gen = Rcpp::wrap(GenoFilter(pBigMat, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // Mat2BigMat
-void Mat2BigMat(const SEXP pBigMat, IntegerMatrix mat, Nullable<IntegerVector> colIdx, int op, int threads);
-RcppExport SEXP _simer_Mat2BigMat(SEXP pBigMatSEXP, SEXP matSEXP, SEXP colIdxSEXP, SEXP opSEXP, SEXP threadsSEXP) {
+void Mat2BigMat(const SEXP pBigMat, IntegerMatrix& mat, Nullable<IntegerVector> indIdxNull, int op, int threads);
+RcppExport SEXP _simer_Mat2BigMat(SEXP pBigMatSEXP, SEXP matSEXP, SEXP indIdxNullSEXP, SEXP opSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type colIdx(colIdxSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type indIdxNull(indIdxNullSEXP);
     Rcpp::traits::input_parameter< int >::type op(opSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    Mat2BigMat(pBigMat, mat, colIdx, op, threads);
+    Mat2BigMat(pBigMat, mat, indIdxNull, op, threads);
     return R_NilValue;
 END_RCPP
 }
 // BigMat2BigMat
-void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> colIdx, int op, int threads);
-RcppExport SEXP _simer_BigMat2BigMat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP colIdxSEXP, SEXP opSEXP, SEXP threadsSEXP) {
+void BigMat2BigMat(const SEXP pBigMat, const SEXP pBigmat, Nullable<IntegerVector> indIdxNull, int op, int threads);
+RcppExport SEXP _simer_BigMat2BigMat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP indIdxNullSEXP, SEXP opSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
-    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type colIdx(colIdxSEXP);
+    Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type indIdxNull(indIdxNullSEXP);
     Rcpp::traits::input_parameter< int >::type op(opSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    BigMat2BigMat(pBigMat, pBigmat, colIdx, op, threads);
+    BigMat2BigMat(pBigMat, pBigmat, indIdxNull, op, threads);
     return R_NilValue;
 END_RCPP
 }
-// GenoMixer
-void GenoMixer(const SEXP pBigMat, const SEXP pBigmat, IntegerVector sirIdx, IntegerVector damIdx, int nBlock, int op, int threads);
-RcppExport SEXP _simer_GenoMixer(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP sirIdxSEXP, SEXP damIdxSEXP, SEXP nBlockSEXP, SEXP opSEXP, SEXP threadsSEXP) {
+// geno_cvt1_mat
+void geno_cvt1_mat(const SEXP pBigMat, IntegerMatrix& mat, int threads);
+RcppExport SEXP _simer_geno_cvt1_mat(SEXP pBigMatSEXP, SEXP matSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    geno_cvt1_mat(pBigMat, mat, threads);
+    return R_NilValue;
+END_RCPP
+}
+// geno_cvt1_bigmat
+void geno_cvt1_bigmat(const SEXP pBigMat, const SEXP pBigmat, int threads);
+RcppExport SEXP _simer_geno_cvt1_bigmat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type sirIdx(sirIdxSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type damIdx(damIdxSEXP);
-    Rcpp::traits::input_parameter< int >::type nBlock(nBlockSEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    GenoMixer(pBigMat, pBigmat, sirIdx, damIdx, nBlock, op, threads);
+    geno_cvt1_bigmat(pBigMat, pBigmat, threads);
+    return R_NilValue;
+END_RCPP
+}
+// geno_cvt2_mat
+void geno_cvt2_mat(const SEXP pBigMat, IntegerMatrix& mat, int threads);
+RcppExport SEXP _simer_geno_cvt2_mat(SEXP pBigMatSEXP, SEXP matSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    geno_cvt2_mat(pBigMat, mat, threads);
+    return R_NilValue;
+END_RCPP
+}
+// geno_cvt2_bigmat
+void geno_cvt2_bigmat(const SEXP pBigMat, const SEXP pBigmat, int threads);
+RcppExport SEXP _simer_geno_cvt2_bigmat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    geno_cvt2_bigmat(pBigMat, pBigmat, threads);
+    return R_NilValue;
+END_RCPP
+}
+// bigt_mat
+void bigt_mat(const SEXP pBigMat, IntegerMatrix& mat, int threads);
+RcppExport SEXP _simer_bigt_mat(SEXP pBigMatSEXP, SEXP matSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    bigt_mat(pBigMat, mat, threads);
+    return R_NilValue;
+END_RCPP
+}
+// bigt_bigmat
+void bigt_bigmat(const SEXP pBigMat, const SEXP pBigmat, int threads);
+RcppExport SEXP _simer_bigt_bigmat(SEXP pBigMatSEXP, SEXP pBigmatSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type pBigmat(pBigmatSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    bigt_bigmat(pBigMat, pBigmat, threads);
     return R_NilValue;
 END_RCPP
 }
@@ -168,7 +224,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_simer_GenoFilter", (DL_FUNC) &_simer_GenoFilter, 8},
     {"_simer_Mat2BigMat", (DL_FUNC) &_simer_Mat2BigMat, 5},
     {"_simer_BigMat2BigMat", (DL_FUNC) &_simer_BigMat2BigMat, 5},
-    {"_simer_GenoMixer", (DL_FUNC) &_simer_GenoMixer, 7},
+    {"_simer_geno_cvt1_mat", (DL_FUNC) &_simer_geno_cvt1_mat, 3},
+    {"_simer_geno_cvt1_bigmat", (DL_FUNC) &_simer_geno_cvt1_bigmat, 3},
+    {"_simer_geno_cvt2_mat", (DL_FUNC) &_simer_geno_cvt2_mat, 3},
+    {"_simer_geno_cvt2_bigmat", (DL_FUNC) &_simer_geno_cvt2_bigmat, 3},
+    {"_simer_bigt_mat", (DL_FUNC) &_simer_bigt_mat, 3},
+    {"_simer_bigt_bigmat", (DL_FUNC) &_simer_bigt_bigmat, 3},
     {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 2},
     {"_simer_hasNABed", (DL_FUNC) &_simer_hasNABed, 5},
     {"_simer_emma_kinship", (DL_FUNC) &_simer_emma_kinship, 3},
