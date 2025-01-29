@@ -14,33 +14,26 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
   if (verbose) { Rcout << " Computing Mendel Conflict Matrix..." << endl; }
   
   MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
-  size_t m = pMat->nrow();
-  size_t n = pMat->ncol();
-  size_t i, j, k;
+  size_t i, j, k, n = pMat->nrow(), m = pMat->ncol();
   
   arma::mat numConfs(n, n, fill::zeros);
-  arma::vec coli(m), colj(m);
-  
+
   MinimalProgressBar pb;
-  Progress p(n, verbose, pb);
+  Progress p(m, verbose, pb);
   
-  #pragma omp parallel for schedule(dynamic) firstprivate(coli, colj) private(i, j, k)
-  for (i = 0; i < n; i++) {
-    for(k = 0; k < m; k++){
-      coli[k] = bigm[i][k];
-    }
-    coli.elem(find(coli == 1)).fill(3);
-    for (j = i+1; j < n; j++) {
-      for (k = 0; k < m; k++) {
-        colj[k] = bigm[j][k];
+  #pragma omp parallel for schedule(dynamic) private(i, j, k)
+  for (k = 0; k < m; k++) {
+    for (i = 0; i < n; i++) {
+      for (j = i+1; j < n; j++) {
+        if (((bigm[k][i] == 0) && (bigm[k][j] == 2)) || ((bigm[k][i] == 2) && (bigm[k][k] == 0))) {
+          numConfs(i, j) = numConfs(i, j) + 1;
+          numConfs(i, j) = numConfs(i, j) + 1;
+        }
       }
-      arma::uvec confIdx = arma::find(coli == 2 - colj);
-      numConfs(i, j) = confIdx.size();
-      numConfs(j, i) = confIdx.size();
     }
     if ( ! Progress::check_abort() ) { p.increment(); }
   }
-  
+
   return numConfs;
 }
 
@@ -76,12 +69,14 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   StringVector candSir, candDam;
   if (candSirID.isNotNull()) {
     StringVector candSirIDUse = as<StringVector>(candSirID);
-    for (size_t i = 0; i < candSirIDUse.size(); i++)
+    size_t ncsu = candSirIDUse.size();
+    for (size_t i = 0; i < ncsu; i++)
       fullSirID.insert(fullSirID.end(), candSirIDUse[i]);
   }
   if (candDamID.isNotNull()) {
     StringVector candDamIDUse = as<StringVector>(candDamID);
-    for (size_t i = 0; i < candDamIDUse.size(); i++)
+    size_t ncdu = candDamIDUse.size();
+    for (size_t i = 0; i < ncdu; i++)
       fullSirID.insert(fullSirID.end(), candDamIDUse[i]);
   }
   NumericVector birdate;
@@ -162,9 +157,10 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     subNumConfs = subNumConfs.cols(candParUse);
     
     arma::uvec sortIdx = sort_index(subNumConfs);
-    for (j = 0; j < sortIdx.n_elem; j++) {
+    size_t nsi = sortIdx.n_elem;
+    for (j = 0; j < nsi; j++) {
       
-      maxPos = sortIdx[sortIdx.n_elem-1-j];;
+      maxPos = sortIdx[nsi-1-j];;
       rowPos = (maxPos + 1) % numCand;
       colPos = (maxPos + 1) / numCand;
       if (rowPos == 0) {

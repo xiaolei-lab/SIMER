@@ -53,10 +53,6 @@ hasNABed <- function(bed_file, ind, maxLine, threads = 0L, verbose = TRUE) {
     .Call('_simer_hasNABed', PACKAGE = 'simer', bed_file, ind, maxLine, threads, verbose)
 }
 
-emma_kinship <- function(pBigMat, threads = 0L, verbose = TRUE) {
-    .Call('_simer_emma_kinship', PACKAGE = 'simer', pBigMat, threads, verbose)
-}
-
 PedigreeCorrector <- function(pBigMat, rawGenoID, rawPed, candSirID = NULL, candDamID = NULL, exclThres = 0.005, assignThres = 0.02, birthDate = NULL, threads = 0L, verbose = TRUE) {
     .Call('_simer_PedigreeCorrector', PACKAGE = 'simer', pBigMat, rawGenoID, rawPed, candSirID, candDamID, exclThres, assignThres, birthDate, threads, verbose)
 }

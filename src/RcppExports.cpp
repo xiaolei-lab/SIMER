@@ -184,19 +184,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// emma_kinship
-arma::mat emma_kinship(SEXP pBigMat, int threads, bool verbose);
-RcppExport SEXP _simer_emma_kinship(SEXP pBigMatSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(emma_kinship(pBigMat, threads, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
 // PedigreeCorrector
 DataFrame PedigreeCorrector(const SEXP pBigMat, StringVector rawGenoID, DataFrame rawPed, Nullable<StringVector> candSirID, Nullable<StringVector> candDamID, double exclThres, double assignThres, Nullable<NumericVector> birthDate, int threads, bool verbose);
 RcppExport SEXP _simer_PedigreeCorrector(SEXP pBigMatSEXP, SEXP rawGenoIDSEXP, SEXP rawPedSEXP, SEXP candSirIDSEXP, SEXP candDamIDSEXP, SEXP exclThresSEXP, SEXP assignThresSEXP, SEXP birthDateSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
@@ -232,7 +219,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_simer_bigt_bigmat", (DL_FUNC) &_simer_bigt_bigmat, 3},
     {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 2},
     {"_simer_hasNABed", (DL_FUNC) &_simer_hasNABed, 5},
-    {"_simer_emma_kinship", (DL_FUNC) &_simer_emma_kinship, 3},
     {"_simer_PedigreeCorrector", (DL_FUNC) &_simer_PedigreeCorrector, 10},
     {NULL, NULL, 0}
 };
