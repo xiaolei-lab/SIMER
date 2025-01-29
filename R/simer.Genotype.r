@@ -100,6 +100,10 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         type = 'char'
       )
       Mat2BigMat(bigmat@address, mat = pop.geno, threads = ncpus)
+      if (hasNA(bigmat@address, mrkbycol = TRUE, threads = ncpus)) {
+        logging.log(" Impute outer genotype matrix...\n", verbose = verbose)
+        impute_marker(bigmat@address, mrkbycol = TRUE, threads = ncpus, verbose = verbose)
+      }
     }
 
   } else if (!is.null(pop.marker) & !is.null(pop.ind)) {

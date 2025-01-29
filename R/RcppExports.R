@@ -45,12 +45,12 @@ bigt_bigmat <- function(pBigMat, pBigmat, threads = 0L) {
     invisible(.Call('_simer_bigt_bigmat', PACKAGE = 'simer', pBigMat, pBigmat, threads))
 }
 
-hasNA <- function(pBigMat, threads = 0L) {
-    .Call('_simer_hasNA', PACKAGE = 'simer', pBigMat, threads)
+impute_marker <- function(pBigMat, mrkbycol = TRUE, threads = 0L, verbose = TRUE) {
+    invisible(.Call('_simer_impute_marker', PACKAGE = 'simer', pBigMat, mrkbycol, threads, verbose))
 }
 
-hasNABed <- function(bed_file, ind, maxLine, threads = 0L, verbose = TRUE) {
-    .Call('_simer_hasNABed', PACKAGE = 'simer', bed_file, ind, maxLine, threads, verbose)
+hasNA <- function(pBigMat, mrkbycol = TRUE, geno_ind = NULL, marker_ind = NULL, threads = 1L) {
+    .Call('_simer_hasNA', PACKAGE = 'simer', pBigMat, mrkbycol, geno_ind, marker_ind, threads)
 }
 
 PedigreeCorrector <- function(pBigMat, rawGenoID, rawPed, candSirID = NULL, candDamID = NULL, exclThres = 0.005, assignThres = 0.02, birthDate = NULL, threads = 0L, verbose = TRUE) {

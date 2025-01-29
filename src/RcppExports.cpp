@@ -157,30 +157,31 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// impute_marker
+void impute_marker(SEXP pBigMat, bool mrkbycol, int threads, bool verbose);
+RcppExport SEXP _simer_impute_marker(SEXP pBigMatSEXP, SEXP mrkbycolSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< bool >::type mrkbycol(mrkbycolSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    impute_marker(pBigMat, mrkbycol, threads, verbose);
+    return R_NilValue;
+END_RCPP
+}
 // hasNA
-bool hasNA(SEXP pBigMat, const int threads);
-RcppExport SEXP _simer_hasNA(SEXP pBigMatSEXP, SEXP threadsSEXP) {
+bool hasNA(SEXP pBigMat, bool mrkbycol, const Nullable<arma::uvec> geno_ind, const Nullable<arma::uvec> marker_ind, const int threads);
+RcppExport SEXP _simer_hasNA(SEXP pBigMatSEXP, SEXP mrkbycolSEXP, SEXP geno_indSEXP, SEXP marker_indSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< bool >::type mrkbycol(mrkbycolSEXP);
+    Rcpp::traits::input_parameter< const Nullable<arma::uvec> >::type geno_ind(geno_indSEXP);
+    Rcpp::traits::input_parameter< const Nullable<arma::uvec> >::type marker_ind(marker_indSEXP);
     Rcpp::traits::input_parameter< const int >::type threads(threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(hasNA(pBigMat, threads));
-    return rcpp_result_gen;
-END_RCPP
-}
-// hasNABed
-bool hasNABed(std::string bed_file, int ind, long maxLine, int threads, bool verbose);
-RcppExport SEXP _simer_hasNABed(SEXP bed_fileSEXP, SEXP indSEXP, SEXP maxLineSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type bed_file(bed_fileSEXP);
-    Rcpp::traits::input_parameter< int >::type ind(indSEXP);
-    Rcpp::traits::input_parameter< long >::type maxLine(maxLineSEXP);
-    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(hasNABed(bed_file, ind, maxLine, threads, verbose));
+    rcpp_result_gen = Rcpp::wrap(hasNA(pBigMat, mrkbycol, geno_ind, marker_ind, threads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -217,8 +218,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_simer_geno_cvt2_bigmat", (DL_FUNC) &_simer_geno_cvt2_bigmat, 3},
     {"_simer_bigt_mat", (DL_FUNC) &_simer_bigt_mat, 3},
     {"_simer_bigt_bigmat", (DL_FUNC) &_simer_bigt_bigmat, 3},
-    {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 2},
-    {"_simer_hasNABed", (DL_FUNC) &_simer_hasNABed, 5},
+    {"_simer_impute_marker", (DL_FUNC) &_simer_impute_marker, 4},
+    {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 5},
     {"_simer_PedigreeCorrector", (DL_FUNC) &_simer_PedigreeCorrector, 10},
     {NULL, NULL, 0}
 };
