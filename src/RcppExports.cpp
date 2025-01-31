@@ -40,12 +40,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // GenoFilter
-List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepIndsNull, Nullable<double> filterGeno, Nullable<double> filterHWE, Nullable<double> filterMind, Nullable<double> filterMAF, int threads, bool verbose);
-RcppExport SEXP _simer_GenoFilter(SEXP pBigMatSEXP, SEXP keepIndsNullSEXP, SEXP filterGenoSEXP, SEXP filterHWESEXP, SEXP filterMindSEXP, SEXP filterMAFSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+List GenoFilter(const SEXP pBigMat, double NA_C, Nullable<IntegerVector> keepIndsNull, Nullable<double> filterGeno, Nullable<double> filterHWE, Nullable<double> filterMind, Nullable<double> filterMAF, int threads, bool verbose);
+RcppExport SEXP _simer_GenoFilter(SEXP pBigMatSEXP, SEXP NA_CSEXP, SEXP keepIndsNullSEXP, SEXP filterGenoSEXP, SEXP filterHWESEXP, SEXP filterMindSEXP, SEXP filterMAFSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< double >::type NA_C(NA_CSEXP);
     Rcpp::traits::input_parameter< Nullable<IntegerVector> >::type keepIndsNull(keepIndsNullSEXP);
     Rcpp::traits::input_parameter< Nullable<double> >::type filterGeno(filterGenoSEXP);
     Rcpp::traits::input_parameter< Nullable<double> >::type filterHWE(filterHWESEXP);
@@ -53,7 +54,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Nullable<double> >::type filterMAF(filterMAFSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(GenoFilter(pBigMat, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose));
+    rcpp_result_gen = Rcpp::wrap(GenoFilter(pBigMat, NA_C, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -185,6 +186,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// hasNABed
+bool hasNABed(std::string bed_file, int ind, long maxLine, int threads, bool verbose);
+RcppExport SEXP _simer_hasNABed(SEXP bed_fileSEXP, SEXP indSEXP, SEXP maxLineSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type bed_file(bed_fileSEXP);
+    Rcpp::traits::input_parameter< int >::type ind(indSEXP);
+    Rcpp::traits::input_parameter< long >::type maxLine(maxLineSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(hasNABed(bed_file, ind, maxLine, threads, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // PedigreeCorrector
 DataFrame PedigreeCorrector(const SEXP pBigMat, StringVector rawGenoID, DataFrame rawPed, Nullable<StringVector> candSirID, Nullable<StringVector> candDamID, double exclThres, double assignThres, Nullable<NumericVector> birthDate, int threads, bool verbose);
 RcppExport SEXP _simer_PedigreeCorrector(SEXP pBigMatSEXP, SEXP rawGenoIDSEXP, SEXP rawPedSEXP, SEXP candSirIDSEXP, SEXP candDamIDSEXP, SEXP exclThresSEXP, SEXP assignThresSEXP, SEXP birthDateSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
@@ -209,7 +225,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_simer_write_bfile", (DL_FUNC) &_simer_write_bfile, 5},
     {"_simer_read_bfile", (DL_FUNC) &_simer_read_bfile, 5},
-    {"_simer_GenoFilter", (DL_FUNC) &_simer_GenoFilter, 8},
+    {"_simer_GenoFilter", (DL_FUNC) &_simer_GenoFilter, 9},
     {"_simer_Mat2BigMat", (DL_FUNC) &_simer_Mat2BigMat, 5},
     {"_simer_BigMat2BigMat", (DL_FUNC) &_simer_BigMat2BigMat, 5},
     {"_simer_geno_cvt1_mat", (DL_FUNC) &_simer_geno_cvt1_mat, 3},
@@ -220,6 +236,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_simer_bigt_bigmat", (DL_FUNC) &_simer_bigt_bigmat, 3},
     {"_simer_impute_marker", (DL_FUNC) &_simer_impute_marker, 4},
     {"_simer_hasNA", (DL_FUNC) &_simer_hasNA, 5},
+    {"_simer_hasNABed", (DL_FUNC) &_simer_hasNABed, 5},
     {"_simer_PedigreeCorrector", (DL_FUNC) &_simer_PedigreeCorrector, 10},
     {NULL, NULL, 0}
 };

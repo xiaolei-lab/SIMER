@@ -232,8 +232,11 @@ NumericVector FilterHWE(arma::mat &genoFreq, int threads=0) {
   return PVAL;
 }
 
-template<typename T>
-List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> &keepIndsNull=R_NilValue, Nullable<double> filterGeno=R_NilValue, Nullable<double> filterHWE=R_NilValue, Nullable<double> filterMind=R_NilValue, Nullable<double> filterMAF=R_NilValue, int threads=0, bool verbose=true) {
+// [[Rcpp::export]]
+List GenoFilter(const SEXP pBigMat, double NA_C, Nullable<IntegerVector> keepIndsNull=R_NilValue, Nullable<double> filterGeno=R_NilValue, Nullable<double> filterHWE=R_NilValue, Nullable<double> filterMind=R_NilValue, Nullable<double> filterMAF=R_NilValue, int threads=0, bool verbose=true) {
+  omp_setup(threads);
+
+  XPtr<BigMatrix> pMat(pBigMat);
 
   double n = pMat->nrow(), m = pMat->ncol();
   IntegerVector  keepMrks = seq(0, m - 1);
@@ -266,7 +269,7 @@ List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> &keep
   
   if (filterMind.isNotNull()) {
     if (verbose) { Rcout << " Calculating sample missingness rates..."; }
-    NumericVector indNumNA = FilterMind(pMat, NA_C, threads);
+    NumericVector indNumNA = FilterMind(pBigMat, NA_C, threads);
     if (verbose) {  Rcout << " done." << endl; }
     keepInds = keepInds[indNumNA/m < fmind];
     if (verbose) {
@@ -279,7 +282,7 @@ List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> &keep
   
   if (filterGeno.isNotNull()) {
     if (verbose) { Rcout << " Calculating variant missingness rates..."; }
-    NumericVector mrkNumNA = FilterGeno(pMat, NA_C, keepInds, keepMrks, threads);
+    NumericVector mrkNumNA = FilterGeno(pBigMat, NA_C, keepInds, keepMrks, threads);
     if (verbose) {  Rcout << " done." << endl; }
     keepMrks = keepMrks[mrkNumNA/n < fgeno];
     if (verbose) {
@@ -293,7 +296,7 @@ List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> &keep
   arma::mat genoFreq;
   if (filterMAF.isNotNull() || filterHWE.isNotNull()) {
     if (verbose) { Rcout << " Calculating Genotype FrequenindIdxes..."; }
-    genoFreq = CalGenoFreq(pMat, keepInds, keepMrks, threads);
+    genoFreq = CalGenoFreq(pBigMat, keepInds, keepMrks, threads);
     if (verbose) {  Rcout << " done." << endl << endl; }
   }
   
@@ -332,26 +335,8 @@ List GenoFilter(XPtr<BigMatrix> pMat, double NA_C, Nullable<IntegerVector> &keep
   return genoInfo;
 }
 
-// [[Rcpp::export]]
-List GenoFilter(const SEXP pBigMat, Nullable<IntegerVector> keepIndsNull=R_NilValue, Nullable<double> filterGeno=R_NilValue, Nullable<double> filterHWE=R_NilValue, Nullable<double> filterMind=R_NilValue, Nullable<double> filterMAF=R_NilValue, int threads=0, bool verbose=true) {
-  XPtr<BigMatrix> xpMat(pBigMat);
-  
-  switch(xpMat->matrix_type()) {
-  case 1:
-    return GenoFilter<char>(xpMat, NA_CHAR, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
-  case 2:
-    return GenoFilter<short>(xpMat, NA_SHORT, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
-  case 4:
-    return GenoFilter<int>(xpMat, NA_INTEGER, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
-  case 8:
-    return GenoFilter<double>(xpMat, NA_REAL, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose);
-  default:
-    throw Rcpp::exception("unknown type detected for big.matrix object!");
-  }
-}
-
 template<typename T>
-void Mat2BigMat(XPtr<BigMatrix> pMat, IntegerMatrix &mat, Nullable<IntegerVector> &indIdxNull=R_NilValue, int op=1, int threads=0) {
+void Mat2BigMat(XPtr<BigMatrix> pMat, IntegerMatrix &mat, Nullable<IntegerVector> indIdxNull=R_NilValue, int op=1, int threads=0) {
   omp_setup(threads);
   
   MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);
@@ -404,7 +389,7 @@ void Mat2BigMat(const SEXP pBigMat, IntegerMatrix &mat, Nullable<IntegerVector> 
 }
 
 template<typename T>
-void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerVector> &indIdxNull=R_NilValue, int op=1, int threads=0) {
+void BigMat2BigMat(XPtr<BigMatrix> pMat, XPtr<BigMatrix> pmat, Nullable<IntegerVector> indIdxNull=R_NilValue, int op=1, int threads=0) {
   omp_setup(threads);
   
   MatrixAccessor<T> bigmat = MatrixAccessor<T>(*pMat);

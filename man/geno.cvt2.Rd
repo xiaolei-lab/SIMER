@@ -19,9 +19,11 @@ Convert genotype matrix from (0, 1, 2) to (0, 1).
 }
 \details{
 Build date: Jul 11, 2020
-Last update: Jan 28, 2025
+Last update: Jan 29, 2025
 }
 \examples{
+\donttest{
+library(bigmemory)
 options(bigmemory.typecast.warning=FALSE)
 pop.geno <- matrix(sample(c(0, 1, 2), 8, replace = TRUE), 2, 4)
 pop.geno[]
@@ -30,6 +32,7 @@ bigmat[]
 pop.geno <- as.big.matrix(pop.geno, type = 'char')
 bigmat <- geno.cvt2(pop.geno)
 bigmat[]
+}
 }
 \author{
 Dong Yin

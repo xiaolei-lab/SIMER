@@ -9,8 +9,8 @@ read_bfile <- function(bed_file, pBigMat, maxLine, threads = 0L, verbose = TRUE)
     invisible(.Call('_simer_read_bfile', PACKAGE = 'simer', bed_file, pBigMat, maxLine, threads, verbose))
 }
 
-GenoFilter <- function(pBigMat, keepIndsNull = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL, threads = 0L, verbose = TRUE) {
-    .Call('_simer_GenoFilter', PACKAGE = 'simer', pBigMat, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose)
+GenoFilter <- function(pBigMat, NA_C, keepIndsNull = NULL, filterGeno = NULL, filterHWE = NULL, filterMind = NULL, filterMAF = NULL, threads = 0L, verbose = TRUE) {
+    .Call('_simer_GenoFilter', PACKAGE = 'simer', pBigMat, NA_C, keepIndsNull, filterGeno, filterHWE, filterMind, filterMAF, threads, verbose)
 }
 
 Mat2BigMat <- function(pBigMat, mat, indIdxNull = NULL, op = 1L, threads = 0L) {
@@ -51,6 +51,10 @@ impute_marker <- function(pBigMat, mrkbycol = TRUE, threads = 0L, verbose = TRUE
 
 hasNA <- function(pBigMat, mrkbycol = TRUE, geno_ind = NULL, marker_ind = NULL, threads = 1L) {
     .Call('_simer_hasNA', PACKAGE = 'simer', pBigMat, mrkbycol, geno_ind, marker_ind, threads)
+}
+
+hasNABed <- function(bed_file, ind, maxLine, threads = 0L, verbose = TRUE) {
+    .Call('_simer_hasNABed', PACKAGE = 'simer', bed_file, ind, maxLine, threads, verbose)
 }
 
 PedigreeCorrector <- function(pBigMat, rawGenoID, rawPed, candSirID = NULL, candDamID = NULL, exclThres = 0.005, assignThres = 0.02, birthDate = NULL, threads = 0L, verbose = TRUE) {

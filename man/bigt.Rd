@@ -19,9 +19,11 @@ Transport genotype matrix.
 }
 \details{
 Build date: Jan 28, 2025
-Last update: Jan 28, 2025
+Last update: Jan 29, 2025
 }
 \examples{
+\donttest{
+library(bigmemory)
 options(bigmemory.typecast.warning=FALSE)
 pop.geno <- matrix(sample(c(0, 1), 16, replace = TRUE), 4, 4)
 pop.geno[]
@@ -30,6 +32,7 @@ bigmat[]
 pop.geno <- as.big.matrix(pop.geno, type = 'char')
 bigmat <- bigt(pop.geno)
 bigmat[]
+}
 }
 \author{
 Dong Yin

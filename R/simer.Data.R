@@ -1574,7 +1574,7 @@ checkEnv <- function(data, envName, verbose = TRUE) {
 #' transforming MVP data to binary format.
 #' 
 #' Build date: Sep 12, 2018
-#' Last update: Dec 28, 2024
+#' Last update: Jan 29, 2025
 #'
 #' @author Haohao Zhang and Dong Yin
 #' 
@@ -1593,6 +1593,8 @@ checkEnv <- function(data, envName, verbose = TRUE) {
 #' 
 #' @examples
 #' \donttest{
+#' library(bigmemory)
+#'
 #' # Generate bigmat and map
 #' bigmat <- as.big.matrix(matrix(1:6, 3, 2))
 #' map <- generate.map(pop.marker = 3)

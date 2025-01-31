@@ -589,7 +589,7 @@ generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.ch
 #' Convert genotype matrix from (0, 1) to (0, 1, 2).
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Jan 28, 2025
+#' Last update: Jan 30, 2025
 #'
 #' @author Dong Yin
 #' 
@@ -601,6 +601,8 @@ generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.ch
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' library(bigmemory)
 #' options(bigmemory.typecast.warning=FALSE)
 #' pop.geno <- matrix(sample(c(0, 1), 16, replace = TRUE), 4, 4)
 #' pop.geno[]
@@ -609,6 +611,7 @@ generate.map <- function(species = NULL, pop.marker = NULL, num.chr = 18, len.ch
 #' pop.geno <- as.big.matrix(pop.geno, type = 'char')
 #' bigmat <- geno.cvt1(pop.geno)
 #' bigmat[]
+#' }
 geno.cvt1 <- function(pop.geno, ncpus = 0) {
   if (is.null(pop.geno)) return(NULL)
 
@@ -637,7 +640,7 @@ geno.cvt1 <- function(pop.geno, ncpus = 0) {
 #' Convert genotype matrix from (0, 1, 2) to (0, 1).
 #'
 #' Build date: Jul 11, 2020
-#' Last update: Jan 28, 2025
+#' Last update: Jan 29, 2025
 #'
 #' @author Dong Yin
 #'
@@ -649,6 +652,8 @@ geno.cvt1 <- function(pop.geno, ncpus = 0) {
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' library(bigmemory)
 #' options(bigmemory.typecast.warning=FALSE)
 #' pop.geno <- matrix(sample(c(0, 1, 2), 8, replace = TRUE), 2, 4)
 #' pop.geno[]
@@ -657,6 +662,7 @@ geno.cvt1 <- function(pop.geno, ncpus = 0) {
 #' pop.geno <- as.big.matrix(pop.geno, type = 'char')
 #' bigmat <- geno.cvt2(pop.geno)
 #' bigmat[]
+#' }
 geno.cvt2 <- function(pop.geno, ncpus = 0) {
   if (is.null(pop.geno)) return(NULL)
 
@@ -685,7 +691,7 @@ geno.cvt2 <- function(pop.geno, ncpus = 0) {
 #' Transport genotype matrix.
 #'
 #' Build date: Jan 28, 2025
-#' Last update: Jan 28, 2025
+#' Last update: Jan 29, 2025
 #'
 #' @author Dong Yin
 #' 
@@ -697,6 +703,8 @@ geno.cvt2 <- function(pop.geno, ncpus = 0) {
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' library(bigmemory)
 #' options(bigmemory.typecast.warning=FALSE)
 #' pop.geno <- matrix(sample(c(0, 1), 16, replace = TRUE), 4, 4)
 #' pop.geno[]
@@ -705,6 +713,7 @@ geno.cvt2 <- function(pop.geno, ncpus = 0) {
 #' pop.geno <- as.big.matrix(pop.geno, type = 'char')
 #' bigmat <- bigt(pop.geno)
 #' bigmat[]
+#' }
 bigt <- function(pop.geno, ncpus = 0) {
   if (is.null(pop.geno)) return(NULL)
 
