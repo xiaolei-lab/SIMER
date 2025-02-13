@@ -253,6 +253,7 @@ annotation <- function(SP, verbose = TRUE) {
   num.chr <- SP$map$num.chr
   len.chr <- SP$map$len.chr
   pop.geno <- SP$geno$pop.geno
+  inrows <- SP$geno$inrows
   qtn.model <- SP$map$qtn.model
   qtn.index <- SP$map$qtn.index
   qtn.num <- SP$map$qtn.num
@@ -339,10 +340,17 @@ annotation <- function(SP, verbose = TRUE) {
     if (is.null(pop.geno)) {
       stop("MAF calculation need genotype data!")
     }
-    if (nrow(pop.geno) != nrow(pop.map)) {
+    if (ncol(pop.geno) != nrow(pop.map)) {
       stop("Marker number should be same in both 'pop.map' and 'pop.geno'!")
     }
-    MAF <- rowSums(pop.geno[]) / ncol(pop.geno)
+    if (inrows == 1) {
+      MAF <- colSums(pop.geno[]) / (2*nrow(pop.geno))
+    } else if (inrows == 2) {
+      MAF <- colSums(pop.geno[]) / nrow(pop.geno)
+    } else {
+      stop("'inrows' should only be 1 or 2!")
+    }
+    
     MAF <- pmin(MAF, 1 - MAF)
     pop.map$QTNProb[MAF < maf] <- 0
     pop.map$MAF <- MAF
