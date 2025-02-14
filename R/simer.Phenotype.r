@@ -235,17 +235,7 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         }
         # (0, 1, 2) -> (-1, 0, 1)
         pop.qtn.add[[i]] <- pop.qtn.add[[i]][] - 1
-        phe.add <- matrix(0, pop.ind, 1)
-        qtn.num.cum <- cumsum(qtn.num[[i]])
-        for (k in 1:length(qtn.num[[i]])) {
-          pop.qtn.add.tmp <- pop.qtn.add[[i]][, (qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), drop = FALSE]
-          qtn.eff.tmp <- qtn.eff[(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]
-          phe.add.tmp <- tcrossprod(pop.qtn.add.tmp, t(qtn.eff.tmp))
-          scale <- as.numeric(sqrt(qtn.var[[i]][k] / var(phe.add.tmp)))
-          SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] <- SP$map$pop.map[[paste0("QTN", i, "_A")]][qtn.pos.add[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] * scale
-          phe.add.tmp <- phe.add.tmp * scale
-          phe.add <- phe.add + phe.add.tmp
-        }
+        phe.add <- tcrossprod(pop.qtn.add[[i]], t(qtn.eff))
         if (length(phe.var) < i) {
           phe.var[[i]] <- var(phe.add) / phe.h2A[[i]]
         }
@@ -281,17 +271,7 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         # (0, 1, 2) -> (-0.5, 0.5, -0.5)
         pop.qtn.dom[[i]][pop.qtn.dom[[i]] == 2] <- 0
         pop.qtn.dom[[i]] <- pop.qtn.dom[[i]][] - 0.5
-        phe.dom <- matrix(0, pop.ind, 1)
-        qtn.num.cum <- cumsum(qtn.num[[i]])
-        for (k in 1:length(qtn.num[[i]])) {
-          pop.qtn.dom.tmp <- pop.qtn.dom[[i]][, (qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k]), drop = FALSE]
-          qtn.eff.tmp <- qtn.eff[(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]
-          phe.dom.tmp <- tcrossprod(pop.qtn.dom.tmp, t(qtn.eff.tmp))
-          scale <- as.numeric(sqrt(qtn.var[[i]][k] / var(phe.dom.tmp)))
-          SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]][qtn.pos.dom[[i]][(qtn.num.cum[k]-qtn.num[[i]][k]+1):(qtn.num.cum[k])]] * scale
-          phe.dom.tmp <- phe.dom.tmp * scale
-          phe.dom <- phe.dom + phe.dom.tmp
-        }
+        phe.dom <- tcrossprod(pop.qtn.dom[[i]], t(qtn.eff))
         scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2D[[i]] / var(phe.dom)))
         SP$map$pop.map[[paste0("QTN", i, "_D")]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]] * scale
         phe.dom <- phe.dom * scale
