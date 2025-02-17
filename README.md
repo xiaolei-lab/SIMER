@@ -139,7 +139,7 @@ Typing ```?simer``` could get the details of all parameters.
 ## Genotype
 **[back to top](#contents)**  
 
-***Genotype data*** should be ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals). Other ***genotype data***, such as ***PLINK Binary*** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), ***VCF***, or ***Hapmap*** can be converted to ***Numeric*** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
+***Genotype data*** should be ***Numeric*** format (either m * n or n * m is acceptable, ***m*** is the number of SNPs, ***n*** is the number of individuals). Other ***genotype data***, such as ***PLINK Binary*** format (details see http://zzz.bwh.harvard.edu/plink/data.shtml#bed), ***VCF***, or ***Hapmap*** can be converted to ***Numeric*** format using ```MVP.Data``` function in the **```rMVP```** (https://github.com/xiaolei-lab/rMVP).
 
 > `genotype.txt`
 
@@ -227,14 +227,14 @@ A ***genetic map*** is necessary in **```SIMER```**. The first column is the ***
 
 ## Basic
 **[back to top](#contents)**  
-At least users should prepare two datasets: ***genotypic map*** and ***genotype data***.  
+At least users should prepare two datasets: ***genetic map*** and ***genotype data***.  
 
-***genotype data***, ***Numeric*** format (***m*** rows and ***n*** columns, ***m*** is the number of SNPs, ***n*** is the number of individuals)  
-***genotypic map***, SNP map information, the first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  
+***genetic map***, SNP map information, the first column is ***SNP name***, the second column is ***Chromosome ID***, the third column is ***physical position***, the fourth column is ***REF***, and the fifth column is ***ALT***.  
+***genotype data***, ***Numeric*** format (either m * n or n * m is acceptable, ***m*** is the number of SNPs, ***n*** is the number of individuals)  
 
 ```r
+pop.map <- read.table("map.txt", head = TRUE)
 pop.geno <- read.table("genotype.txt")
-pop.map <- read.table("map.txt" , head = TRUE)
 ```
 
 ## Optional
