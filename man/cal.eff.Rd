@@ -19,7 +19,7 @@ cal.eff(
 \arguments{
 \item{qtn.num}{integer: the QTN number of single trait; vector: the multiple group QTN number of single trait; matrix: the QTN number of multiple traits.}
 
-\item{qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
+\item{qtn.dist}{the QTN distribution containing "norm", "geom", "gamma" or "beta".}
 
 \item{qtn.var}{the standard deviations for normal distribution.}
 

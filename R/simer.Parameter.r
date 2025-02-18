@@ -31,10 +31,10 @@
 #' \item{$map$pop.marker}{the number of markers.}
 #' \item{$map$num.chr}{the number of chromosomes.}
 #' \item{$map$len.chr}{the length of chromosomes.}
-#' \item{$map$qtn.model}{the genetic model of QTN such as 'A + D'.}
+#' \item{$map$qtn.model}{the genetic model of QTN such as "A + D".}
 #' \item{$map$qtn.index}{the QTN index for each trait.}
 #' \item{$map$qtn.num}{the QTN number for (each group in) each trait.}
-#' \item{$map$qtn.dist}{the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.}
+#' \item{$map$qtn.dist}{the QTN distribution containing "norm", "geom", "gamma" or "beta".}
 #' \item{$map$qtn.var}{the standard deviations for normal distribution.}
 #' \item{$map$qtn.prob}{the probability of success for geometric distribution.}
 #' \item{$map$qtn.shape}{the shape parameter for gamma distribution.}
@@ -181,12 +181,12 @@ param.annot <- function(SP = NULL, ...) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$geno$pop.geno}{the genotype data.}
-#' \item{$geno$inrows}{'1':one-row genotype represents an individual; '2': two-row genotype represents an individual.}
+#' \item{$geno$inrows}{"1":one-row genotype represents an individual; "2": two-row genotype represents an individual.}
 #' \item{$geno$pop.marker}{the number of markers.}
 #' \item{$geno$pop.ind}{the number of individuals in the base population.}
 #' \item{$geno$prob}{the genotype code probability.}
 #' \item{$geno$rate.mut}{the mutation rate of the genotype data.}
-#' \item{$geno$cld}{whether to generate a complete LD genotype data when 'inrows == 2'.}
+#' \item{$geno$cld}{whether to generate a complete LD genotype data when "inrows == 2".}
 #' }
 #' 
 #' @export

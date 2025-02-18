@@ -337,7 +337,7 @@ SP <- phenotype(SP)
 <td><b>inrows</b></td>
 <td>1</td>
 <td>1 or 2</td>
-<td>'1': one-row genotype represents an individual; '2': two-row genotype represents an individual.</td>
+<td>"1": one-row genotype represents an individual; "2": two-row genotype represents an individual.</td>
 </tr>
 <tr>
 <td><b>pop.marker</b></td>
@@ -359,15 +359,15 @@ SP <- phenotype(SP)
 </tr>
 <tr>
 <td><b>rate.mut</b></td>
-<td>1e-8</td>
-<td>num</td>
+<td>list(qtn = 1e-8, snp = 1e-8)</td>
+<td>list</td>
 <td>the mutation rate of the genotype data.</td>
 </tr>
 <tr>
 <td><b>cld</b></td>
 <td>FALSE</td>
 <td>TRUE or FALSE</td>
-<td>whether to generate a complete LD genotype data when 'inrows == 2'.</td>
+<td>whether to generate a complete LD genotype data when "inrows == 2".</td>
 </tr>
 </tbody>
 </table>
@@ -659,19 +659,19 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>phe.h2GxG</b></td>
-<td>NULL</td>
+<td>list(tr1 = 0.1)</td>
 <td>list</td>
 <td>a list of GxG interaction heritability.</td>
 </tr>
 <tr>
 <td><b>phe.h2GxE</b></td>
-<td>NULL</td>
+<td>list(tr1 = 0.1)</td>
 <td>list</td>
 <td>a list of GxE interaction heritability.</td>
 </tr>
 <tr>
 <td><b>phe.h2PE</b></td>
-<td>NULL</td>
+<td>list(tr1 = 0.1)</td>
 <td>list</td>
 <td>a list of permanent environmental heritability.</td>
 </tr>
@@ -683,31 +683,31 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>phe.corA</b></td>
-<td>NULL</td>
+<td>diag(nTrait)</td>
 <td>matrix</td>
 <td>the additive genetic correlation matrix.</td>
 </tr>
 <tr>
 <td><b>phe.corD</b></td>
-<td>NULL</td>
+<td>diag(nTrait)</td>
 <td>matrix</td>
 <td>the dominant genetic correlation matrix.</td>
 </tr>
 <tr>
 <td><b>phe.corGxG</b></td>
-<td>NULL</td>
+<td>list(diag(nTrait))</td>
 <td>list</td>
 <td>a list of the GxG genetic correlation matrix.</td>
 </tr>
 <tr>
 <td><b>phe.corPE</b></td>
-<td>NULL</td>
+<td>diag(nTrait)</td>
 <td>matrix</td>
 <td>the permanent environmental correlation matrix.</td>
 </tr>
 <tr>
 <td><b>phe.corE</b></td>
-<td>NULL</td>
+<td>diag(nTrait)</td>
 <td>matrix</td>
 <td>the residual correlation matrix.</td>
 </tr>
@@ -734,9 +734,9 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>qtn.model</b></td>
-<td>'A'</td>
+<td>"A"</td>
 <td>character</td>
-<td>the genetic model of QTN such as 'A + D'.</td>
+<td>the genetic model of QTN such as "A + D".</td>
 </tr>
 <tr>
 <td><b>qtn.index</b></td>
@@ -752,9 +752,9 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>qtn.dist</b></td>
-<td>list(tr1 = 'norm')</td>
+<td>list(tr1 = "norm")</td>
 <td>list</td>
-<td>the QTN distribution containing 'norm', 'geom', 'gamma' or 'beta'.</td>
+<td>the QTN distribution containing "norm", "geom", "gamma" or "beta".</td>
 </tr>
 <tr>
 <td><b>qtn.var</b></td>
@@ -828,7 +828,7 @@ Users can use ***real genotype data*** with specific genetic structure to genera
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
-pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e4, ncol = 1e2, byrow = TRUE)
+pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e2, ncol = 1e4, byrow = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
@@ -1305,7 +1305,7 @@ SP <- param.annot(
   qtn.num = list(tr1 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm"),
-  qtn.var = list(tr1 = 1)
+  qtn.var = list(tr1 = 0.01)
 )
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
@@ -1335,7 +1335,7 @@ SP <- param.annot(
   qtn.num = list(tr1 = 10, tr2 = 10),
   qtn.model = "A",
   qtn.dist = list(tr1 = "norm", tr2 = "norm"),
-  qtn.var = list(tr1 = 1, tr2 = 1)
+  qtn.var = list(tr1 = 0.01, tr2 = 0.01)
 )
 # Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
@@ -1842,7 +1842,6 @@ pop.env <- list(
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A") # Additive effect
 # Generate genotype simulation parameters
-# SP <- param.geno(SP = SP, pop.geno = pop.geno)           # external genotype
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
@@ -1878,7 +1877,7 @@ SP <- param.annot(
   pop.marker = 1e4, 
   qtn.num = list(tr1 = c(2, 8)), # Group1: 2 QTNs; Group 2: 8 QTNs
   qtn.dist = list(tr1 = c("norm", "norm")),
-  qtn.var = list(tr1 = c(1, 1)), # Group1: genetic variance of QTNs = 1; Group2: genetic variance of QTNs = 1
+  qtn.var = list(tr1 = c(0.01, 0.01)), # Group1: genetic variance of QTNs = 0.01; Group2: genetic variance of QTNs = 0.01
   qtn.model = "A"
 )
 # Generate genotype simulation parameters
@@ -1889,6 +1888,41 @@ SP <- param.pheno(
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
   # phe.var = list(tr1 = 100),
   phe.h2A = list(tr1 = 0.3)
+)
+
+# Run annotation simulation
+SP <- annotation(SP)
+# Run genotype simulation
+SP <- genotype(SP)
+# Run phenotype simulation
+SP <- phenotype(SP)
+
+```
+An example of the multiple-trait controlled by two-group QTNs is displayed as follows:   
+If users want to output files, please see **[File output](#file-output)**.  
+
+```r
+# Prepare environmental factor list
+# Generate annotation simulation parameters
+SP <- param.annot(
+  pop.marker = 1e4, 
+  qtn.num = list(tr1 = c(2, 8), tr2 = c(2, 8)), # Group1: 2 QTNs; Group 2: 8 QTNs
+  qtn.dist = list(tr1 = c("norm", "norm"), tr2 = c("norm", "norm")),
+  qtn.var = list(tr1 = c(0.01, 0.01), tr2 = c(0.01, 0.01)), # Group1: genetic variance of QTNs = 0.01; Group2: genetic variance of QTNs = 0.01
+  qtn.model = "A"
+)
+# Generate genotype simulation parameters
+SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
+# Generate phenotype simulation parameters
+SP <- param.pheno(
+  SP = SP,
+  phe.model = list(
+    tr1 = "T1 = A + E", # "T1" (Trait 1) consists of Additive effect and Residual effect
+    tr2 = "T2 = A + E"  # "T2" (Trait 2) consists of Additive effect and Residual effect
+  ),
+  # phe.var = list(tr1 = 100, tr2 = 100),
+  phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Additive genetic correlation
 )
 
 # Run annotation simulation
