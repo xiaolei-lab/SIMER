@@ -363,6 +363,12 @@ SP <- phenotype(SP)
 <td>num</td>
 <td>the mutation rate of the genotype data.</td>
 </tr>
+<tr>
+<td><b>cld</b></td>
+<td>FALSE</td>
+<td>TRUE or FALSE</td>
+<td>whether to generate a complete LD genotype data when 'inrows == 2'.</td>
+</tr>
 </tbody>
 </table>
 
@@ -476,7 +482,7 @@ Users can use ***real genotype data*** with specific genetic structure for subse
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
-pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e4, ncol = 1e2, byrow = TRUE)
+pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e2, ncol = 1e4, byrow = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
@@ -541,7 +547,7 @@ With ***annotation data***, chromosome crossovers and mutations can be added to 
 
 ```r
 # Generate annotation simulation parameters
-# If recom.spot = TRUE, chromsome crossovers will be added to genotype matrix
+# If recom.spot = TRUE, chromosome crossovers will be added to genotype matrix
 SP <- param.annot(pop.marker = 1e4, recom.spot = TRUE)
 # Generate genotype simulation parameters
 # Base mutation rate of QTN and SNP are 1e8
@@ -557,7 +563,7 @@ Note that recombination only exists in meiosis. Therefore, some reproduction met
 
 ```r
 # Generate annotation simulation parameters
-# If recom.spot = FALSE, chromsome crossovers will not be added to genotype matrix
+# If recom.spot = FALSE, chromosome crossovers will not be added to genotype matrix
 SP <- param.annot(pop.marker = 1e4, recom.spot = FALSE)
 # Generate genotype simulation parameters
 # Base mutation rate of QTN and SNP are 1e8
@@ -734,13 +740,13 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>qtn.index</b></td>
-<td>10</td>
+<td>NULL</td>
 <td>list</td>
 <td>the QTN index for each trait.</td>
 </tr>
 <tr>
 <td><b>qtn.num</b></td>
-<td>10</td>
+<td>list(tr1 = 10)</td>
 <td>list</td>
 <td>the QTN number for (each group in) each trait.</td>
 </tr>
@@ -752,50 +758,50 @@ SP <- genotype(SP)
 </tr>
 <tr>
 <td><b>qtn.var</b></td>
-<td>list(tr1 = 1)</td>
+<td>list(tr1 = 0.01)</td>
 <td>list</td>
 <td>the variances for normal distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.prob</b></td>
-<td>NULL</td>
+<td>list(tr1 = 0.5)</td>
 <td>list</td>
 <td>the probability of success for geometric distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.shape</b></td>
-<td>NULL</td>
+<td>list(tr1 = 1)</td>
 <td>list</td>
 <td>the shape parameter for gamma distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.scale</b></td>
-<td>NULL</td>
+<td>list(tr1 = 1)</td>
 <td>list</td>
 <td>the scale parameter for gamma distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.shape1</b></td>
-<td>NULL</td>
+<td>list(tr1 = 1)</td>
 <td>list</td>
 <td>the shape1 parameter for beta distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.shape2</b></td>
-<td>NULL</td>
+<td>list(tr1 = 1)</td>
 <td>list</td>
 <td>the shape2 parameter for beta distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.ncp</b></td>
-<td>NULL</td>
+<td>list(tr1 = 0)</td>
 <td>list</td>
 <td>the ncp parameter for beta distribution.</td>
 </tr>
 <tr>
 <td><b>qtn.spot</b></td>
-<td>NULL</td>
-<td>list</td>
+<td>FALSE</td>
+<td>TRUE or FALSE</td>
 <td>the QTN distribution probability in each block.</td>
 </tr>
 <tr>
