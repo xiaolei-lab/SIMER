@@ -1902,7 +1902,6 @@ An example of the multiple-trait controlled by two-group QTNs is displayed as fo
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Prepare environmental factor list
 # Generate annotation simulation parameters
 SP <- param.annot(
   pop.marker = 1e4, 
@@ -1975,21 +1974,21 @@ SP <- phenotype(SP)
 </tr>
 <tr>
 <td><b>sel.crit</b></td>
-<td>'pheno'</td>
+<td>"pheno"</td>
 <td>character</td>
-<td>the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.</td>
+<td>the selection criteria, it can be "TBV", "TGV", and "pheno".</td>
 </tr>
 <tr>
 <td><b>sel.single</b></td>
-<td>'comb'</td>
+<td>"ind"</td>
 <td>character</td>
-<td>the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.</td>
+<td>the single-trait selection method, it can be "ind", "fam", "infam", and "comb".</td>
 </tr>
 <tr>
 <td><b>sel.multi</b></td>
-<td>'index'</td>
+<td>"index"</td>
 <td>character</td>
-<td>the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.</td>
+<td>the multiple-trait selection method, it can be "index", "indcul", and "tmd".</td>
 </tr>
 <tr>
 <td><b>index.wt</b></td>
@@ -2032,15 +2031,15 @@ SP <- phenotype(SP)
 <tbody>
 <tr>
 <td><b>pop.gen</b></td>
-<td>2</td>
+<td>1</td>
 <td>num</td>
 <td>the generations of simulated population.</td>
 </tr>
 <tr>
 <td><b>reprod.way</b></td>
-<td>'randmate'</td>
+<td>"randmate"</td>
 <td>character</td>
-<td>reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', 'assort', 'disassort', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.</td>
+<td>reproduction method, it consists of "clone", "dh", "selfpol", "randmate", "randexself", "assort", "disassort", "2waycro", "3waycro", "4waycro", "backcro", and "userped".</td>
 </tr>
 <tr>
 <td><b>sex.rate</b></td>
@@ -2558,7 +2557,7 @@ SP <- annotation(SP)
 SP <- genotype(SP)
 # Run phenotype simulation
 SP <- phenotype(SP)
-# Three different breeds are cut by sex
+# Four different breeds are cut by sex
 SP$pheno$pop$gen1$sex <- rep(c(1, 2, 1, 2), c(25, 25, 25, 25))
 # Run selection
 SP <- selects(SP)
@@ -2632,7 +2631,7 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate all simulation parameters
-SP <- param.simer(qtn.num = list(tr1 = 10), pop.marker = 1e4, pop.ind = 1e2, sel.single = "comb", reprod.way = "randmate")
+SP <- param.simer(qtn.num = list(tr1 = 10), pop.marker = 1e4, pop.ind = 1e2, sel.single = "ind", reprod.way = "randmate")
 
 # Run Simer
 SP <- simer(SP)

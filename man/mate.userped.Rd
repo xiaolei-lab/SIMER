@@ -20,6 +20,7 @@ the function returns a list containing
 \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', 'assort', 'disassort', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
 \item{$reprod$sex.rate}{the sex ratio of simulated population.}
 \item{$reprod$prog}{the progeny number of an individual.}
+\item{$reprod$userped}{the pedigree designed by user.}
 \item{$geno}{a list of genotype simulation parameters.}
 \item{$pheno}{a list of phenotype simulation parameters.}
 }
@@ -29,7 +30,7 @@ Produce individuals by user-specified pedigree mating.
 }
 \details{
 Build date: Apr 12, 2022
-Last update: Apr 30, 2022
+Last update: Feb 18, 2025
 }
 \examples{
 \donttest{

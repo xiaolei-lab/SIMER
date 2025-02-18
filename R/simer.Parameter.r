@@ -399,9 +399,9 @@ param.pheno <- function(SP = NULL, ...) {
 #' \item{$sel$pop.sel}{the selected males and females.}
 #' \item{$sel$ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
 #' \item{$sel$decr}{whether the sort order is decreasing.}
-#' \item{$sel$sel.crit}{the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.}
-#' \item{$sel$sel.single}{the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.}
-#' \item{$sel$sel.multi}{the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.}
+#' \item{$sel$sel.crit}{the selection criteria, it can be "TBV", "TGV", and "pheno".}
+#' \item{$sel$sel.single}{the single-trait selection method, it can be "ind", "fam", "infam", and "comb".}
+#' \item{$sel$sel.multi}{the multiple-trait selection method, it can be "index", "indcul", and "tmd".}
 #' \item{$sel$index.wt}{the weight of each trait for multiple-trait selection.}
 #' \item{$sel$index.tdm}{the index of tandem selection for multiple-trait selection.}
 #' \item{$sel$goal.perc}{the percentage of goal more than the mean of scores of individuals.}
@@ -465,7 +465,7 @@ param.sel <- function(SP = NULL, ...) {
 #' the function returns a list containing
 #' \describe{
 #' \item{$reprod$pop.gen}{the generations of simulated population.}
-#' \item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', 'assort', 'disassort', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+#' \item{$reprod$reprod.way}{reproduction method, it consists of "clone", "dh", "selfpol", "randmate", "randexself", "assort", "disassort", "2waycro", "3waycro", "4waycro", "backcro", and "userped".}
 #' \item{$reprod$sex.rate}{the male rate in the population.}
 #' \item{$reprod$prog}{the progeny number of an individual.}
 #' }

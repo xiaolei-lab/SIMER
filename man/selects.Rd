@@ -17,9 +17,9 @@ the function returns a list containing
 \item{$sel$pop.sel}{the selected males and females.}
 \item{$sel$ps}{if ps <= 1, fraction selected in selection of males and females; if ps > 1, ps is number of selected males and females.}
 \item{$sel$decr}{whether the sort order is decreasing.}
-\item{$sel$sel.crit}{the selection criteria, it can be 'TBV', 'TGV', and 'pheno'.}
-\item{$sel$sel.single}{the single-trait selection method, it can be 'ind', 'fam', 'infam', and 'comb'.}
-\item{$sel$sel.multi}{the multiple-trait selection method, it can be 'index', 'indcul', and 'tmd'.}
+\item{$sel$sel.crit}{the selection criteria, it can be "TBV", "TGV", and "pheno".}
+\item{$sel$sel.single}{the single-trait selection method, it can be "ind", "fam", "infam", and "comb".}
+\item{$sel$sel.multi}{the multiple-trait selection method, it can be "index", "indcul", and "tmd".}
 \item{$sel$index.wt}{the weight of each trait for multiple-trait selection.}
 \item{$sel$index.tdm}{the index of tandem selection for multiple-trait selection.}
 \item{$sel$goal.perc}{the percentage of goal more than the mean of scores of individuals.}
@@ -31,7 +31,7 @@ Select individuals by combination of selection method and criterion.
 }
 \details{
 Build date: Sep 8, 2018
-Last update: Apr 30, 2022
+Last update: Feb 18, 2025
 }
 \examples{
 \donttest{

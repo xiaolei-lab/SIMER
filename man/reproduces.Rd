@@ -17,9 +17,10 @@ reproduces(SP, ncpus = 0, verbose = TRUE)
 the function returns a list containing
 \describe{
 \item{$reprod$pop.gen}{the generations of simulated population.}
-\item{$reprod$reprod.way}{reproduction method, it consists of 'clone', 'dh', 'selfpol', 'randmate', 'randexself', 'assort', 'disassort', '2waycro', '3waycro', '4waycro', 'backcro', and 'userped'.}
+\item{$reprod$reprod.way}{reproduction method, it consists of "clone", "dh", "selfpol", "randmate", "randexself", "assort", "disassort", "2waycro", "3waycro", "4waycro", "backcro", and "userped".}
 \item{$reprod$sex.rate}{the male rate in the population.}
 \item{$reprod$prog}{the progeny number of an individual.}
+\item{$reprod$userped}{the pedigree designed by user.}
 \item{$geno}{a list of genotype simulation parameters.}
 \item{$pheno}{a list of phenotype simulation parameters.}
 }
@@ -29,7 +30,7 @@ Population reproduction by different mate design.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: Apr 29, 2022
+Last update: Feb 18, 2025
 }
 \examples{
 \donttest{
