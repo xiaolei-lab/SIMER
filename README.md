@@ -2667,13 +2667,13 @@ After generating a population, further work can be done. Breeders wish to evalua
 </tr>
 <tr>
 <td><b>hiblupPath</b></td>
-<td>''</td>
+<td>""</td>
 <td>character</td>
 <td>the path of HIBLUP software.</td>
 </tr>
 <tr>
 <td><b>out</b></td>
-<td>'simer.qc'</td>
+<td>"simer.qc"</td>
 <td>character</td>
 <td>the prefix of output files.</td>
 </tr>
@@ -2686,13 +2686,13 @@ After generating a population, further work can be done. Breeders wish to evalua
 <tr>
 <td><b>buildModel</b></td>
 <td>TRUE</td>
-<td>TRUR or FALSE</td>
+<td>TRUE or FALSE</td>
 <td>whether to build EBV model.</td>
 </tr>
 <tr>
 <td><b>buildIndex</b></td>
 <td>TRUE</td>
-<td>TRUR or FALSE</td>
+<td>TRUE or FALSE</td>
 <td>whether to build Selection Index.</td>
 </tr>
 <tr>
@@ -2725,7 +2725,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >> ***quality_control_plan***: the quality control plan for genotype, pedigree, and phenotype  
 
 >>> ***genotype_quality_control***: the quality control plan for genotype  
->>>> ***filter***: the 'filter' (individual) condition for genotyped individual  
+>>>> ***filter***: the "filter" (individual) condition for genotyped individual  
 >>>> ***filter_geno***: the genotype missing rate filter  
 >>>> ***filter_mind*** the sample missing rate filter  
 >>>> ***filter_maf*** the Minor Allele Frequency filter  
@@ -2743,9 +2743,9 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>>> ***sample_info***: the filename with absolute path or relative path to JSON file of phenotype data   
 >>>> ***repeated_records***: whether phenotype data contains repeated records  
 >>>> ***multi_trait***: whether phenotype data contains multiple traits  
->>>> ***filter***: the 'filter' (individual) condition for phenotyped individual  
->>>> ***select***: the 'select' (trait) condition for phenotyped individual  
->>>> ***arrange***: the 'arrange' (order) condition for phenotyped individual  
+>>>> ***filter***: the "filter" (individual) condition for phenotyped individual  
+>>>> ***select***: the "select" (trait) condition for phenotyped individual  
+>>>> ***arrange***: the "arrange" (order) condition for phenotyped individual  
 >>>> ***job_traits***: the trait need quality control and its definition and range  
 
 >> ***breeding_plan***: the genetic evaluation plan  
@@ -2755,7 +2755,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>> ***multi_trait***: whether phenotype data contains multiple traits  
 >>> ***vc_vars***: the filename of variance component data  
 >>> ***vc_covars***: the filename of covariance component data  
->>> ***random_ratio***: the least random effect ratio to phenotype variance  
+>>> ***random_ratio***: the least random effect variance ratio to phenotype variance  
 >>> ***job_traits***: the trait need analysis and its covariate, fixed effect, and random effect  
 
 ```json
@@ -2844,7 +2844,7 @@ To evaluate the breeding program design, **```SIMER```** completes the following
 # Get JSON file
 jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 
-# It needs 'plink' and 'hiblup' software
+# It needs "plink" and "hiblup" software
 jsonList <- simer.Data.Json(jsonFile = jsonFile)
 
 ```
@@ -2885,7 +2885,7 @@ Users can use global parameters to control the ***population properties*** , ***
 </tr>
 <tr>
 <td><b>out</b></td>
-<td>'simer'</td>
+<td>"simer"</td>
 <td>character</td>
 <td>the prefix of output files.</td>
 </tr>
@@ -2893,29 +2893,29 @@ Users can use global parameters to control the ***population properties*** , ***
 <td><b>outpath</b></td>
 <td>NULL</td>
 <td>character</td>
-<td>the path of output files, Simer writes files only if outpath is not 'NULL'.</td>
+<td>the path of output files, Simer writes files only if outpath is not "NULL".</td>
 </tr>
 <tr>
 <td><b>out.format</b></td>
-<td>'numeric'</td>
-<td>'numeric' or 'plink'</td>
-<td>'numeric' or 'plink', the data format of output files.</td>
+<td>"numeric"</td>
+<td>"numeric" or "plink"</td>
+<td>"numeric" or "plink", the data format of output files.</td>
 </tr>
 <tr>
 <td><b>pop.gen</b></td>
-<td>2</td>
+<td>1</td>
 <td>num</td>
 <td>the generations of simulated population.</td>
 </tr>
 <tr>
 <td><b>out.geno.gen</b></td>
-<td>1:2</td>
+<td>1</td>
 <td>num vector</td>
 <td>the output generations of genotype data.</td>
 </tr>
 <tr>
 <td><b>out.pheno.gen</b></td>
-<td>1:2</td>
+<td>1</td>
 <td>num vector</td>
 <td>the output generations of phenotype data.</td>
 </tr>
@@ -3006,7 +3006,7 @@ for (i in 1:rep) {
 ### 01 Numeric Format ###
 # Generate all simulation parameters
 SP <- param.simer(
-  # SP = SP, # uncomment it when users already have a 'SP'
+  # SP = SP, # uncomment it when users already have a "SP"
   out = "simer",
   outpath = getwd(),
   out.format = "numeric"
@@ -3018,7 +3018,7 @@ SP <- simer(SP)
 ### 02 PLINK Binary Format ###
 # Generate all simulation parameters
 SP <- param.simer(
-  # SP = SP, # uncomment it when users already have a 'SP'
+  # SP = SP, # uncomment it when users already have a "SP"
   out = "simer",
   outpath = getwd(),
   out.format = "plink"
@@ -3030,7 +3030,7 @@ SP <- simer(SP)
 ### 03 Numeric Format with missing values in genotype and phenotype ###
 # Generate all simulation parameters
 SP <- param.simer(
-  # SP = SP, # uncomment it when users already have a 'SP'
+  # SP = SP, # uncomment it when users already have a "SP"
   out = "simer",
   outpath = getwd(),
   out.format = "numeric",
@@ -3044,7 +3044,7 @@ SP <- simer(SP)
 ### 04 PLINK Binary Format with missing values in genotype and phenotype ###
 # Generate all simulation parameters
 SP <- param.simer(
-  # SP = SP, # uncomment it when users already have a 'SP'
+  # SP = SP, # uncomment it when users already have a "SP"
   out = "simer",
   outpath = getwd(),
   out.format = "plink",

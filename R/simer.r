@@ -16,7 +16,7 @@
 #' Main function of Simer.
 #'
 #' Build date: Jan 7, 2019
-#' Last update: Apr 29, 2022
+#' Last update: Feb 18, 2025
 #'
 #' @author Dong Yin, Lilin Yin, Haohao Zhang, and Xiaolei Liu
 #'
@@ -51,11 +51,8 @@ simer <- function(SP) {
 # TODO: optcontri.sel  
 # TODO: add superior limit of homo
 # TODO: add inbreeding coefficient
-# TODO: add true block distribution
 # TODO: inbreeding change in every generations
 # TODO: breeding literature from ZhenST
-# TODO: remove one column genotype
-# TODO: data converter of simer
 # TODO: core population
 # TODO: pEBVs, gEBVs, and ssEBVs
   

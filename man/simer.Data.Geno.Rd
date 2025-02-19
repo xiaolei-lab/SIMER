@@ -70,7 +70,7 @@ Last update: Apr 28, 2022
 fileBed <- system.file("extdata", "02plinkb", "demo", package = "simer")
 
 \dontrun{
-# It needs 'plink' software
+# It needs "plink" software
 simer.Data.Geno(fileBed=fileBed)
 }
 }

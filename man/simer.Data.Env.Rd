@@ -50,7 +50,7 @@ jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "s
 jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 
 \dontrun{
-# It needs 'hiblup' solfware
+# It needs "hiblup" solfware
 jsonList <- simer.Data.Env(jsonList = jsonList)
 }
 }

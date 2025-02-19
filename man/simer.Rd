@@ -25,7 +25,7 @@ Main function of Simer.
 }
 \details{
 Build date: Jan 7, 2019
-Last update: Apr 29, 2022
+Last update: Feb 18, 2025
 }
 \examples{
 \donttest{

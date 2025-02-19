@@ -48,7 +48,7 @@ jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "s
 jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 
 \dontrun{
-# It needs 'hiblup' software
+# It needs "hiblup" software
 gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
 }
 }

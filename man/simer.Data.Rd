@@ -39,7 +39,7 @@ jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "s
 jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 
 \dontrun{
-# It needs 'plink' and 'hiblup' software
+# It needs "plink" and "hiblup" software
 jsonList <- simer.Data(jsonList = jsonList)
 }
 }

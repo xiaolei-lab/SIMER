@@ -44,7 +44,7 @@
 #' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
-#' # It needs 'plink' and 'hiblup' software
+#' # It needs "plink" and "hiblup" software
 #' jsonList <- simer.Data(jsonList = jsonList)
 #' }
 simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = TRUE) {
@@ -361,7 +361,7 @@ simer.Data.Impute <- function(fileMVP = NULL, fileBed = NULL, out = NULL, maxLin
 #' fileBed <- system.file("extdata", "02plinkb", "demo", package = "simer")
 #' 
 #' \dontrun{
-#' # It needs 'plink' software
+#' # It needs "plink" software
 #' simer.Data.Geno(fileBed=fileBed)
 #' }
 simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL, filePed = NULL, filePhe = NULL, out = 'simer.qc', genoType = 'char',
@@ -929,7 +929,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
 #' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
-#' # It needs 'hiblup' solfware
+#' # It needs "hiblup" solfware
 #' jsonList <- simer.Data.Env(jsonList = jsonList)
 #' }
 simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep = '\t', ncpus = 10, verbose = TRUE) {
@@ -1079,7 +1079,7 @@ simer.Data.Env <- function(jsonList = NULL, hiblupPath = '', header = TRUE, sep 
 #' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
-#' # It needs 'hiblup' software
+#' # It needs "hiblup" software
 #' gebvs <- simer.Data.cHIBLUP(jsonList = jsonList)
 #' }
 simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.method = "AI", ncpus = 10, verbose = TRUE) {
@@ -1276,7 +1276,7 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
 #' jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)
 #' 
 #' \dontrun{
-#' # It needs 'hiblup' software
+#' # It needs "hiblup" software
 #' jsonList <- simer.Data.SELIND(jsonList = jsonList)
 #' }
 simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verbose = TRUE) {
@@ -1434,10 +1434,10 @@ simer.Data.SELIND <- function(jsonList = NULL, hiblupPath = '', ncpus = 10, verb
 #' jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 #' 
 #' \dontrun{
-#' # It needs 'plink' and 'hiblup' software
+#' # It needs "plink" and "hiblup" software
 #' jsonList <- simer.Data.Json(jsonFile = jsonFile)
 #' }
-simer.Data.Json <- function(jsonFile, hiblupPath = '', out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
+simer.Data.Json <- function(jsonFile, hiblupPath = "", out = "simer.qc", dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE, ncpus = 10, verbose = TRUE) {
   
   newJsonFile <- paste0(out, ".model.json")
   jsonList <- jsonlite::fromJSON(txt = jsonFile, simplifyVector = FALSE)

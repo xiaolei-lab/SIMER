@@ -17,12 +17,14 @@ the function returns a list containing
 \item{$replication}{the replication times of simulation.}
 \item{$seed.sim}{simulation random seed.}
 \item{$out}{the prefix of output files.}
-\item{$outpath}{the path of output files, Simer writes files only if outpath is not 'NULL'.}
-\item{$out.format}{'numeric' or 'plink', the data format of output files.}
+\item{$outpath}{the path of output files, Simer writes files only if outpath is not "NULL".}
+\item{$out.format}{"numeric" or "plink", the data format of output files.}
 \item{$pop.gen}{the generations of simulated population.}
 \item{$out.geno.gen}{the output generations of genotype data.}
 \item{$out.pheno.gen}{the output generations of phenotype data.}
 \item{$useAllGeno}{whether to use all genotype data to simulate phenotype.}
+\item{$missing.geno}{the ratio of missing values in genotype data.}
+\item{$missing.phe}{the ratio of missing values in phenotype data.}
 \item{$ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
 \item{$verbose}{whether to print detail.}
 }

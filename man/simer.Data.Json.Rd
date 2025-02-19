@@ -55,7 +55,7 @@ Last update: Apr 28, 2022
 jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
 
 \dontrun{
-# It needs 'plink' and 'hiblup' software
+# It needs "plink" and "hiblup" software
 jsonList <- simer.Data.Json(jsonFile = jsonFile)
 }
 }
