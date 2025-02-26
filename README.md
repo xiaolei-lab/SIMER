@@ -1,5 +1,5 @@
 # SIMER 
-[![GitHub issues](https://img.shields.io/github/issues/xiaolei-lab/SIMER?color=green)](https://github.com/xiaolei-lab/SIMER/issues/new) [![CRAN Version](https://www.r-pkg.org/badges/version/simer?color=yellow)](https://CRAN.R-project.org/package=simer) [![](https://img.shields.io/badge/GitHub-0.9.0.6-blueviolet.svg)](https://github.com/xiaolei-lab/SIMER) ![](http://cranlogs.r-pkg.org/badges/grand-total/simer?color=red) [![](https://cranlogs.r-pkg.org/badges/last-month/simer)](https://CRAN.R-project.org/package=simer) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxiaolei-lab%2FSIMER"/>
+[![GitHub issues](https://img.shields.io/github/issues/xiaolei-lab/SIMER?color=green)](https://github.com/xiaolei-lab/SIMER/issues/new) [![CRAN Version](https://www.r-pkg.org/badges/version/simer?color=yellow)](https://CRAN.R-project.org/package=simer) [![](https://img.shields.io/badge/GitHub-1.0.0-blueviolet.svg)](https://github.com/xiaolei-lab/SIMER) ![](http://cranlogs.r-pkg.org/badges/grand-total/simer?color=red) [![](https://cranlogs.r-pkg.org/badges/last-month/simer)](https://CRAN.R-project.org/package=simer) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxiaolei-lab%2FSIMER"/>
 
 ## Data Simulation for Life Science and Breeding
 
@@ -3175,7 +3175,7 @@ head(SP$pheno$pop$gen1)
 
 ```
 For SIMER:
-Hope it will be coming soon!
+Yin, D., Zhang, X., Yin, L. et al. "SIMER: an accurate and intelligent tool for simulating customizable population data across species in complex scenarios." J Big Data 12, 49 (2025). https://doi.org/10.1186/s40537-025-01102-z
 
 For ADI model:
 Kao, Chenhung, et al. "Modeling Epistasis of Quantitative Trait Loci Using Cockerham's Model." Genetics 160.3 (2002): 1243-1261.
