@@ -542,7 +542,7 @@ param.reprod <- function(SP = NULL, ...) {
 #' \item{$useAllGeno}{whether to use all genotype data to simulate phenotype.}
 #' \item{$missing.geno}{the ratio of missing values in genotype data.}
 #' \item{$missing.phe}{the ratio of missing values in phenotype data.}
-#' \item{$ncpus}{the number of threads used, if NULL, (logical core number - 1) is automatically used.}
+#' \item{$ncpus}{the number of threads used, if it is 0, (logical core number - 1) is automatically used.}
 #' \item{$verbose}{whether to print detail.}
 #' }
 #' 

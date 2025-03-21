@@ -31,7 +31,7 @@ Select individuals by combination of selection method and criterion.
 }
 \details{
 Build date: Sep 8, 2018
-Last update: Feb 18, 2025
+Last update: Mar 21, 2025
 }
 \examples{
 \donttest{

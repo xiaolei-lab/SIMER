@@ -470,7 +470,7 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     phe.res <- phe.eff[, grep(pattern = "_E_", x = names(phe.eff)), drop = FALSE]
     phe.varE <- unlist(phe.h2E) * unlist(phe.var)
     phe.res[] <- rnorm(nrow(phe.res) * ncol(phe.res))
-    phe.res <- scale(phe.res)
+    phe.res <- sweep(phe.res, 2, sqrt(diag(var(phe.res))), "/")
     phe.res <- sweep(phe.res, 2, sqrt(phe.varE), "*")
     if (nTrait > 1) {
       Sigma <- diag(sqrt(phe.varE)) %*% phe.corE %*% diag(sqrt(phe.varE))
@@ -520,9 +520,9 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     }
   } else {
     SP$pheno$pop[[length(SP$pheno$pop)]] <- pop
-    names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
   }
-  
+  names(SP$pheno$pop)[length(SP$pheno$pop)] <- paste0("gen", length(SP$pheno$pop))
+
   return(SP)
 }
 

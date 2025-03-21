@@ -5,7 +5,8 @@
 
 ### Authors:
 ***Design and Maintenance:*** Dong Yin, Xuanning Zhang, Lilin Yin ,Haohao Zhang, and ***Xiaolei Liu***.  
-***Contributors:*** Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xiang Zhou, Xinyun Li, and Shuhong Zhao.
+***Contributors:*** Zhenshuang Tang, Jingya Xu, Xiaohui Yuan, Xiang Zhou, Xinyun Li, and Shuhong Zhao.  
+***Citation:*** Yin D., Zhang X, Yin L, Zhang H, Tang Z, Xu J, Yuan X, Zhou X, Li X, Zhao S, Liu X. [SIMER: an accurate and intelligent tool for simulating customizable population data across species in complex scenarios](https://doi.org/10.1186/s40537-025-01102-z), ***Journal of Big Data*** , 2025, 12 (49), doi: [https://doi.org/10.1186/s40537-025-01102-z](https://doi.org/10.1186/s40537-025-01102-z).  
 
 ***If you have any bug reports or questions, please feed back :point_right:[here](https://github.com/xiaolei-lab/SIMER/issues/new):point_left:.***
 
@@ -550,7 +551,7 @@ With ***annotation data***, chromosome crossovers and mutations can be added to 
 # If recom.spot = TRUE, chromosome crossovers will be added to genotype matrix
 SP <- param.annot(pop.marker = 1e4, recom.spot = TRUE)
 # Generate genotype simulation parameters
-# Base mutation rate of QTN and SNP are 1e8
+# Base mutation rate of QTN and SNP are 1e-8
 SP <- param.geno(SP = SP, pop.ind = 1e2, rate.mut = list(qtn = 1e-8, snp = 1e-8))
 
 # Run annotation simulation
@@ -1250,8 +1251,10 @@ SP <- param.pheno(
   pop.rep.bal = TRUE,                   # Repeated records are balanced
   phe.model = list(tr1 = "T1 = A + E"), # "T1" (Trait 1) consists of Additive effect and Residual effect
   # phe.var = list(tr1 = 100),
-  phe.h2A = list(tr1 = 0.3)
+  phe.h2A = list(tr1 = 0.3),
+  phe.h2PE = list(tr1 = 0.1)
 )
+SP$global$useAllGeno <- TRUE
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -1280,9 +1283,11 @@ SP <- param.pheno(
   ),
   # phe.var = list(tr1 = 100, tr2 = 100),
   phe.h2A = list(tr1 = 0.3, tr2 = 0.3),
+  phe.h2PE = list(tr1 = 0.1, tr2 = 0.1)
   phe.corA = matrix(c(1, 0.5, 0.5, 1), 2, 2), # Additive genetic correlation
   phe.corPE = matrix(c(1, 0.5, 0.5, 1), 2, 2) # Permanent Environmental correlation
 )
+SP$global$useAllGeno <- TRUE
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -1593,9 +1598,9 @@ pop.env <- list(
   )
 )
 
-# Generate genotype simulation parameters
-SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10), qtn.model = "A")
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
@@ -1638,9 +1643,9 @@ pop.env <- list(
   )
 )
 
-# Generate genotype simulation parameters
-SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
 # Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10), qtn.model = "A")
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2) # random genotype
 # Generate phenotype simulation parameters
 SP <- param.pheno(
@@ -2071,6 +2076,7 @@ SP <- param.geno(SP = SP, pop.ind = 1e2)
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2097,6 +2103,7 @@ SP <- param.geno(SP = SP, pop.ind = 1e2)
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "fam")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2123,6 +2130,7 @@ SP <- param.geno(SP = SP, pop.ind = 1e2)
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "infam")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2149,6 +2157,7 @@ SP <- param.geno(SP = SP, pop.ind = 1e2)
 SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "comb")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2167,9 +2176,9 @@ SP <- selects(SP)
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Generate genotype simulation parameters
-SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
 # Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(
@@ -2182,6 +2191,7 @@ SP <- param.pheno(
 )
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.multi = "tdm")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2200,9 +2210,9 @@ Set a ***minimum selection criterion*** for each target trait. Then a ***Indepen
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Generate genotype simulation parameters
-SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
 # Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(
@@ -2215,6 +2225,7 @@ SP <- param.pheno(
 )
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.multi = "indcul")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2233,9 +2244,9 @@ SP <- selects(SP)
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
-# Generate genotype simulation parameters
-SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
 # Generate annotation simulation parameters
+SP <- param.annot(pop.marker = 1e4, qtn.num = list(tr1 = 10, tr2 = 10))
+# Generate genotype simulation parameters
 SP <- param.geno(SP = SP, pop.ind = 1e2)
 # Generate phenotype simulation parameters
 SP <- param.pheno(
@@ -2248,6 +2259,7 @@ SP <- param.pheno(
 )
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.multi = "index")
+SP$global$pop.gen <- 2
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2275,7 +2287,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "clone")
+SP <- param.reprod(SP = SP, reprod.way = "clone", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2305,7 +2317,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "dh")
+SP <- param.reprod(SP = SP, reprod.way = "dh", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2335,7 +2347,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "selfpol")
+SP <- param.reprod(SP = SP, reprod.way = "selfpol", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2365,7 +2377,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "randmate")
+SP <- param.reprod(SP = SP, reprod.way = "randmate", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2395,7 +2407,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "randexself")
+SP <- param.reprod(SP = SP, reprod.way = "randexself", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2425,7 +2437,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "assort")
+SP <- param.reprod(SP = SP, reprod.way = "assort", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2455,7 +2467,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "disassort")
+SP <- param.reprod(SP = SP, reprod.way = "disassort", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2581,7 +2593,7 @@ SP <- param.pheno(SP = SP, phe.h2A = list(tr1 = 0.3))
 # Generate selection parameters
 SP <- param.sel(SP = SP, sel.single = "ind")
 # Generate reproduction parameters
-SP <- param.reprod(SP = SP, reprod.way = "backcro")
+SP <- param.reprod(SP = SP, reprod.way = "backcro", pop.gen = 2)
 
 # Run annotation simulation
 SP <- annotation(SP)
@@ -2941,7 +2953,7 @@ Users can use global parameters to control the ***population properties*** , ***
 <td><b>ncpus</b></td>
 <td>0</td>
 <td>num</td>
-<td>the number of threads used, if NULL, (logical core number - 1) is automatically used.</td>
+<td>the number of threads used, if it is 0, (logical core number - 1) is automatically used.</td>
 </tr>
 <tr>
 <td><b>verbose</b></td>
@@ -3078,7 +3090,7 @@ SP <- simer(SP)
 ***Numeric*** format:  
 ```simer.geno.ind``` contains indice of genotyped individuals;  
 ```simer.geno.desc``` and ```simer.geno.bin``` contain genotype matrix of all individuals;  
-```simer.map``` contains input map with block information and recombination information;  
+```simer.geno.map``` contains input map with block information and recombination information;  
 ```simer.ped``` contains pedigree of individuals;  
 ```simer.phe``` contains phenotype of individuals.  
 ***PLINK Binary*** format:  

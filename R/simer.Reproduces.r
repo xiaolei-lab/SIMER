@@ -16,7 +16,7 @@
 #' Population reproduction by different mate design.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Feb 18, 2025
+#' Last update: Mar 21, 2025
 #'
 #' @author Dong Yin
 #'
@@ -67,6 +67,9 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
 ### Start reproduction
 
   reprod.way <- SP$reprod$reprod.way
+  if (!is.null(SP$global$pop.gen)) {
+    SP$reprod$pop.gen <- SP$global$pop.gen
+  }
   
   if (reprod.way == "clone") {
     SP <- mate.clone(SP, ncpus = ncpus, verbose = verbose)
@@ -241,7 +244,7 @@ mate.clone <- function(SP, ncpus = 0, verbose = TRUE) {
     }
     prog <- SP$reprod$prog
     
-    pop.marker <- nrow(pop.geno)
+    pop.marker <- ncol(pop.geno)
     if (all(pop.sel$sir == pop.sel$dam)) {
       ped.dam <- pop.sel$dam
     } else {
@@ -366,7 +369,7 @@ mate.dh <- function(SP, ncpus = 0, verbose = TRUE) {
     }
     prog <- SP$reprod$prog
     
-    pop.marker <- nrow(pop.geno)
+    pop.marker <- ncol(pop.geno)
     if (all(pop.sel$sir == pop.sel$dam)) {
       ped.dam <- pop.sel$dam
     } else {

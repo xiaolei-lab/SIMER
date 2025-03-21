@@ -16,7 +16,7 @@
 #' Select individuals by combination of selection method and criterion.
 #'
 #' Build date: Sep 8, 2018
-#' Last update: Feb 18, 2025
+#' Last update: Mar 21, 2025
 #'
 #' @author Dong Yin
 #'
@@ -78,7 +78,13 @@ selects <- function(SP = NULL, verbose = TRUE) {
   goal.perc <- SP$sel$goal.perc
   pass.perc <- SP$sel$pass.perc
   pop.ind <- length(pop$index)
-  pop.gen <- SP$global$pop.gen - 1
+  if (!is.null(SP$global$pop.gen)) {
+    pop.gen <- SP$global$pop.gen - 1
+  } else if (!is.null(SP$reprod$pop.gen)) {
+    pop.gen <- SP$reprod$pop.gen - 1
+  } else {
+    stop("Please add 'SP$global$pop.gen'!")
+  }
   
   if (length(pop.gen) == 0) { pop.gen <- 0  }
   

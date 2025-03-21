@@ -117,7 +117,7 @@ genotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     if (inrows == 2 & cld) {
       pop.geno <- matrix(0, inrows*pop.ind, pop.marker)
       if (is.null(prob)) {  prob <- c(0.5, 0.5) }
-      pop.geno[, sample(1:nrow(pop.geno), prob[2] * nrow(pop.geno))] <- 1
+      pop.geno[sample(1:nrow(pop.geno), prob[2] * nrow(pop.geno)), ] <- 1
     } else {
       pop.geno <- matrix(sample(c(0, 1), pop.marker*pop.ind*inrows, prob = prob, replace = TRUE), inrows*pop.ind, pop.marker)
     }
@@ -514,7 +514,7 @@ GxG.network <- function(pop.map = NULL, qtn.pos = 1:10, qtn.model = "A:D") {
   SNP <- pop.map[, 1]
   paths <- rep(list(NULL), max.lev)
   nQTNs <- length(qtn.pos)
-  g <- igraph::ba.game(n = nQTNs, m = 2, directed = FALSE)
+  g <- igraph::sample_pa(n = nQTNs, m = 2, directed = FALSE)
   for (i in 1:(nQTNs-1)) {
     for (j in (i+1):nQTNs) {
       ps <- igraph::all_simple_paths(g, from = i, to = j)
