@@ -483,7 +483,7 @@ Users can use ***real genotype data*** with specific genetic structure for subse
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
-pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e2, ncol = 1e4, byrow = TRUE)
+pop.geno <- matrix(c(0, 1, 2), nrow = 1e2, ncol = 1e4, byrow = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
@@ -829,7 +829,7 @@ Users can use ***real genotype data*** with specific genetic structure to genera
 # Create a genotype matrix
 # pop.geno <- read.table("genotype.txt")
 # pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
-pop.geno <- matrix(c(0, 1, 2, 0), nrow = 1e2, ncol = 1e4, byrow = TRUE)
+pop.geno <- matrix(c(0, 1, 2), nrow = 1e2, ncol = 1e4, byrow = TRUE)
 
 # Generate annotation simulation parameters
 SP <- param.annot(pop.marker = 1e4)
@@ -2643,7 +2643,7 @@ If users want to output files, please see **[File output](#file-output)**.
 
 ```r
 # Generate all simulation parameters
-SP <- param.simer(qtn.num = list(tr1 = 10), pop.marker = 1e4, pop.ind = 1e2, sel.single = "ind", reprod.way = "randmate")
+SP <- param.simer(qtn.num = list(tr1 = 10), pop.marker = 1e4, pop.ind = 1e2, pop.gen = 2, sel.single = "ind", reprod.way = "randmate")
 
 # Run Simer
 SP <- simer(SP)
@@ -2711,7 +2711,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 <td><b>ncpus</b></td>
 <td>10</td>
 <td>num</td>
-<td>the number of threads used, if NULL, (logical core number - 1) is automatically used.</td>
+<td>the number of threads used, if it is 0, (logical core number - 1) is automatically used.</td>
 </tr>
 <tr>
 <td><b>verbose</b></td>
@@ -2739,9 +2739,9 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>> ***genotype_quality_control***: the quality control plan for genotype  
 >>>> ***filter***: the "filter" (individual) condition for genotyped individual  
 >>>> ***filter_geno***: the genotype missing rate filter  
->>>> ***filter_mind*** the sample missing rate filter  
->>>> ***filter_maf*** the Minor Allele Frequency filter  
->>>> ***filter_hwe*** the Hardy-Weinberg Equilibrium filter  
+>>>> ***filter_mind***: the sample missing rate filter  
+>>>> ***filter_maf***: the Minor Allele Frequency filter  
+>>>> ***filter_hwe***: the Hardy-Weinberg Equilibrium filter  
 
 >>> ***pedigree_quality_control***: the quality control plan for pedigree  
 >>>> ***standard_ID***: whether ID is standard 15-digit ID  
@@ -2751,7 +2751,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>>> ***assign_threshold***: if the number of base error is less than this threshold, this parent will be assigned to this individual  
 
 >>> ***phenotype_quality_control***: the quality control plan for phenotype  
->>>> ***job_name***: the name of phenotype quality control job  
+>>>> ***job_name***: the name of the phenotype quality control job  
 >>>> ***sample_info***: the filename with absolute path or relative path to JSON file of phenotype data   
 >>>> ***repeated_records***: whether phenotype data contains repeated records  
 >>>> ***multi_trait***: whether phenotype data contains multiple traits  
@@ -2761,7 +2761,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>>> ***job_traits***: the trait need quality control and its definition and range  
 
 >> ***breeding_plan***: the genetic evaluation plan  
->>> ***job_name***: the name of phenotype quality control job  
+>>> ***job_name***: the name of the genetic evaluation job  
 >>> ***sample_info***: the filename with absolute path or relative path to JSON file of phenotype data   
 >>> ***repeated_records***: whether phenotype data contains repeated records  
 >>> ***multi_trait***: whether phenotype data contains multiple traits  
