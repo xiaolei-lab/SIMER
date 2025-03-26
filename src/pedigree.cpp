@@ -60,7 +60,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   
   // ******* 01 prepare data for checking rawPed *******
   StringVector kidID = rawPed[0], sirOriID = rawPed[1], damOriID = rawPed[2], sirID = rawPed[3], damID = rawPed[4], sirState = rawPed[5], damState = rawPed[6];
-  size_t n = kidID.size(), m = pMat->nrow();
+  size_t n = kidID.size(), m = pMat->ncol();
 
   StringVector fullSirID, fullDamID;
   copy(sirID.begin(), sirID.end(), back_inserter(fullSirID));
