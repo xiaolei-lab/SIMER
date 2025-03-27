@@ -595,10 +595,11 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   }
   colnames(pedx) <- pedName
   pedx <- pedx[pedx[, 1] != "0", ]
+  pedx <- as.data.frame(pedx)
   
   # keep original sires and dams
-  pedx <- cbind(pedx, pedx[, 2:3], "Match", "Match")
-  colnames(pedx) <- c("index", "sirOrigin", "damOrigin", "sirFound", "damFound", "sirState", "damState")
+  pedx <- cbind(pedx[, 1], 1, pedx[, 2:3], pedx[, 2:3], "NoGeno", "NoGeno")
+  colnames(pedx) <- c("index", "generation", "sirOrigin", "damOrigin", "sirFound", "damFound", "sirState", "damState")
   
   if (length(fileMVP) == 0) { fileMVP <- NULL }
   if (!is.null(fileMVP)) {
@@ -617,32 +618,38 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     birthDate <- NULL
   }
   
-  pedx[pedx[, 1] == pedx[, 2], 4] <- "0"
   pedx[pedx[, 1] == pedx[, 3], 5] <- "0"
-  pedx[pedx[, 1] == pedx[, 2], 6] <- "KidIsSire"
-  pedx[pedx[, 1] == pedx[, 3], 7] <- "KidIsDam"
+  pedx[pedx[, 1] == pedx[, 4], 6] <- "0"
+  pedx[pedx[, 1] == pedx[, 3], 7] <- "KidIsSire"
+  pedx[pedx[, 1] == pedx[, 4], 8] <- "KidIsDam"
 
   if (hasGeno) {
     pedx <- PedigreeCorrector(geno@address, genoID, pedx, candSir, candDam, exclThres, assignThres, birthDate, ncpus, verbose)
   } 
 
   # print("Making needed files")
-  pedx1 <- pedx[pedx[, 4] == "0" & pedx[, 5] == "0", ]
-  pedx2 <- pedx[!(pedx[, 4] == "0" & pedx[, 5] == "0"), ]
+  pedx1 <- pedx[pedx[, 5] == "0" & pedx[, 6] == "0", ]
+  pedx2 <- pedx[!(pedx[, 5] == "0" & pedx[, 6] == "0"), ]
   go <- TRUE
   while (go) {
     Cpedx <- pedx1[, 1]
-    index <- (pedx2[, 4] %in% Cpedx) & (pedx2[, 5] %in% Cpedx)
+    index <- (pedx2[, 5] %in% Cpedx) & (pedx2[, 6] %in% Cpedx)
     if (sum(index) == 0) {
-      index.sir <- pedx2[, 4] %in% Cpedx
-      index.dam <- pedx2[, 5] %in% Cpedx
-      pedx2[index.dam, 4] <- "0"
-      pedx2[index.sir, 5] <- "0"
-      pedx2[index.dam, 6] <- "KidOlderThanSire"
-      pedx2[index.sir, 7] <- "KidOlderThanDam"
-      pedx1 <- rbind(pedx1, pedx2[index.sir | index.dam, ])
-      pedx2 <- pedx2[!(index.sir | index.dam), ]
+      index.sir <- pedx2[, 5] %in% Cpedx
+      index.dam <- pedx2[, 6] %in% Cpedx
+      index <- (index.sir & (pedx2[, 6] == "0")) | ((pedx2[, 5] == "0") & index.dam)
+      if (sum(index) == 0) {
+        pedx2[(pedx2[, 5] != "0") & index.dam, 5] <- "0"
+        pedx2[index.sir & (pedx2[, 6] != "0"), 6] <- "0"
+        pedx2[(pedx2[, 5] != "0") & index.dam, 7] <- "KidOlderThanSire"
+        pedx2[index.sir & (pedx2[, 6] != "0"), 8] <- "KidOlderThanDam"
+      } else {
+        pedx2[, 2] <- pedx2[, 2] + 1
+        pedx1 <- rbind(pedx1, pedx2[index, ])
+        pedx2 <- pedx2[!index, ]
+      }
     } else {
+      pedx2[, 2] <- pedx2[, 2] + 1
       pedx1 <- rbind(pedx1, pedx2[index, ])
       pedx2 <- pedx2[!index, ]
     }
@@ -650,8 +657,8 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     if (nrow(pedx2) == 0) { go <- FALSE }
   }
   ped <- pedx1
-  ped[duplicated(ped[, 1]), 6:7] <- "DuplicatedID"
-  pedout <- ped[!duplicated(ped[, 1]), c(1, 4, 5)]
+  ped[duplicated(ped[, 1]), 7:8] <- "DuplicatedID"
+  pedout <- ped[!duplicated(ped[, 1]), c(1, 5, 6)]
   colnames(pedout) <- pedName
   rm(pedx1); rm(pedx2); gc()
   

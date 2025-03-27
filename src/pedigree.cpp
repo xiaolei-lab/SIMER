@@ -25,9 +25,9 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
   for (k = 0; k < m; k++) {
     for (i = 0; i < n; i++) {
       for (j = i+1; j < n; j++) {
-        if (((bigm[k][i] == 0) && (bigm[k][j] == 2)) || ((bigm[k][i] == 2) && (bigm[k][k] == 0))) {
+        if (((bigm[k][i] == 0) && (bigm[k][j] == 2)) || ((bigm[k][i] == 2) && (bigm[k][j] == 0))) {
           numConfs(i, j) = numConfs(i, j) + 1;
-          numConfs(i, j) = numConfs(i, j) + 1;
+          numConfs(j, i) = numConfs(j, i) + 1;
         }
       }
     }
@@ -55,11 +55,12 @@ arma::mat calConf(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
 }
 
 template <typename T>
-DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame rawPed, Nullable<StringVector> candSirID=R_NilValue, Nullable<StringVector> candDamID=R_NilValue, double exclThres=0.005, double assignThres=0.01, Nullable<NumericVector> birthDate=R_NilValue, int threads=0, bool verbose=true) {
+DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame rawPed, Nullable<StringVector> candSirID=R_NilValue, Nullable<StringVector> candDamID=R_NilValue, double exclThres=0.1, double assignThres=0.05, Nullable<NumericVector> birthDate=R_NilValue, int threads=0, bool verbose=true) {
   omp_setup(threads);
   
   // ******* 01 prepare data for checking rawPed *******
-  StringVector kidID = rawPed[0], sirOriID = rawPed[1], damOriID = rawPed[2], sirID = rawPed[3], damID = rawPed[4], sirState = rawPed[5], damState = rawPed[6];
+  StringVector kidID = rawPed[0], sirOriID = rawPed[2], damOriID = rawPed[3], sirID = rawPed[4], damID = rawPed[5], sirState = rawPed[6], damState = rawPed[7];
+  NumericVector generation = rawPed[1];
   size_t n = kidID.size(), m = pMat->ncol();
 
   StringVector fullSirID, fullDamID;
@@ -107,7 +108,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
     if (!naSir[i]) {
       sirNumConfs[i] = numConfs(kidOrder[i], sirOrder[i]);
-      if (sirNumConfs[i] > exclMax) {
+      if (sirNumConfs[i] <= exclMax) {
+        sirState[i] = "Match";
+      } else {
         sirState[i] = "NotFoundByGeno";
         sirID[i] = "0";
       }
@@ -115,7 +118,9 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
 
     if (!naDam[i]) {
       damNumConfs[i] = numConfs(kidOrder[i], damOrder[i]);
-      if (damNumConfs[i] > exclMax) {
+      if (damNumConfs[i] <= exclMax) {
+        damState[i] = "Match";
+      } else {
         damState[i] = "NotFoundByGeno";
         damID[i] = "0";
       }
@@ -160,28 +165,12 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
     size_t nsi = sortIdx.n_elem;
     for (j = 0; j < nsi; j++) {
       
-      maxPos = sortIdx[nsi-1-j];;
-      rowPos = (maxPos + 1) % numCand;
-      colPos = (maxPos + 1) / numCand;
-      if (rowPos == 0) {
-        rowPos = numCand;
-        colPos = colPos - 1;
-      }
-      rowPos = rowPos - 1;
+      maxPos = sortIdx[nsi-1-j];
+      rowPos = maxPos % numCand;
+      colPos = maxPos / numCand;
       candPar1[0] = genoID[candParUse[rowPos]];
       candPar2[0] = genoID[candParUse[colPos]];
 
-      if ((sirState[i] == "Match") || (sirState[i] == "FoundByGeno")) {
-        if (candPar1[0] != sirID[i]) {
-          continue;
-        } 
-      }
-      if ((damState[i] == "Match") || (damState[i] == "FoundByGeno")) {
-        if (candPar2[0] != damID[i]) {
-          continue;
-        } 
-      }
-      
       if (find(fullSirID.begin(), fullSirID.end(), candPar1[0]) != fullSirID.end()) {
         if (find(fullDamID.begin(), fullDamID.end(), candPar2[0]) != fullDamID.end()) {
           if (sirState[i] == "NotFoundByGeno") {
@@ -194,12 +183,25 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
             damState[i] = "FoundByGeno";
             damNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
           }
-          if (((sirState[i] == "Match") || (sirState[i] == "FoundByGeno")) && ((damState[i] == "Match") || (damState[i] == "FoundByGeno"))) {
-            break;
-          }
+          break;
         }
+
+      } else if (find(fullSirID.begin(), fullSirID.end(), candPar2[0]) != fullSirID.end()) {
+        if (find(fullDamID.begin(), fullDamID.end(), candPar1[0]) != fullDamID.end()) {
+          if (sirState[i] == "NotFoundByGeno") {
+            sirID[i] = candPar2[0];
+            sirState[i] = "FoundByGeno";
+            sirNumConfs[i] = numConfs(kidOrder[i], candParUse[colPos]);
+          }
+          if (damState[i] == "NotFoundByGeno") {
+            damID[i] = candPar1[0];
+            damState[i] = "FoundByGeno";
+            damNumConfs[i] = numConfs(kidOrder[i], candParUse[rowPos]);
+          }
+          break;
+        }
+
       }
-      
     }
 
     if ( ! Progress::check_abort() ) { p.increment(); }
@@ -207,6 +209,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   
   DataFrame parConflict = DataFrame::create(
     Named("kid")        = kidID,
+    _["generation"]     = generation,
     _["sirOrigin"]      = sirOriID,
     _["damOrigin"]      = damOriID,
     _["sirFound"]       = sirID,
