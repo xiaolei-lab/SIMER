@@ -663,7 +663,7 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
   rm(pedx1); rm(pedx2); gc()
   
   if (is.null(out)) {
-    out <- paste0(unlist(strsplit(filePed, split = '.', fixed = TRUE))[1], ".qc")
+    out <- paste0(substr(filePed, 1, nchar(filePed)-4), ".qc")
   }
   write.table(ped, paste0(out, ".ped.report"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
   write.table(pedout, paste0(out, ".ped"), quote = FALSE, row.names = FALSE, col.names = TRUE, sep='\t')
@@ -856,7 +856,7 @@ simer.Data.Pheno <- function(filePhe = NULL, filePed = NULL, out = NULL, planPhe
       }
 
       if (is.null(out)) {
-        out <- planPhe$job_name
+        out <- paste0(substr(filePhe, 1, nchar(filePhe)-4), ".qc")
       }
       
     }
@@ -1095,7 +1095,10 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
   genoPath <- unlist(jsonList$genotype)
   if (is.null(genoPath)) {  genoPath <- "" }
   genoFiles <- list.files(genoPath)
-  fileBed <- grep(pattern = "bed", genoFiles, value = TRUE)
+  fileBed <- grep(pattern = "qc.bed", genoFiles, value = TRUE)
+  if (length(fileBed) == 0) {
+    fileBed <- grep(pattern = "bed", genoFiles, value = TRUE)
+  }
   fileBed <- file.path(genoPath, fileBed)
   fileBed <- substr(fileBed, 1, nchar(fileBed) - 4)
   filePed <- unlist(jsonList$pedigree)

@@ -1,7 +1,11 @@
 {
     "genotype": "../02plinkb",
     "pedigree": "../05others/pedigree.txt",
+    "selection_index": "100 - 0.2 * T1 + 0.8 * T2",
     "threads": 16,
+    "genetic_progress": [],
+    "breeding_value_index": "-0.2 * T1 + 0.8 * T2",
+    "auto_optimization": true,
     "quality_control_plan": {
         "genotype_quality_control":{
             "filter": "F1 == 'Male'",
@@ -38,5 +42,30 @@
                 ]
             }
         ]
-    }
+    },
+    "breeding_plan":[
+        {
+            "job_name": "EBV_Model_Demo",
+            "sample_info": "../05others/phenotype.txt",
+            "repeated_records": false,
+            "multi_trait": true,
+            "vc_vars": [],
+            "vc_covars": [],
+            "random_ratio": 0.05,
+            "job_traits": [
+                {
+                    "traits": "T1",
+                    "covariates": [],
+                    "fixed_effects": ["F1", "F2"],
+                    "random_effects": ["R1"]
+                },
+                {
+                    "traits": "T2",
+                    "covariates": [],
+                    "fixed_effects": ["F1", "F2"],
+                    "random_effects": ["R1"]
+                }
+            ]
+        }
+    ]
 }

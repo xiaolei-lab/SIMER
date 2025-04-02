@@ -90,8 +90,10 @@
     - [AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)
 - [Breeding Program Design](#breeding-program-design)
     - [Gallery of breeding program design parameters](#gallery-of-breeding-program-design-parameters)
-    - [Preparation of a breeding program design](#preparation-of-a-breeding-program-design)
-    - [Evaluation of a breeding program design](#evaluation-of-a-breeding-program-design)
+    - [Definition of a breeding program design](#definition-of-a-breeding-program-design)
+    - [Data quality control](#data-quality-control)
+    - [Model optimization](#model-optimization)
+    - [Construction of selection index](#construction-of-selection-index)
 - [Global Options](#global-options)
     - [Gallery of global parameters](#gallery-of-global-parameters)
     - [Counts of total population size](#counts-of-total-population-size)
@@ -236,6 +238,13 @@ At least users should prepare two datasets: ***genetic map*** and ***genotype da
 ```r
 pop.map <- read.table("map.txt", head = TRUE)
 pop.geno <- read.table("genotype.txt")
+```
+
+**```SIMER```** also supports genotype data in bigmemory format.
+
+```r
+pop.map <- read.table("map.geno.map", head = TRUE)
+pop.geno <- bigmemory::attach.big.matrix("genotype.geno.desc")
 ```
 
 ## Optional
@@ -2722,7 +2731,7 @@ After generating a population, further work can be done. Breeders wish to evalua
 </tbody>
 </table>
 
-## Preparation of a breeding program design
+## Definition of a breeding program design
 **[back to top](#contents)**
 
 ***Breeding program design*** should be stored on a ***JSON*** file. 
@@ -2769,6 +2778,160 @@ After generating a population, further work can be done. Breeders wish to evalua
 >>> ***vc_covars***: the filename of covariance component data  
 >>> ***random_ratio***: the least random effect variance ratio to phenotype variance  
 >>> ***job_traits***: the trait need analysis and its covariate, fixed effect, and random effect  
+
+## Data quality control
+**[back to top](#contents)**  
+
+Data quality is an important factor affecting the accuracy of genetic assessment. Therefore, **```SIMER```** provides quality control functions for pedigree, genotype, and phenotype data. The design of the data quality control plan is saved in a JSON file:  
+
+```json
+{
+    "genotype": "../02plinkb",
+    "pedigree": "../05others/pedigree.txt",
+    "threads": 16,
+    "quality_control_plan": {
+        "genotype_quality_control":{
+            "filter": "F1 == 'Male'",
+            "filter_geno": 0.1,
+            "filter_mind": 0.1,
+            "filter_maf": 0.05,
+            "filter_hwe": 0.001
+        },
+        "pedigree_quality_control":{
+            "standard_ID": false,
+            "candidate_sire_file": [],
+            "candidate_dam_file": [],
+            "exclude_threshold": 0.1, 
+            "assign_threshold": 0.05
+        },
+        "phenotype_quality_control":[
+            {
+                "job_name": "Data_Quality_Control_Demo",
+                "sample_info": "../05others/phenotype.txt",
+                "repeated_records": false,
+                "multi_trait": true,
+                "filter": "F1 == 'Male'",
+                "job_traits": [
+                    {
+                        "traits": "T1",
+                        "definition": "T1",
+                        "range": []
+                    },
+                    {
+                        "traits": "T2",
+                        "definition": "T2",
+                        "range": []
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+Running the data quality control plan process only requires two steps, the first step is to read in the JSON file path, and the second step is to use ```simer.Data.Json``` to read in a JSON file. It should be noted that users need to set ```buildModel``` and ```buildIndex``` to FALSE to ensure that **```SIMER```** only runs data quality control processes.  
+
+```r
+# Get JSON file
+jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
+
+# It needs "plink" and "hiblup" software
+jsonList <- simer.Data.Json(jsonFile = jsonFile, dataQC = TRUE, buildModel = FALSE, buildIndex = FALSE)
+
+```
+
+## Model optimization
+**[back to top](#contents)**  
+
+In addition to data quality, a suitable breeding value evaluation model is another important factor that affects the accuracy of genetic evaluation. When ```auto_optization``` is true, **```SIMER```** will optimize the environmental factors in the breeding value evaluation model, namely covariates, fixed effects, and random effects. The covariates and fixed effects will be optimized using a multi-step regression method combined with BIC (Bayesian Information Criterion) (the lower the BIC value, the better the model fitting effect), while the random effects will be optimized using the variance component method, which only retains random effects with a variance to phenotype variance ratio greater than ```random_ratio``` (the larger the variance to phenotype ratio, the more important the random effect). When ```auto_optization``` is false, **```SIMER```** will directly use the covariates, fixed effects, and random effects provided by the user as the optimal combination of environmental factors. The design of the model optimization plan is saved in a JSON file:  
+
+
+```json
+{
+    "genotype": "../02plinkb",
+    "pedigree": "../05others/pedigree.txt",
+    "threads": 16,
+    "auto_optimization": true,
+    "quality_control_plan": {
+        "genotype_quality_control":{
+            "filter": "F1 == 'Male'",
+            "filter_geno": 0.1,
+            "filter_mind": 0.1,
+            "filter_maf": 0.05,
+            "filter_hwe": 0.001
+        },
+        "pedigree_quality_control":{
+            "standard_ID": false,
+            "candidate_sire_file": [],
+            "candidate_dam_file": [],
+            "exclude_threshold": 0.1, 
+            "assign_threshold": 0.05
+        },
+        "phenotype_quality_control":[
+            {
+                "job_name": "Data_Quality_Control_Demo",
+                "sample_info": "../05others/phenotype.txt",
+                "repeated_records": false,
+                "multi_trait": true,
+                "filter": "F1 == 'Male'",
+                "job_traits": [
+                    {
+                        "traits": "T1",
+                        "definition": "T1",
+                        "range": []
+                    },
+                    {
+                        "traits": "T2",
+                        "definition": "T2",
+                        "range": []
+                    }
+                ]
+            }
+        ]
+    },
+    "breeding_plan":[
+        {
+            "job_name": "EBV_Model_Demo",
+            "sample_info": "../05others/phenotype.txt",
+            "repeated_records": false,
+            "multi_trait": true,
+            "vc_vars": [],
+            "vc_covars": [],
+            "random_ratio": 0.05,
+            "job_traits": [
+                {
+                    "traits": "T1",
+                    "covariates": [],
+                    "fixed_effects": ["F1", "F2"],
+                    "random_effects": ["R1"]
+                },
+                {
+                    "traits": "T2",
+                    "covariates": [],
+                    "fixed_effects": ["F1", "F2"],
+                    "random_effects": ["R1"]
+                }
+            ]
+        }
+    ]
+}
+```
+
+Running the breeding value evaluation model planning process only requires two steps, the first step is to read in the JSON file path, and the second step is to use ```simer.Data.Json``` reads in a JSON file. It should be noted that users need to set ```buildIndex``` to FALSE to ensure that **```SIMER```** only runs the data quality control process and genetic evaluation process.  
+
+```r
+# Get JSON file
+jsonFile <- system.file("extdata", "04breeding_plan", "plan2.json", package = "simer")
+
+# It needs "plink" and "hiblup" software
+jsonList <- simer.Data.Json(jsonFile = jsonFile, dataQC = TRUE, buildModel = TRUE, buildIndex = FALSE)
+
+```
+
+## Construction of selection index
+**[back to top](#contents)** 
+
+In multiple-trait breeding, constructing an appropriate multiple-trait selection index is a powerful means to improve the accuracy of overall genetic evaluation. **```SIMER```** adopts the general selection index method as the core algorithm for constructing multiple-trait selection indices. When ```auto_optization``` is set to true, users only need to provide the economic weight of the breeding value of each trait, ```breeding-value_index```, and **```SIMER```** will automatically calculate the appropriate multiple-trait selection index, ```selection_index```. In the case where ```auto_optization``` is false, **```SIMER```** will consider the ```selection_index``` provided by the user as the optimal multiple-trait selection index.  The design of the multiple-trait selection index plan is saved in a JSON file:  
 
 ```json
 {
@@ -2844,20 +3007,14 @@ After generating a population, further work can be done. Breeders wish to evalua
 }
 ```
 
-## Evaluation of a breeding program design
-**[back to top](#contents)**  
-
-To evaluate the breeding program design, **```SIMER```** completes the following three tasks:  
-***(1)*** Data quality control for genotype, pedigree, and phenotype  
-***(2)*** Model optimization (i.e., the most suitable covariate, fixed effect, and random effect)  
-***(3)*** Construction of Selection Index and calculation of Genetic Progress
+Running the multiple-trait selection index plan process only requires two steps, the first step is to read in the JSON file path, and the second step is to use ```simer.Data.Json``` to read in a JSON file. It should be noted that constructing a multiple-trait selection index requires the use of genetic evaluation results, therefore ```dataQC```, ```buildModel```, and ```buildIndex``` all need to be set to TRUE.  
 
 ```r
 # Get JSON file
-jsonFile <- system.file("extdata", "04breeding_plan", "plan1.json", package = "simer")
+jsonFile <- system.file("extdata", "04breeding_plan", "plan3.json", package = "simer")
 
 # It needs "plink" and "hiblup" software
-jsonList <- simer.Data.Json(jsonFile = jsonFile)
+jsonList <- simer.Data.Json(jsonFile = jsonFile, dataQC = TRUE, buildModel = TRUE, buildIndex = TRUE)
 
 ```
 
