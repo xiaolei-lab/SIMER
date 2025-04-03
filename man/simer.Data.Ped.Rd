@@ -57,7 +57,7 @@ Data quality control for pedigree data.
 }
 \details{
 Build date: May 6, 2021
-Last update: Apr 28, 2022
+Last update: Apr 3, 2025
 }
 \examples{
 \donttest{

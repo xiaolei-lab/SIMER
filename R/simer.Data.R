@@ -457,7 +457,7 @@ simer.Data.Geno <- function(fileMVP = NULL, fileBed = NULL, filePlinkPed = NULL,
 #' Data quality control for pedigree data.
 #' 
 #' Build date: May 6, 2021
-#' Last update: Apr 28, 2022
+#' Last update: Apr 3, 2025
 #'
 #' @author Lilin Yin and Dong Yin
 #' 
@@ -657,10 +657,28 @@ simer.Data.Ped <- function(filePed, fileMVP = NULL, out = NULL, standardID = FAL
     if (nrow(pedx2) == 0) { go <- FALSE }
   }
   ped <- pedx1
+  rm(pedx1); rm(pedx2); gc()
+
+  # fix sex error
+  sexErrorInd <- intersect(ped[, 5], ped[, 6])
+  sexErrorInd <- sexErrorInd[sexErrorInd != "0"]
+  if (length(sexErrorInd) > 0) {
+    for (i in 1:length(sexErrorInd)) {
+      sirTimes <- sum(sexErrorInd[i] == ped[, 5])
+      damTimes <- sum(sexErrorInd[i] == ped[, 6])
+      if (sirTimes >= damTimes) {
+        ped[sexErrorInd[i] == ped[, 6], 8] <- paste0(ped[sexErrorInd[i] == ped[, 6], 8], "_damSexError")
+        ped[sexErrorInd[i] == ped[, 6], 6] <- "0"
+      } else {
+        ped[sexErrorInd[i] == ped[, 5], 7] <- paste0(ped[sexErrorInd[i] == ped[, 5], 7], "_sireSexError")
+        ped[sexErrorInd[i] == ped[, 5], 5] <- "0"
+      }
+    }
+  }
+  
   ped[duplicated(ped[, 1]), 7:8] <- "DuplicatedID"
   pedout <- ped[!duplicated(ped[, 1]), c(1, 5, 6)]
   colnames(pedout) <- pedName
-  rm(pedx1); rm(pedx2); gc()
   
   if (is.null(out)) {
     out <- paste0(substr(filePed, 1, nchar(filePed)-4), ".qc")
