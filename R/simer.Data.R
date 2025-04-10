@@ -16,7 +16,7 @@
 #' Make data quality control for genotype, phenotype, and pedigree.
 #' 
 #' Build date: May 26, 2021
-#' Last update: Apr 28, 2022
+#' Last update: Apr 10, 2025
 #'
 #' @author Dong Yin
 #'
@@ -166,8 +166,8 @@ simer.Data <- function(jsonList = NULL, out = 'simer.qc', ncpus = 0, verbose = T
         missing = missing, 
         verbose = verbose)
     
-    for (i in 1:length(filePhe)) {
-      jsonList$breeding_plan[[i]]$sample_info <- pheFileName[i]
+    for (i in 1:length(jsonList$breeding_plan)) {
+      jsonList$breeding_plan[[i]]$sample_info <- pheFileName[jsonList$breeding_plan[[i]]$sample_info == filePhe]
     }
   }
   

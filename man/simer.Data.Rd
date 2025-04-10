@@ -31,7 +31,7 @@ Make data quality control for genotype, phenotype, and pedigree.
 }
 \details{
 Build date: May 26, 2021
-Last update: Apr 28, 2022
+Last update: Apr 10, 2025
 }
 \examples{
 # Read JSON file
