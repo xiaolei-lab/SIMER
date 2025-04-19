@@ -16,7 +16,7 @@
 #' Select individuals by combination of selection method and criterion.
 #'
 #' Build date: Sep 8, 2018
-#' Last update: Mar 21, 2025
+#' Last update: Apr 19, 2025
 #'
 #' @author Dong Yin
 #'
@@ -249,10 +249,10 @@ selects <- function(SP = NULL, verbose = TRUE) {
         ind.ordered <- ind.score.ordered[, 1]
         if (index.tdm == ncol(pheno)) {
           logging.log(" All phenotype have selected by tandem method.\n", verbose = verbose)
-          SP$sel$index.wt <- 1
+          SP$sel$index.tmd <- 1
         }
         if (pheno[nrow(pheno) * pass.perc, index.tdm] >= goal[index.tdm]) {
-          SP$sel$index.wt <- index.tdm + 1
+          SP$sel$index.tmd <- index.tdm + 1
         }
         
       } else {
