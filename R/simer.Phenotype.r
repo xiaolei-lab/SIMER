@@ -16,7 +16,7 @@
 #' Generate single-trait or multiple-trait phenotype by mixed model.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Jan 28, 2025
+#' Last update: May 15, 2025
 #'
 #' @author Dong Yin
 #'
@@ -481,7 +481,7 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
   
   # effect summary
   phe <- as.data.frame(do.call(cbind, lapply(1:nTrait, function(i) {
-    return(rowSums(phe.eff[, grep(pattern = phe.name[[i]], x = names(phe.eff))]))
+    return(rowSums(phe.eff[, grep(pattern = paste0(phe.name[[i]], "_"), x = names(phe.eff))]))
   })))
   names(phe) <- phe.name
   TBV <- as.data.frame(do.call(cbind, lapply(1:nTrait, function(i) {
