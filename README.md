@@ -2647,7 +2647,7 @@ SP <- reproduces(SP)
 ## AN EASY WAY TO GENERATE A POPULATION
 **[back to top](#contents)**  
 
-The above methods are to generate populations ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can generate a population directly in a ***MORE CONVENIENT*** way.   
+The above methods are to generate populations ***step by step***, which are ***easy to understand***. Actually, **```SIMER```** can generate a population directly in a ***MORE CONVENIENT*** way. ```param.simer``` will call ```param.annot```, ```param.geno```, ```param.pheno```, ```param.sel```, and ```param.reprod```, so users can directly pass all parameters into ```param.simer```, or pass the generated ```SP``` into ```param.simer```. ```simer``` will call ```annotation```,``` genotype```, ```phenotype```, ```selects```, and ```reproduces```, so users can directly use ```simer``` to replace the above sub functions.  
 If users want to output files, please see **[File output](#file-output)**.  
 
 ```r
@@ -3134,7 +3134,7 @@ count.ind <- IndPerGen(pop = pop, pop.gen = 2, ps = c(0.8, 0.8), reprod.way = "r
 ## Multi-thread computation
 **[back to top](#contents)**  
 
-**```SIMER```** runs on ***multiple threads***. Users can easily change the number of threads used for simulation by the following:
+This section uses the ```param.simer``` and ```simer``` functions for demonstration. Therefore, please read the usage of ```param.simer``` and ```simer``` in **[AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)** before reading this section. **```SIMER```** runs on ***multiple threads***. Users can easily change the number of threads used for simulation by the following:
 
 ```r
 # Generate all simulation parameters
@@ -3147,7 +3147,7 @@ SP <- simer(SP)
 ## Multi-population simulation
 **[back to top](#contents)**
 
-Simulation of ***multiple populations*** can be realized by ```for``` by using **R** software.
+This section uses the ```param.simer``` and ```simer``` functions for demonstration. Therefore, please read the usage of ```param.simer``` and ```simer``` in **[AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)** before reading this section. Simulation of ***multiple populations*** can be realized by ```for``` by using **R** software.
 
 ```r
 # Replication times
@@ -3169,7 +3169,7 @@ for (i in 1:rep) {
 ## File output
 **[back to top](#contents)** 
 
-**```SIMER```** will not output files by default. A series of files with the prefix ```out``` will output when specifying ```outpath```.
+This section uses the ```param.simer``` and ```simer``` functions for demonstration. Therefore, please read the usage of ```param.simer``` and ```simer``` in **[AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)** before reading this section. **```SIMER```** will not output files by default. A series of files with the prefix ```out``` will output when specifying ```outpath```.
 
 ```r
 ### 01 Numeric Format ###
@@ -3228,7 +3228,7 @@ SP <- simer(SP)
 ## Generation-selective output
 **[back to top](#contents)**  
 
-Output of genotype and phenotype can be ***generation-selective*** using ```out.geno.gen``` and ```out.pheno.gen```. 
+This section uses the ```param.simer``` and ```simer``` functions for demonstration. Therefore, please read the usage of ```param.simer``` and ```simer``` in **[AN EASY WAY TO GENERATE A POPULATION](#an-easy-way-to-generate-a-population)** before reading this section. Output of genotype and phenotype can be ***generation-selective*** using ```out.geno.gen``` and ```out.pheno.gen```. 
 
 ```r
 # Generate all simulation parameters
