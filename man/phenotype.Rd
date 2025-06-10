@@ -41,7 +41,7 @@ Generate single-trait or multiple-trait phenotype by mixed model.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: May 15, 2025
+Last update: Jun 10, 2025
 }
 \examples{
 \donttest{

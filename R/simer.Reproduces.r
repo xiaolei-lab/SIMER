@@ -16,7 +16,7 @@
 #' Population reproduction by different mate design.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: Mar 21, 2025
+#' Last update: May 28, 2025
 #'
 #' @author Dong Yin
 #'
@@ -87,10 +87,10 @@ reproduces <- function(SP, ncpus = 0, verbose = TRUE) {
     SP <- mate.randexself(SP, ncpus = ncpus, verbose = verbose)
     
   } else if (reprod.way == "assort") {
-    SP <- mate.randexself(SP, ncpus = ncpus, verbose = verbose)
+    SP <- mate.assort(SP, ncpus = ncpus, verbose = verbose)
     
   } else if (reprod.way == "disassort") {
-    SP <- mate.randexself(SP, ncpus = ncpus, verbose = verbose)
+    SP <- mate.disassort(SP, ncpus = ncpus, verbose = verbose)
     
   } else if (reprod.way == "2waycro") {
     SP <- mate.2waycro(SP, ncpus = ncpus, verbose = verbose)
@@ -922,7 +922,7 @@ mate.assort <- function(SP, ncpus = 0, verbose = TRUE) {
 #' # Run selection
 #' SP <- selects(SP)
 #' # Run random mating
-#' SP <- mate.assort(SP)
+#' SP <- mate.disassort(SP)
 #' }
 mate.disassort <- function(SP, ncpus = 0, verbose = TRUE) {
   

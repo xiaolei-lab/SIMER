@@ -30,7 +30,7 @@ Population reproduction by different mate design.
 }
 \details{
 Build date: Nov 14, 2018
-Last update: Mar 21, 2025
+Last update: May 28, 2025
 }
 \examples{
 \donttest{

@@ -16,7 +16,7 @@
 #' Generate single-trait or multiple-trait phenotype by mixed model.
 #'
 #' Build date: Nov 14, 2018
-#' Last update: May 15, 2025
+#' Last update: Jun 10, 2025
 #'
 #' @author Dong Yin
 #'
@@ -239,9 +239,11 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         if (length(phe.var) < i) {
           phe.var[[i]] <- var(phe.add) / phe.h2A[[i]]
         }
-        scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2A[[i]] / var(phe.add)))
-        SP$map$pop.map[[paste0("QTN", i, "_A")]] <- SP$map$pop.map[[paste0("QTN", i, "_A")]] * scale
-        phe.add <- phe.add * scale
+        if (var(phe.add) != 0) {
+          scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2A[[i]] / var(phe.add)))
+          SP$map$pop.map[[paste0("QTN", i, "_A")]] <- SP$map$pop.map[[paste0("QTN", i, "_A")]] * scale
+          phe.add <- phe.add * scale
+        }
         phe.add <- scale(phe.add, scale = FALSE)
         phe.eff[[i]] <- cbind(phe.eff[[i]], phe.add)
         colnames(phe.eff[[i]])[ncol(phe.eff[[i]])] <- paste0(phe.name[[i]], "_A_eff")
@@ -272,9 +274,11 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         pop.qtn.dom[[i]][pop.qtn.dom[[i]] == 2] <- 0
         pop.qtn.dom[[i]] <- pop.qtn.dom[[i]][] - 0.5
         phe.dom <- tcrossprod(pop.qtn.dom[[i]], t(qtn.eff))
-        scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2D[[i]] / var(phe.dom)))
-        SP$map$pop.map[[paste0("QTN", i, "_D")]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]] * scale
-        phe.dom <- phe.dom * scale
+        if (var(phe.dom) != 0) {
+          scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2D[[i]] / var(phe.dom)))
+          SP$map$pop.map[[paste0("QTN", i, "_D")]] <- SP$map$pop.map[[paste0("QTN", i, "_D")]] * scale
+          phe.dom <- phe.dom * scale
+        }
         phe.dom <- scale(phe.dom, scale = FALSE)
         phe.eff[[i]] <- cbind(phe.eff[[i]], phe.dom)
         colnames(phe.eff[[i]])[ncol(phe.eff[[i]])] <- paste0(phe.name[[i]], "_D_eff")
@@ -326,9 +330,11 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
             }
           }
           phe.GxG <- tcrossprod(pop.qtn.GxG[[i]], t(pop.map.GxG[qtn.pos.GxG[[i]], i + 1]))
-          scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2GxG[[i]][[eff.name[j]]] / var(phe.GxG)))
-          SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] <- SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] * scale
-          phe.GxG <- phe.GxG * scale
+          if (var(phe.GxG) != 0) {
+            scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2GxG[[i]][[eff.name[j]]] / var(phe.GxG)))
+            SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] <- SP$map$pop.map.GxG[qtn.pos.GxG[[i]], i + 1] * scale
+            phe.GxG <- phe.GxG * scale
+          }
           phe.GxG <- scale(phe.GxG, scale = FALSE)
           phe.eff[[i]] <- cbind(phe.eff[[i]], phe.GxG)
           colnames(phe.eff[[i]])[ncol(phe.eff[[i]])] <- paste0(phe.name[[i]], "_", gsub(pattern = ":", replacement = "x", x = eff.name[j]), "_eff")
@@ -346,8 +352,10 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
                 phe.GxE <- phe.GxE * scale(phe.eff[[i]][, match(eff.GxE[k], colnames(phe.eff[[i]]))])
               }
             }
-            scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2GxE[[i]][[eff.name[j]]] / var(phe.GxE)))
-            phe.GxE <- phe.GxE * scale
+            if (var(phe.GxE) != 0) {
+              scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2GxE[[i]][[eff.name[j]]] / var(phe.GxE)))
+              phe.GxE <- phe.GxE * scale
+            }
             phe.GxE <- scale(phe.GxE, scale = FALSE)
             phe.eff[[i]] <- cbind(phe.eff[[i]], phe.GxE)
             colnames(phe.eff[[i]])[ncol(phe.eff[[i]])] <- paste0(phe.name[[i]], "_", gsub(pattern = ":", replacement = "x", x = eff.name[j]), "_eff")
@@ -365,8 +373,10 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
         if (phe.h2E[[i]] < 0) {
           stop("Residual variance cannot be less than 0!")
         }
-        scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2E[[i]] / var(phe.res)))
-        phe.res <- phe.res * scale
+        if (var(phe.res) != 0) {
+          scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2E[[i]] / var(phe.res)))
+          phe.res <- phe.res * scale
+        }
         phe.res <- scale(phe.res, scale = FALSE)
         phe.eff[[i]] <- cbind(phe.eff[[i]], phe.res)
         colnames(phe.eff[[i]])[ncol(phe.eff[[i]])] <- paste0(phe.name[[i]], "_E_eff")
@@ -379,8 +389,10 @@ phenotype <- function(SP = NULL, ncpus = 0, verbose = TRUE) {
     # repeated record model
     if (pop.rep > 1) {
       phe.PE <- rnorm(pop.ind)
-      scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2PE[[i]] / var(phe.PE)))
-      phe.PE <- phe.PE * scale
+      if (var(phe.PE) != 0) {
+        scale <- as.numeric(sqrt(phe.var[[i]] * phe.h2PE[[i]] / var(phe.PE)))
+        phe.PE <- phe.PE * scale
+      }
       phe.PE <- scale(phe.PE, scale = FALSE)
       phe.eff[[i]] <- cbind(phe.eff[[i]], phe.PE)
       colnames(phe.eff[[i]])[ncol(phe.eff[[i]])] <- paste0(phe.name[[i]], "_PE_eff")

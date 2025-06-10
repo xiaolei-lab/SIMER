@@ -53,7 +53,7 @@ SP <- phenotype(SP)
 # Run selection
 SP <- selects(SP)
 # Run random mating
-SP <- mate.assort(SP)
+SP <- mate.disassort(SP)
 }
 }
 \author{
