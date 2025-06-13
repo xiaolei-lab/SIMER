@@ -16,7 +16,7 @@
 #' Make data quality control for genotype, phenotype, and pedigree.
 #' 
 #' Build date: May 26, 2021
-#' Last update: Apr 10, 2025
+#' Last update: Jun 13, 2025
 #'
 #' @author Dong Yin
 #'
@@ -1203,6 +1203,9 @@ simer.Data.cHIBLUP <- function(jsonList = NULL, hiblupPath = '', mode = "A", vc.
         ifelse(length(fileBed) == 0, "", paste("--bfile", fileBed)),
         ifelse(mode == "A", "--add", paste("--add", "--dom")),
         paste("--vc-method", vc.method),
+        ifelse(vc.method == "AI" | vc.method == "HI", "--ai-maxit 100", ""),
+        ifelse(vc.method == "EM", "--em-maxit 100", ""),
+        ifelse(vc.method == "EMAI", "--em-maxit 20 --ai-maxit 100", ""),
         paste("--threads", ncpus),
         paste("--out", out)
       )
