@@ -59,7 +59,7 @@ DataFrame PedigreeCorrector(XPtr<BigMatrix> pMat, StringVector genoID, DataFrame
   omp_setup(threads);
   
   // ******* 01 prepare data for checking rawPed *******
-  StringVector kidID = rawPed[0], sirOriID = rawPed[2], damOriID = rawPed[3], sirID = rawPed[4], damID = rawPed[5], sirState = rawPed[6], damState = rawPed[7];
+  StringVector kidID = rawPed[0], sirOriID = clone(as<StringVector>(rawPed[2])), damOriID = clone(as<StringVector>(rawPed[3])), sirID = clone(as<StringVector>(rawPed[4])), damID = clone(as<StringVector>(rawPed[5])), sirState = rawPed[6], damState = rawPed[7];
   NumericVector generation = rawPed[1];
   size_t n = kidID.size(), m = pMat->ncol();
 
